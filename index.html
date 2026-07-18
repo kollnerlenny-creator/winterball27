@@ -177,6 +177,9 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
+  // Muss dieselbe URL sein wie in admin.html
+  const WORKER_URL = "https://winterball-worker.kollnerlenny.workers.dev";
+
   const companionsList = document.getElementById('companionsList');
   document.getElementById('addCompanionBtn').addEventListener('click', () => addCompanionRow());
 
@@ -243,6 +246,17 @@
         });
       });
       await batch.commit();
+
+      // Bestätigungsmail direkt nach der Anmeldung anstoßen (Ticket-Mail folgt erst nach Bezahlung)
+      try {
+        await fetch(WORKER_URL + '/send-confirmation', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ name, email, attendeeNames: allAttendees })
+        });
+      } catch (mailErr) {
+        console.error('Bestätigungsmail fehlgeschlagen:', mailErr);
+      }
 
       document.getElementById('formView').classList.add('hidden');
       document.getElementById('successView').classList.add('active');
