@@ -146,10 +146,6 @@
         <div id="companionsList"></div>
       </div>
 
-      <div class="field">
-        <label for="notes">Anmerkungen (optional)</label>
-        <input type="text" id="notes" placeholder="z.B. Allergien, Wünsche">
-      </div>
       <button type="submit" id="submitBtn">Jetzt anmelden</button>
       <div class="status" id="status"></div>
     </form>
@@ -210,7 +206,6 @@
 
     const name = document.getElementById('name').value.trim();
     const email = document.getElementById('email').value.trim();
-    const notes = document.getElementById('notes').value.trim();
     const companionNames = Array.from(document.querySelectorAll('.companion-name'))
       .map(i => i.value.trim())
       .filter(v => v.length > 0);
@@ -227,7 +222,7 @@
     try {
       // 1) Bestellung anlegen (unbezahlt) — enthält den Besteller + Namen der Begleitungen
       const regRef = await addDoc(collection(db, 'registrations'), {
-        name, email, companions: companionNames, notes,
+        name, email, companions: companionNames,
         paid: false, createdAt: serverTimestamp()
       });
 
