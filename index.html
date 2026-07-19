@@ -37,7 +37,7 @@
     opacity:0.4;
   }
   .card{
-    position:relative; width:100%; max-width:440px;
+    position:relative; z-index:1; width:100%; max-width:440px;
     background:var(--glass); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
     border:1px solid var(--glass-border); border-radius:var(--radius);
     box-shadow:0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
@@ -57,6 +57,11 @@
   .subtitle{
     text-align:center; color:var(--text-dim); font-size:13px;
     letter-spacing:2px; text-transform:uppercase; margin-bottom:28px;
+  }
+  .info-box{
+    background:rgba(143,180,255,0.08); border:1px solid rgba(143,180,255,0.25);
+    border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:22px;
+    font-size:13px; line-height:1.6; color:var(--text); white-space:pre-line;
   }
   .field{margin-bottom:16px;}
   label{
@@ -124,15 +129,19 @@
 </head>
 <body>
 
+<canvas id="snowCanvas" style="position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:0;"></canvas>
+
 <div class="card">
   <div class="moon"></div>
   <h1><span>Winter Ball</span></h1>
   <div class="subtitle">Anmeldung</div>
 
+  <div class="info-box" id="infoBox" style="display:none;"></div>
+
   <div class="form-view" id="formView">
     <form id="regForm">
       <div class="field">
-        <label for="name">Dein Name</label>
+        <label for="name">Dein Vor- und Nachname</label>
         <input type="text" id="name" placeholder="Max Mustermann" required>
       </div>
       <div class="field">
@@ -173,7 +182,7 @@
 <!-- Firebase -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-  import { getFirestore, collection, addDoc, doc, writeBatch, query, where, limit, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, doc, getDoc, writeBatch, query, where, limit, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDQaRxga3bFrNkyU6E_sQpp5_0G4ApInOg",
@@ -190,6 +199,16 @@
   // Muss dieselbe URL sein wie in admin.html
   const WORKER_URL = "https://winterball-worker.kollnerlenny.workers.dev";
 
+  // Wichtige Infos anzeigen, falls im Admin-Dashboard hinterlegt
+  getDoc(doc(db, 'settings', 'info')).then(snap => {
+    const text = snap.exists() ? (snap.data().text || '').trim() : '';
+    if (text) {
+      const box = document.getElementById('infoBox');
+      box.textContent = text;
+      box.style.display = 'block';
+    }
+  }).catch(() => {});
+
   const companionsList = document.getElementById('companionsList');
   document.getElementById('addCompanionBtn').addEventListener('click', () => addCompanionRow());
 
@@ -197,7 +216,7 @@
     const row = document.createElement('div');
     row.className = 'companion-row';
     row.innerHTML = `
-      <input type="text" class="companion-name" placeholder="Name der Begleitung">
+      <input type="text" class="companion-name" placeholder="Vor- und Nachname der Begleitung">
       <select class="companion-category">
         <option value="">Alter?</option>
         <option value="u18">U18</option>
@@ -215,6 +234,10 @@
 
   function genTicketId(){
     return 'WB27-' + Math.random().toString(36).slice(2,8).toUpperCase();
+  }
+
+  function isFullName(str){
+    return str.trim().split(/\s+/).filter(Boolean).length >= 2;
   }
 
   form.addEventListener('submit', async (e) => {
@@ -235,6 +258,16 @@
     if(!name || !email || !category){
       statusEl.className = 'status error';
       statusEl.textContent = 'Bitte Name, E-Mail und deine Altersgruppe ausfüllen.';
+      return;
+    }
+    if(!isFullName(name)){
+      statusEl.className = 'status error';
+      statusEl.textContent = 'Bitte gib deinen vollständigen Vor- und Nachnamen an.';
+      return;
+    }
+    if(companions.some(c => !isFullName(c.name))){
+      statusEl.className = 'status error';
+      statusEl.textContent = 'Bitte bei jeder Begleitung Vor- und Nachname angeben.';
       return;
     }
     if(companions.some(c => !c.category)){
@@ -304,6 +337,56 @@
       submitBtn.textContent = 'Jetzt anmelden';
     }
   });
+</script>
+
+<!-- Animierter Schneefall im Hintergrund -->
+<script>
+  (function(){
+    const canvas = document.getElementById('snowCanvas');
+    const ctx = canvas.getContext('2d');
+    let flakes = [];
+
+    function resize(){
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function initFlakes(){
+      const count = Math.min(80, Math.floor(window.innerWidth / 12));
+      flakes = Array.from({length: count}, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2.2 + 0.8,
+        speedY: Math.random() * 0.6 + 0.3,
+        speedX: Math.random() * 0.4 - 0.2,
+        drift: Math.random() * Math.PI * 2,
+        opacity: Math.random() * 0.5 + 0.3
+      }));
+    }
+    initFlakes();
+
+    function animate(){
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for(const flake of flakes){
+        flake.drift += 0.01;
+        flake.y += flake.speedY;
+        flake.x += flake.speedX + Math.sin(flake.drift) * 0.3;
+
+        if(flake.y > canvas.height){ flake.y = -5; flake.x = Math.random() * canvas.width; }
+        if(flake.x > canvas.width) flake.x = 0;
+        if(flake.x < 0) flake.x = canvas.width;
+
+        ctx.beginPath();
+        ctx.arc(flake.x, flake.y, flake.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${flake.opacity})`;
+        ctx.fill();
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+  })();
 </script>
 </body>
 </html>
