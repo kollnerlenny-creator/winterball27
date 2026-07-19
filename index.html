@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Winter Ball 2027 · Anmeldung</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg-1:#0a0e1a; --bg-2:#131c30; --bg-3:#1c2a45;
@@ -44,16 +47,16 @@
     padding:40px 28px 32px;
   }
   .moon{
-    width:64px; height:64px; margin:0 auto 8px;
+    width:76px; height:76px; margin:0 auto 8px;
     border-radius:50%;
     background:radial-gradient(circle at 35% 35%, #fff, #d8e2f5 60%, #b7c6e8);
-    box-shadow:0 0 40px 8px rgba(200,220,255,0.35);
+    box-shadow:0 0 20px 4px rgba(255,255,255,0.5), 0 0 60px 16px rgba(200,220,255,0.4), 0 0 110px 30px rgba(150,180,255,0.2);
   }
   h1{
     text-align:center; font-weight:300; letter-spacing:0.5px;
     font-size:32px; margin-bottom:2px;
   }
-  h1 span{display:block; font-size:44px; font-family:'Brush Script MT',cursive; font-style:italic; font-weight:400;}
+  h1 span{display:block; font-size:60px; font-family:'Great Vibes',cursive; font-weight:400; line-height:1.1; background:linear-gradient(180deg,#ffffff,#c9d6f0); -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:0 0 30px rgba(200,220,255,0.3);}
   .subtitle{
     text-align:center; color:var(--text-dim); font-size:13px;
     letter-spacing:2px; text-transform:uppercase; margin-bottom:28px;
@@ -176,6 +179,12 @@
     <p>Bitte hol dir deine Karte(n) im Vorverkauf in der Schule ab und bezahle dort bar.<br>Alle Tickets mit QR-Code werden dir direkt nach der Bezahlung in einer E-Mail zugeschickt.</p>
   </div>
 
+  <div class="success-view" id="closedView">
+    <div class="success-icon" style="background:rgba(255,210,127,0.15); border-color:rgba(255,210,127,0.4);">⏰</div>
+    <h2>Anmeldeschluss erreicht</h2>
+    <p>Die Anmeldung für den Winter Ball ist leider bereits geschlossen.</p>
+  </div>
+
   <div class="date-badge">30.01.2027 · 17:30 Uhr</div>
 </div>
 
@@ -206,6 +215,16 @@
       const box = document.getElementById('infoBox');
       box.textContent = text;
       box.style.display = 'block';
+    }
+  }).catch(() => {});
+
+  // Anmeldeschluss prüfen — Formular sperren, falls abgelaufen
+  getDoc(doc(db, 'settings', 'deadline')).then(snap => {
+    const iso = snap.exists() ? snap.data().timestamp : null;
+    if (iso && new Date(iso).getTime() < Date.now()) {
+      document.getElementById('formView').classList.add('hidden');
+      const closedView = document.getElementById('closedView');
+      closedView.classList.add('active');
     }
   }).catch(() => {});
 
