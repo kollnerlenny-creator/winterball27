@@ -128,6 +128,14 @@
     border-top:1px solid var(--glass-border);
     color:var(--text-dim); font-size:13px; letter-spacing:1px;
   }
+  .countdown{display:flex; justify-content:center; gap:14px;}
+  .countdown-part{
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    background:rgba(255,255,255,0.05); border:1px solid var(--glass-border);
+    border-radius:var(--radius-sm); padding:12px 14px; min-width:56px;
+  }
+  .countdown-part span{font-size:26px; font-weight:600; font-variant-numeric:tabular-nums;}
+  .countdown-part label{font-size:10px; color:var(--text-dim); letter-spacing:1px; text-transform:uppercase;}
 </style>
 </head>
 <body>
@@ -185,6 +193,18 @@
     <p>Die Anmeldung für den Winter Ball ist leider bereits geschlossen.</p>
   </div>
 
+  <div class="success-view" id="countdownView">
+    <div class="success-icon" style="background:rgba(143,180,255,0.15); border-color:rgba(143,180,255,0.4);">🌙</div>
+    <h2>Die Anmeldung startet bald</h2>
+    <p style="margin-bottom:18px;">Noch etwas Geduld, gleich geht's los!</p>
+    <div class="countdown" id="countdownDisplay">
+      <div class="countdown-part"><span id="cdDays">00</span><label>Tage</label></div>
+      <div class="countdown-part"><span id="cdHours">00</span><label>Std</label></div>
+      <div class="countdown-part"><span id="cdMinutes">00</span><label>Min</label></div>
+      <div class="countdown-part"><span id="cdSeconds">00</span><label>Sek</label></div>
+    </div>
+  </div>
+
   <div class="date-badge">30.01.2027 · 17:30 Uhr</div>
 </div>
 
@@ -218,15 +238,51 @@
     }
   }).catch(() => {});
 
-  // Anmeldeschluss prüfen — Formular sperren, falls abgelaufen
-  getDoc(doc(db, 'settings', 'deadline')).then(snap => {
+  // Anmeldebeginn prüfen — falls noch nicht offen, Countdown zeigen statt Formular
+  let registrationLocked = false;
+  getDoc(doc(db, 'settings', 'opensAt')).then(snap => {
     const iso = snap.exists() ? snap.data().timestamp : null;
-    if (iso && new Date(iso).getTime() < Date.now()) {
+    const opensAtMs = iso ? new Date(iso).getTime() : null;
+
+    if (opensAtMs && opensAtMs > Date.now()) {
+      registrationLocked = true;
       document.getElementById('formView').classList.add('hidden');
-      const closedView = document.getElementById('closedView');
-      closedView.classList.add('active');
+      document.getElementById('countdownView').classList.add('active');
+
+      function tick(){
+        const remaining = opensAtMs - Date.now();
+        if (remaining <= 0) {
+          // Anmeldebeginn erreicht — Seite neu laden, damit das Formular erscheint
+          window.location.reload();
+          return;
+        }
+        const days = Math.floor(remaining / 86400000);
+        const hours = Math.floor((remaining % 86400000) / 3600000);
+        const minutes = Math.floor((remaining % 3600000) / 60000);
+        const seconds = Math.floor((remaining % 60000) / 1000);
+        const pad = n => String(n).padStart(2, '0');
+        document.getElementById('cdDays').textContent = pad(days);
+        document.getElementById('cdHours').textContent = pad(hours);
+        document.getElementById('cdMinutes').textContent = pad(minutes);
+        document.getElementById('cdSeconds').textContent = pad(seconds);
+      }
+      tick();
+      setInterval(tick, 1000);
+    } else {
+      checkDeadline();
     }
-  }).catch(() => {});
+  }).catch(() => { checkDeadline(); });
+
+  // Anmeldeschluss prüfen — Formular sperren, falls abgelaufen
+  function checkDeadline(){
+    getDoc(doc(db, 'settings', 'deadline')).then(snap => {
+      const iso = snap.exists() ? snap.data().timestamp : null;
+      if (iso && new Date(iso).getTime() < Date.now()) {
+        document.getElementById('formView').classList.add('hidden');
+        document.getElementById('closedView').classList.add('active');
+      }
+    }).catch(() => {});
+  }
 
   const companionsList = document.getElementById('companionsList');
   document.getElementById('addCompanionBtn').addEventListener('click', () => addCompanionRow());
