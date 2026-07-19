@@ -315,6 +315,17 @@
     return str.trim().split(/\s+/).filter(Boolean).length >= 2;
   }
 
+  // Berechnet die Klassenstufe aus dem Einschulungsjahr am Ende der LernSax-Adresse
+  function gradeFromEmail(email){
+    const [local, domain] = String(email || '').toLowerCase().split('@');
+    if (!domain || !domain.endsWith('lernsax.de')) return null;
+    const match = (local || '').match(/(\d{4})$/);
+    if (!match) return null;
+    const enrollYear = Number(match[1]);
+    const grade = (2026 - enrollYear) + 5; // Gymnasium: Einschulung = 5. Klasse, Schuljahr 2026/2027
+    return (grade >= 5 && grade <= 12) ? grade : null;
+  }
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     statusEl.className = 'status';
@@ -392,10 +403,15 @@
 
       // Bestätigungsmail direkt nach der Anmeldung anstoßen (Ticket-Mail folgt erst nach Bezahlung)
       try {
+        const lernsaxSnap = await getDoc(doc(db, 'settings', 'lernsaxThreshold'));
+        const threshold = lernsaxSnap.exists() ? lernsaxSnap.data().grade : null;
+        const grade = gradeFromEmail(email);
+        const useLernSax = !!(threshold && grade !== null && grade < threshold);
+
         await fetch(WORKER_URL + '/send-confirmation', {
           method: 'POST',
           headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ name, email, attendeeNames: allAttendees.map(a => a.name) })
+          body: JSON.stringify({ name, email, attendeeNames: allAttendees.map(a => a.name), useLernSax })
         });
       } catch (mailErr) {
         console.error('Bestätigungsmail fehlgeschlagen:', mailErr);
