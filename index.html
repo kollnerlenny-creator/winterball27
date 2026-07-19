@@ -151,6 +151,12 @@
 
   <div class="form-view" id="formView">
     <form id="regForm">
+      <!-- Honeypot-Feld gegen Spam-Bots: für Menschen unsichtbar, Bots füllen es oft automatisch aus -->
+      <div style="position:absolute; left:-9999px; top:-9999px;" aria-hidden="true">
+        <label for="website">Website</label>
+        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+      </div>
+
       <div class="field">
         <label for="name">Dein Vor- und Nachname</label>
         <input type="text" id="name" placeholder="Max Mustermann" required>
@@ -184,7 +190,7 @@
   <div class="success-view" id="successView">
     <div class="success-icon">✓</div>
     <h2>Anmeldung eingegangen!</h2>
-    <p>Bitte hol dir deine Karte(n) im Vorverkauf in der Schule ab und bezahle dort bar.<br>Alle Tickets mit QR-Code werden dir direkt nach der Bezahlung in einer E-Mail zugeschickt.</p>
+    <p>Bitte bezahle dein Ticket bar an der Vorverkaufskasse in der Schule.<br>Dein Ticket mit QR-Code bekommst du danach automatisch per E-Mail zugeschickt.</p>
   </div>
 
   <div class="success-view" id="closedView">
@@ -326,10 +332,23 @@
     return (grade >= 5 && grade <= 12) ? grade : null;
   }
 
+  const pageLoadedAt = Date.now();
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     statusEl.className = 'status';
     statusEl.textContent = '';
+
+    // Spam-Schutz: Honeypot-Feld gefüllt = Bot -> Anmeldung stillschweigend ignorieren
+    if (document.getElementById('website').value.trim() !== '') {
+      return;
+    }
+    // Spam-Schutz: Formular in unter 2 Sekunden abgeschickt = sehr wahrscheinlich ein Bot
+    if (Date.now() - pageLoadedAt < 2000) {
+      statusEl.className = 'status error';
+      statusEl.textContent = 'Bitte versuch es erneut.';
+      return;
+    }
 
     const name = document.getElementById('name').value.trim();
     const email = document.getElementById('email').value.trim();
