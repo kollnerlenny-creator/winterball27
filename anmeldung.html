@@ -47,10 +47,19 @@
     padding:40px 28px 32px;
   }
   .moon{
-    width:76px; height:76px; margin:0 auto 8px;
+    width:82px; height:82px; margin:0 auto 8px;
     border-radius:50%;
-    background:radial-gradient(circle at 35% 35%, #fff, #d8e2f5 60%, #b7c6e8);
-    box-shadow:0 0 20px 4px rgba(255,255,255,0.5), 0 0 60px 16px rgba(200,220,255,0.4), 0 0 110px 30px rgba(150,180,255,0.2);
+    background:
+      radial-gradient(circle at 62% 30%, rgba(120,130,150,0.35) 0%, transparent 9%),
+      radial-gradient(circle at 40% 55%, rgba(120,130,150,0.30) 0%, transparent 12%),
+      radial-gradient(circle at 70% 62%, rgba(120,130,150,0.28) 0%, transparent 10%),
+      radial-gradient(circle at 28% 30%, rgba(120,130,150,0.22) 0%, transparent 7%),
+      radial-gradient(circle at 55% 78%, rgba(120,130,150,0.20) 0%, transparent 6%),
+      radial-gradient(ellipse 46% 34% at 46% 48%, rgba(110,120,140,0.16), transparent 70%),
+      radial-gradient(circle at 35% 35%, #ffffff, #dbe4f5 55%, #b7c6e8 85%, #9fb0d6 100%);
+    box-shadow:
+      inset -6px -5px 12px rgba(60,70,100,0.25),
+      0 0 20px 4px rgba(255,255,255,0.5), 0 0 60px 16px rgba(200,220,255,0.4), 0 0 110px 30px rgba(150,180,255,0.2);
   }
   h1{
     text-align:center; font-weight:300; letter-spacing:0.5px;
@@ -165,6 +174,7 @@
       <div class="field">
         <label for="email">Deine E-Mail-Adresse</label>
         <input type="email" id="email" placeholder="max@beispiel.de" required>
+        <div style="font-size:11.5px; color:var(--text-dim); margin-top:6px;">Sowohl LernSax- als auch private E-Mail-Adressen funktionieren.</div>
       </div>
       <div class="field">
         <label for="category">Deine Altersgruppe</label>
