@@ -35,7 +35,7 @@
   /* ---------- Hero ---------- */
   .hero{
     min-height:100svh; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    text-align:center; padding:40px 24px; position:relative; z-index:1;
+    text-align:center; padding:40px 36px; position:relative; z-index:1; overflow:visible;
   }
   .hero::before{
     content:''; position:absolute; inset:0; pointer-events:none;
@@ -64,10 +64,10 @@
       0 0 24px 6px rgba(255,255,255,0.5), 0 0 70px 18px rgba(200,220,255,0.4), 0 0 130px 34px rgba(150,180,255,0.2);
   }
   .hero h1{
-    font-family:'Great Vibes',cursive; font-size:clamp(40px,8vw,76px); font-weight:400; line-height:1.15;
+    font-family:'Great Vibes',cursive; font-size:clamp(36px,7vw,64px); font-weight:400; line-height:1.2;
     background:linear-gradient(180deg,#ffffff,#c9d6f0); -webkit-background-clip:text; background-clip:text; color:transparent;
     text-shadow:0 0 40px rgba(200,220,255,0.3);
-    max-width:100%; padding:0 12px; overflow-wrap:break-word;
+    max-width:100%; padding:0 20px; overflow-wrap:break-word; box-sizing:border-box;
   }
   .hero .subtitle{
     margin-top:6px; color:var(--text-dim); font-size:15px; letter-spacing:3px; text-transform:uppercase;
