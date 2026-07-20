@@ -49,18 +49,25 @@
     opacity:0.4;
   }
   .moon{
-    width:96px; height:96px; margin-bottom:20px; border-radius:50%;
-    background:radial-gradient(circle at 35% 35%, #fff, #d8e2f5 60%, #b7c6e8);
-    box-shadow:0 0 24px 6px rgba(255,255,255,0.5), 0 0 70px 18px rgba(200,220,255,0.4), 0 0 130px 34px rgba(150,180,255,0.2);
+    width:108px; height:108px; margin-bottom:20px; border-radius:50%;
+    background:
+      radial-gradient(circle at 62% 30%, rgba(120,130,150,0.35) 0%, transparent 9%),
+      radial-gradient(circle at 40% 55%, rgba(120,130,150,0.30) 0%, transparent 12%),
+      radial-gradient(circle at 70% 62%, rgba(120,130,150,0.28) 0%, transparent 10%),
+      radial-gradient(circle at 28% 30%, rgba(120,130,150,0.22) 0%, transparent 7%),
+      radial-gradient(circle at 55% 78%, rgba(120,130,150,0.20) 0%, transparent 6%),
+      radial-gradient(circle at 78% 42%, rgba(120,130,150,0.18) 0%, transparent 5%),
+      radial-gradient(ellipse 46% 34% at 46% 48%, rgba(110,120,140,0.16), transparent 70%),
+      radial-gradient(circle at 35% 35%, #ffffff, #dbe4f5 55%, #b7c6e8 85%, #9fb0d6 100%);
+    box-shadow:
+      inset -8px -6px 16px rgba(60,70,100,0.25),
+      0 0 24px 6px rgba(255,255,255,0.5), 0 0 70px 18px rgba(200,220,255,0.4), 0 0 130px 34px rgba(150,180,255,0.2);
   }
   .hero h1{
-    font-family:'Great Vibes',cursive; font-size:clamp(44px,9vw,88px); font-weight:400; line-height:1.1;
+    font-family:'Great Vibes',cursive; font-size:clamp(40px,8vw,76px); font-weight:400; line-height:1.15;
     background:linear-gradient(180deg,#ffffff,#c9d6f0); -webkit-background-clip:text; background-clip:text; color:transparent;
     text-shadow:0 0 40px rgba(200,220,255,0.3);
-    max-width:100%; padding:0 8px; white-space:nowrap;
-  }
-  @media (max-width:420px){
-    .hero h1{font-size:clamp(38px,15vw,56px); white-space:normal;}
+    max-width:100%; padding:0 12px; overflow-wrap:break-word;
   }
   .hero .subtitle{
     margin-top:6px; color:var(--text-dim); font-size:15px; letter-spacing:3px; text-transform:uppercase;
