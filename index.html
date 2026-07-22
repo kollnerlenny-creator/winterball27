@@ -217,29 +217,10 @@
 <section class="reveal">
   <div class="eyebrow">Der Abend</div>
   <div class="section-title">Ablauf</div>
-  <div class="timeline">
-    <div class="timeline-item">
-      <div class="timeline-time">17:30</div>
-      <div class="timeline-label">Einlass<small>Ankommen, Garderobe, erste Getränke</small></div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-time">18:00</div>
-      <div class="timeline-label">Eröffnung<small>Begrüßung und Auftakt des Abends</small></div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-time">18:30</div>
-      <div class="timeline-label">Buffet<small>Gemeinsames Essen</small></div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-time">20:00</div>
-      <div class="timeline-label">Tanz &amp; Programm<small>Musik, Überraschungen, gute Laune</small></div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-time">23:00</div>
-      <div class="timeline-label">Ausklang<small>Gemütlicher Ausklang des Abends</small></div>
-    </div>
+  <div class="timeline" id="timelineList">
+    <!-- wird per JS aus Firestore (settings/schedule) befüllt, siehe Skript unten -->
   </div>
-  <!-- TODO: Uhrzeiten und Programmpunkte nach Bedarf anpassen -->
+  <!-- TODO: Uhrzeiten und Programmpunkte über die Admin-Ansicht pflegen -->
 </section>
 
 <!-- Ort & Dresscode -->
@@ -345,6 +326,32 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  const DEFAULT_SCHEDULE = [
+    { time: '17:30', label: 'Einlass', note: 'Ankommen, Garderobe, erste Getränke' },
+    { time: '18:00', label: 'Eröffnung', note: 'Begrüßung und Auftakt des Abends' },
+    { time: '18:30', label: 'Buffet', note: 'Gemeinsames Essen' },
+    { time: '20:00', label: 'Tanz & Programm', note: 'Musik, Überraschungen, gute Laune' },
+    { time: '23:00', label: 'Ausklang', note: 'Gemütlicher Ausklang des Abends' },
+  ];
+
+  function renderSchedule(items){
+    document.getElementById('timelineList').innerHTML = items.map(it => `
+      <div class="timeline-item">
+        <div class="timeline-time">${escapeHtml(it.time)}</div>
+        <div class="timeline-label">${escapeHtml(it.label)}${it.note ? `<small>${escapeHtml(it.note)}</small>` : ''}</div>
+      </div>`).join('');
+  }
+
+  getDoc(doc(db, 'settings', 'schedule')).then(snap => {
+    const items = (snap.exists() && Array.isArray(snap.data().items) && snap.data().items.length)
+      ? snap.data().items : DEFAULT_SCHEDULE;
+    renderSchedule(items);
+  }).catch(() => renderSchedule(DEFAULT_SCHEDULE));
 
   getDoc(doc(db, 'settings', 'pricing')).then(snap => {
     if (!snap.exists()) return;
