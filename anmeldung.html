@@ -107,6 +107,15 @@
     color:var(--error); border-radius:var(--radius-sm); width:40px; cursor:pointer; font-size:16px; flex-shrink:0;
   }
 
+  .consent-field{display:flex; align-items:flex-start; gap:10px; margin-bottom:18px;}
+  .consent-field input[type="checkbox"]{
+    width:auto; flex-shrink:0; margin-top:3px; accent-color:var(--accent-glow); cursor:pointer;
+  }
+  .consent-field label{
+    margin-bottom:0; font-size:12.5px; line-height:1.6; color:var(--text-dim); cursor:pointer;
+  }
+  .consent-field a{color:var(--accent-glow);}
+
   button[type="submit"]{
     width:100%; margin-top:10px; padding:16px;
     background:linear-gradient(135deg, var(--accent), var(--accent-glow));
@@ -191,6 +200,15 @@
           <button type="button" class="add-companion" id="addCompanionBtn">+ Person hinzufügen</button>
         </div>
         <div id="companionsList"></div>
+      </div>
+
+      <div class="consent-field">
+        <input type="checkbox" id="privacyConsent" required>
+        <label for="privacyConsent">
+          Ich habe die <a href="datenschutz.html" target="_blank">Datenschutzerklärung</a> gelesen und
+          bin mit der Verarbeitung meiner Daten (und ggf. der meiner Begleitpersonen) zur Abwicklung
+          des Ticketkaufs einverstanden.
+        </label>
       </div>
 
       <button type="submit" id="submitBtn">Jetzt anmelden</button>
@@ -391,6 +409,11 @@
       statusEl.textContent = 'Bitte bei jeder Begleitung die Altersgruppe angeben.';
       return;
     }
+    if(!document.getElementById('privacyConsent').checked){
+      statusEl.className = 'status error';
+      statusEl.textContent = 'Bitte bestätige, dass du die Datenschutzerklärung gelesen hast.';
+      return;
+    }
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Wird angemeldet...';
@@ -409,7 +432,8 @@
       // 1) Bestellung anlegen (unbezahlt) — enthält den Besteller + Begleitungen mit Altersgruppe
       const regRef = await addDoc(collection(db, 'registrations'), {
         name, email, category, companions,
-        paid: false, createdAt: serverTimestamp()
+        paid: false, createdAt: serverTimestamp(),
+        privacyConsent: true, privacyConsentAt: serverTimestamp()
       });
 
       // 2) Ein eigenes Ticket pro Person (Besteller + jede Begleitung), alle mit
