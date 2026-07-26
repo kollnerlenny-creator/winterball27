@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Winter Ball 2027 · Impressum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1:#0a0e1a; --bg-2:#131c30; --bg-3:#1c2a45;
+    --glass:rgba(255,255,255,0.07); --glass-border:rgba(255,255,255,0.14);
+    --text:#eef2fb; --text-dim:#9aa7c2;
+    --accent:#dfe9ff; --accent-glow:#8fb4ff;
+    --radius:20px; --radius-sm:12px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse 700px 500px at 50% -10%, rgba(150,180,255,0.14), transparent 60%),
+      linear-gradient(180deg,var(--bg-1),var(--bg-2) 50%,var(--bg-3));
+    color:var(--text);
+    padding:48px 16px 80px;
+  }
+  .wrap{max-width:640px; margin:0 auto;}
+  .card{
+    background:var(--glass); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+    border:1px solid var(--glass-border); border-radius:var(--radius);
+    box-shadow:0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+    padding:36px 30px;
+  }
+  a.back{display:inline-block; color:var(--text-dim); font-size:12px; text-decoration:none; margin-bottom:20px;}
+  h1{font-weight:300; font-size:28px; margin-bottom:4px;}
+  h1 span{display:block; font-size:44px; font-family:'Great Vibes',cursive; font-weight:400; line-height:1.1;
+    background:linear-gradient(180deg,#ffffff,#c9d6f0); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .subtitle{color:var(--text-dim); font-size:13px; letter-spacing:2px; text-transform:uppercase; margin-bottom:28px;}
+  h2{font-size:17px; font-weight:600; margin:24px 0 10px;}
+  h2:first-of-type{margin-top:0;}
+  p{font-size:14.5px; line-height:1.7; color:var(--text-dim);}
+  a{color:var(--accent-glow);}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="card">
+    <a href="index.html" class="back">← Zurück zur Startseite</a>
+    <h1><span>Winter Ball</span></h1>
+    <div class="subtitle">Impressum</div>
+
+    <h2>Kontakt</h2>
+    <p><a href="mailto:kontakt@winterball27.de">kontakt@winterball27.de</a></p>
+
+    <h2>Veranstaltungsort</h2>
+    <p>Gymnasium Wilsdruff<br>30.01.2027 · 17:30 Uhr</p>
+  </div>
+</div>
+
+</body>
+</html>
