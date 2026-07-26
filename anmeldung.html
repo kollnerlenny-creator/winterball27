@@ -258,7 +258,7 @@
 <!-- Firebase -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-  import { getFirestore, collection, addDoc, doc, getDoc, writeBatch, query, where, limit, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, increment, writeBatch, query, where, limit, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDQaRxga3bFrNkyU6E_sQpp5_0G4ApInOg",
@@ -466,6 +466,16 @@
         });
       });
       await batch.commit();
+
+      // Live-Ticketzähler auf der Startseite erhöhen — unkritisch: falls das Dokument
+      // noch nicht existiert (Admin hat das Dashboard noch nie geöffnet) oder der
+      // Schreibvorgang aus anderen Gründen fehlschlägt, soll das die Anmeldung selbst
+      // nicht verhindern.
+      try {
+        await updateDoc(doc(db, 'settings', 'stats'), { ticketCount: increment(allAttendees.length) });
+      } catch (err) {
+        console.warn('Live-Ticketzähler konnte nicht aktualisiert werden:', err);
+      }
 
       // Bestätigungsmail direkt nach der Anmeldung anstoßen (Ticket-Mail folgt erst nach Bezahlung)
       try {
