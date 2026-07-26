@@ -103,6 +103,35 @@
     transition:transform 0.2s ease-out, box-shadow 0.2s ease-out;
   }
   .hero .cta:hover{transform:translateY(-2px); box-shadow:0 12px 36px rgba(143,180,255,0.5);}
+
+  .countdown{
+    margin-top:28px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;
+  }
+  .countdown .unit{
+    background:rgba(255,255,255,0.06); border:1px solid var(--glass-border); border-radius:var(--radius-sm);
+    padding:12px 16px; min-width:64px; text-align:center;
+  }
+  .countdown .unit .num{
+    font-size:24px; font-weight:600; color:var(--text); font-family:'Segoe UI',system-ui,sans-serif; line-height:1.1;
+  }
+  .countdown .unit .lbl{
+    margin-top:2px; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-dim);
+  }
+
+  .live-counter{
+    margin-top:18px; display:inline-flex; align-items:center; gap:8px;
+    color:var(--text-dim); font-size:13px; letter-spacing:0.3px;
+  }
+  .pulse-dot{
+    width:8px; height:8px; border-radius:50%; background:#8fffb0; flex-shrink:0;
+    box-shadow:0 0 0 0 rgba(143,255,176,0.6); animation:pulseDot 2s infinite;
+  }
+  @keyframes pulseDot{
+    0%{ box-shadow:0 0 0 0 rgba(143,255,176,0.55); }
+    70%{ box-shadow:0 0 0 8px rgba(143,255,176,0); }
+    100%{ box-shadow:0 0 0 0 rgba(143,255,176,0); }
+  }
+
   .hero .scroll-hint{
     margin-top:64px; color:var(--text-dim); font-size:12px; letter-spacing:2px; text-transform:uppercase;
     display:flex; flex-direction:column; align-items:center; gap:8px;
@@ -228,6 +257,10 @@
   <h1>Winter Ball</h1>
   <div class="subtitle">Klassenstufe 12</div>
   <div class="date">30. Januar 2027 · 17:30 Uhr</div>
+  <div class="countdown" id="countdown"></div>
+  <div class="live-counter" id="liveCounter" style="display:none;">
+    <span class="pulse-dot"></span><span id="liveCounterText"></span>
+  </div>
   <a href="anmeldung.html" class="cta">Jetzt anmelden</a>
   <div class="scroll-hint">Mehr erfahren<div class="arrow"></div></div>
 </section>
@@ -332,7 +365,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDQaRxga3bFrNkyU6E_sQpp5_0G4ApInOg",
@@ -345,6 +378,36 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+
+  // --- Countdown bis zum Ball ---
+  const EVENT_DATE = new Date('2027-01-30T17:30:00+01:00');
+  function updateCountdown(){
+    const el = document.getElementById('countdown');
+    const diff = EVENT_DATE.getTime() - Date.now();
+    if (diff <= 0) { el.style.display = 'none'; return; }
+
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 60000);
+
+    el.innerHTML = `
+      <div class="unit"><div class="num">${days}</div><div class="lbl">Tage</div></div>
+      <div class="unit"><div class="num">${hours}</div><div class="lbl">Std</div></div>
+      <div class="unit"><div class="num">${minutes}</div><div class="lbl">Min</div></div>
+    `;
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 30000);
+
+  // --- Live-Ticketzähler ---
+  onSnapshot(doc(db, 'settings', 'stats'), (snap) => {
+    const count = snap.exists() ? Number(snap.data().ticketCount || 0) : 0;
+    const wrap = document.getElementById('liveCounter');
+    if (count <= 0) { wrap.style.display = 'none'; return; }
+    document.getElementById('liveCounterText').textContent =
+      count === 1 ? 'Schon 1 Person dabei!' : `Schon ${count} Leute dabei!`;
+    wrap.style.display = 'inline-flex';
+  });
 
   function escapeHtml(str){
     return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
