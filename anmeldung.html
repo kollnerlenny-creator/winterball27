@@ -69,7 +69,7 @@
     text-align:center; font-weight:300; letter-spacing:0.5px;
     font-size:32px; margin-bottom:2px;
   }
-  h1 span{display:block; font-size:clamp(48px,14vw,110px); font-family:'Great Vibes',cursive; font-weight:400; line-height:1.6; padding:10px 0;
+  h1 span{display:block; font-size:clamp(34px,8vw,64px); font-family:'Great Vibes',cursive; font-weight:400; line-height:1.6; padding:10px 0;
     background:linear-gradient(115deg, #ffffff 0%, #c9d6f0 22%, #ffffff 42%, #eef4ff 58%, #c9d6f0 78%, #ffffff 100%);
     background-size:250% auto;
     -webkit-background-clip:text; background-clip:text; color:transparent;
@@ -98,6 +98,33 @@
   input::placeholder{color:rgba(255,255,255,0.3);}
   input:focus, select:focus{border-color:var(--accent-glow); background:rgba(255,255,255,0.08);}
   select option{background:#131c30; color:var(--text);}
+
+  /* Custom-Dropdown statt nativer Browser-Auswahlliste */
+  .cs-wrap{position:relative;}
+  .cs-wrap select{
+    position:absolute; opacity:0; pointer-events:none; width:1px; height:1px; padding:0; border:none;
+  }
+  .cs-trigger{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    padding:14px 16px; font-size:15px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border);
+    border-radius:var(--radius-sm); color:var(--text); cursor:pointer; user-select:none;
+    transition:border-color 0.2s, background 0.2s;
+  }
+  .cs-trigger.placeholder{color:rgba(255,255,255,0.3);}
+  .cs-wrap.open .cs-trigger{border-color:var(--accent-glow); background:rgba(255,255,255,0.08);}
+  .cs-arrow{width:8px; height:8px; border-right:2px solid var(--text-dim); border-bottom:2px solid var(--text-dim);
+    transform:rotate(45deg); transition:transform 0.2s; flex-shrink:0; margin-top:-3px;}
+  .cs-wrap.open .cs-arrow{transform:rotate(-135deg); margin-top:3px;}
+  .cs-panel{
+    position:absolute; left:0; right:0; top:calc(100% + 6px); z-index:80;
+    background:rgba(19,28,48,0.98); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    border:1px solid var(--glass-border); border-radius:var(--radius-sm); overflow:hidden;
+    box-shadow:0 16px 40px rgba(0,0,0,0.5); max-height:220px; overflow-y:auto;
+    display:none; opacity:0; transform:translateY(-4px); transition:opacity 0.15s, transform 0.15s;
+  }
+  .cs-wrap.open .cs-panel{display:block; opacity:1; transform:translateY(0);}
+  .cs-option{padding:11px 16px; font-size:14px; color:var(--text); cursor:pointer;}
+  .cs-option:hover, .cs-option.active{background:rgba(143,180,255,0.15);}
 
   .companions-label{
     display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;
@@ -199,7 +226,7 @@
       </div>
       <div class="field">
         <label for="category">Deine Altersgruppe</label>
-        <select id="category" required>
+        <select id="category">
           <option value="">Bitte wählen</option>
           <option value="u18">Unter 18</option>
           <option value="ue18">18 oder älter</option>
@@ -275,6 +302,77 @@
   // Muss dieselbe URL sein wie in admin.html
   const WORKER_URL = "https://winterball-worker.kollnerlenny.workers.dev";
 
+  // --- Custom-Dropdown: ersetzt <select> visuell durch das Winterball-Design,
+  // das native <select> bleibt (unsichtbar) bestehen, damit der Rest des Codes
+  // ganz normal .value lesen/schreiben und auf 'change' hören kann. ---
+  function enhanceSelect(select){
+    if (!select || select.dataset.csEnhanced) return;
+    select.dataset.csEnhanced = '1';
+
+    const wrap = document.createElement('div');
+    wrap.className = 'cs-wrap';
+    select.parentNode.insertBefore(wrap, select);
+    wrap.appendChild(select);
+
+    const trigger = document.createElement('div');
+    trigger.className = 'cs-trigger';
+    trigger.tabIndex = 0;
+    trigger.innerHTML = '<span class="cs-label"></span><span class="cs-arrow"></span>';
+    const label = trigger.querySelector('.cs-label');
+
+    const panel = document.createElement('div');
+    panel.className = 'cs-panel';
+
+    function renderOptions(){
+      panel.innerHTML = '';
+      Array.from(select.options).forEach(opt => {
+        const o = document.createElement('div');
+        o.className = 'cs-option' + (opt.value === select.value ? ' active' : '');
+        o.textContent = opt.textContent;
+        o.addEventListener('click', () => {
+          select.value = opt.value;
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+          syncLabel();
+          close();
+        });
+        panel.appendChild(o);
+      });
+    }
+    function syncLabel(){
+      const opt = select.options[select.selectedIndex];
+      label.textContent = opt ? opt.textContent : '';
+      trigger.classList.toggle('placeholder', !select.value);
+    }
+    function open(){ wrap.classList.add('open'); renderOptions(); document.addEventListener('click', onDocClick); }
+    function close(){ wrap.classList.remove('open'); document.removeEventListener('click', onDocClick); }
+    function onDocClick(e){ if (!wrap.contains(e.target)) close(); }
+
+    trigger.addEventListener('click', () => { wrap.classList.contains('open') ? close() : open(); });
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); wrap.classList.contains('open') ? close() : open(); }
+      if (e.key === 'Escape') close();
+    });
+
+    wrap.appendChild(trigger);
+    wrap.appendChild(panel);
+    syncLabel();
+
+    // Falls ein <label for="..."> auf dieses Select zeigt, dessen Klick auf
+    // unseren Custom-Trigger umleiten statt auf das (jetzt unsichtbare) native Select.
+    if (select.id) {
+      const boundLabel = document.querySelector(`label[for="${select.id}"]`);
+      if (boundLabel) {
+        boundLabel.removeAttribute('for');
+        boundLabel.style.cursor = 'pointer';
+        boundLabel.addEventListener('click', () => trigger.click());
+      }
+    }
+  }
+  function enhanceAllSelects(root = document){
+    root.querySelectorAll('select').forEach(enhanceSelect);
+  }
+  enhanceAllSelects();
+
   // Wichtige Infos anzeigen, falls im Admin-Dashboard hinterlegt
   getDoc(doc(db, 'settings', 'info')).then(snap => {
     const text = snap.exists() ? (snap.data().text || '').trim() : '';
@@ -348,6 +446,7 @@
     `;
     row.querySelector('.remove-companion').addEventListener('click', () => row.remove());
     companionsList.appendChild(row);
+    enhanceSelect(row.querySelector('.companion-category'));
   }
 
   const form = document.getElementById('regForm');
