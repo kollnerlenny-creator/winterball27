@@ -75,18 +75,13 @@
     -webkit-background-clip:text; background-clip:text; color:transparent;
     text-shadow:0 0 70px rgba(200,220,255,0.6), 0 0 24px rgba(255,255,255,0.45);
     max-width:100%; padding:14px 20px; overflow-wrap:break-word; box-sizing:border-box;
-    clip-path:inset(0 100% 0 0);
-    animation:writeIn 1.8s cubic-bezier(0.65,0,0.35,1) 0.4s forwards,
-              shimmer 5s linear 2.3s infinite;
-  }
-  @keyframes writeIn{
-    to{ clip-path:inset(0 -10% 0 -10%); }
+    animation:shimmer 5s linear 0.5s infinite;
   }
   @keyframes shimmer{
     to{ background-position:-250% center; }
   }
   @media (prefers-reduced-motion:reduce){
-    .hero h1{ animation:none; clip-path:none; }
+    .hero h1{ animation:none; }
   }
   .hero .subtitle{
     margin-top:6px; color:var(--text-dim); font-size:15px; letter-spacing:3px; text-transform:uppercase;
@@ -235,10 +230,29 @@
   .reveal-group .reveal-item{opacity:0; transform:translateY(24px); transition:opacity 0.6s ease-out, transform 0.6s ease-out;}
   .reveal-group.is-visible .reveal-item{opacity:1; transform:translateY(0);}
 
+  /* Zeitstrahl-Punkte werden per Firestore nachgeladen (Timing unbekannt) —
+     Stagger daher über nth-child statt per JS-Delay, damit es unabhängig vom
+     Ladezeitpunkt zuverlässig funktioniert. */
+  .reveal-group .timeline-item{transition-delay:0ms;}
+  .reveal-group .timeline-item:nth-child(2){transition-delay:80ms;}
+  .reveal-group .timeline-item:nth-child(3){transition-delay:160ms;}
+  .reveal-group .timeline-item:nth-child(4){transition-delay:240ms;}
+  .reveal-group .timeline-item:nth-child(5){transition-delay:320ms;}
+  .reveal-group .timeline-item:nth-child(6){transition-delay:400ms;}
+
+  /* Scroll-Fortschrittsleiste */
+  .scroll-progress{
+    position:fixed; top:0; left:0; height:3px; width:100%;
+    background:linear-gradient(90deg, var(--accent-glow), #dfe9ff);
+    transform:scaleX(0); transform-origin:left; z-index:200;
+    box-shadow:0 0 12px rgba(143,180,255,0.6);
+  }
+
   @media (prefers-reduced-motion: reduce){
-    .reveal, .reveal-item{opacity:1 !important; transform:none !important; transition:none !important;}
+    .reveal, .reveal-item, .timeline-item{opacity:1 !important; transform:none !important; transition:none !important;}
     html{scroll-behavior:auto;}
     .scroll-hint .arrow{animation:none;}
+    .moon{transform:none !important;}
   }
 
   @media (max-width:600px){
@@ -249,11 +263,12 @@
 </head>
 <body>
 
+<div class="scroll-progress" id="scrollProgress"></div>
 <canvas id="snowCanvas"></canvas>
 
 <!-- Hero -->
 <section class="hero">
-  <div class="moon"></div>
+  <div class="moon" data-parallax-speed="0.15"></div>
   <h1>Winter Ball</h1>
   <div class="subtitle">Klassenstufe 12</div>
   <div class="date">30. Januar 2027 · 17:30 Uhr</div>
@@ -269,7 +284,7 @@
 <section class="reveal">
   <div class="eyebrow">Der Abend</div>
   <div class="section-title">Ablauf</div>
-  <div class="timeline" id="timelineList">
+  <div class="timeline reveal-group" id="timelineList">
     <!-- wird per JS aus Firestore (settings/schedule) befüllt, siehe Skript unten -->
   </div>
   <!-- TODO: Uhrzeiten und Programmpunkte über die Admin-Ansicht pflegen -->
@@ -280,7 +295,7 @@
   <div class="eyebrow">Gut zu wissen</div>
   <div class="section-title">Details</div>
 
-  <div class="map-card reveal-item" style="margin-bottom:20px;">
+  <div class="map-card reveal" style="margin-bottom:20px;">
     <div class="map-card-info">
       <div class="icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
@@ -321,12 +336,12 @@
 <section class="reveal">
   <div class="eyebrow">Tickets</div>
   <div class="section-title">Preise</div>
-  <div class="price-grid">
-    <div class="price-card">
+  <div class="price-grid reveal-group">
+    <div class="price-card reveal-item">
       <div class="label">Unter 18</div>
       <div class="amount" id="priceU18">–<span> €</span></div>
     </div>
-    <div class="price-card">
+    <div class="price-card reveal-item">
       <div class="label">18 oder älter</div>
       <div class="amount" id="priceUe18">–<span> €</span></div>
     </div>
@@ -337,16 +352,16 @@
 <section class="reveal">
   <div class="eyebrow">Anmeldung</div>
   <div class="section-title">So läuft's ab</div>
-  <div class="steps">
-    <div class="step">
+  <div class="steps reveal-group">
+    <div class="step reveal-item">
       <div class="step-num">1</div>
       <div class="step-text"><h4>Online anmelden</h4><p>Name, E-Mail und ggf. Begleitpersonen eintragen — dauert nur eine Minute.</p></div>
     </div>
-    <div class="step">
+    <div class="step reveal-item">
       <div class="step-num">2</div>
       <div class="step-text"><h4>Bar bezahlen</h4><p>Im Vorverkauf in der Schule dein Ticket bar bezahlen.</p></div>
     </div>
-    <div class="step">
+    <div class="step reveal-item">
       <div class="step-num">3</div>
       <div class="step-text"><h4>Ticket per Mail</h4><p>Direkt nach der Zahlung bekommst du dein Ticket mit QR-Code zugeschickt.</p></div>
     </div>
@@ -423,7 +438,7 @@
 
   function renderSchedule(items){
     document.getElementById('timelineList').innerHTML = items.map(it => `
-      <div class="timeline-item">
+      <div class="timeline-item reveal-item">
         <div class="timeline-time">${escapeHtml(it.time)}</div>
         <div class="timeline-label">${escapeHtml(it.label)}${it.note ? `<small>${escapeHtml(it.note)}</small>` : ''}</div>
       </div>`).join('');
@@ -458,9 +473,43 @@
 
   document.querySelectorAll('.reveal-group').forEach(group => {
     group.querySelectorAll('.reveal-item').forEach((el, i) => {
-      el.style.transitionDelay = `${i * 100}ms`;
+      if (!el.classList.contains('timeline-item')) {
+        el.style.transitionDelay = `${i * 100}ms`;
+      }
     });
   });
+
+  // Scroll-Fortschrittsleiste oben auf der Seite
+  const progressBar = document.getElementById('scrollProgress');
+  function updateProgress(){
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? window.scrollY / docHeight : 0;
+    progressBar.style.transform = `scaleX(${progress})`;
+  }
+
+  // Dezenter Parallax-Effekt (z.B. der Mond) — respektiert prefers-reduced-motion
+  const parallaxEls = document.querySelectorAll('[data-parallax-speed]');
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function updateParallax(){
+    const scrollY = window.scrollY;
+    parallaxEls.forEach(el => {
+      const speed = parseFloat(el.dataset.parallaxSpeed) || 0.2;
+      el.style.transform = `translateY(${scrollY * speed}px)`;
+    });
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        updateProgress();
+        if (!prefersReducedMotion) updateParallax();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+  updateProgress();
 </script>
 
 <!-- Animierter Schneefall im Hintergrund -->
