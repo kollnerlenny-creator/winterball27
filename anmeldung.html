@@ -143,6 +143,10 @@
   }
 
   .consent-field{display:flex; align-items:flex-start; gap:10px; margin-bottom:18px;}
+  .cancel-notice{
+    background:rgba(255,210,127,0.1); border:1px solid rgba(255,210,127,0.25); border-radius:var(--radius-sm);
+    padding:12px 14px; font-size:12px; line-height:1.6; color:var(--text-dim); margin-bottom:18px;
+  }
   .consent-field input[type="checkbox"]{
     /* Die globale input{appearance:none} weiter oben würde das Häkchen unsichtbar machen —
        hier gezielt zurücksetzen, damit der native Haken wieder gerendert wird. */
@@ -248,6 +252,13 @@
           bin mit der Verarbeitung meiner Daten (und ggf. der meiner Begleitpersonen) zur Abwicklung
           des Ticketkaufs einverstanden.
         </label>
+      </div>
+
+      <div class="cancel-notice">
+        ℹ️ Die Online-Anmeldung selbst ist noch unverbindlich und kostet nichts. Verbindlich wird
+        dein Ticket erst mit der Barzahlung an der Vorverkaufskasse in der Schule — ab dann kann
+        es nicht mehr storniert oder erstattet werden (Ticket-Verkäufe für Veranstaltungen mit
+        festem Termin sind laut § 312g Abs. 2 Nr. 9 BGB vom gesetzlichen Widerrufsrecht ausgenommen).
       </div>
 
       <button type="submit" id="submitBtn">Jetzt anmelden</button>
