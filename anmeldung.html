@@ -176,7 +176,8 @@
   .status.error{display:block; background:rgba(255,128,128,0.12); color:var(--error); border:1px solid rgba(255,128,128,0.3);}
   .success-view{display:none; text-align:center;}
   .success-view.active{display:block;}
-  .form-view.hidden{display:none;}
+  .form-view{display:none;}
+  .form-view.show{display:block;}
   .success-icon{
     width:56px; height:56px; margin:0 auto 16px; border-radius:50%;
     background:rgba(127,224,168,0.15); border:1px solid rgba(127,224,168,0.4);
@@ -394,7 +395,10 @@
     }
   }).catch(() => {});
 
-  // Anmeldebeginn prüfen — falls noch nicht offen, Countdown zeigen statt Formular
+  // Anmeldebeginn prüfen — falls noch nicht offen, Countdown zeigen statt Formular.
+  // Das Formular startet ausgeblendet (siehe CSS .form-view{display:none}) und wird
+  // erst gezeigt, wenn wir wirklich wissen, dass die Anmeldung offen ist — sonst
+  // blitzt es kurz auf, bevor der Countdown greift.
   let registrationLocked = false;
   getDoc(doc(db, 'settings', 'opensAt')).then(snap => {
     const iso = snap.exists() ? snap.data().timestamp : null;
@@ -402,7 +406,6 @@
 
     if (opensAtMs && opensAtMs > Date.now()) {
       registrationLocked = true;
-      document.getElementById('formView').classList.add('hidden');
       document.getElementById('countdownView').classList.add('active');
 
       function tick(){
@@ -429,15 +432,22 @@
     }
   }).catch(() => { checkDeadline(); });
 
-  // Anmeldeschluss prüfen — Formular sperren, falls abgelaufen
+  // Anmeldeschluss prüfen — Formular sperren, falls abgelaufen. Ist die Anmeldung
+  // weder gesperrt noch abgelaufen (oder konnte der Deadline-Wert nicht geladen
+  // werden), wird das Formular jetzt erst final eingeblendet.
   function checkDeadline(){
     getDoc(doc(db, 'settings', 'deadline')).then(snap => {
       const iso = snap.exists() ? snap.data().timestamp : null;
       if (iso && new Date(iso).getTime() < Date.now()) {
-        document.getElementById('formView').classList.add('hidden');
         document.getElementById('closedView').classList.add('active');
+      } else {
+        document.getElementById('formView').classList.add('show');
       }
-    }).catch(() => {});
+    }).catch(() => {
+      // Deadline konnte nicht geladen werden — im Zweifel lieber das Formular
+      // zeigen (fail open), statt echte Gäste ohne Grund auszusperren.
+      document.getElementById('formView').classList.add('show');
+    });
   }
 
   const companionsList = document.getElementById('companionsList');
@@ -603,7 +613,7 @@
         console.error('Bestätigungsmail fehlgeschlagen:', mailErr);
       }
 
-      document.getElementById('formView').classList.add('hidden');
+      document.getElementById('formView').classList.remove('show');
       document.getElementById('successView').classList.add('active');
 
     } catch(err){
