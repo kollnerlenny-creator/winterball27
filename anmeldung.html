@@ -130,10 +130,22 @@
     display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;
   }
   .companions-label label{margin-bottom:0;}
-  .add-companion{
-    background:none; border:none; color:var(--accent-glow); font-size:12px;
-    cursor:pointer; padding:4px 0;
+  .companion-toggle{display:flex; gap:10px; margin-top:6px;}
+  .companion-toggle-btn{
+    flex:1; padding:14px; border-radius:var(--radius-sm); border:1px solid var(--glass-border);
+    background:rgba(255,255,255,0.04); color:var(--text); font-size:15px; font-weight:600; cursor:pointer;
+    transition:background 0.2s, border-color 0.2s, color 0.2s;
   }
+  .companion-toggle-btn.active{
+    background:rgba(143,180,255,0.16); border-color:var(--accent-glow); color:var(--accent-glow);
+  }
+  .add-companion{
+    display:block; width:100%; margin-top:10px; padding:13px;
+    border-radius:var(--radius-sm); border:1px dashed rgba(143,180,255,0.4);
+    background:rgba(143,180,255,0.06); color:var(--accent-glow);
+    font-size:14.5px; font-weight:600; cursor:pointer;
+  }
+  .add-companion:hover{background:rgba(143,180,255,0.12);}
   .companion-row{display:flex; gap:8px; margin-bottom:8px;}
   .companion-row input{flex:2;}
   .companion-row select{flex:1; padding:14px 8px; font-size:13px;}
@@ -255,11 +267,15 @@
       </div>
 
       <div class="field">
-        <div class="companions-label">
-          <label>Begleitpersonen (optional)</label>
-          <button type="button" class="add-companion" id="addCompanionBtn">+ Person hinzufügen</button>
+        <label>Bringst du eine Begleitung mit?</label>
+        <div class="companion-toggle">
+          <button type="button" class="companion-toggle-btn" id="companionYesBtn">Ja</button>
+          <button type="button" class="companion-toggle-btn active" id="companionNoBtn">Nein</button>
         </div>
-        <div id="companionsList"></div>
+        <div id="companionsSection" style="display:none; margin-top:14px;">
+          <div id="companionsList"></div>
+          <button type="button" class="add-companion" id="addCompanionBtn">+ Weitere Begleitung hinzufügen</button>
+        </div>
       </div>
 
       <div class="consent-field">
@@ -470,6 +486,23 @@
   }
 
   const companionsList = document.getElementById('companionsList');
+  const companionsSection = document.getElementById('companionsSection');
+  const companionYesBtn = document.getElementById('companionYesBtn');
+  const companionNoBtn = document.getElementById('companionNoBtn');
+
+  companionYesBtn.addEventListener('click', () => {
+    companionYesBtn.classList.add('active');
+    companionNoBtn.classList.remove('active');
+    companionsSection.style.display = 'block';
+    if (companionsList.children.length === 0) addCompanionRow();
+  });
+  companionNoBtn.addEventListener('click', () => {
+    companionNoBtn.classList.add('active');
+    companionYesBtn.classList.remove('active');
+    companionsSection.style.display = 'none';
+    companionsList.innerHTML = ''; // vorhandene Begleitungen verwerfen, wenn auf "Nein" gewechselt wird
+  });
+
   document.getElementById('addCompanionBtn').addEventListener('click', () => addCompanionRow());
 
   function addCompanionRow(){
