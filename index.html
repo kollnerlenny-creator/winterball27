@@ -322,6 +322,17 @@
     section{padding:64px 20px;}
     .timeline-item{grid-template-columns:70px 1fr; gap:14px;}
   }
+
+  /* backdrop-filter über einem ständig animierten Hintergrund (Schneefall) ist auf
+     schwächeren/mobilen GPUs sehr teuer, weil jeder Frame neu weichgezeichnet werden
+     muss — das war die Hauptursache fürs Ruckeln. Auf Touch-Geräten daher einfach
+     einen etwas deckenderen, festen Hintergrund statt der teuren Blur-Berechnung. */
+  @media (pointer:coarse){
+    .info-card, .map-card, .price-card{
+      backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+      background:rgba(19,28,48,0.82) !important;
+    }
+  }
 </style>
 </head>
 <body>
@@ -627,7 +638,7 @@
     resize();
 
     function initFlakes(){
-      const count = Math.min(36, Math.floor(window.innerWidth / 32));
+      const count = Math.min(24, Math.floor(window.innerWidth / 40));
       flakes = Array.from({length: count}, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -641,22 +652,34 @@
     initFlakes();
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let paused = document.hidden;
+    document.addEventListener('visibilitychange', () => { paused = document.hidden; });
+
+    // Nur jeden zweiten Frame neu zeichnen (~30fps statt 60fps) — beim langsamen,
+    // sanften Schneefall optisch kaum ein Unterschied, aber halbiert die Kosten
+    // für's Neuzeichnen (was wegen der blur-Karten darüber sonst spürbar ruckelt).
+    let frameSkip = false;
 
     function animate(){
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for(const flake of flakes){
-        if(!reduceMotion){
-          flake.drift += 0.01;
-          flake.y += flake.speedY;
-          flake.x += flake.speedX + Math.sin(flake.drift) * 0.3;
-          if(flake.y > canvas.height){ flake.y = -5; flake.x = Math.random() * canvas.width; }
-          if(flake.x > canvas.width) flake.x = 0;
-          if(flake.x < 0) flake.x = canvas.width;
+      if (!paused) {
+        frameSkip = !frameSkip;
+        if (frameSkip) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          for(const flake of flakes){
+            if(!reduceMotion){
+              flake.drift += 0.02;
+              flake.y += flake.speedY * 2;
+              flake.x += (flake.speedX + Math.sin(flake.drift) * 0.3) * 2;
+              if(flake.y > canvas.height){ flake.y = -5; flake.x = Math.random() * canvas.width; }
+              if(flake.x > canvas.width) flake.x = 0;
+              if(flake.x < 0) flake.x = canvas.width;
+            }
+            ctx.beginPath();
+            ctx.arc(flake.x, flake.y, flake.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255,255,255,${flake.opacity})`;
+            ctx.fill();
+          }
         }
-        ctx.beginPath();
-        ctx.arc(flake.x, flake.y, flake.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${flake.opacity})`;
-        ctx.fill();
       }
       if(!reduceMotion) requestAnimationFrame(animate);
     }
