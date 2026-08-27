@@ -313,6 +313,12 @@
     <p>Die Anmeldung für den Winter Ball ist leider bereits geschlossen.</p>
   </div>
 
+  <div class="success-view" id="soldOutView">
+    <div class="success-icon" style="background:rgba(255,128,128,0.15); border-color:rgba(255,128,128,0.4);">🎟️</div>
+    <h2>Ausgebucht</h2>
+    <p>Die maximale Teilnehmerzahl für den Winter Ball ist bereits erreicht. Es sind leider keine weiteren Anmeldungen mehr möglich.</p>
+  </div>
+
   <div class="success-view" id="countdownView">
     <div class="success-icon" style="background:rgba(143,180,255,0.15); border-color:rgba(143,180,255,0.4);">🌙</div>
     <h2>Die Anmeldung startet bald</h2>
@@ -472,16 +478,44 @@
   // werden), wird das Formular jetzt erst final eingeblendet.
   function checkDeadline(){
     getDoc(doc(db, 'settings', 'deadline')).then(snap => {
-      document.getElementById('loadingView').classList.add('hide');
       const iso = snap.exists() ? snap.data().timestamp : null;
       if (iso && new Date(iso).getTime() < Date.now()) {
+        document.getElementById('loadingView').classList.add('hide');
         document.getElementById('closedView').classList.add('active');
       } else {
-        document.getElementById('formView').classList.add('show');
+        checkCapacity();
       }
     }).catch(() => {
-      // Deadline konnte nicht geladen werden — im Zweifel lieber das Formular
-      // zeigen (fail open), statt echte Gäste ohne Grund auszusperren.
+      // Deadline konnte nicht geladen werden — im Zweifel weiterprüfen (fail open),
+      // statt echte Gäste ohne Grund auszusperren.
+      checkCapacity();
+    });
+  }
+
+  // Maximale Teilnehmerzahl prüfen — ist sie erreicht, wird statt des Formulars
+  // die "Ausgebucht"-Ansicht gezeigt. Ohne gesetztes Limit (oder falls die Werte
+  // nicht geladen werden können) wird ganz normal weitergemacht (fail open).
+  function checkCapacity(){
+    getDoc(doc(db, 'settings', 'capacity')).then(capSnap => {
+      const maxTickets = capSnap.exists() ? capSnap.data().maxTickets : null;
+      if (!maxTickets) {
+        document.getElementById('loadingView').classList.add('hide');
+        document.getElementById('formView').classList.add('show');
+        return;
+      }
+      getDoc(doc(db, 'settings', 'stats')).then(statsSnap => {
+        const currentCount = statsSnap.exists() ? Number(statsSnap.data().ticketCount || 0) : 0;
+        document.getElementById('loadingView').classList.add('hide');
+        if (currentCount >= maxTickets) {
+          document.getElementById('soldOutView').classList.add('active');
+        } else {
+          document.getElementById('formView').classList.add('show');
+        }
+      }).catch(() => {
+        document.getElementById('loadingView').classList.add('hide');
+        document.getElementById('formView').classList.add('show');
+      });
+    }).catch(() => {
       document.getElementById('loadingView').classList.add('hide');
       document.getElementById('formView').classList.add('show');
     });
@@ -613,6 +647,26 @@
         submitBtn.disabled = false;
         submitBtn.textContent = 'Jetzt anmelden';
         return;
+      }
+
+      // Kapazität frisch prüfen (der Stand beim Laden der Seite könnte inzwischen
+      // überholt sein, falls sich die Liste in der Zwischenzeit gefüllt hat)
+      const capSnap = await getDoc(doc(db, 'settings', 'capacity'));
+      const maxTickets = capSnap.exists() ? capSnap.data().maxTickets : null;
+      if (maxTickets) {
+        const statsSnap = await getDoc(doc(db, 'settings', 'stats'));
+        const currentCount = statsSnap.exists() ? Number(statsSnap.data().ticketCount || 0) : 0;
+        const wantedCount = 1 + companions.length;
+        if (currentCount + wantedCount > maxTickets) {
+          const free = Math.max(0, maxTickets - currentCount);
+          statusEl.className = 'status error';
+          statusEl.textContent = free > 0
+            ? `Leider nicht mehr genug freie Plätze (nur noch ${free} übrig).`
+            : 'Die maximale Teilnehmerzahl ist leider bereits erreicht.';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Jetzt anmelden';
+          return;
+        }
       }
 
       // 1) Bestellung anlegen (unbezahlt) — enthält den Besteller + Begleitungen mit Altersgruppe
