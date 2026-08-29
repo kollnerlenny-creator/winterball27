@@ -115,6 +115,7 @@
       radial-gradient(1px 1px at 10% 65%, #fff, transparent);
     opacity:0.4;
   }
+  .moon-wrap{display:inline-block;}
   .moon{
     width:108px; height:108px; margin-bottom:20px; border-radius:50%;
     background:
@@ -315,7 +316,7 @@
     .reveal, .reveal-item, .timeline-item{opacity:1 !important; transform:none !important; transition:none !important;}
     html{scroll-behavior:auto;}
     .scroll-hint .arrow{animation:none;}
-    .moon{transform:none !important;}
+    .moon-wrap{transform:none !important;}
   }
 
   @media (max-width:600px){
@@ -378,7 +379,7 @@
 
 <!-- Hero -->
 <section class="hero">
-  <div class="moon" data-parallax-speed="0.15"></div>
+  <div class="moon-wrap" data-parallax-speed="0.15"><div class="moon"></div></div>
   <h1>Winter Ball</h1>
   <div class="subtitle">Klassenstufe 12</div>
   <div class="date">30. Januar 2027 · 17:30 Uhr</div>
@@ -437,7 +438,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 6.5 8 6 8-6"/></svg>
       </div>
       <h3>Fragen?</h3>
-      <p>Schreib uns jederzeit an <a href="mailto:kontakt@winterball27.de">kontakt@winterball27.de</a></p>
+      <p>Schreib uns jederzeit an <a href="mailto:info@winterball27.de">info@winterball27.de</a></p>
     </div>
   </div>
 </section>
@@ -485,7 +486,7 @@
 </section>
 
 <footer>
-  Winter Ball 2027 · Klassenstufe 12 · <a href="mailto:kontakt@winterball27.de">kontakt@winterball27.de</a> · <a href="datenschutz.html">Datenschutz</a> · <a href="impressum.html">Impressum</a>
+  Winter Ball 2027 · Klassenstufe 12 · <a href="mailto:info@winterball27.de">info@winterball27.de</a> · <a href="datenschutz.html">Datenschutz</a> · <a href="impressum.html">Impressum</a>
   <div style="margin-top:8px; opacity:0.6;">© 2026–2027 Winter Ball · Klassenstufe 12, Gymnasium Wilsdruff · Website von Lenny Köllner. Alle Rechte vorbehalten.</div>
 </footer>
 
