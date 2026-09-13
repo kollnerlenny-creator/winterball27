@@ -293,6 +293,33 @@
     font-family:'Segoe UI',system-ui,sans-serif; font-weight:600; font-size:15px; color:var(--accent-glow);
   }
   .step-text h4{font-family:'Segoe UI',system-ui,sans-serif; font-size:16px; font-weight:600; margin-bottom:4px;}
+
+  /* Bewertung */
+  .rating-card{
+    max-width:420px; margin:0 auto; background:var(--glass); border:1px solid var(--glass-border);
+    border-radius:var(--radius); padding:32px 26px; text-align:center; backdrop-filter:blur(16px);
+    font-family:'Segoe UI',system-ui,sans-serif;
+  }
+  .stars{display:flex; justify-content:center; gap:6px; margin-bottom:18px;}
+  .star{
+    background:none; border:none; font-size:34px; line-height:1; cursor:pointer; padding:2px;
+    color:rgba(255,255,255,0.2); transition:color 0.15s, transform 0.15s;
+  }
+  .star:hover, .star.hover{transform:scale(1.12);}
+  .star.filled, .star.hover{color:#ffd27f;}
+  .rating-card textarea{
+    width:100%; min-height:70px; padding:12px 14px; margin-bottom:14px; resize:vertical;
+    background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm);
+    color:var(--text); font-size:13.5px; font-family:inherit;
+  }
+  .rating-card textarea::placeholder{color:var(--text-dim);}
+  .rating-thanks{
+    display:none; margin-top:14px; color:var(--success, #7fe0a8); font-size:14px; font-weight:600;
+  }
+  .rating-thanks.show{display:block;}
+  .rating-card.submitted .stars, .rating-card.submitted textarea, .rating-card.submitted #ratingSubmitBtn{
+    opacity:0.4; pointer-events:none;
+  }
   .step-text p{color:var(--text-dim); font-size:14.5px; font-family:'Segoe UI',system-ui,sans-serif; line-height:1.6;}
 
   /* Kontakt / Footer CTA */
@@ -331,6 +358,44 @@
     background:linear-gradient(90deg, var(--accent-glow), #dfe9ff);
     transform:scaleX(0); transform-origin:left; z-index:200;
     box-shadow:0 0 12px rgba(143,180,255,0.6);
+  }
+
+  /* Liquid-Glass-Navigation */
+  .glass-nav{
+    position:fixed; top:16px; left:50%; transform:translate(-50%, -140%);
+    z-index:190; display:flex; align-items:center; gap:4px;
+    padding:8px; border-radius:100px;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.18);
+    box-shadow:0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.1);
+    backdrop-filter:blur(20px) saturate(160%); -webkit-backdrop-filter:blur(20px) saturate(160%);
+    transition:transform 0.5s cubic-bezier(0.22,1,0.36,1), top 0.3s ease-out, padding 0.3s ease-out;
+    font-family:'Segoe UI',system-ui,sans-serif;
+  }
+  .glass-nav.show{transform:translate(-50%, 0);}
+  .glass-nav.compact{top:10px; padding:6px;}
+  .glass-nav a{
+    position:relative; display:inline-block; padding:9px 16px; border-radius:100px;
+    color:var(--text-dim); font-size:13px; font-weight:600; text-decoration:none; white-space:nowrap;
+    transition:color 0.2s, background 0.2s;
+  }
+  .glass-nav a:hover{color:var(--text);}
+  .glass-nav a.active{color:#0a0e1a; background:linear-gradient(135deg, var(--accent), var(--accent-glow));}
+  .glass-nav a.glass-nav-cta{
+    margin-left:4px; color:#0a0e1a; background:linear-gradient(135deg, var(--accent), var(--accent-glow));
+    box-shadow:0 4px 16px rgba(143,180,255,0.35);
+  }
+  @media (max-width:720px){
+    .glass-nav{
+      max-width:92vw; overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none;
+      justify-content:flex-start;
+    }
+    .glass-nav::-webkit-scrollbar{display:none;}
+    .glass-nav a{padding:8px 13px; font-size:12.5px;}
+    .glass-nav a.glass-nav-cta{flex-shrink:0;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .glass-nav{transition:none;}
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -398,6 +463,14 @@
 <div class="scroll-progress" id="scrollProgress"></div>
 <canvas id="snowCanvas"></canvas>
 
+<nav class="glass-nav" id="glassNav">
+  <a href="#ablaufSection" data-nav-target="ablaufSection">Ablauf</a>
+  <a href="#detailsSection" data-nav-target="detailsSection">Details</a>
+  <a href="#preiseSection" data-nav-target="preiseSection">Preise</a>
+  <a href="#anmeldungSection" data-nav-target="anmeldungSection">Anmeldung</a>
+  <a href="anmeldung.html" class="glass-nav-cta">Jetzt anmelden</a>
+</nav>
+
 <!-- Hero -->
 <section class="hero">
   <div class="moon-wrap" data-parallax-speed="0.15"><div class="moon"></div></div>
@@ -413,7 +486,7 @@
 </section>
 
 <!-- Ablauf -->
-<section class="reveal">
+<section class="reveal" id="ablaufSection">
   <div class="eyebrow">Der Abend</div>
   <div class="section-title">Ablauf</div>
   <div class="timeline reveal-group" id="timelineList">
@@ -423,7 +496,7 @@
 </section>
 
 <!-- Ort & Dresscode -->
-<section class="reveal">
+<section class="reveal" id="detailsSection">
   <div class="eyebrow">Gut zu wissen</div>
   <div class="section-title">Details</div>
 
@@ -465,7 +538,7 @@
 </section>
 
 <!-- Preise -->
-<section class="reveal">
+<section class="reveal" id="preiseSection">
   <div class="eyebrow">Tickets</div>
   <div class="section-title">Preise</div>
   <div class="price-grid reveal-group">
@@ -481,7 +554,7 @@
 </section>
 
 <!-- So läuft's ab -->
-<section class="reveal">
+<section class="reveal" id="anmeldungSection">
   <div class="eyebrow">Anmeldung</div>
   <div class="section-title">So läuft's ab</div>
   <div class="steps reveal-group">
@@ -506,6 +579,28 @@
   <a href="anmeldung.html" class="cta">Jetzt anmelden</a>
 </section>
 
+<!-- Bewertung -->
+<section class="reveal" id="ratingSection">
+  <div class="eyebrow">Dein Feedback</div>
+  <div class="section-title">Wie findest du die Seite?</div>
+  <p style="text-align:center; color:var(--text-dim); font-size:14px; max-width:420px; margin:0 auto 28px;">
+    Sag uns kurz, wie dir die Website und die Ticket-Abwicklung gefallen haben — hilft uns fürs nächste Mal.
+  </p>
+
+  <div class="rating-card" id="ratingCard">
+    <div class="stars" id="starRow">
+      <button type="button" class="star" data-value="1" aria-label="1 Stern">★</button>
+      <button type="button" class="star" data-value="2" aria-label="2 Sterne">★</button>
+      <button type="button" class="star" data-value="3" aria-label="3 Sterne">★</button>
+      <button type="button" class="star" data-value="4" aria-label="4 Sterne">★</button>
+      <button type="button" class="star" data-value="5" aria-label="5 Sterne">★</button>
+    </div>
+    <textarea id="ratingComment" placeholder="Magst du noch was dazuschreiben? (optional)" maxlength="500"></textarea>
+    <button type="button" class="cta" id="ratingSubmitBtn" style="width:100%;">Bewertung abschicken</button>
+    <div class="rating-thanks" id="ratingThanks">Danke für dein Feedback! 💙</div>
+  </div>
+</section>
+
 <footer>
   Winter Ball 2027 · Klassenstufe 12 · <a href="mailto:info@winterball27.de">info@winterball27.de</a> · <a href="datenschutz.html">Datenschutz</a> · <a href="impressum.html">Impressum</a>
   <div style="margin-top:8px; opacity:0.6;">© 2026–2027 Winter Ball · Klassenstufe 12, Gymnasium Wilsdruff · Website von Lenny Köllner. Alle Rechte vorbehalten.</div>
@@ -513,7 +608,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-  import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, onSnapshot, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDQaRxga3bFrNkyU6E_sQpp5_0G4ApInOg",
@@ -589,6 +684,52 @@
     if (data.u18) document.getElementById('priceU18').innerHTML = `${data.u18}<span> €</span>`;
     if (data.ue18) document.getElementById('priceUe18').innerHTML = `${data.ue18}<span> €</span>`;
   }).catch(() => {});
+
+  // --- Bewertung ---
+  let selectedRating = 0;
+  const starButtons = Array.from(document.querySelectorAll('#starRow .star'));
+
+  function paintStars(upTo){
+    starButtons.forEach(btn => {
+      btn.classList.toggle('filled', Number(btn.dataset.value) <= upTo);
+    });
+  }
+  starButtons.forEach(btn => {
+    btn.addEventListener('mouseenter', () => {
+      starButtons.forEach(b => b.classList.toggle('hover', Number(b.dataset.value) <= Number(btn.dataset.value)));
+    });
+    btn.addEventListener('mouseleave', () => {
+      starButtons.forEach(b => b.classList.remove('hover'));
+    });
+    btn.addEventListener('click', () => {
+      selectedRating = Number(btn.dataset.value);
+      paintStars(selectedRating);
+    });
+  });
+
+  document.getElementById('ratingSubmitBtn').addEventListener('click', async () => {
+    if (selectedRating < 1) {
+      alert('Bitte zuerst eine Sternebewertung auswählen.');
+      return;
+    }
+    const btn = document.getElementById('ratingSubmitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Wird gesendet...';
+    try {
+      await addDoc(collection(db, 'ratings'), {
+        stars: selectedRating,
+        comment: document.getElementById('ratingComment').value.trim().slice(0, 500),
+        createdAt: serverTimestamp()
+      });
+      document.getElementById('ratingCard').classList.add('submitted');
+      document.getElementById('ratingThanks').classList.add('show');
+    } catch (err) {
+      console.error('Bewertung konnte nicht gespeichert werden:', err);
+      alert('Da ist leider was schiefgegangen — magst du es nochmal versuchen?');
+      btn.disabled = false;
+      btn.textContent = 'Bewertung abschicken';
+    }
+  });
 </script>
 
 <!-- Scroll-Reveal (Intersection Observer, ohne Abhängigkeiten) -->
@@ -611,6 +752,40 @@
       }
     });
   });
+
+  // Glas-Navigation: erscheint erst, sobald man aus dem Hero-Bereich raus­scrollt,
+  // wird beim weiteren Scrollen kompakter, und hebt per Scroll-Spy hervor, in
+  // welchem Abschnitt man sich gerade befindet.
+  const glassNav = document.getElementById('glassNav');
+  const heroEl = document.querySelector('.hero');
+  const navLinks = Array.from(glassNav.querySelectorAll('a[data-nav-target]'));
+  const navSections = navLinks
+    .map(a => document.getElementById(a.dataset.navTarget))
+    .filter(Boolean);
+
+  function updateNavVisibility(){
+    const heroBottom = heroEl ? heroEl.getBoundingClientRect().bottom : 0;
+    glassNav.classList.toggle('show', heroBottom < 80);
+    glassNav.classList.toggle('compact', window.scrollY > 600);
+  }
+
+  const navSpyObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const id = entry.target.id;
+      navLinks.forEach(a => a.classList.toggle('active', a.dataset.navTarget === id));
+    });
+  }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+  navSections.forEach(sec => navSpyObserver.observe(sec));
+
+  navLinks.forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById(a.dataset.navTarget)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  updateNavVisibility();
 
   // Scroll-Fortschrittsleiste oben auf der Seite
   const progressBar = document.getElementById('scrollProgress');
@@ -636,6 +811,7 @@
     if (!ticking) {
       requestAnimationFrame(() => {
         updateProgress();
+        updateNavVisibility();
         if (!prefersReducedMotion) updateParallax();
         ticking = false;
       });
