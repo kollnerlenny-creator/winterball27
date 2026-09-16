@@ -370,46 +370,6 @@
     box-shadow:0 0 12px rgba(143,180,255,0.6);
   }
 
-  /* Liquid-Glass-Navigation */
-  .glass-nav{
-    position:fixed; top:16px; left:50%; transform:translate(-50%, -140%);
-    z-index:190; display:flex; align-items:center; gap:4px;
-    padding:7px; border-radius:100px;
-    background:rgba(255,255,255,0.05);
-    border:1px solid rgba(255,255,255,0.1);
-    box-shadow:0 4px 18px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.08);
-    backdrop-filter:blur(14px) saturate(140%); -webkit-backdrop-filter:blur(14px) saturate(140%);
-    transition:transform 0.5s cubic-bezier(0.22,1,0.36,1), top 0.3s ease-out, padding 0.3s ease-out, opacity 0.3s ease-out;
-    font-family:'Segoe UI',system-ui,sans-serif;
-    opacity:0.85;
-  }
-  .glass-nav:hover{opacity:1;}
-  .glass-nav.show{transform:translate(-50%, 0);}
-  .glass-nav.compact{top:10px; padding:6px;}
-  .glass-nav a{
-    position:relative; display:inline-block; padding:9px 16px; border-radius:100px;
-    color:var(--text-dim); font-size:13px; font-weight:600; text-decoration:none; white-space:nowrap;
-    transition:color 0.2s, background 0.2s;
-  }
-  .glass-nav a:hover{color:var(--text);}
-  .glass-nav a.active{color:#0a0e1a; background:linear-gradient(135deg, var(--accent), var(--accent-glow));}
-  .glass-nav a.glass-nav-cta{
-    margin-left:4px; color:#0a0e1a; background:linear-gradient(135deg, var(--accent), var(--accent-glow));
-    box-shadow:0 4px 16px rgba(143,180,255,0.35);
-  }
-  @media (max-width:720px){
-    .glass-nav{
-      max-width:92vw; overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none;
-      justify-content:flex-start;
-    }
-    .glass-nav::-webkit-scrollbar{display:none;}
-    .glass-nav a{padding:8px 13px; font-size:12.5px;}
-    .glass-nav a.glass-nav-cta{flex-shrink:0;}
-  }
-  @media (prefers-reduced-motion: reduce){
-    .glass-nav{transition:none;}
-  }
-
   @media (prefers-reduced-motion: reduce){
     .reveal, .reveal-item, .timeline-item{opacity:1 !important; transform:none !important; transition:none !important;}
     html{scroll-behavior:auto;}
@@ -474,14 +434,6 @@
 
 <div class="scroll-progress" id="scrollProgress"></div>
 <canvas id="snowCanvas"></canvas>
-
-<nav class="glass-nav show" id="glassNav">
-  <a href="#ablaufSection" data-nav-target="ablaufSection">Ablauf</a>
-  <a href="#detailsSection" data-nav-target="detailsSection">Details</a>
-  <a href="#preiseSection" data-nav-target="preiseSection">Preise</a>
-  <a href="#anmeldungSection" data-nav-target="anmeldungSection">Anmeldung</a>
-  <a href="anmeldung.html" class="glass-nav-cta">Jetzt anmelden</a>
-</nav>
 
 <!-- Hero -->
 <section class="hero">
@@ -765,41 +717,6 @@
     });
   });
 
-  // Glas-Navigation: erscheint erst, sobald man aus dem Hero-Bereich raus­scrollt,
-  // wird beim weiteren Scrollen kompakter, und hebt per Scroll-Spy hervor, in
-  // welchem Abschnitt man sich gerade befindet.
-  const glassNav = document.getElementById('glassNav');
-  const heroEl = document.querySelector('.hero');
-  const navLinks = Array.from(glassNav.querySelectorAll('a[data-nav-target]'));
-  const navSections = navLinks
-    .map(a => document.getElementById(a.dataset.navTarget))
-    .filter(Boolean);
-
-  function updateNavVisibility(){
-    // "show" bleibt dauerhaft aktiv (von Anfang an eingeblendet) — nur noch
-    // "compact" reagiert auf Scrollen, um die Leiste beim Scrollen etwas
-    // kleiner werden zu lassen.
-    glassNav.classList.toggle('compact', window.scrollY > 600);
-  }
-
-  const navSpyObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const id = entry.target.id;
-      navLinks.forEach(a => a.classList.toggle('active', a.dataset.navTarget === id));
-    });
-  }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
-  navSections.forEach(sec => navSpyObserver.observe(sec));
-
-  navLinks.forEach(a => {
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      document.getElementById(a.dataset.navTarget)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-  });
-
-  updateNavVisibility();
-
   // Scroll-Fortschrittsleiste oben auf der Seite
   const progressBar = document.getElementById('scrollProgress');
   function updateProgress(){
@@ -824,7 +741,6 @@
     if (!ticking) {
       requestAnimationFrame(() => {
         updateProgress();
-        updateNavVisibility();
         if (!prefersReducedMotion) updateParallax();
         ticking = false;
       });
