@@ -300,17 +300,23 @@
   }
 
   .countdown{
-    margin-top:28px; display:flex; gap:16px; justify-content:center; flex-wrap:wrap;
+    margin-top:28px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;
   }
   .countdown .unit{
     background:rgba(255,255,255,0.06); border:1px solid var(--glass-border); border-radius:var(--radius-sm);
-    padding:18px 24px; min-width:88px; text-align:center;
+    padding:16px 20px; min-width:80px; text-align:center;
   }
   .countdown .unit .num{
-    font-size:38px; font-weight:600; color:var(--text); font-family:'Segoe UI',system-ui,sans-serif; line-height:1.1;
+    font-size:36px; font-weight:600; color:var(--text); font-family:'Segoe UI',system-ui,sans-serif; line-height:1.1; font-variant-numeric:tabular-nums;
   }
   .countdown .unit .lbl{
-    margin-top:4px; font-size:13px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-dim);
+    margin-top:4px; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-dim);
+  }
+  @media (max-width:480px){
+    .countdown{gap:8px;}
+    .countdown .unit{padding:12px 10px; min-width:68px;}
+    .countdown .unit .num{font-size:26px;}
+    .countdown .unit .lbl{font-size:10px; letter-spacing:1px;}
   }
 
   .live-counter{
@@ -459,21 +465,67 @@
     transform:translateX(5px);
   }
 
-  /* Bewertung */
+  /* Clean TikTok Standalone Video Reel (Transparent background, no clunky TikTok UI) */
+  .tiktok-standalone-section{
+    max-width:440px; margin:36px auto 0; background:transparent;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .tiktok-reel-frame{
+    position:relative; width:100%; max-width:320px; aspect-ratio:9 / 16;
+    border-radius:22px; overflow:hidden; background:transparent;
+    border:1px solid rgba(143,180,255,0.28);
+    box-shadow:0 18px 48px rgba(0,0,0,0.55), 0 0 35px rgba(143,180,255,0.12);
+    transition:transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
+  }
+  .tiktok-reel-frame:hover{
+    transform:translateY(-3px);
+    border-color:rgba(143,180,255,0.55);
+    box-shadow:0 24px 60px rgba(0,0,0,0.65), 0 0 45px rgba(143,180,255,0.24);
+  }
+  .tiktok-reel-frame iframe{
+    width:100%; height:100%; border:none; display:block;
+    background:transparent; border-radius:20px;
+  }
+  .tiktok-reel-meta{
+    margin-top:14px; display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;
+  }
+  .tiktok-meta-pill{
+    display:inline-flex; align-items:center; gap:7px; padding:6px 14px; border-radius:100px;
+    background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); color:var(--text-dim);
+    font-size:12px; font-family:'Segoe UI',system-ui,sans-serif; text-decoration:none;
+    backdrop-filter:blur(8px);
+    transition:background 0.25s, border-color 0.25s, color 0.25s, transform 0.25s;
+  }
+  .tiktok-meta-pill:hover{
+    background:rgba(143,180,255,0.12); border-color:rgba(143,180,255,0.4); color:var(--text);
+    transform:translateY(-1px);
+  }
+  .tiktok-meta-pill .live-dot{
+    width:6px; height:6px; border-radius:50%; background:#ff445a;
+    box-shadow:0 0 0 0 rgba(255,68,90,0.6); animation:pulseDot 1.8s infinite;
+  }
+
+  /* Bewertung mit Schneeflocken */
   .rating-card{
-    max-width:420px; margin:0 auto; background:var(--glass); border:1px solid var(--glass-border);
+    max-width:440px; margin:0 auto; background:var(--glass); border:1px solid var(--glass-border);
     border-radius:var(--radius); padding:32px 26px; text-align:center; backdrop-filter:blur(16px);
     font-family:'Segoe UI',system-ui,sans-serif;
     transition:border-color 0.35s ease, box-shadow 0.35s ease;
   }
-  .stars{display:flex; justify-content:center; gap:6px; margin-bottom:18px;}
-  .star{
-    background:none; border:none; font-size:34px; line-height:1; cursor:pointer; padding:2px;
-    color:rgba(255,255,255,0.2);
-    transition:color 0.25s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  .snowflakes-row, .stars{display:flex; justify-content:center; gap:8px; margin-bottom:18px;}
+  .snowflake-btn, .star{
+    background:none; border:none; font-size:36px; line-height:1; cursor:pointer; padding:4px 6px;
+    color:rgba(255,255,255,0.22);
+    transition:color 0.25s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
+    user-select:none;
   }
-  .star:hover, .star.hover{transform:scale(1.18);}
-  .star.filled, .star.hover{color:#ffd27f;}
+  .snowflake-btn:hover, .snowflake-btn.hover, .star:hover, .star.hover{
+    transform:scale(1.24) rotate(15deg);
+  }
+  .snowflake-btn.filled, .snowflake-btn.hover, .star.filled, .star.hover{
+    color:#a5d8ff;
+    filter:drop-shadow(0 0 10px rgba(165,216,255,0.75));
+  }
   .rating-card textarea{
     width:100%; min-height:70px; padding:12px 14px; margin-bottom:14px; resize:vertical;
     background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm);
@@ -502,7 +554,7 @@
     display:none; margin-top:14px; color:var(--success, #7fe0a8); font-size:14px; font-weight:600;
   }
   .rating-thanks.show{display:block;}
-  .rating-card.submitted .stars, .rating-card.submitted textarea, .rating-card.submitted #ratingSubmitBtn{
+  .rating-card.submitted .snowflakes-row, .rating-card.submitted .stars, .rating-card.submitted textarea, .rating-card.submitted #ratingSubmitBtn{
     opacity:0.4; pointer-events:none;
   }
 
@@ -679,7 +731,8 @@
     </div>
     <div class="map-embed">
       <iframe
-        src="https://www.google.com/maps?q=Gymnasium%20Wilsdruff%2C%20An%20der%20Schule%209%2C%2001723%20Wilsdruff&output=embed"
+        title="Standort Gymnasium Wilsdruff"
+        src="https://www.google.com/maps?q=Gymnasium+Wilsdruff,+An+der+Schule+9,+01723+Wilsdruff&amp;t=m&amp;z=17&amp;output=embed"
         loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
     </div>
   </div>
@@ -774,6 +827,28 @@
       <span class="social-action">Folgen &rarr;</span>
     </a>
   </div>
+
+  <!-- Standalone TikTok Video mit transparentem Hintergrund (ohne störende TikTok-UI) -->
+  <div class="tiktok-standalone-section reveal-item">
+    <div class="tiktok-reel-frame" id="tiktokReelFrame">
+      <iframe
+        id="tiktokCleanPlayer"
+        src="https://www.tiktok.com/player/v1/7548402593199391766?description=0&amp;music_info=0"
+        title="TikTok Video @thewinner.takes.it.all27"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        loading="lazy">
+      </iframe>
+    </div>
+    <div class="tiktok-reel-meta">
+      <span class="tiktok-meta-pill" style="cursor:default;">
+        <span class="live-dot"></span> @thewinner.takes.it.all27
+      </span>
+      <a href="https://www.tiktok.com/@thewinner.takes.it.all27" target="_blank" rel="noopener noreferrer" class="tiktok-meta-pill">
+        Auf TikTok öffnen &rarr;
+      </a>
+    </div>
+  </div>
 </section>
 
 <!-- Finaler CTA -->
@@ -782,25 +857,25 @@
   <a href="anmeldung.html" class="cta">Jetzt anmelden</a>
 </section>
 
-<!-- Bewertung -->
+<!-- Bewertung mit Schneeflocken -->
 <section class="reveal" id="ratingSection">
   <div class="eyebrow">Dein Feedback</div>
   <div class="section-title">Wie findest du die Seite?</div>
   <p style="text-align:center; color:var(--text-dim); font-size:14px; max-width:420px; margin:0 auto 28px;">
-    Sag uns kurz, wie dir die Website und die Ticket-Abwicklung gefallen haben — hilft uns fürs nächste Mal.
+    Bewerte die Website mit Schneeflocken ❄️ — dein Feedback hilft uns bei der Vorbereitung!
   </p>
 
   <div class="rating-card" id="ratingCard">
-    <div class="stars" id="starRow">
-      <button type="button" class="star" data-value="1" aria-label="1 Stern">★</button>
-      <button type="button" class="star" data-value="2" aria-label="2 Sterne">★</button>
-      <button type="button" class="star" data-value="3" aria-label="3 Sterne">★</button>
-      <button type="button" class="star" data-value="4" aria-label="4 Sterne">★</button>
-      <button type="button" class="star" data-value="5" aria-label="5 Sterne">★</button>
+    <div class="snowflakes-row" id="starRow">
+      <button type="button" class="snowflake-btn" data-value="1" aria-label="1 Schneeflocke">❄</button>
+      <button type="button" class="snowflake-btn" data-value="2" aria-label="2 Schneeflocken">❄</button>
+      <button type="button" class="snowflake-btn" data-value="3" aria-label="3 Schneeflocken">❄</button>
+      <button type="button" class="snowflake-btn" data-value="4" aria-label="4 Schneeflocken">❄</button>
+      <button type="button" class="snowflake-btn" data-value="5" aria-label="5 Schneeflocken">❄</button>
     </div>
     <textarea id="ratingComment" placeholder="Magst du noch was dazuschreiben? (optional)" maxlength="500"></textarea>
     <button type="button" id="ratingSubmitBtn">Bewertung abschicken</button>
-    <div class="rating-thanks" id="ratingThanks">Danke für dein Feedback! 💙</div>
+    <div class="rating-thanks" id="ratingThanks">Danke für dein Feedback! ❄️💙</div>
   </div>
 </section>
 
@@ -825,25 +900,30 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // --- Countdown bis zum Ball ---
+  // --- Countdown bis zum Ball (auf die Sekunde genau) ---
   const EVENT_DATE = new Date('2027-01-30T17:30:00+01:00');
   function updateCountdown(){
     const el = document.getElementById('countdown');
+    if (!el) return;
     const diff = EVENT_DATE.getTime() - Date.now();
     if (diff <= 0) { el.style.display = 'none'; return; }
 
     const days = Math.floor(diff / 86400000);
     const hours = Math.floor((diff % 86400000) / 3600000);
     const minutes = Math.floor((diff % 3600000) / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+
+    const pad = (n) => String(n).padStart(2, '0');
 
     el.innerHTML = `
       <div class="unit"><div class="num">${days}</div><div class="lbl">Tage</div></div>
-      <div class="unit"><div class="num">${hours}</div><div class="lbl">Std</div></div>
-      <div class="unit"><div class="num">${minutes}</div><div class="lbl">Min</div></div>
+      <div class="unit"><div class="num">${pad(hours)}</div><div class="lbl">Std</div></div>
+      <div class="unit"><div class="num">${pad(minutes)}</div><div class="lbl">Min</div></div>
+      <div class="unit"><div class="num">${pad(seconds)}</div><div class="lbl">Sek</div></div>
     `;
   }
   updateCountdown();
-  setInterval(updateCountdown, 30000);
+  setInterval(updateCountdown, 1000);
 
   // --- Live-Ticketzähler ---
   onSnapshot(doc(db, 'settings', 'stats'), (snap) => {
@@ -888,9 +968,23 @@
     if (data.ue18) document.getElementById('priceUe18').innerHTML = `${data.ue18}<span> €</span>`;
   }).catch(() => {});
 
-  // --- Bewertung ---
+  // --- Standalone TikTok Video Player ---
+  const DEFAULT_TIKTOK_ID = '7548402593199391766';
+  getDoc(doc(db, 'settings', 'tiktok')).then(snap => {
+    if (!snap.exists()) return;
+    const data = snap.data();
+    const vid = (data.videoId || '').trim();
+    if (vid) {
+      const player = document.getElementById('tiktokCleanPlayer');
+      if (player) {
+        player.src = `https://www.tiktok.com/player/v1/${encodeURIComponent(vid)}?description=0&music_info=0`;
+      }
+    }
+  }).catch(() => {});
+
+  // --- Schneeflocken-Bewertung ---
   let selectedRating = 0;
-  const starButtons = Array.from(document.querySelectorAll('#starRow .star'));
+  const starButtons = Array.from(document.querySelectorAll('#starRow .snowflake-btn, #starRow .star'));
 
   function paintStars(upTo){
     starButtons.forEach(btn => {
@@ -912,7 +1006,7 @@
 
   document.getElementById('ratingSubmitBtn').addEventListener('click', async () => {
     if (selectedRating < 1) {
-      alert('Bitte zuerst eine Sternebewertung auswählen.');
+      alert('Bitte wähle zuerst mindestens eine Schneeflocke ❄️ aus.');
       return;
     }
     const btn = document.getElementById('ratingSubmitBtn');
@@ -922,6 +1016,7 @@
       await addDoc(collection(db, 'ratings'), {
         stars: selectedRating,
         comment: document.getElementById('ratingComment').value.trim().slice(0, 500),
+        context: 'homepage',
         createdAt: serverTimestamp()
       });
       document.getElementById('ratingCard').classList.add('submitted');
