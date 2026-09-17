@@ -465,46 +465,6 @@
     transform:translateX(5px);
   }
 
-  /* Clean TikTok Standalone Video Reel (Transparent background, no clunky TikTok UI) */
-  .tiktok-standalone-section{
-    max-width:440px; margin:36px auto 0; background:transparent;
-    display:flex; flex-direction:column; align-items:center;
-  }
-  .tiktok-reel-frame{
-    position:relative; width:100%; max-width:320px; aspect-ratio:9 / 16;
-    border-radius:22px; overflow:hidden; background:transparent;
-    border:1px solid rgba(143,180,255,0.28);
-    box-shadow:0 18px 48px rgba(0,0,0,0.55), 0 0 35px rgba(143,180,255,0.12);
-    transition:transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
-  }
-  .tiktok-reel-frame:hover{
-    transform:translateY(-3px);
-    border-color:rgba(143,180,255,0.55);
-    box-shadow:0 24px 60px rgba(0,0,0,0.65), 0 0 45px rgba(143,180,255,0.24);
-  }
-  .tiktok-reel-frame iframe{
-    width:100%; height:100%; border:none; display:block;
-    background:transparent; border-radius:20px;
-  }
-  .tiktok-reel-meta{
-    margin-top:14px; display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;
-  }
-  .tiktok-meta-pill{
-    display:inline-flex; align-items:center; gap:7px; padding:6px 14px; border-radius:100px;
-    background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); color:var(--text-dim);
-    font-size:12px; font-family:'Segoe UI',system-ui,sans-serif; text-decoration:none;
-    backdrop-filter:blur(8px);
-    transition:background 0.25s, border-color 0.25s, color 0.25s, transform 0.25s;
-  }
-  .tiktok-meta-pill:hover{
-    background:rgba(143,180,255,0.12); border-color:rgba(143,180,255,0.4); color:var(--text);
-    transform:translateY(-1px);
-  }
-  .tiktok-meta-pill .live-dot{
-    width:6px; height:6px; border-radius:50%; background:#ff445a;
-    box-shadow:0 0 0 0 rgba(255,68,90,0.6); animation:pulseDot 1.8s infinite;
-  }
-
   /* Bewertung mit Schneeflocken */
   .rating-card{
     max-width:440px; margin:0 auto; background:var(--glass); border:1px solid var(--glass-border);
@@ -827,28 +787,6 @@
       <span class="social-action">Folgen &rarr;</span>
     </a>
   </div>
-
-  <!-- Standalone TikTok Video mit transparentem Hintergrund (ohne störende TikTok-UI) -->
-  <div class="tiktok-standalone-section reveal-item">
-    <div class="tiktok-reel-frame" id="tiktokReelFrame">
-      <iframe
-        id="tiktokCleanPlayer"
-        src="https://www.tiktok.com/player/v1/7548402593199391766?description=0&amp;music_info=0"
-        title="TikTok Video @thewinner.takes.it.all27"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-        loading="lazy">
-      </iframe>
-    </div>
-    <div class="tiktok-reel-meta">
-      <span class="tiktok-meta-pill" style="cursor:default;">
-        <span class="live-dot"></span> @thewinner.takes.it.all27
-      </span>
-      <a href="https://www.tiktok.com/@thewinner.takes.it.all27" target="_blank" rel="noopener noreferrer" class="tiktok-meta-pill">
-        Auf TikTok öffnen &rarr;
-      </a>
-    </div>
-  </div>
 </section>
 
 <!-- Finaler CTA -->
@@ -966,20 +904,6 @@
     const data = snap.data();
     if (data.u18) document.getElementById('priceU18').innerHTML = `${data.u18}<span> €</span>`;
     if (data.ue18) document.getElementById('priceUe18').innerHTML = `${data.ue18}<span> €</span>`;
-  }).catch(() => {});
-
-  // --- Standalone TikTok Video Player ---
-  const DEFAULT_TIKTOK_ID = '7548402593199391766';
-  getDoc(doc(db, 'settings', 'tiktok')).then(snap => {
-    if (!snap.exists()) return;
-    const data = snap.data();
-    const vid = (data.videoId || '').trim();
-    if (vid) {
-      const player = document.getElementById('tiktokCleanPlayer');
-      if (player) {
-        player.src = `https://www.tiktok.com/player/v1/${encodeURIComponent(vid)}?description=0&music_info=0`;
-      }
-    }
   }).catch(() => {});
 
   // --- Schneeflocken-Bewertung ---

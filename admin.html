@@ -516,19 +516,6 @@
     </div>
 
     <div class="settings-section">
-      <div class="settings-section-title">📱 TikTok Video (Startseite)</div>
-      <div class="info-editor">
-        <label for="tiktokVideoInput">TikTok Video-ID oder Video-Link (erscheint auf der Startseite ohne TikTok-Interface als eigenständiges Video mit transparentem Hintergrund):</label>
-        <input type="text" id="tiktokVideoInput" placeholder="z.B. 7548402593199391766 oder https://www.tiktok.com/@.../video/7548402593199391766" style="max-width:520px;">
-        <div class="info-editor-actions">
-          <button id="tiktokVideoSaveBtn">Speichern</button>
-          <button id="tiktokVideoResetBtn" style="background:rgba(255,255,255,0.05); color:var(--text); border:1px solid var(--glass-border);">Standard wiederherstellen</button>
-          <span class="price-saved" id="tiktokVideoSaved">Gespeichert ✓</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="settings-section">
       <div class="settings-section-title">🔒 Datenschutz &amp; Löschung</div>
       <div class="info-editor">
         <label>Ihr speichert Name, E-Mail, Altersgruppe (U18/Ü18) und Ticket-ID von
@@ -1080,13 +1067,6 @@
     onSnapshot(doc(db, 'settings', 'capacity'), (snap) => {
       const max = snap.exists() ? snap.data().maxTickets : null;
       document.getElementById('maxTicketsInput').value = max || '';
-    });
-    onSnapshot(doc(db, 'settings', 'tiktok'), (snap) => {
-      const vid = snap.exists() ? (snap.data().videoId || '') : '';
-      const input = document.getElementById('tiktokVideoInput');
-      if (input && document.activeElement !== input) {
-        input.value = vid;
-      }
     });
     onSnapshot(doc(db, 'settings', 'schedule'), (snap) => {
       // Nur beim allerersten Laden rendern, damit ein laufender Bearbeitungsvorgang
@@ -1949,26 +1929,6 @@
     document.getElementById('maxTicketsInput').value = '';
     await setDoc(doc(db, 'settings', 'capacity'), { maxTickets: null });
     const savedEl = document.getElementById('maxTicketsSaved');
-    savedEl.classList.add('show');
-    setTimeout(() => savedEl.classList.remove('show'), 2000);
-  });
-
-  const DEFAULT_TIKTOK_ID = '7548402593199391766';
-  document.getElementById('tiktokVideoSaveBtn')?.addEventListener('click', async () => {
-    const raw = document.getElementById('tiktokVideoInput').value.trim();
-    // Extrahiere numerische ID falls Link eingefügt wurde
-    const match = raw.match(/video\/(\d+)/) || raw.match(/(\d{15,25})/);
-    const videoId = match ? match[1] : (raw || DEFAULT_TIKTOK_ID);
-    document.getElementById('tiktokVideoInput').value = videoId;
-    await setDoc(doc(db, 'settings', 'tiktok'), { videoId });
-    const savedEl = document.getElementById('tiktokVideoSaved');
-    savedEl.classList.add('show');
-    setTimeout(() => savedEl.classList.remove('show'), 2000);
-  });
-  document.getElementById('tiktokVideoResetBtn')?.addEventListener('click', async () => {
-    document.getElementById('tiktokVideoInput').value = DEFAULT_TIKTOK_ID;
-    await setDoc(doc(db, 'settings', 'tiktok'), { videoId: DEFAULT_TIKTOK_ID });
-    const savedEl = document.getElementById('tiktokVideoSaved');
     savedEl.classList.add('show');
     setTimeout(() => savedEl.classList.remove('show'), 2000);
   });
