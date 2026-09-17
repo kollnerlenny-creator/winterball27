@@ -1,0 +1,6 @@
+{
+  "name": "Winter Ball 2027",
+  "description": "Winter Ball 2027 der Klassenstufe 12 · 30. Januar 2027 · Gymnasium Wilsdruff. Jetzt anmelden!",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

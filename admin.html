@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Winter Ball · Admin</title>
+<style>
+  :root{
+    --bg-1:#0a0e1a; --bg-2:#131c30;
+    --glass:rgba(255,255,255,0.06); --glass-border:rgba(255,255,255,0.13);
+    --text:#eef2fb; --text-dim:#9aa7c2;
+    --accent:#8fb4ff; --success:#7fe0a8; --error:#ff8080; --warn:#ffd27f;
+    --radius:16px; --radius-sm:10px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Segoe UI',system-ui,sans-serif;
+    background:linear-gradient(180deg,var(--bg-1),var(--bg-2));
+    color:var(--text); min-height:100vh; padding:24px 16px;
+  }
+  .wrap{max-width:min(1400px, 96vw); margin:0 auto;}
+  h1{font-weight:300; font-size:26px; margin-bottom:4px;}
+  .sub{color:var(--text-dim); font-size:13px; margin-bottom:24px;}
+
+  .login-card{
+    max-width:360px; margin:80px auto; padding:32px;
+    background:var(--glass); backdrop-filter:blur(20px); border:1px solid var(--glass-border);
+    border-radius:var(--radius); text-align:center;
+  }
+  .login-card input{
+    width:100%; padding:12px 14px; margin-top:12px; background:rgba(255,255,255,0.05);
+    border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:14px;
+  }
+  .login-card button{
+    width:100%; margin-top:14px; padding:12px; border:none; border-radius:var(--radius-sm);
+    background:var(--accent); color:#0a0e1a; font-weight:600; cursor:pointer;
+  }
+  .login-error{color:var(--error); font-size:13px; margin-top:10px; display:none;}
+
+  .stats{display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap;}
+  .stat{
+    flex:1; min-width:120px; padding:16px; background:var(--glass); border:1px solid var(--glass-border);
+    border-radius:var(--radius-sm); backdrop-filter:blur(16px); transition:border-color 0.2s, transform 0.2s;
+  }
+  .stat:hover{border-color:rgba(143,180,255,0.35); transform:translateY(-1px);}
+  .stat .num{font-size:26px; font-weight:600; color:var(--accent);}
+  .stat .lbl{font-size:12px; color:var(--text-dim); margin-top:2px;}
+
+  .price-bar{
+    display:flex; align-items:center; gap:10px; margin-bottom:20px; padding:14px 16px;
+    background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius-sm);
+    backdrop-filter:blur(16px); flex-wrap:wrap;
+  }
+  .price-bar label{font-size:13px; color:var(--text-dim);}
+  .price-bar input{
+    width:100px; padding:8px 10px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border);
+    border-radius:var(--radius-sm); color:var(--text); font-size:14px;
+  }
+  .price-bar button{
+    padding:8px 14px; border-radius:var(--radius-sm); border:none; background:var(--accent);
+    color:#0a0e1a; font-weight:600; font-size:13px; cursor:pointer;
+  }
+  .price-saved{color:var(--success); font-size:12px; opacity:0; transition:opacity 0.3s;}
+  .price-saved.show{opacity:1;}
+
+  .settings-section{margin-bottom:32px;}
+  .settings-section-title{
+    font-size:14px; font-weight:600; color:var(--text); margin-bottom:12px;
+    padding-bottom:8px; border-bottom:1px solid var(--glass-border);
+  }
+  .settings-section .info-editor:last-child{margin-bottom:0;}
+
+  .info-editor{
+    margin-bottom:20px; padding:14px 16px;
+    background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius-sm);
+    backdrop-filter:blur(16px);
+  }
+  .info-editor label{display:block; font-size:12px; color:var(--text-dim); margin-bottom:8px;}
+  .info-editor textarea{
+    width:100%; min-height:70px; padding:10px 12px; background:rgba(255,255,255,0.05);
+    border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text);
+    font-size:13px; font-family:inherit; resize:vertical;
+  }
+  .info-editor-actions{display:flex; align-items:center; gap:10px; margin-top:10px;}
+  .info-editor-actions button{
+    padding:8px 14px; border-radius:var(--radius-sm); border:none; background:var(--accent);
+    color:#0a0e1a; font-weight:600; font-size:13px; cursor:pointer;
+  }
+
+  .tabs{display:flex; gap:8px; margin-bottom:20px; border-bottom:1px solid var(--glass-border); flex-wrap:wrap;}
+  .tab-btn{
+    padding:12px 18px; border:none; background:none; color:var(--text-dim); font-size:14px; font-weight:600;
+    cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition:color 0.2s, border-color 0.2s;
+  }
+  .tab-btn:hover{color:var(--text);}
+  .tab-btn.active{color:var(--accent); border-bottom-color:var(--accent);}
+  .tab-content{display:none;}
+  .tab-content.active{display:block;}
+
+  .insights-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px;}
+  .insight-card{
+    background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius);
+    padding:18px; backdrop-filter:blur(16px);
+  }
+  .insight-card.wide{grid-column:1 / -1;}
+  .insight-title{font-size:13px; color:var(--text-dim); margin-bottom:14px; font-weight:600;}
+  .insight-card canvas{max-height:240px;}
+  .insight-empty{color:var(--text-dim); font-size:13px; text-align:center; padding:30px 0;}
+
+  .toolbar{display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;}
+  .toolbar input{
+    flex:1; min-width:180px; padding:10px 14px; background:var(--glass); border:1px solid var(--glass-border);
+    border-radius:var(--radius-sm); color:var(--text); font-size:14px;
+  }
+  .toolbar button{
+    padding:10px 16px; border-radius:var(--radius-sm); border:1px solid var(--glass-border);
+    background:rgba(255,255,255,0.05); color:var(--text); cursor:pointer; font-size:13px;
+  }
+  .toolbar button.active{
+    background:rgba(255,210,127,0.15); border-color:rgba(255,210,127,0.45); color:var(--warn, #ffd27f);
+  }
+
+  .add-form{
+    display:none; flex-direction:column; gap:10px; margin-bottom:16px; padding:16px;
+    background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius-sm);
+    backdrop-filter:blur(16px);
+  }
+  .add-form.show{display:flex;}
+  .add-form input{
+    padding:10px 12px; background:rgba(255,255,255,0.05);
+    border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:13px;
+  }
+  .add-row{display:flex; gap:10px; flex-wrap:wrap;}
+  .add-row input{flex:1; min-width:160px;}
+  .add-row select{flex:0 0 100px; padding:10px 8px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:13px;}
+  .companions-block{display:flex; flex-direction:column; gap:8px;}
+  .add-companion-btn{
+    display:block; margin-top:6px; padding:4px 9px; border-radius:20px; border:1px dashed rgba(143,180,255,0.4);
+    background:rgba(143,180,255,0.06); color:var(--accent); font-size:11px; cursor:pointer;
+  }
+  .add-companion-btn:hover{background:rgba(143,180,255,0.14);}
+  .companion-add-row{display:flex; gap:8px;}
+  .companion-add-row input{flex:1;}
+  .companion-add-row select{flex:0 0 90px; padding:10px 8px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:13px;}
+
+  /* Custom-Dropdown statt nativer Browser-Auswahlliste */
+  .cs-wrap{position:relative;}
+  .cs-wrap select{
+    position:absolute; opacity:0; pointer-events:none; width:1px; height:1px; padding:0; border:none;
+  }
+  .cs-trigger{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    padding:10px 12px; font-size:13px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border);
+    border-radius:var(--radius-sm); color:var(--text); cursor:pointer; user-select:none;
+    transition:border-color 0.2s, background 0.2s;
+  }
+  .cs-trigger.placeholder{color:var(--text-dim);}
+  .cs-wrap.open .cs-trigger{border-color:var(--accent); background:rgba(255,255,255,0.08);}
+  .cs-arrow{width:7px; height:7px; border-right:2px solid var(--text-dim); border-bottom:2px solid var(--text-dim);
+    transform:rotate(45deg); transition:transform 0.2s; flex-shrink:0; margin-top:-3px;}
+  .cs-wrap.open .cs-arrow{transform:rotate(-135deg); margin-top:3px;}
+  .cs-panel{
+    position:absolute; left:0; right:0; top:calc(100% + 6px); z-index:80;
+    background:rgba(19,28,48,0.98); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    border:1px solid var(--glass-border); border-radius:var(--radius-sm); overflow:hidden;
+    box-shadow:0 16px 40px rgba(0,0,0,0.5); max-height:220px; overflow-y:auto;
+    display:none; opacity:0; transform:translateY(-4px); transition:opacity 0.15s, transform 0.15s;
+  }
+  .cs-wrap.open .cs-panel{display:block; opacity:1; transform:translateY(0);}
+  .cs-option{padding:10px 12px; font-size:13px; color:var(--text); cursor:pointer;}
+  .cs-option:hover, .cs-option.active{background:rgba(143,180,255,0.15);}
+  .companion-add-row button{
+    width:36px; border-radius:var(--radius-sm); border:1px solid rgba(255,128,128,0.3);
+    background:rgba(255,128,128,0.1); color:var(--error); cursor:pointer;
+  }
+  .add-form-actions{display:flex; gap:10px;}
+  .add-form-actions button{
+    padding:10px 16px; border-radius:var(--radius-sm); border:none; cursor:pointer; font-size:13px; font-weight:600;
+  }
+  #addSaveBtn{background:var(--accent); color:#0a0e1a;}
+  .add-form-actions button.secondary{background:rgba(255,255,255,0.05); color:var(--text); border:1px solid var(--glass-border); font-weight:400;}
+  #addCompanionFieldBtn{
+    align-self:flex-start; background:none; border:none; color:var(--accent); font-size:12px; cursor:pointer; padding:4px 0;
+  }
+
+  .schedule-list{display:flex; flex-direction:column; gap:6px; margin-bottom:6px;}
+  .schedule-row{
+    display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+    padding:6px; border-radius:var(--radius-sm); transition:background 0.15s, box-shadow 0.15s;
+  }
+  .schedule-row.dragging{opacity:0.35;}
+  .schedule-row:hover{background:rgba(255,255,255,0.03);}
+  .drag-handle{
+    cursor:grab; color:var(--text-dim); font-size:16px; padding:0 2px; flex-shrink:0; user-select:none;
+  }
+  .drag-handle:active{cursor:grabbing;}
+  .schedule-row input{
+    padding:8px 10px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border);
+    border-radius:var(--radius-sm); color:var(--text); font-size:13px; font-family:inherit;
+  }
+  .schedule-row input.schedule-time{flex:0 0 76px;}
+  .schedule-row input.schedule-label{flex:1 1 160px; min-width:140px;}
+  .schedule-row input.schedule-note{flex:1 1 220px; min-width:180px;}
+  .schedule-row-actions{display:flex; gap:4px; flex-shrink:0;}
+  .schedule-row-actions button{
+    width:30px; height:34px; border-radius:var(--radius-sm); border:1px solid var(--glass-border);
+    background:rgba(255,255,255,0.05); color:var(--text); cursor:pointer; font-size:13px;
+  }
+  .schedule-row-actions button:disabled{opacity:0.3; cursor:default;}
+  .schedule-row-actions button.remove{border-color:rgba(255,128,128,0.3); background:rgba(255,128,128,0.1); color:var(--error);}
+  #scheduleAddBtn{
+    align-self:flex-start; background:none; border:none; color:var(--accent); font-size:12px; cursor:pointer; padding:4px 0;
+  }
+
+  .danger-btn{
+    padding:8px 14px; border-radius:var(--radius-sm); border:1px solid rgba(255,128,128,0.4);
+    background:rgba(255,128,128,0.1); color:var(--error); font-weight:600; font-size:13px; cursor:pointer;
+  }
+  .danger-btn:hover{background:rgba(255,128,128,0.2);}
+
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  thead th{
+    text-align:left; padding:10px 12px; color:var(--text-dim); font-weight:500;
+    border-bottom:1px solid var(--glass-border); font-size:12px; text-transform:uppercase; letter-spacing:0.5px;
+  }
+  tbody tr{border-bottom:1px solid rgba(255,255,255,0.05);}
+  tbody tr:hover{background:rgba(255,255,255,0.03);}
+  tbody td{padding:10px 12px; vertical-align:top;}
+  .badge{
+    display:inline-block; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:600; flex-shrink:0; white-space:nowrap;
+  }
+  .badge.in{background:rgba(127,224,168,0.15); color:var(--success);}
+  .badge.out{background:rgba(255,255,255,0.08); color:var(--text-dim);}
+  .pay-btn{
+    padding:5px 12px; border-radius:20px; border:1px solid rgba(255,210,127,0.4);
+    background:rgba(255,210,127,0.1); color:var(--warn); font-size:11px; font-weight:600; cursor:pointer;
+    white-space:nowrap; flex-shrink:0;
+  }
+  .pay-btn:hover{background:rgba(255,210,127,0.2);}
+  .pay-btn:disabled{opacity:0.5; cursor:default;}
+  .delete-btn{
+    background:rgba(255,128,128,0.1); border:1px solid rgba(255,128,128,0.25);
+    color:var(--error); border-radius:var(--radius-sm); width:34px; height:34px;
+    cursor:pointer; font-size:14px;
+  }
+  .delete-btn:hover{background:rgba(255,128,128,0.2);}
+  .edit-reg-btn{
+    background:rgba(143,180,255,0.1); border:1px solid rgba(143,180,255,0.3);
+    color:var(--accent); border-radius:var(--radius-sm); width:34px; height:34px;
+    cursor:pointer; font-size:14px; margin-right:6px;
+  }
+  .edit-reg-btn:hover{background:rgba(143,180,255,0.2);}
+  .attendee-list{list-style:none; font-size:12px; color:var(--text-dim);}
+  .attendee-list li{margin-bottom:2px;}
+  .attendee-list .orderer{color:var(--text); font-weight:600;}
+
+  .ticket-checkin-list{list-style:none; display:flex; flex-direction:column; gap:6px;}
+  .ticket-checkin-list li{display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:12px;}
+  .checkin-toggle{
+    padding:4px 10px; border-radius:20px; font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap;
+    border:1px solid var(--glass-border); background:rgba(255,255,255,0.05); color:var(--text-dim);
+  }
+  .checkin-toggle.in{border-color:rgba(127,224,168,0.4); background:rgba(127,224,168,0.12); color:var(--success);}
+  .paid-cell{display:flex; align-items:center; gap:6px; flex-wrap:nowrap; white-space:nowrap;}
+  .pdf-btn, .invoice-btn{
+    padding:5px 9px; border-radius:20px; border:1px solid var(--glass-border);
+    background:rgba(255,255,255,0.05); color:var(--text); font-size:11px; cursor:pointer; white-space:nowrap; flex-shrink:0;
+  }
+  .pdf-btn:hover, .invoice-btn:hover{background:rgba(255,255,255,0.1);}
+  .table-wrap{
+    background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius);
+    overflow-x:auto; backdrop-filter:blur(16px);
+  }
+
+  /* Kassen-Popup */
+  .modal-overlay{
+    display:none; position:fixed; inset:0; background:rgba(5,7,14,0.72); backdrop-filter:blur(4px);
+    align-items:center; justify-content:center; z-index:300; padding:20px;
+  }
+  .modal-overlay.show{display:flex;}
+  .cash-modal{
+    width:100%; max-width:340px; background:var(--bg-2); border:1px solid var(--glass-border);
+    border-radius:var(--radius); padding:22px; box-shadow:0 24px 70px rgba(0,0,0,0.6);
+  }
+  .cash-modal-name{font-size:15px; font-weight:600; margin-bottom:14px; text-align:center;}
+  .cash-row{
+    display:flex; justify-content:space-between; align-items:baseline; font-size:13px;
+    color:var(--text-dim); padding:7px 0; border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .cash-row strong{font-size:16px; color:var(--text); font-weight:600;}
+  .cash-row.cash-change{border-bottom:none; margin-top:2px;}
+  .cash-row.cash-change strong{font-size:19px; color:var(--success);}
+  .cash-row.cash-change.negative strong{color:var(--warn);}
+
+  .numpad{display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin:16px 0 10px;}
+  .num-btn{
+    padding:14px 0; border-radius:var(--radius-sm); border:1px solid var(--glass-border);
+    background:rgba(255,255,255,0.05); color:var(--text); font-size:18px; font-weight:600; cursor:pointer;
+  }
+  .num-btn:hover{background:rgba(255,255,255,0.1);}
+  .num-btn.num-clear{color:var(--warn); border-color:rgba(255,210,127,0.35);}
+  .num-btn.num-back{color:var(--text-dim);}
+
+  .exact-btn{
+    width:100%; padding:9px 0; margin-bottom:14px; border-radius:var(--radius-sm);
+    border:1px solid rgba(143,180,255,0.35); background:rgba(143,180,255,0.1); color:var(--accent);
+    font-size:12.5px; font-weight:600; cursor:pointer;
+  }
+  .exact-btn:hover{background:rgba(143,180,255,0.18);}
+
+  .cash-modal-actions{display:flex; gap:10px;}
+  .cash-modal-actions button{flex:1; padding:12px 0; border-radius:var(--radius-sm); font-size:14px; font-weight:600; cursor:pointer;}
+  .cash-modal-actions button:not(.secondary){
+    border:none; background:var(--success); color:#0a0e1a;
+  }
+  .cash-modal-actions button:not(.secondary):disabled{background:rgba(127,224,168,0.25); color:rgba(10,14,26,0.5); cursor:not-allowed;}
+  .cash-modal-actions button.secondary{
+    border:1px solid var(--glass-border); background:rgba(255,255,255,0.05); color:var(--text);
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div class="login-card" id="loginCard">
+  <h1 style="margin-bottom:16px;">Admin Login</h1>
+  <input type="email" id="loginEmail" placeholder="E-Mail">
+  <input type="password" id="loginPass" placeholder="Passwort">
+  <button id="loginBtn">Anmelden</button>
+  <div class="login-error" id="loginError">Login fehlgeschlagen.</div>
+</div>
+
+<div class="wrap" id="dashboard" style="display:none;">
+  <h1>Winter Ball · Bestellungen</h1>
+  <div class="sub">30.01.2027 · 17:30 Uhr</div>
+
+  <div class="stats">
+    <div class="stat"><div class="num" id="statOrders">0</div><div class="lbl">Bestellungen</div></div>
+    <div class="stat"><div class="num" id="statTickets">0</div><div class="lbl">Tickets gesamt</div></div>
+    <div class="stat"><div class="num" id="statPaid">0</div><div class="lbl">Bezahlt</div></div>
+    <div class="stat"><div class="num" id="statCheckedIn">0</div><div class="lbl">Eingecheckt</div></div>
+    <div class="stat"><div class="num" id="statRevenue">0 €</div><div class="lbl">Umsatz</div></div>
+    <div class="stat"><div class="num" id="statU18Ratio">0 / 0</div><div class="lbl">U18 / Ü18</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="orders">Bestellungen</button>
+    <button class="tab-btn" data-tab="insights">Insights</button>
+    <button class="tab-btn" data-tab="ratings">⭐ Bewertungen</button>
+    <button class="tab-btn" data-tab="settings">⚙️ Einstellungen</button>
+  </div>
+
+  <!-- Tab: Bestellungen -->
+  <div class="tab-content active" data-tab-content="orders">
+    <div class="toolbar">
+      <input type="text" id="search" placeholder="Nach Name oder E-Mail suchen...">
+      <button id="filterUnpaidBtn">Nur Unbezahlte</button>
+      <button id="addBtn">+ Bestellung hinzufügen</button>
+      <button id="exportBtn">CSV exportieren</button>
+      <button id="logoutBtn">Logout</button>
+    </div>
+
+    <div class="add-form" id="addForm">
+      <div class="add-row">
+        <input type="text" id="addName" placeholder="Name des Bestellers (Vorname Nachname)">
+        <input type="number" id="addKlasse" placeholder="Klasse" min="5" max="12" style="max-width:90px;">
+        <button type="button" id="suggestEmailBtn" style="background:rgba(143,180,255,0.12); border:1px solid rgba(143,180,255,0.35); color:var(--accent-glow); border-radius:var(--radius-sm); padding:10px 14px; font-size:12px; cursor:pointer; white-space:nowrap;">LernSax-Adresse vorschlagen</button>
+      </div>
+      <div class="add-row">
+        <input type="email" id="addEmail" placeholder="E-Mail des Bestellers">
+        <select id="addCategory">
+          <option value="">Alter?</option>
+          <option value="u18">U18</option>
+          <option value="ue18">Ü18</option>
+        </select>
+      </div>
+      <div class="companions-block" id="companionsBlock"></div>
+      <button type="button" id="addCompanionFieldBtn">+ Begleitung hinzufügen</button>
+      <div class="add-form-actions">
+        <button id="addSaveBtn">Anlegen</button>
+        <button id="addPayNowBtn" style="background:var(--success); color:#0a0e1a;">Anlegen &amp; gleich bezahlen</button>
+        <button id="addCancelBtn" class="secondary">Abbrechen</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Besteller</th><th>Begleitungen</th><th>E-Mail</th><th>Tickets / Check-in</th><th>Bezahlt</th><th>Zeiten</th><th></th></tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tab: Insights -->
+  <div class="tab-content" data-tab-content="insights">
+    <div class="insights-grid">
+      <div class="insight-card">
+        <div class="insight-title">U18 / Ü18-Verteilung</div>
+        <canvas id="chartCategory"></canvas>
+      </div>
+      <div class="insight-card">
+        <div class="insight-title">Bezahlt vs. offen</div>
+        <canvas id="chartPaid"></canvas>
+      </div>
+      <div class="insight-card wide">
+        <div class="insight-title">Anmeldungen pro Tag</div>
+        <canvas id="chartDaily"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Bewertungen -->
+  <div class="tab-content" data-tab-content="ratings">
+    <div class="stats" style="margin-bottom:24px;">
+      <div class="stat"><div class="num" id="statRatingAvg">–</div><div class="lbl">Ø Sterne</div></div>
+      <div class="stat"><div class="num" id="statRatingCount">0</div><div class="lbl">Bewertungen</div></div>
+    </div>
+    <div class="insights-grid" style="margin-bottom:24px;">
+      <div class="insight-card wide">
+        <div class="insight-title">Sterne-Verteilung</div>
+        <canvas id="chartRatings"></canvas>
+      </div>
+    </div>
+    <div class="table-wrap" style="padding:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+        <div style="font-size:13px; color:var(--text-dim); font-weight:600;">Kommentare &amp; Bewertungen</div>
+        <button id="resetAllRatingsBtn" class="danger-btn" style="padding:6px 12px; font-size:12px;">🗑️ Alle Bewertungen zurücksetzen</button>
+      </div>
+      <div id="ratingsCommentList" style="display:flex; flex-direction:column; gap:10px;"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Einstellungen -->
+  <div class="tab-content" data-tab-content="settings">
+    <div class="settings-section">
+      <div class="settings-section-title">💶 Preise</div>
+      <div class="price-bar">
+        <label for="priceU18Input">Preis U18 (€)</label>
+        <input type="number" id="priceU18Input" min="0" step="0.5" placeholder="z.B. 10">
+        <label for="priceUe18Input">Preis Ü18 (€)</label>
+        <input type="number" id="priceUe18Input" min="0" step="0.5" placeholder="z.B. 15">
+        <button id="priceSaveBtn">Speichern</button>
+        <span class="price-saved" id="priceSaved">Gespeichert ✓</span>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">🗓️ Anmeldezeitraum &amp; Kapazität</div>
+
+      <div class="info-editor">
+        <label for="opensAtInput">Anmeldebeginn (davor läuft ein Countdown, Formular gesperrt)</label>
+        <input type="datetime-local" id="opensAtInput" style="max-width:240px;">
+        <div class="info-editor-actions">
+          <button id="opensAtSaveBtn">Speichern</button>
+          <button id="opensAtClearBtn" style="background:rgba(255,255,255,0.05); color:var(--text); border:1px solid var(--glass-border);">Sofort geöffnet</button>
+          <span class="price-saved" id="opensAtSaved">Gespeichert ✓</span>
+        </div>
+      </div>
+
+      <div class="info-editor">
+        <label for="deadlineInput">Anmeldeschluss (danach ist das Formular gesperrt)</label>
+        <input type="datetime-local" id="deadlineInput" style="max-width:240px;">
+        <div class="info-editor-actions">
+          <button id="deadlineSaveBtn">Speichern</button>
+          <button id="deadlineClearBtn" style="background:rgba(255,255,255,0.05); color:var(--text); border:1px solid var(--glass-border);">Kein Anmeldeschluss</button>
+          <span class="price-saved" id="deadlineSaved">Gespeichert ✓</span>
+        </div>
+      </div>
+
+      <div class="info-editor">
+        <label for="maxTicketsInput">Maximale Teilnehmerzahl (leer lassen = kein Limit). Sobald erreicht, sperrt sich die Anmeldeseite automatisch.</label>
+        <input type="number" id="maxTicketsInput" min="1" style="max-width:120px;" placeholder="z.B. 200">
+        <div class="info-editor-actions">
+          <button id="maxTicketsSaveBtn">Speichern</button>
+          <button id="maxTicketsClearBtn" style="background:rgba(255,255,255,0.05); color:var(--text); border:1px solid var(--glass-border);">Kein Limit</button>
+          <span class="price-saved" id="maxTicketsSaved">Gespeichert ✓</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">📢 Infos für Gäste &amp; Mailversand</div>
+
+      <div class="info-editor">
+        <label for="infoText">Wichtige Infos auf der Anmeldeseite (optional, erscheint dort für alle Gäste)</label>
+        <textarea id="infoText" placeholder="z.B. Dresscode: Elegant. Einlass ab 17:00 Uhr. Fragen an ..."></textarea>
+        <div class="info-editor-actions">
+          <button id="infoSaveBtn">Speichern</button>
+          <span class="price-saved" id="infoSaved">Gespeichert ✓</span>
+        </div>
+      </div>
+
+      <div class="info-editor">
+        <label for="lernsaxThresholdInput">LernSax-Versand: Ab dieser Klassenstufe funktioniert der Weltweit-Modus (Mail geht normal raus). Darunter wird automatisch über deine eigene LernSax-Adresse verschickt.</label>
+        <input type="number" id="lernsaxThresholdInput" min="1" max="13" style="max-width:120px;" placeholder="z.B. 9">
+        <div class="info-editor-actions">
+          <button id="lernsaxThresholdSaveBtn">Speichern</button>
+          <span class="price-saved" id="lernsaxThresholdSaved">Gespeichert ✓</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">🕐 Ablaufplan des Abends</div>
+      <div class="info-editor">
+        <label>Erscheint als Zeitstrahl "Ablauf" auf der Winterball-Seite. Zum Sortieren an ⠿ ziehen.</label>
+        <div class="schedule-list" id="scheduleList"></div>
+        <button type="button" id="scheduleAddBtn">+ Programmpunkt hinzufügen</button>
+        <div class="info-editor-actions">
+          <button id="scheduleSaveBtn">Speichern</button>
+          <span class="price-saved" id="scheduleSaved">Gespeichert ✓</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">🔒 Datenschutz &amp; Löschung</div>
+      <div class="info-editor">
+        <label>Ihr speichert Name, E-Mail, Altersgruppe (U18/Ü18) und Ticket-ID von
+          Schüler:innen. Das sind personenbezogene Daten Minderjähriger. Bitte nach der Veranstaltung
+          zeitnah löschen (empfohlen: spätestens 30 Tage danach, sofern keine Buchhaltungspflicht
+          entgegensteht). Die <a href="datenschutz.html" target="_blank" style="color:var(--accent);">Datenschutzerklärung</a>
+          ist auf der Anmeldeseite verlinkt und muss vor jeder Anmeldung bestätigt werden.
+        </label>
+        <div class="info-editor-actions">
+          <button type="button" id="deleteAllDataBtn" class="danger-btn">⚠️ Alle Bestellungs- und Ticketdaten jetzt endgültig löschen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Kassen-Popup: Betrag eingeben, Rückgeld wird automatisch berechnet -->
+<div class="modal-overlay" id="cashModalOverlay">
+  <div class="cash-modal">
+    <div class="cash-modal-name" id="cashModalName"></div>
+
+    <div class="cash-row">
+      <span>Fälliger Betrag</span>
+      <strong id="cashDue">0,00 €</strong>
+    </div>
+    <div class="cash-row">
+      <span>Gegeben</span>
+      <strong id="cashGiven">0,00 €</strong>
+    </div>
+    <div class="cash-row cash-change" id="cashChangeRow">
+      <span>Rückgeld</span>
+      <strong id="cashChange">0,00 €</strong>
+    </div>
+
+    <div class="numpad">
+      <button type="button" class="num-btn" data-num="1">1</button>
+      <button type="button" class="num-btn" data-num="2">2</button>
+      <button type="button" class="num-btn" data-num="3">3</button>
+      <button type="button" class="num-btn" data-num="4">4</button>
+      <button type="button" class="num-btn" data-num="5">5</button>
+      <button type="button" class="num-btn" data-num="6">6</button>
+      <button type="button" class="num-btn" data-num="7">7</button>
+      <button type="button" class="num-btn" data-num="8">8</button>
+      <button type="button" class="num-btn" data-num="9">9</button>
+      <button type="button" class="num-btn num-clear" id="cashClearBtn">C</button>
+      <button type="button" class="num-btn" data-num="0">0</button>
+      <button type="button" class="num-btn num-back" id="cashBackBtn">⌫</button>
+    </div>
+
+    <button type="button" class="exact-btn" id="cashExactBtn">Passend</button>
+
+    <div class="cash-modal-actions">
+      <button type="button" class="secondary" id="cashCancelBtn">Abbrechen</button>
+      <button type="button" id="cashConfirmBtn" disabled>Bezahlt</button>
+    </div>
+  </div>
+</div>
+
+<!-- Popup: nachträglich eine Begleitung zu einer bestehenden Bestellung hinzufügen -->
+<div class="modal-overlay" id="addCompanionModalOverlay">
+  <div class="cash-modal">
+    <div class="cash-modal-name" id="addCompanionModalName"></div>
+    <div style="display:flex; flex-direction:column; gap:4px; margin-bottom:12px;">
+      <label style="font-size:12px; color:var(--text-dim);" for="addCompanionModalNameInput">Name der Begleitung</label>
+      <input type="text" id="addCompanionModalNameInput" placeholder="Vor- und Nachname"
+        style="padding:10px 12px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:14px;">
+    </div>
+    <div style="display:flex; flex-direction:column; gap:4px;">
+      <label style="font-size:12px; color:var(--text-dim);" for="addCompanionModalCategory">Altersgruppe</label>
+      <select id="addCompanionModalCategory">
+        <option value="">Alter?</option>
+        <option value="u18">U18</option>
+        <option value="ue18">Ü18</option>
+      </select>
+    </div>
+    <div id="addCompanionModalHint" style="font-size:12px; color:var(--text-dim); margin:12px 0 4px;"></div>
+    <div class="cash-modal-actions" style="margin-top:14px;">
+      <button type="button" class="secondary" id="addCompanionModalCancelBtn">Abbrechen</button>
+      <button type="button" id="addCompanionModalConfirmBtn">Hinzufügen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Popup: Bestellung vollständig bearbeiten (Name, E-Mail, Kategorie, Begleitungen) -->
+<div class="modal-overlay" id="editRegModalOverlay">
+  <div class="cash-modal" style="max-width:420px; text-align:left;">
+    <div class="cash-modal-name" style="text-align:center;">Bestellung bearbeiten</div>
+
+    <div style="display:flex; flex-direction:column; gap:4px; margin-bottom:12px;">
+      <label style="font-size:12px; color:var(--text-dim);" for="editRegNameInput">Name des Bestellers</label>
+      <input type="text" id="editRegNameInput"
+        style="padding:10px 12px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:14px;">
+    </div>
+    <div style="display:flex; flex-direction:column; gap:4px; margin-bottom:12px;">
+      <label style="font-size:12px; color:var(--text-dim);" for="editRegEmailInput">E-Mail</label>
+      <input type="email" id="editRegEmailInput"
+        style="padding:10px 12px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:14px;">
+    </div>
+    <div style="display:flex; flex-direction:column; gap:4px; margin-bottom:16px;">
+      <label style="font-size:12px; color:var(--text-dim);" for="editRegCategory">Altersgruppe des Bestellers</label>
+      <select id="editRegCategory">
+        <option value="u18">U18</option>
+        <option value="ue18">Ü18</option>
+      </select>
+    </div>
+
+    <div style="font-size:12px; color:var(--text-dim); font-weight:600; margin-bottom:8px;">Begleitungen</div>
+    <div id="editRegCompanionsList" style="display:flex; flex-direction:column; gap:8px;"></div>
+    <button type="button" class="add-companion-btn" id="editRegAddCompanionBtn" style="margin-top:8px; width:100%;">+ Begleitung hinzufügen</button>
+
+    <div id="editRegHint" style="font-size:11.5px; color:var(--text-dim); margin:12px 0 4px;"></div>
+    <div class="cash-modal-actions" style="margin-top:14px;">
+      <button type="button" class="secondary" id="editRegCancelBtn">Abbrechen</button>
+      <button type="button" id="editRegSaveBtn">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, doc, getDoc, writeBatch, onSnapshot, query, where, orderBy, updateDoc, deleteDoc, setDoc, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDQaRxga3bFrNkyU6E_sQpp5_0G4ApInOg",
+    authDomain: "winterball-27.firebaseapp.com",
+    projectId: "winterball-27",
+    storageBucket: "winterball-27.firebasestorage.app",
+    messagingSenderId: "487160103602",
+    appId: "1:487160103602:web:961a10f85bfdf77d3f7fab"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  const WORKER_URL = "https://winterball-worker.kollnerlenny.workers.dev";
+
+  // --- Custom-Dropdown: ersetzt <select> visuell durch das Winterball-Design,
+  // das native <select> bleibt (unsichtbar) bestehen, damit der Rest des Codes
+  // ganz normal .value lesen/schreiben und auf 'change' hören kann. ---
+  function enhanceSelect(select){
+    if (!select || select.dataset.csEnhanced) return;
+    select.dataset.csEnhanced = '1';
+
+    const wrap = document.createElement('div');
+    wrap.className = 'cs-wrap';
+    select.parentNode.insertBefore(wrap, select);
+    wrap.appendChild(select);
+
+    const trigger = document.createElement('div');
+    trigger.className = 'cs-trigger';
+    trigger.tabIndex = 0;
+    trigger.innerHTML = '<span class="cs-label"></span><span class="cs-arrow"></span>';
+    const label = trigger.querySelector('.cs-label');
+
+    const panel = document.createElement('div');
+    panel.className = 'cs-panel';
+
+    function renderOptions(){
+      panel.innerHTML = '';
+      Array.from(select.options).forEach(opt => {
+        const o = document.createElement('div');
+        o.className = 'cs-option' + (opt.value === select.value ? ' active' : '');
+        o.textContent = opt.textContent;
+        o.addEventListener('click', () => {
+          select.value = opt.value;
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+          syncLabel();
+          close();
+        });
+        panel.appendChild(o);
+      });
+    }
+    function syncLabel(){
+      const opt = select.options[select.selectedIndex];
+      label.textContent = opt ? opt.textContent : '';
+      trigger.classList.toggle('placeholder', !select.value);
+    }
+    function open(){ wrap.classList.add('open'); renderOptions(); document.addEventListener('click', onDocClick); }
+    function close(){ wrap.classList.remove('open'); document.removeEventListener('click', onDocClick); }
+    function onDocClick(e){ if (!wrap.contains(e.target)) close(); }
+
+    trigger.addEventListener('click', () => { wrap.classList.contains('open') ? close() : open(); });
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); wrap.classList.contains('open') ? close() : open(); }
+      if (e.key === 'Escape') close();
+    });
+
+    wrap.appendChild(trigger);
+    wrap.appendChild(panel);
+    syncLabel();
+  }
+  function enhanceAllSelects(root = document){
+    root.querySelectorAll('select').forEach(enhanceSelect);
+  }
+  enhanceAllSelects();
+
+  // Setzt die sichtbare Beschriftung eines Custom-Dropdowns zurück, wenn select.value
+  // programmatisch (nicht per Klick) geändert wurde — enhanceSelect() reagiert sonst
+  // nur auf echte Klicks auf die Optionen, nicht auf select.value= von außen.
+  function resetCustomSelectVisual(select){
+    const wrap = select.closest('.cs-wrap');
+    if (!wrap) return;
+    const label = wrap.querySelector('.cs-label');
+    const trigger = wrap.querySelector('.cs-trigger');
+    const opt = select.options[select.selectedIndex];
+    if (label) label.textContent = opt ? opt.textContent : '';
+    if (trigger) trigger.classList.toggle('placeholder', !select.value);
+  }
+
+  let allRegs = [];
+  let allTickets = [];
+  let ticketPrices = { u18: 0, ue18: 0 };
+  let lernsaxThreshold = null;
+  let scheduleLoaded = false;
+  let statsSyncTimer = null;
+
+  // Während das "Manuell hinzufügen"-Formular offen ist, soll sich Tabelle/Statistik
+  // nicht live neu aufbauen (stört beim Ausfüllen) — die Daten selbst bleiben im
+  // Hintergrund trotzdem aktuell, angezeigt wird der neue Stand erst wieder, sobald
+  // das Formular geschlossen wird (Anlegen, Anlegen & Bezahlen, oder Abbrechen).
+  let addFormOpen = false;
+  let pendingRender = false;
+
+  function scheduleRender(){
+    if (addFormOpen) { pendingRender = true; return; }
+    render();
+  }
+  function scheduleCharts(){
+    if (addFormOpen) { pendingRender = true; return; }
+    updateCharts();
+  }
+  function setAddFormOpen(open){
+    addFormOpen = open;
+    if (!open && pendingRender) {
+      pendingRender = false;
+      render();
+      updateCharts();
+    }
+  }
+
+  // Hält den öffentlichen Live-Ticketzähler (settings/stats) mit der echten Anzahl
+  // Tickets synchron — legt das Dokument beim allerersten Mal auch gleich an.
+  // Debounced, damit nicht bei jeder einzelnen Änderung sofort geschrieben wird.
+  function syncStatsCounter(){
+    clearTimeout(statsSyncTimer);
+    statsSyncTimer = setTimeout(async () => {
+      try {
+        await setDoc(doc(db, 'settings', 'stats'), { ticketCount: allTickets.length }, { merge: true });
+      } catch (err) {
+        console.error('Ticketzähler konnte nicht synchronisiert werden:', err);
+      }
+    }, 1500);
+  }
+
+  // --- Insights-Charts ---
+  // Abgesichert: falls Chart.js aus irgendeinem Grund nicht laden konnte
+  // (Netzwerk, Blocker, CDN down), darf das NICHT den Rest des Scripts
+  // (insbesondere den Login) lahmlegen.
+  if (typeof Chart !== 'undefined') {
+    Chart.defaults.color = '#9aa7c2';
+    Chart.defaults.font.family = "'Segoe UI',system-ui,sans-serif";
+    Chart.defaults.borderColor = 'rgba(255,255,255,0.08)';
+  } else {
+    console.error('Chart.js konnte nicht geladen werden — Diagramme sind deaktiviert, der Rest funktioniert normal.');
+  }
+
+  let chartCategory = null, chartPaid = null, chartDaily = null, chartRatings = null;
+
+  function tsToDate(ts){
+    if (!ts) return null;
+    if (typeof ts.toDate === 'function') return ts.toDate();
+    return new Date(ts);
+  }
+
+  function updateCharts(){
+    if (typeof Chart === 'undefined') return; // Chart.js nicht verfügbar — Diagramme einfach überspringen
+    const catCanvas = document.getElementById('chartCategory');
+    const paidCanvas = document.getElementById('chartPaid');
+    const dailyCanvas = document.getElementById('chartDaily');
+    if (!catCanvas || !paidCanvas || !dailyCanvas) return;
+
+    // 1) U18 / Ü18-Verteilung (über alle Tickets, nicht nur Bestellungen)
+    const u18Count = allTickets.filter(t => t.category === 'u18').length;
+    const ue18Count = allTickets.filter(t => t.category === 'ue18').length;
+
+    if (chartCategory) chartCategory.destroy();
+    chartCategory = new Chart(catCanvas, {
+      type: 'doughnut',
+      data: {
+        labels: ['Unter 18', '18 oder älter'],
+        datasets: [{ data: [u18Count, ue18Count], backgroundColor: ['#8fb4ff', '#7fe0a8'], borderColor: '#131c30', borderWidth: 2 }]
+      },
+      options: { plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: true }
+    });
+
+    // 2) Bezahlt vs. offen (auf Bestellungs-Ebene)
+    const paidCount = allRegs.filter(r => r.paid).length;
+    const openCount = allRegs.length - paidCount;
+
+    if (chartPaid) chartPaid.destroy();
+    chartPaid = new Chart(paidCanvas, {
+      type: 'doughnut',
+      data: {
+        labels: ['Bezahlt', 'Offen'],
+        datasets: [{ data: [paidCount, openCount], backgroundColor: ['#7fe0a8', '#ffd27f'], borderColor: '#131c30', borderWidth: 2 }]
+      },
+      options: { plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: true }
+    });
+
+    // 3) Anmeldungen pro Tag (Anzahl neuer Bestellungen je Kalendertag)
+    const dayCounts = {};
+    allRegs.forEach(r => {
+      const d = tsToDate(r.createdAt);
+      if (!d) return;
+      const key = d.toISOString().slice(0, 10);
+      dayCounts[key] = (dayCounts[key] || 0) + 1;
+    });
+    const sortedDays = Object.keys(dayCounts).sort();
+    const dayLabels = sortedDays.map(k => {
+      const [y,m,dd] = k.split('-');
+      return `${dd}.${m}.`;
+    });
+
+    if (chartDaily) chartDaily.destroy();
+    if (sortedDays.length === 0) {
+      const ctx = dailyCanvas.getContext('2d');
+      ctx.clearRect(0, 0, dailyCanvas.width, dailyCanvas.height);
+    } else {
+      chartDaily = new Chart(dailyCanvas, {
+        type: 'line',
+        data: {
+          labels: dayLabels,
+          datasets: [{
+            label: 'Neue Anmeldungen',
+            data: sortedDays.map(k => dayCounts[k]),
+            borderColor: '#8fb4ff', backgroundColor: 'rgba(143,180,255,0.15)',
+            fill: true, tension: 0.3, pointRadius: 3,
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
+          maintainAspectRatio: true,
+        }
+      });
+    }
+  }
+
+  let allRatings = [];
+
+  function renderRatings(){
+    const ratingsCanvas = document.getElementById('chartRatings');
+    if (!ratingsCanvas) return;
+
+    const count = allRatings.length;
+    const avg = count ? allRatings.reduce((sum, r) => sum + (Number(r.stars) || 0), 0) / count : 0;
+    document.getElementById('statRatingAvg').textContent = count ? avg.toFixed(1) + ' ★' : '–';
+    document.getElementById('statRatingCount').textContent = count;
+
+    const distribution = [1,2,3,4,5].map(v => allRatings.filter(r => Number(r.stars) === v).length);
+
+    if (chartRatings) chartRatings.destroy();
+    chartRatings = new Chart(ratingsCanvas, {
+      type: 'bar',
+      data: {
+        labels: ['1 ★','2 ★','3 ★','4 ★','5 ★'],
+        datasets: [{ data: distribution, backgroundColor: '#ffd27f', borderRadius: 6 }]
+      },
+      options: {
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
+        maintainAspectRatio: true,
+      }
+    });
+
+    const sortedRatings = [...allRatings]
+      .sort((a, b) => (b.createdAt?.toDate?.() || 0) - (a.createdAt?.toDate?.() || 0));
+
+    const list = document.getElementById('ratingsCommentList');
+    if (!list) return;
+    list.innerHTML = sortedRatings.length
+      ? sortedRatings.map(r => `
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:12px 14px; background:rgba(255,255,255,0.03); border:1px solid var(--glass-border); border-radius:var(--radius-sm);">
+          <div style="flex-grow:1;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span style="color:#ffd27f; font-size:13px;">${'★'.repeat(Number(r.stars)||0)}${'☆'.repeat(5-(Number(r.stars)||0))}</span>
+              <span style="font-size:11px; color:var(--text-dim);">${formatTimestamp(r.createdAt)}</span>
+            </div>
+            <div style="font-size:13.5px; color:${r.comment ? 'var(--text)' : 'var(--text-dim)'}; font-style:${r.comment ? 'normal' : 'italic'};">
+              ${r.comment ? escapeHtml(r.comment) : 'Kein Kommentar hinterlassen'}
+            </div>
+          </div>
+          <button class="delete-btn delete-rating-btn" data-id="${r.id}" title="Diese Bewertung löschen" style="flex-shrink:0;">🗑</button>
+        </div>`).join('')
+      : '<div style="color:var(--text-dim); font-size:13px;">Noch keine Bewertungen vorhanden.</div>';
+
+    list.querySelectorAll('.delete-rating-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.id;
+        if (!id) return;
+        if (!confirm('Diese Bewertung wirklich löschen?')) return;
+        btn.disabled = true;
+        try {
+          await deleteDoc(doc(db, 'ratings', id));
+        } catch(err) {
+          alert('Fehler beim Löschen: ' + err.message);
+          btn.disabled = false;
+        }
+      });
+    });
+  }
+
+  document.getElementById('resetAllRatingsBtn')?.addEventListener('click', async () => {
+    if (allRatings.length === 0) {
+      alert('Keine Bewertungen zum Zurücksetzen vorhanden.');
+      return;
+    }
+    if (!confirm(`Wirklich ALLE ${allRatings.length} Bewertungen unwiderruflich löschen?`)) return;
+    try {
+      const snap = await getDocs(collection(db, 'ratings'));
+      const batch = writeBatch(db);
+      snap.docs.forEach(d => batch.delete(d.ref));
+      await batch.commit();
+      alert('Alle Bewertungen wurden zurückgesetzt.');
+    } catch(err) {
+      alert('Fehler beim Zurücksetzen: ' + err.message);
+    }
+  });
+
+  const DEFAULT_SCHEDULE = [
+    { time: '17:30', label: 'Einlass', note: 'Ankommen, Garderobe, erste Getränke' },
+    { time: '18:00', label: 'Eröffnung', note: 'Begrüßung und Auftakt des Abends' },
+    { time: '18:30', label: 'Buffet', note: 'Gemeinsames Essen' },
+    { time: '20:00', label: 'Tanz & Programm', note: 'Musik, Überraschungen, gute Laune' },
+    { time: '23:00', label: 'Ausklang', note: 'Gemütlicher Ausklang des Abends' },
+  ];
+
+  // Berechnet die Klassenstufe aus dem Einschulungsjahr am Ende der LernSax-Adresse
+  // (Muster: nachname+vorname-kürzel+einschulungsjahr@schule.lernsax.de)
+  function gradeFromEmail(email){
+    const [local, domain] = String(email || '').toLowerCase().split('@');
+    if (!domain || !domain.endsWith('lernsax.de')) return null;
+    const match = (local || '').match(/(\d{4})$/);
+    if (!match) return null;
+    const enrollYear = Number(match[1]);
+    const grade = (2026 - enrollYear) + 5; // Gymnasium: Einschulung = 5. Klasse, Schuljahr 2026/2027
+    return (grade >= 5 && grade <= 12) ? grade : null;
+  }
+
+  // Wandelt Umlaute/ß in die bei LernSax übliche Schreibweise um (ä->ae, ö->oe, ü->ue, ß->ss)
+  function transliterateForLernSax(str){
+    return str
+      .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue')
+      .replace(/Ä/g,'ae').replace(/Ö/g,'oe').replace(/Ü/g,'ue')
+      .replace(/ß/g,'ss')
+      .toLowerCase()
+      .replace(/[^a-z]/g,'');
+  }
+
+  // Schlägt aus Name + Klassenstufe eine LernSax-Adresse vor, nach dem Muster
+  // nachname + erste 2 Buchstaben vorname + einschulungsjahr@gymwilsdruff.lernsax.de
+  function suggestLernsaxEmail(fullName, klasse){
+    const parts = fullName.trim().split(/\s+/);
+    if (parts.length < 2 || !klasse) return '';
+    const vorname = parts[0];
+    const nachname = parts.slice(1).join('');
+    const enrollYear = 2031 - Number(klasse); // Umkehrung von gradeFromEmail()
+    const localPart = transliterateForLernSax(nachname) + transliterateForLernSax(vorname).slice(0, 2) + enrollYear;
+    return `${localPart}@gymwilsdruff.lernsax.de`;
+  }
+
+  function shouldUseLernSax(email){
+    if (!lernsaxThreshold) return false;
+    const grade = gradeFromEmail(email);
+    if (grade === null) return false;
+    return grade < lernsaxThreshold;
+  }
+
+  onAuthStateChanged(auth, (user) => {
+    document.getElementById('loginCard').style.display = user ? 'none' : 'block';
+    document.getElementById('dashboard').style.display = user ? 'block' : 'none';
+    if(user) startListening();
+  });
+
+  document.getElementById('loginBtn').addEventListener('click', async () => {
+    const email = document.getElementById('loginEmail').value;
+    const pass = document.getElementById('loginPass').value;
+    try { await signInWithEmailAndPassword(auth, email, pass); }
+    catch(e){ document.getElementById('loginError').style.display = 'block'; }
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelector(`[data-tab-content="${btn.dataset.tab}"]`).classList.add('active');
+      if (btn.dataset.tab === 'insights') updateCharts();
+      if (btn.dataset.tab === 'ratings') renderRatings();
+    });
+  });
+
+  function startListening(){
+    onSnapshot(query(collection(db, 'registrations'), orderBy('createdAt', 'desc')), (snap) => {
+      allRegs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      scheduleRender();
+      scheduleCharts();
+    });
+    onSnapshot(collection(db, 'tickets'), (snap) => {
+      allTickets = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      scheduleRender();
+      syncStatsCounter();
+      scheduleCharts();
+    });
+    onSnapshot(collection(db, 'ratings'), (snap) => {
+      allRatings = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderRatings();
+    });
+    onSnapshot(doc(db, 'settings', 'pricing'), (snap) => {
+      const data = snap.exists() ? snap.data() : {};
+      ticketPrices = { u18: Number(data.u18 || 0), ue18: Number(data.ue18 || 0) };
+      document.getElementById('priceU18Input').value = ticketPrices.u18 || '';
+      document.getElementById('priceUe18Input').value = ticketPrices.ue18 || '';
+      scheduleRender();
+    });
+    onSnapshot(doc(db, 'settings', 'info'), (snap) => {
+      document.getElementById('infoText').value = snap.exists() ? (snap.data().text || '') : '';
+    });
+    onSnapshot(doc(db, 'settings', 'deadline'), (snap) => {
+      const iso = snap.exists() ? snap.data().timestamp : null;
+      document.getElementById('deadlineInput').value = iso ? isoToLocalInputValue(iso) : '';
+    });
+    onSnapshot(doc(db, 'settings', 'opensAt'), (snap) => {
+      const iso = snap.exists() ? snap.data().timestamp : null;
+      document.getElementById('opensAtInput').value = iso ? isoToLocalInputValue(iso) : '';
+    });
+    onSnapshot(doc(db, 'settings', 'lernsaxThreshold'), (snap) => {
+      const grade = snap.exists() ? snap.data().grade : null;
+      document.getElementById('lernsaxThresholdInput').value = grade || '';
+      lernsaxThreshold = grade || null;
+    });
+    onSnapshot(doc(db, 'settings', 'capacity'), (snap) => {
+      const max = snap.exists() ? snap.data().maxTickets : null;
+      document.getElementById('maxTicketsInput').value = max || '';
+    });
+    onSnapshot(doc(db, 'settings', 'schedule'), (snap) => {
+      // Nur beim allerersten Laden rendern, damit ein laufender Bearbeitungsvorgang
+      // (z.B. neue, noch leere Zeile) nicht durch den Snapshot überschrieben wird.
+      if (scheduleLoaded) return;
+      scheduleLoaded = true;
+      const items = (snap.exists() && Array.isArray(snap.data().items) && snap.data().items.length)
+        ? snap.data().items : DEFAULT_SCHEDULE;
+      renderScheduleRows(items);
+    });
+  }
+
+  function isoToLocalInputValue(iso){
+    const d = new Date(iso);
+    const pad = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function ticketsFor(regId){
+    return allTickets.filter(t => t.registrationId === regId);
+  }
+
+  function categoryLabel(cat){
+    return cat === 'u18' ? 'U18' : cat === 'ue18' ? 'Ü18' : '';
+  }
+
+  let showOnlyUnpaid = false;
+
+  function render(){
+    const term = document.getElementById('search').value.toLowerCase();
+    const rows = allRegs.filter(r =>
+      (!term || (r.name||'').toLowerCase().includes(term) || (r.email||'').toLowerCase().includes(term)
+      || (r.companions||[]).some(c => (c.name||'').toLowerCase().includes(term)))
+      && (!showOnlyUnpaid || !r.paid)
+    );
+
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = rows.map(r => {
+      const tickets = ticketsFor(r.id);
+      const companionsHtml = (r.companions||[]).length
+        ? `<ul class="attendee-list">${r.companions.map(c => `<li>${escapeHtml(c.name)} <span class="badge out">${categoryLabel(c.category)}</span></li>`).join('')}</ul>`
+        : '<span style="color:var(--text-dim)">—</span>';
+
+      const ticketsHtml = tickets.length
+        ? `<ul class="ticket-checkin-list">${tickets.map(t => `
+            <li>
+              <span>${escapeHtml(t.name)}</span>
+              <button class="checkin-toggle ${t.checkedIn ? 'in' : ''}" data-ticket-id="${t.id}" data-state="${t.checkedIn ? '1' : '0'}">
+                ${t.checkedIn ? '✓ Eingecheckt' : 'Einchecken'}
+              </button>
+            </li>`).join('')}</ul>`
+        : '<span style="color:var(--text-dim)">—</span>';
+
+      return `
+      <tr>
+        <td><span class="attendee-list orderer">${escapeHtml(r.name||'')} <span class="badge out">${categoryLabel(r.category)}</span></span></td>
+        <td>
+          ${companionsHtml}
+          <button class="add-companion-btn" data-id="${r.id}" title="Nachträglich eine Begleitung hinzufügen">+ Begleitung</button>
+        </td>
+        <td>${escapeHtml(r.email||'')}</td>
+        <td>${ticketsHtml}</td>
+        <td>
+          <div class="paid-cell">
+            ${r.paid
+              ? `<span class="badge in">Bezahlt</span>`
+              : `<button class="pay-btn" data-id="${r.id}">Bezahlen</button>`}
+            ${r.paid ? `<button class="pdf-btn" data-id="${r.id}" title="Tickets als PDF herunterladen">📄 PDF</button>` : ''}
+            ${r.paid ? `<button class="invoice-btn" data-id="${r.id}" title="Quittung als PDF herunterladen">🧾 Quittung</button>` : ''}
+          </div>
+        </td>
+        <td style="font-size:11px; color:var(--text-dim); white-space:nowrap;">
+          <div>Angemeldet:<br>${formatTimestamp(r.createdAt)}</div>
+          ${r.paid ? `<div style="margin-top:6px;">Bezahlt:<br>${formatTimestamp(r.paidAt)}</div>` : ''}
+        </td>
+        <td>
+          <button class="edit-reg-btn" data-id="${r.id}" title="Bestellung bearbeiten">✏️</button>
+          <button class="delete-btn" data-id="${r.id}" title="Bestellung löschen">🗑</button>
+        </td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('statOrders').textContent = allRegs.length;
+    document.getElementById('statTickets').textContent = allTickets.length;
+    document.getElementById('statPaid').textContent = allRegs.filter(r=>r.paid).length;
+    document.getElementById('statCheckedIn').textContent = allTickets.filter(t=>t.checkedIn).length;
+    const revenue = allTickets
+      .filter(t => t.paid)
+      .reduce((sum, t) => sum + (t.category === 'u18' ? ticketPrices.u18 : ticketPrices.ue18), 0);
+    document.getElementById('statRevenue').textContent = revenue.toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
+    const u18Count = allTickets.filter(t => t.category === 'u18').length;
+    const ue18Count = allTickets.filter(t => t.category === 'ue18').length;
+    document.getElementById('statU18Ratio').textContent = `${u18Count} / ${ue18Count}`;
+
+    tbody.querySelectorAll('.pay-btn').forEach(btn => {
+      btn.addEventListener('click', () => openCashModal(btn.dataset.id));
+    });
+    tbody.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', () => deleteRegistration(btn.dataset.id));
+    });
+    tbody.querySelectorAll('.edit-reg-btn').forEach(btn => {
+      btn.addEventListener('click', () => openEditRegModal(btn.dataset.id));
+    });
+    tbody.querySelectorAll('.checkin-toggle').forEach(btn => {
+      btn.addEventListener('click', () => toggleCheckIn(btn.dataset.ticketId, btn.dataset.state === '1'));
+    });
+    tbody.querySelectorAll('.pdf-btn').forEach(btn => {
+      btn.addEventListener('click', () => downloadTicketsPdf(btn.dataset.id, btn));
+    });
+    tbody.querySelectorAll('.invoice-btn').forEach(btn => {
+      btn.addEventListener('click', () => downloadInvoicePdf(btn.dataset.id, btn));
+    });
+    tbody.querySelectorAll('.add-companion-btn').forEach(btn => {
+      btn.addEventListener('click', () => openAddCompanionModal(btn.dataset.id));
+    });
+  }
+
+  async function toggleCheckIn(ticketId, currentlyCheckedIn){
+    await updateDoc(doc(db, 'tickets', ticketId), { checkedIn: !currentlyCheckedIn });
+  }
+
+  async function downloadTicketsPdf(regId, btnEl){
+    const reg = allRegs.find(r => r.id === regId);
+    const tickets = ticketsFor(regId);
+    if(!reg || tickets.length === 0) return;
+
+    btnEl.disabled = true;
+    btnEl.textContent = '⏳ ...';
+    try {
+      const idToken = await auth.currentUser.getIdToken();
+      const res = await fetch(WORKER_URL + '/generate-pdf', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
+        body: JSON.stringify({
+          attendees: tickets.map(t => ({ name: t.name, ticketId: t.ticketId, category: t.category }))
+        })
+      });
+      if(!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error(errBody.error || `PDF-Erstellung fehlgeschlagen (Status ${res.status})`);
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Winterball-Tickets-${reg.name.replace(/\s+/g,'-')}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch(err){
+      console.error(err);
+      alert('PDF konnte nicht erstellt werden:\n' + err.message);
+    } finally {
+      btnEl.disabled = false;
+      btnEl.textContent = '📄 PDF';
+    }
+  }
+
+  async function downloadInvoicePdf(regId, btnEl){
+    const reg = allRegs.find(r => r.id === regId);
+    const tickets = ticketsFor(regId);
+    if(!reg || tickets.length === 0) return;
+
+    btnEl.disabled = true;
+    btnEl.textContent = '⏳ ...';
+    try {
+      // Immer die aktuell gültigen Preise nutzen (nicht auf lokalen Cache verlassen)
+      const priceSnap = await getDoc(doc(db, 'settings', 'pricing'));
+      const freshPrices = priceSnap.exists()
+        ? { u18: Number(priceSnap.data().u18 || 0), ue18: Number(priceSnap.data().ue18 || 0) }
+        : { u18: 0, ue18: 0 };
+
+      const idToken = await auth.currentUser.getIdToken();
+      const res = await fetch(WORKER_URL + '/generate-invoice', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
+        body: JSON.stringify({
+          ordererName: reg.name,
+          attendees: tickets.map(t => ({
+            name: t.name, category: t.category, price: freshPrices[t.category] || 0
+          }))
+        })
+      });
+      if(!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error(errBody.error || `Quittung konnte nicht erstellt werden (Status ${res.status})`);
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Winterball-Quittung-${reg.name.replace(/\s+/g,'-')}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch(err){
+      console.error(err);
+      alert('Quittung konnte nicht erstellt werden:\n' + err.message);
+    } finally {
+      btnEl.disabled = false;
+      btnEl.textContent = '🧾 Quittung';
+    }
+  }
+
+  async function deleteRegistration(regId){
+    const reg = allRegs.find(r => r.id === regId);
+    if(!reg) return;
+    const confirmed = confirm(`Bestellung von "${reg.name}" (inkl. aller zugehörigen Tickets) wirklich unwiderruflich löschen?`);
+    if(!confirmed) return;
+
+    const tickets = ticketsFor(regId);
+    const batch = writeBatch(db);
+    batch.delete(doc(db, 'registrations', regId));
+    tickets.forEach(t => batch.delete(doc(db, 'tickets', t.id)));
+    await batch.commit();
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function formatTimestamp(ts){
+    if (!ts || !ts.toDate) return '–';
+    return ts.toDate().toLocaleString('de-DE', {
+      day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+  }
+
+  // --- Kassen-Popup: Betrag eingeben, Rückgeld wird automatisch berechnet ---
+  let cashModalState = { regId: null, btnEl: null, dueCents: 0, givenCents: 0 };
+
+  function ticketsDueCents(regId){
+    const tickets = ticketsFor(regId);
+    const total = tickets.reduce((sum, t) => sum + (ticketPrices[t.category] || 0), 0);
+    return Math.round(total * 100);
+  }
+
+  function formatCents(cents){
+    return (cents / 100).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+  }
+
+  function updateCashDisplay(){
+    document.getElementById('cashDue').textContent = formatCents(cashModalState.dueCents);
+    document.getElementById('cashGiven').textContent = formatCents(cashModalState.givenCents);
+    const change = cashModalState.givenCents - cashModalState.dueCents;
+    const changeRow = document.getElementById('cashChangeRow');
+    document.getElementById('cashChange').textContent = formatCents(Math.abs(change));
+    changeRow.classList.toggle('negative', change < 0);
+    document.getElementById('cashConfirmBtn').disabled = cashModalState.givenCents < cashModalState.dueCents;
+  }
+
+  function openCashModal(regId){
+    const reg = allRegs.find(r => r.id === regId);
+    const btnEl = document.getElementById('tableBody').querySelector(`.pay-btn[data-id="${regId}"]`);
+    if (!reg || !btnEl) return;
+
+    cashModalState = { regId, btnEl, dueCents: ticketsDueCents(regId), givenCents: 0 };
+    document.getElementById('cashModalName').textContent = reg.name;
+    updateCashDisplay();
+    document.getElementById('cashModalOverlay').classList.add('show');
+  }
+
+  function closeCashModal(){
+    document.getElementById('cashModalOverlay').classList.remove('show');
+    cashModalState = { regId: null, btnEl: null, dueCents: 0, givenCents: 0 };
+  }
+
+  document.querySelectorAll('.num-btn[data-num]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const next = cashModalState.givenCents * 10 + Number(btn.dataset.num);
+      if (next <= 99999999) cashModalState.givenCents = next; // Deckel bei 999.999,99 €
+      updateCashDisplay();
+    });
+  });
+  document.getElementById('cashBackBtn').addEventListener('click', () => {
+    cashModalState.givenCents = Math.floor(cashModalState.givenCents / 10);
+    updateCashDisplay();
+  });
+  document.getElementById('cashClearBtn').addEventListener('click', () => {
+    cashModalState.givenCents = 0;
+    updateCashDisplay();
+  });
+  document.getElementById('cashExactBtn').addEventListener('click', () => {
+    cashModalState.givenCents = cashModalState.dueCents;
+    updateCashDisplay();
+  });
+  document.getElementById('cashCancelBtn').addEventListener('click', closeCashModal);
+  document.getElementById('cashModalOverlay').addEventListener('click', (e) => {
+    if (e.target.id === 'cashModalOverlay') closeCashModal();
+  });
+  document.getElementById('cashConfirmBtn').addEventListener('click', () => {
+    const { regId, btnEl } = cashModalState;
+    closeCashModal();
+    if (regId && btnEl) markAsPaid(regId, btnEl);
+  });
+
+  // --- Bestellung vollständig bearbeiten (Name, E-Mail, Kategorie, Begleitungen) ---
+  let editRegId = null;
+
+  function makeEditCompanionRow(companion, ticketId){
+    const row = document.createElement('div');
+    row.className = 'companion-add-row';
+    row.dataset.ticketId = ticketId || ''; // vorhandenes Ticket, das mit dieser Zeile verknüpft ist (leer = neu)
+    row.innerHTML = `
+      <input type="text" class="edit-companion-name" value="${(companion.name||'').replace(/"/g,'&quot;')}" placeholder="Vor- und Nachname"
+        style="padding:10px 12px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:13px;">
+      <select class="edit-companion-category">
+        <option value="u18">U18</option>
+        <option value="ue18">Ü18</option>
+      </select>
+      <button type="button" title="Begleitung entfernen">×</button>`;
+    row.querySelector('.edit-companion-category').value = companion.category === 'ue18' ? 'ue18' : 'u18';
+    row.querySelector('button').addEventListener('click', () => row.remove());
+    enhanceSelect(row.querySelector('.edit-companion-category'));
+    return row;
+  }
+
+  function openEditRegModal(regId){
+    const reg = allRegs.find(r => r.id === regId);
+    if (!reg) return;
+    editRegId = regId;
+
+    document.getElementById('editRegNameInput').value = reg.name || '';
+    document.getElementById('editRegEmailInput').value = reg.email || '';
+    document.getElementById('editRegCategory').value = reg.category === 'ue18' ? 'ue18' : 'u18';
+    resetCustomSelectVisual(document.getElementById('editRegCategory'));
+
+    // Bestehende Tickets so gut wie möglich den Begleitungen zuordnen (per Name +
+    // Kategorie), damit beim Speichern genau die richtigen Ticket-Dokumente
+    // aktualisiert bzw. gelöscht werden, statt neue anzulegen.
+    const tickets = ticketsFor(regId);
+    const ordererTicket = tickets.find(t => t.name === reg.name && t.category === reg.category);
+    const usedTicketIds = new Set(ordererTicket ? [ordererTicket.id] : []);
+
+    const list = document.getElementById('editRegCompanionsList');
+    list.innerHTML = '';
+    (reg.companions || []).forEach(c => {
+      const match = tickets.find(t => !usedTicketIds.has(t.id) && t.name === c.name && t.category === c.category);
+      if (match) usedTicketIds.add(match.id);
+      list.appendChild(makeEditCompanionRow(c, match ? match.id : ''));
+    });
+
+    document.getElementById('editRegHint').textContent = reg.paid
+      ? 'Bestellung ist bereits bezahlt. Neu hinzugefügte Begleitungen bekommen sofort eine eigene Ticket-Mail — bestehende Tickets werden nicht automatisch neu verschickt.'
+      : 'Bestellung ist noch nicht bezahlt — Änderungen wirken sich erst beim Bezahlen auf die verschickten Tickets aus.';
+
+    document.getElementById('editRegModalOverlay').classList.add('show');
+  }
+
+  function closeEditRegModal(){
+    document.getElementById('editRegModalOverlay').classList.remove('show');
+    editRegId = null;
+  }
+
+  document.getElementById('editRegAddCompanionBtn').addEventListener('click', () => {
+    document.getElementById('editRegCompanionsList').appendChild(makeEditCompanionRow({ name: '', category: 'u18' }, ''));
+  });
+  document.getElementById('editRegCancelBtn').addEventListener('click', closeEditRegModal);
+  document.getElementById('editRegModalOverlay').addEventListener('click', (e) => {
+    if (e.target.id === 'editRegModalOverlay') closeEditRegModal();
+  });
+
+  document.getElementById('editRegSaveBtn').addEventListener('click', async () => {
+    const regId = editRegId;
+    const reg = allRegs.find(r => r.id === regId);
+    if (!reg) return;
+
+    const name = document.getElementById('editRegNameInput').value.trim();
+    const email = document.getElementById('editRegEmailInput').value.trim();
+    const category = document.getElementById('editRegCategory').value;
+    if (!name || !email) { alert('Name und E-Mail dürfen nicht leer sein.'); return; }
+
+    const companionRows = Array.from(document.getElementById('editRegCompanionsList').children);
+    const companionEntries = companionRows.map(row => ({
+      ticketId: row.dataset.ticketId || null,
+      name: row.querySelector('.edit-companion-name').value.trim(),
+      category: row.querySelector('.edit-companion-category').value
+    })).filter(c => c.name);
+
+    const saveBtn = document.getElementById('editRegSaveBtn');
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Speichern...';
+
+    try {
+      const tickets = ticketsFor(regId);
+      const ordererTicket = tickets.find(t => t.name === reg.name && t.category === reg.category);
+      const keptTicketIds = new Set(companionEntries.map(c => c.ticketId).filter(Boolean));
+      if (ordererTicket) keptTicketIds.add(ordererTicket.id);
+
+      const batch = writeBatch(db);
+
+      // 1) Bestellungs-Grunddaten aktualisieren
+      batch.update(doc(db, 'registrations', regId), {
+        name, email, category,
+        companions: companionEntries.map(c => ({ name: c.name, category: c.category }))
+      });
+
+      // 2) Ticket des Bestellers mitziehen (umbenennen/Kategorie ändern), oder
+      //    anlegen, falls aus irgendeinem Grund noch keins existiert
+      if (ordererTicket) {
+        batch.update(doc(db, 'tickets', ordererTicket.id), { name, category, email });
+      } else {
+        const ref = doc(collection(db, 'tickets'));
+        batch.set(ref, {
+          registrationId: regId, name, category, email,
+          ticketId: genTicketId(), paid: reg.paid, checkedIn: false, createdAt: serverTimestamp()
+        });
+      }
+
+      // 3) Begleitungen abgleichen: bestehende Tickets updaten, entfernte löschen,
+      //    neue anlegen
+      const newCompanionTickets = []; // für ggf. Ticket-Mail, falls schon bezahlt
+      companionEntries.forEach(c => {
+        if (c.ticketId) {
+          batch.update(doc(db, 'tickets', c.ticketId), { name: c.name, category: c.category });
+        } else {
+          const ref = doc(collection(db, 'tickets'));
+          const ticketId = genTicketId();
+          batch.set(ref, {
+            registrationId: regId, name: c.name, category: c.category, email,
+            ticketId, paid: reg.paid, checkedIn: false, createdAt: serverTimestamp()
+          });
+          newCompanionTickets.push({ name: c.name, category: c.category, ticketId });
+        }
+      });
+      tickets.forEach(t => {
+        if (!keptTicketIds.has(t.id)) batch.delete(doc(db, 'tickets', t.id));
+      });
+
+      await batch.commit();
+
+      // 4) Ist die Bestellung schon bezahlt und es kamen neue Begleitungen dazu,
+      //    dafür sofort eine eigene Ticket-Mail verschicken (wie beim separaten
+      //    "+ Begleitung"-Button)
+      if (reg.paid && newCompanionTickets.length) {
+        const priceSnap = await getDoc(doc(db, 'settings', 'pricing'));
+        const freshPrices = priceSnap.exists()
+          ? { u18: Number(priceSnap.data().u18 || 0), ue18: Number(priceSnap.data().ue18 || 0) }
+          : { u18: 0, ue18: 0 };
+        const idToken = await auth.currentUser.getIdToken();
+        await fetch(WORKER_URL + '/send-tickets', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
+          body: JSON.stringify({
+            email, ordererName: name,
+            attendees: newCompanionTickets.map(t => ({ ...t, price: freshPrices[t.category] || 0 })),
+            useLernSax: shouldUseLernSax(email)
+          })
+        });
+      }
+
+      closeEditRegModal();
+    } catch (err) {
+      console.error(err);
+      alert('Änderungen konnten nicht vollständig gespeichert werden: ' + err.message);
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Speichern';
+    }
+  });
+
+  async function markAsPaid(regId, btnEl){
+    btnEl.disabled = true;
+    btnEl.textContent = 'Wird verarbeitet...';
+    const reg = allRegs.find(r => r.id === regId);
+    const tickets = ticketsFor(regId);
+    if(!reg || tickets.length === 0) return;
+
+    try {
+      const batch = writeBatch(db);
+      batch.update(doc(db, 'registrations', regId), { paid: true, paidAt: serverTimestamp() });
+      tickets.forEach(t => batch.update(doc(db, 'tickets', t.id), { paid: true }));
+      await batch.commit();
+
+      // Preise IMMER frisch aus Firestore holen (nicht den evtl. veralteten
+      // lokalen Cache nutzen) — verhindert 0€-Quittungen durch Timing-Probleme.
+      const priceSnap = await getDoc(doc(db, 'settings', 'pricing'));
+      const freshPrices = priceSnap.exists()
+        ? { u18: Number(priceSnap.data().u18 || 0), ue18: Number(priceSnap.data().ue18 || 0) }
+        : { u18: 0, ue18: 0 };
+
+      const idToken = await auth.currentUser.getIdToken();
+      const res = await fetch(WORKER_URL + '/send-tickets', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
+        body: JSON.stringify({
+          email: reg.email,
+          ordererName: reg.name,
+          attendees: tickets.map(t => ({
+            name: t.name, ticketId: t.ticketId, category: t.category,
+            price: freshPrices[t.category] || 0
+          })),
+          useLernSax: shouldUseLernSax(reg.email)
+        })
+      });
+
+      if(!res.ok) throw new Error('Ticket-Mail fehlgeschlagen');
+    } catch(err){
+      console.error(err);
+      alert('Als bezahlt markiert, aber Ticket-Mail konnte nicht verschickt werden. Bitte manuell prüfen.');
+      btnEl.disabled = false;
+      btnEl.textContent = 'Erneut versuchen';
+    }
+  }
+
+  function genTicketId(){
+    return 'WB27-' + Math.random().toString(36).slice(2,8).toUpperCase();
+  }
+
+  // --- Nachträglich eine Begleitung zu einer bestehenden Bestellung hinzufügen ---
+  let addCompanionRegId = null;
+
+  function openAddCompanionModal(regId){
+    const reg = allRegs.find(r => r.id === regId);
+    if (!reg) return;
+    addCompanionRegId = regId;
+    document.getElementById('addCompanionModalName').textContent = `Begleitung für ${reg.name}`;
+    document.getElementById('addCompanionModalNameInput').value = '';
+    document.getElementById('addCompanionModalCategory').value = '';
+    resetCustomSelectVisual(document.getElementById('addCompanionModalCategory'));
+    document.getElementById('addCompanionModalHint').textContent = reg.paid
+      ? 'Die Bestellung ist schon bezahlt — die Begleitung bekommt sofort eine eigene Ticket-Mail.'
+      : 'Die Bestellung ist noch nicht bezahlt — die Begleitung bekommt ihr Ticket automatisch mit, sobald bezahlt wird.';
+    document.getElementById('addCompanionModalOverlay').classList.add('show');
+  }
+  function closeAddCompanionModal(){
+    document.getElementById('addCompanionModalOverlay').classList.remove('show');
+    addCompanionRegId = null;
+  }
+  document.getElementById('addCompanionModalCancelBtn').addEventListener('click', closeAddCompanionModal);
+  document.getElementById('addCompanionModalOverlay').addEventListener('click', (e) => {
+    if (e.target.id === 'addCompanionModalOverlay') closeAddCompanionModal();
+  });
+
+  document.getElementById('addCompanionModalConfirmBtn').addEventListener('click', async () => {
+    const regId = addCompanionRegId;
+    const reg = allRegs.find(r => r.id === regId);
+    const name = document.getElementById('addCompanionModalNameInput').value.trim();
+    const category = document.getElementById('addCompanionModalCategory').value;
+    if (!reg || !name || !category) {
+      alert('Bitte Name und Altersgruppe der Begleitung ausfüllen.');
+      return;
+    }
+
+    const confirmBtn = document.getElementById('addCompanionModalConfirmBtn');
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = 'Wird hinzugefügt...';
+
+    try {
+      const ticketId = genTicketId();
+      const newCompanion = { name, category };
+
+      // 1) Begleitung in der Bestellung ergänzen + neues Ticket dafür anlegen
+      //    (bereits bezahlt, falls die Bestellung selbst schon bezahlt ist)
+      const batch = writeBatch(db);
+      batch.update(doc(db, 'registrations', regId), {
+        companions: [...(reg.companions || []), newCompanion]
+      });
+      const ticketRef = doc(collection(db, 'tickets'));
+      batch.set(ticketRef, {
+        registrationId: regId, name, category, email: reg.email,
+        ticketId, paid: reg.paid, checkedIn: false, createdAt: serverTimestamp()
+      });
+      await batch.commit();
+
+      // 2) Ist die Bestellung schon bezahlt, sofort eine eigene Ticket-Mail nur
+      //    für die neue Begleitung verschicken (mit frischem Preis + Quittung).
+      if (reg.paid) {
+        const priceSnap = await getDoc(doc(db, 'settings', 'pricing'));
+        const freshPrices = priceSnap.exists()
+          ? { u18: Number(priceSnap.data().u18 || 0), ue18: Number(priceSnap.data().ue18 || 0) }
+          : { u18: 0, ue18: 0 };
+
+        const idToken = await auth.currentUser.getIdToken();
+        const res = await fetch(WORKER_URL + '/send-tickets', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
+          body: JSON.stringify({
+            email: reg.email,
+            ordererName: reg.name,
+            attendees: [{ name, category, ticketId, price: freshPrices[category] || 0 }],
+            useLernSax: shouldUseLernSax(reg.email)
+          })
+        });
+        if (!res.ok) throw new Error('Ticket-Mail für die neue Begleitung konnte nicht verschickt werden.');
+      }
+
+      closeAddCompanionModal();
+    } catch (err) {
+      console.error(err);
+      alert('Begleitung wurde ggf. gespeichert, aber es gab ein Problem: ' + err.message);
+    } finally {
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = 'Hinzufügen';
+    }
+  });
+
+  // --- Manuelle Bestellung anlegen ---
+  const companionsBlock = document.getElementById('companionsBlock');
+  document.getElementById('addCompanionFieldBtn').addEventListener('click', () => addCompanionField());
+
+  function addCompanionField(){
+    const row = document.createElement('div');
+    row.className = 'companion-add-row';
+    row.innerHTML = `
+      <input type="text" class="add-companion-name" placeholder="Name der Begleitung">
+      <select class="add-companion-category">
+        <option value="">Alter?</option>
+        <option value="u18">U18</option>
+        <option value="ue18">Ü18</option>
+      </select>
+      <button type="button">×</button>`;
+    row.querySelector('button').addEventListener('click', () => row.remove());
+    companionsBlock.appendChild(row);
+    enhanceSelect(row.querySelector('.add-companion-category'));
+  }
+
+  document.getElementById('addBtn').addEventListener('click', () => {
+    const form = document.getElementById('addForm');
+    form.classList.toggle('show');
+    setAddFormOpen(form.classList.contains('show'));
+  });
+
+  document.getElementById('suggestEmailBtn').addEventListener('click', () => {
+    const name = document.getElementById('addName').value.trim();
+    const klasse = document.getElementById('addKlasse').value;
+    if (!name || name.split(/\s+/).length < 2) {
+      alert('Bitte zuerst Vor- und Nachname eintragen.');
+      return;
+    }
+    if (!klasse) {
+      alert('Bitte zuerst die Klassenstufe eintragen.');
+      return;
+    }
+    const suggested = suggestLernsaxEmail(name, klasse);
+    if (suggested) {
+      document.getElementById('addEmail').value = suggested;
+    }
+  });
+
+  document.getElementById('addCancelBtn').addEventListener('click', () => {
+    document.getElementById('addForm').classList.remove('show');
+    setAddFormOpen(false);
+  });
+
+  // Legt die Bestellung + Tickets an und aktualisiert Tabelle/Statistik einmalig
+  // sofort danach (unabhängig von scheduleRender, damit z.B. der Pay-Button in der
+  // Tabelle für "Anlegen & gleich bezahlen" direkt existiert). Gibt die neue
+  // Registrations-ID zurück, oder null bei einem Validierungsfehler.
+  async function createManualRegistration(){
+    const name = document.getElementById('addName').value.trim();
+    const email = document.getElementById('addEmail').value.trim();
+    const category = document.getElementById('addCategory').value;
+    const companionRows = Array.from(document.querySelectorAll('.companion-add-row'));
+    const companions = companionRows.map(row => ({
+      name: row.querySelector('.add-companion-name').value.trim(),
+      category: row.querySelector('.add-companion-category').value
+    })).filter(c => c.name.length > 0);
+
+    if(!name || !email || !category){
+      alert('Bitte Name, E-Mail und Altersgruppe des Bestellers ausfüllen.');
+      return null;
+    }
+    if(companions.some(c => !c.category)){
+      alert('Bitte bei jeder Begleitung die Altersgruppe angeben.');
+      return null;
+    }
+
+    const regRef = await addDoc(collection(db, 'registrations'), {
+      name, email, category, companions, paid: false, createdAt: serverTimestamp()
+    });
+
+    const attendees = [{ name, category }, ...companions];
+    const ticketRefs = attendees.map(() => doc(collection(db, 'tickets')));
+    const batch = writeBatch(db);
+    attendees.forEach((attendee, i) => {
+      batch.set(ticketRefs[i], {
+        registrationId: regRef.id, name: attendee.name, category: attendee.category, email,
+        ticketId: genTicketId(), paid: false, checkedIn: false, createdAt: serverTimestamp()
+      });
+    });
+    await batch.commit();
+
+    // Lokal sofort ergänzen (statt auf den Firestore-Listener zu warten), damit
+    // Tabelle/Statistik/Cash-Popup unmittelbar den neuen Stand zeigen. Der Listener
+    // aus startListening() kann aber genau in diesem Moment (während des Schreibens
+    // oben) schon selbst mit den frischen Firestore-Daten dazwischenfunken — daher
+    // hier zur Sicherheit auf Duplikate prüfen, statt blind einzufügen.
+    const now = new Date();
+    if (!allRegs.some(r => r.id === regRef.id)) {
+      allRegs.unshift({ id: regRef.id, name, email, category, companions, paid: false, createdAt: now });
+    }
+    attendees.forEach((attendee, i) => {
+      const ticketDocId = ticketRefs[i].id;
+      if (!allTickets.some(t => t.id === ticketDocId)) {
+        allTickets.push({
+          id: ticketDocId, registrationId: regRef.id, name: attendee.name, category: attendee.category,
+          email, ticketId: null, paid: false, checkedIn: false, createdAt: now
+        });
+      }
+    });
+    render();
+    updateCharts();
+
+    document.getElementById('addName').value = '';
+    document.getElementById('addEmail').value = '';
+    document.getElementById('addCategory').value = '';
+    resetCustomSelectVisual(document.getElementById('addCategory'));
+    document.getElementById('addKlasse').value = '';
+    companionsBlock.innerHTML = '';
+
+    return regRef.id;
+  }
+
+  document.getElementById('addSaveBtn').addEventListener('click', async (e) => {
+    const btn = e.currentTarget;
+    btn.disabled = true;
+    const regId = await createManualRegistration().finally(() => { btn.disabled = false; });
+    if (!regId) return;
+    document.getElementById('addForm').classList.remove('show');
+    setAddFormOpen(false);
+  });
+
+  document.getElementById('addPayNowBtn').addEventListener('click', async (e) => {
+    const btn = e.currentTarget;
+    btn.disabled = true;
+    const regId = await createManualRegistration().finally(() => { btn.disabled = false; });
+    if (!regId) return;
+    document.getElementById('addForm').classList.remove('show');
+    setAddFormOpen(false);
+    openCashModal(regId);
+  });
+
+  document.getElementById('priceSaveBtn').addEventListener('click', async () => {
+    const u18 = Number(document.getElementById('priceU18Input').value);
+    const ue18 = Number(document.getElementById('priceUe18Input').value);
+    if (isNaN(u18) || isNaN(ue18) || u18 < 0 || ue18 < 0) { alert('Bitte gültige Preise eingeben.'); return; }
+    await setDoc(doc(db, 'settings', 'pricing'), { u18, ue18 });
+    const savedEl = document.getElementById('priceSaved');
+    savedEl.classList.add('show');
+    setTimeout(() => savedEl.classList.remove('show'), 2000);
+  });
+
+  // --- Ablaufplan ---
+  const scheduleList = document.getElementById('scheduleList');
+
+  function addScheduleRow(item = { time: '', label: '', note: '' }){
+    const row = document.createElement('div');
+    row.className = 'schedule-row';
+    row.draggable = true;
+    row.innerHTML = `
+      <span class="drag-handle" title="Zum Sortieren ziehen">⠿</span>
+      <input type="text" class="schedule-time" placeholder="17:30" value="${escapeHtml(item.time || '')}">
+      <input type="text" class="schedule-label" placeholder="Programmpunkt (z.B. Einlass)" value="${escapeHtml(item.label || '')}">
+      <input type="text" class="schedule-note" placeholder="Beschreibung (optional)" value="${escapeHtml(item.note || '')}">
+      <div class="schedule-row-actions">
+        <button type="button" class="remove" title="Entfernen">×</button>
+      </div>`;
+    row.querySelector('.remove').addEventListener('click', () => row.remove());
+
+    // Drag-and-Drop zum Umsortieren
+    row.addEventListener('dragstart', () => row.classList.add('dragging'));
+    row.addEventListener('dragend', () => row.classList.remove('dragging'));
+
+    scheduleList.appendChild(row);
+  }
+
+  scheduleList.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    const dragging = scheduleList.querySelector('.dragging');
+    if (!dragging) return;
+    const afterEl = [...scheduleList.querySelectorAll('.schedule-row:not(.dragging)')].find(row => {
+      const box = row.getBoundingClientRect();
+      return e.clientY < box.top + box.height / 2;
+    });
+    if (afterEl) scheduleList.insertBefore(dragging, afterEl);
+    else scheduleList.appendChild(dragging);
+  });
+
+  function renderScheduleRows(items){
+    scheduleList.innerHTML = '';
+    items.forEach(item => addScheduleRow(item));
+  }
+
+  document.getElementById('scheduleAddBtn').addEventListener('click', () => addScheduleRow());
+
+  document.getElementById('scheduleSaveBtn').addEventListener('click', async () => {
+    const items = Array.from(scheduleList.querySelectorAll('.schedule-row')).map(row => ({
+      time: row.querySelector('.schedule-time').value.trim(),
+      label: row.querySelector('.schedule-label').value.trim(),
+      note: row.querySelector('.schedule-note').value.trim(),
+    })).filter(it => it.time || it.label);
+
+    if (items.some(it => !it.time || !it.label)) {
+      alert('Bitte bei jedem Programmpunkt mindestens Uhrzeit und Titel ausfüllen (oder die Zeile entfernen).');
+      return;
+    }
+
+    await setDoc(doc(db, 'settings', 'schedule'), { items });
+    const savedEl = document.getElementById('scheduleSaved');
+    savedEl.classList.add('show');
+    setTimeout(() => savedEl.classList.remove('show'), 2000);
+  });
+
+  document.getElementById('infoSaveBtn').addEventListener('click', async () => {
+    const text = document.getElementById('infoText').value.trim();
+    await setDoc(doc(db, 'settings', 'info'), { text });
+    const savedEl = document.getElementById('infoSaved');
+    savedEl.classList.add('show');
+    setTimeout(() => savedEl.classList.remove('show'), 2000);
+  });
+
+  document.getElementById('deadlineSaveBtn').addEventListener('click', async () => {
+    const val = document.getElementById('deadlineInput').value;
+    if (!val) { alert('Bitte ein Datum/Uhrzeit wählen oder "Kein Anmeldeschluss" nutzen.'); return; }
+    const iso = new Date(val).toISOString();
+    await setDoc(doc(db, 'settings', 'deadline'), { timestamp: iso });
+    const savedEl = document.getElementById('deadlineSaved');
+    savedEl.classList.add('show');
+    setTimeout(() => savedEl.classList.remove('show'), 2000);
+  });
+
+  document.getElementById('deadlineClearBtn').addEventListener('click', async () => {
+    await setDoc(doc(db, 'settings', 'deadline'), { timestamp: null });
+    document.getElementById('deadlineInput').value = '';
+  });
+
+  document.getElementById('opensAtSaveBtn').addEventListener('click', async () => {
+    const val = document.getElementById('opensAtInput').value;
+    if (!val) { alert('Bitte ein Datum/Uhrzeit wählen oder "Sofort geöffnet" nutzen.'); return; }
+    const iso = new Date(val).toISOString();
+    await setDoc(doc(db, 'settings', 'opensAt'), { timestamp: iso });
+    const savedEl = document.getElementById('opensAtSaved');
+    savedEl.classList.add('show');
+    setTimeout(() => savedEl.classList.remove('show'), 2000);
+  });
+
+  document.getElementById('opensAtClearBtn').addEventListener('click', async () => {
+    await setDoc(doc(db, 'settings', 'opensAt'), { timestamp: null });
+    document.getElementById('opensAtInput').value = '';
+  });
+
+  document.getElementById('lernsaxThresholdSaveBtn').addEventListener('click', async () => {
+    const val = Number(document.getElementById('lernsaxThresholdInput').value);
+    if (isNaN(val) || val < 1 || val > 13) { alert('Bitte eine gültige Klassenstufe (1–13) eingeben.'); return; }
+    await setDoc(doc(db, 'settings', 'lernsaxThreshold'), { grade: val });
+    const savedEl = document.getElementById('lernsaxThresholdSaved');
+    savedEl.classList.add('show');
+    setTimeout(() => savedEl.classList.remove('show'), 2000);
+  });
+
+  document.getElementById('maxTicketsSaveBtn').addEventListener('click', async () => {
+    const raw = document.getElementById('maxTicketsInput').value;
+    const val = raw === '' ? null : Number(raw);
+    if (val !== null && (isNaN(val) || val < 1)) { alert('Bitte eine gültige Zahl eingeben, oder leer lassen für kein Limit.'); return; }
+    await setDoc(doc(db, 'settings', 'capacity'), { maxTickets: val });
+    const savedEl = document.getElementById('maxTicketsSaved');
+    savedEl.classList.add('show');
+    setTimeout(() => savedEl.classList.remove('show'), 2000);
+  });
+  document.getElementById('maxTicketsClearBtn').addEventListener('click', async () => {
+    document.getElementById('maxTicketsInput').value = '';
+    await setDoc(doc(db, 'settings', 'capacity'), { maxTickets: null });
+    const savedEl = document.getElementById('maxTicketsSaved');
+    savedEl.classList.add('show');
+    setTimeout(() => savedEl.classList.remove('show'), 2000);
+  });
+
+  document.getElementById('deleteAllDataBtn').addEventListener('click', async () => {
+    if (allRegs.length === 0) { alert('Es sind aktuell keine Bestellungen vorhanden.'); return; }
+
+    const step1 = confirm(
+      `Wirklich ALLE ${allRegs.length} Bestellungen und ${allTickets.length} Tickets unwiderruflich löschen?\n\n` +
+      `Vor dem Löschen wird automatisch ein CSV-Backup heruntergeladen. Das eigentliche Löschen ` +
+      `aus Firestore kann danach NICHT rückgängig gemacht werden.`
+    );
+    if (!step1) return;
+
+    const typed = prompt('Zur Sicherheit: Tippe "LÖSCHEN" (in Großbuchstaben) ein, um fortzufahren.');
+    if (typed !== 'LÖSCHEN') { alert('Abgebrochen — Eingabe stimmte nicht überein.'); return; }
+
+    const btn = document.getElementById('deleteAllDataBtn');
+    btn.disabled = true;
+    btn.textContent = 'Erstelle Sicherheitskopie...';
+
+    // Sicherheitsnetz: vor dem endgültigen Löschen automatisch ein CSV-Backup
+    // herunterladen, falls doch mal was schiefgeht oder es aus Versehen passiert.
+    const stamp = new Date().toISOString().slice(0,16).replace(/[:T]/g,'-');
+    exportCsv(`winterball-backup-vor-loeschung_${stamp}.csv`);
+    await new Promise(r => setTimeout(r, 400)); // kurz warten, damit der Download sicher startet
+
+    btn.textContent = 'Wird gelöscht...';
+
+    try {
+      // Firestore erlaubt max. 500 Schreiboperationen pro Batch, daher in Häppchen aufteilen.
+      const allDocs = [
+        ...allRegs.map(r => doc(db, 'registrations', r.id)),
+        ...allTickets.map(t => doc(db, 'tickets', t.id)),
+      ];
+      const chunkSize = 400;
+      for (let i = 0; i < allDocs.length; i += chunkSize) {
+        const batch = writeBatch(db);
+        allDocs.slice(i, i + chunkSize).forEach(ref => batch.delete(ref));
+        await batch.commit();
+      }
+      alert('Alle Bestellungs- und Ticketdaten wurden gelöscht. Ein Backup liegt in deinem Downloads-Ordner.');
+    } catch (err) {
+      console.error(err);
+      alert('Beim Löschen ist ein Fehler aufgetreten. Bitte Konsole prüfen.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '⚠️ Alle Bestellungs- und Ticketdaten jetzt endgültig löschen';
+    }
+  });
+
+  document.getElementById('search').addEventListener('input', render);
+
+  document.getElementById('filterUnpaidBtn').addEventListener('click', (e) => {
+    showOnlyUnpaid = !showOnlyUnpaid;
+    e.target.classList.toggle('active', showOnlyUnpaid);
+    e.target.textContent = showOnlyUnpaid ? 'Alle anzeigen' : 'Nur Unbezahlte';
+    render();
+  });
+
+  function exportCsv(filename){
+    const header = ['Besteller','Begleitungen','E-Mail','Tickets gesamt','Bezahlt','Angemeldet am','Bezahlt am'];
+    const rows = allRegs.map(r => [
+      r.name, (r.companions||[]).map(c => `${c.name} (${categoryLabel(c.category)})`).join('; '), r.email,
+      ticketsFor(r.id).length, r.paid ? 'ja':'nein', formatTimestamp(r.createdAt), r.paid ? formatTimestamp(r.paidAt) : ''
+    ]);
+    const csv = [header, ...rows].map(row => row.map(v => `"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    exportCsv('winterball-bestellungen.csv');
+  });
+</script>
+</body>
+</html>
