@@ -259,26 +259,6 @@
     100%{ transform:translateY(6px) rotate(-1.2deg); }
   }
 
-  /* Responsive layout: on narrower screens / tablets / mobile, arrange as centered floating duo beneath the title */
-  @media (max-width:1039px){
-    .hero-title-wrapper{
-      flex-wrap:wrap; gap:14px;
-    }
-    .hero h1{
-      width:100%; text-align:center; order:1; margin-right:0; padding:10px 48px 10px 20px;
-    }
-    .hero-social-slot.hero-social-left{
-      order:2;
-    }
-    .hero-social-slot.hero-social-right{
-      order:3;
-    }
-  }
-
-  @media (prefers-reduced-motion:reduce){
-    .hero-social-left, .hero-social-right{animation:none !important;}
-  }
-
   .hero .subtitle{
     margin-top:6px; color:var(--text-dim); font-size:15px; letter-spacing:3px; text-transform:uppercase;
   }
@@ -312,12 +292,114 @@
   .countdown .unit .lbl{
     margin-top:4px; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-dim);
   }
-  @media (max-width:480px){
-    .countdown{gap:8px;}
-    .countdown .unit{padding:12px 10px; min-width:68px;}
-    .countdown .unit .num{font-size:26px;}
-    .countdown .unit .lbl{font-size:10px; letter-spacing:1px;}
+
+  /* Responsive layout: on narrower screens / tablets / mobile, arrange as centered floating duo beneath the title */
+  @media (max-width:1039px){
+    .hero-title-wrapper{
+      flex-wrap:wrap; gap:12px;
+    }
+    .hero h1{
+      width:100%; text-align:center; order:1; margin-right:0; padding:8px 24px 6px 16px;
+    }
+    .hero-social-slot.hero-social-left{
+      order:2;
+    }
+    .hero-social-slot.hero-social-right{
+      order:3;
+    }
   }
+
+  /* Optimized Mobile View: breathable spacing, proportionally scaled celestial moon, relaxed hierarchy */
+  @media (max-width:768px){
+    .hero{
+      padding:28px 16px 24px;
+      min-height:100svh;
+      justify-content:center;
+    }
+    .moon{
+      width:72px; height:72px; margin-bottom:12px;
+      box-shadow:inset -5px -4px 12px rgba(60,70,100,0.25),
+                 0 0 16px 4px rgba(255,255,255,0.45), 0 0 45px 12px rgba(200,220,255,0.35);
+    }
+    .hero-title-wrapper{
+      padding:0 8px; gap:8px; margin-bottom:4px;
+    }
+    .hero h1{
+      font-size:clamp(38px, 11vw, 56px);
+      padding:4px 12px; line-height:1.25;
+    }
+    .hero-floating-social{
+      padding:6px 12px 6px 8px; gap:8px;
+    }
+    .hero-floating-icon{
+      width:28px; height:28px;
+    }
+    .hero-floating-icon svg{width:14px; height:14px;}
+    .hero-floating-platform{font-size:9.5px; letter-spacing:0.8px;}
+    .hero-floating-handle{font-size:11.5px;}
+    .hero .subtitle{
+      margin-top:4px; font-size:13px; letter-spacing:2.5px;
+    }
+    .hero .date{
+      margin-top:14px; font-size:clamp(17px,4.5vw,22px);
+    }
+    .countdown{
+      margin-top:16px; gap:8px;
+    }
+    .countdown .unit{
+      padding:10px 12px; min-width:64px;
+    }
+    .countdown .unit .num{font-size:26px;}
+    .countdown .unit .lbl{font-size:10px; letter-spacing:1px; margin-top:2px;}
+    .live-counter{
+      margin-top:12px; font-size:14.5px;
+    }
+    .hero .cta{
+      margin-top:20px; padding:15px 36px; font-size:15px;
+    }
+    .hero .scroll-hint{
+      margin-top:28px; font-size:11px;
+    }
+  }
+
+  @media (max-width:480px){
+    .hero{
+      padding:20px 12px 18px;
+    }
+    .moon{
+      width:58px; height:58px; margin-bottom:8px;
+    }
+    .hero-title-wrapper{
+      gap:6px;
+    }
+    .hero h1{
+      font-size:clamp(34px, 10.5vw, 46px);
+      padding:2px 8px;
+    }
+    .hero-floating-social{
+      padding:4px 10px 4px 6px; gap:6px;
+      box-shadow:0 4px 14px rgba(10,16,32,0.3);
+    }
+    .hero-floating-icon{width:24px; height:24px;}
+    .hero-floating-icon svg{width:12px; height:12px;}
+    .hero-floating-platform{font-size:8.5px;}
+    .hero-floating-handle{font-size:10.5px;}
+    .hero .subtitle{margin-top:2px; font-size:12px;}
+    .hero .date{margin-top:10px; font-size:16px;}
+    .countdown{margin-top:12px; gap:6px;}
+    .countdown .unit{padding:8px 8px; min-width:58px;}
+    .countdown .unit .num{font-size:22px;}
+    .countdown .unit .lbl{font-size:9px; letter-spacing:0.8px;}
+    .live-counter{margin-top:10px; font-size:13px;}
+    .hero .cta{margin-top:16px; padding:13px 30px; font-size:14.5px;}
+    .hero .scroll-hint{margin-top:18px;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .hero-social-left, .hero-social-right{animation:none !important;}
+  }
+
+
 
   .live-counter{
     margin-top:22px; display:inline-flex; align-items:center; gap:10px;

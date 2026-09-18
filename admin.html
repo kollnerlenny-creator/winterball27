@@ -37,14 +37,162 @@
   }
   .login-error{color:var(--error); font-size:13px; margin-top:10px; display:none;}
 
+  .admin-header{
+    display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px;
+    flex-wrap:wrap; gap:14px;
+  }
+  .admin-title-row{display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
+  .admin-header-actions{display:flex; align-items:center; gap:8px;}
+  .header-action-btn{
+    padding:8px 14px; border-radius:var(--radius-sm); border:1px solid var(--glass-border);
+    background:rgba(255,255,255,0.06); color:var(--text); font-size:13px; font-weight:500;
+    cursor:pointer; transition:background 0.2s, border-color 0.2s;
+  }
+  .header-action-btn:hover{background:rgba(255,255,255,0.12); border-color:rgba(143,180,255,0.35);}
+  .header-action-btn.logout{color:var(--error); border-color:rgba(255,128,128,0.3); background:rgba(255,128,128,0.06);}
+  .header-action-btn.logout:hover{background:rgba(255,128,128,0.15);}
+  .live-pill{
+    display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:600;
+    letter-spacing:0.5px; text-transform:uppercase; color:var(--success);
+    background:rgba(127,224,168,0.12); border:1px solid rgba(127,224,168,0.3);
+    border-radius:100px; padding:3px 10px;
+  }
+  .pulse-dot{
+    width:7px; height:7px; border-radius:50%; background:#7fe0a8;
+    box-shadow:0 0 0 0 rgba(127,224,168,0.7); animation:pulseGreen 2s infinite;
+  }
+  @keyframes pulseGreen{
+    0%{ box-shadow:0 0 0 0 rgba(127,224,168,0.6); }
+    70%{ box-shadow:0 0 0 6px rgba(127,224,168,0); }
+    100%{ box-shadow:0 0 0 0 rgba(127,224,168,0); }
+  }
+
   .stats{display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap;}
   .stat{
-    flex:1; min-width:120px; padding:16px; background:var(--glass); border:1px solid var(--glass-border);
+    flex:1; min-width:140px; padding:16px; background:var(--glass); border:1px solid var(--glass-border);
     border-radius:var(--radius-sm); backdrop-filter:blur(16px); transition:border-color 0.2s, transform 0.2s;
+    display:flex; flex-direction:column; justify-content:space-between;
   }
   .stat:hover{border-color:rgba(143,180,255,0.35); transform:translateY(-1px);}
-  .stat .num{font-size:26px; font-weight:600; color:var(--accent);}
-  .stat .lbl{font-size:12px; color:var(--text-dim); margin-top:2px;}
+  .stat .stat-lbl{font-size:12px; color:var(--text-dim); margin-bottom:6px; display:flex; align-items:center; gap:6px;}
+  .stat .num{font-size:26px; font-weight:600; color:var(--accent); line-height:1.2;}
+  .stat .stat-sub{font-size:11px; color:var(--text-dim); margin-top:4px;}
+  .stat-progress{
+    margin-top:8px; width:100%; height:4px; border-radius:2px;
+    background:rgba(255,255,255,0.08); overflow:hidden;
+  }
+  .stat-progress-fill{
+    height:100%; width:0%; border-radius:2px;
+    background:linear-gradient(90deg, var(--accent), var(--success));
+    transition:width 0.4s ease;
+  }
+
+  .tabs{display:flex; gap:8px; margin-bottom:20px; border-bottom:1px solid var(--glass-border); flex-wrap:wrap;}
+  .tab-btn{
+    padding:12px 18px; border:none; background:none; color:var(--text-dim); font-size:14px; font-weight:600;
+    cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition:color 0.2s, border-color 0.2s;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .tab-btn:hover{color:var(--text);}
+  .tab-btn.active{color:var(--accent); border-bottom-color:var(--accent);}
+  .tab-badge{
+    font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:100px;
+    background:rgba(255,255,255,0.1); color:var(--text); line-height:1;
+  }
+  .tab-btn.active .tab-badge{
+    background:rgba(143,180,255,0.25); color:var(--accent);
+  }
+
+  .toolbar-container{display:flex; flex-direction:column; gap:12px; margin-bottom:18px;}
+  .toolbar-top{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+  .search-box-wrap{position:relative; flex:1; min-width:240px; display:flex; align-items:center;}
+  .search-box-wrap input{
+    width:100%; padding:10px 38px 10px 36px; background:var(--glass);
+    border:1px solid var(--glass-border); border-radius:var(--radius-sm);
+    color:var(--text); font-size:13.5px; transition:border-color 0.2s, background 0.2s;
+  }
+  .search-box-wrap input:focus{
+    outline:none; border-color:var(--accent); background:rgba(255,255,255,0.08);
+  }
+  .search-icon{
+    position:absolute; left:12px; width:15px; height:15px; color:var(--text-dim); pointer-events:none;
+  }
+  .search-clear-btn{
+    position:absolute; right:10px; background:rgba(255,255,255,0.1); border:none;
+    color:var(--text-dim); border-radius:50%; width:20px; height:20px; font-size:11px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .search-clear-btn:hover{color:var(--text); background:rgba(255,255,255,0.2);}
+  .filter-chips{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+  .chip{
+    padding:6px 13px; border-radius:100px; border:1px solid var(--glass-border);
+    background:rgba(255,255,255,0.04); color:var(--text-dim); font-size:12px; font-weight:600;
+    cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.15s ease;
+  }
+  .chip:hover{background:rgba(255,255,255,0.08); color:var(--text); border-color:rgba(143,180,255,0.3);}
+  .chip.active{
+    background:rgba(143,180,255,0.18); border-color:var(--accent); color:var(--accent);
+  }
+  .chip-count{
+    font-size:10px; padding:1px 6px; border-radius:10px;
+    background:rgba(255,255,255,0.08); color:inherit;
+  }
+  .toolbar-actions{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+  .toolbar-actions button{
+    padding:8px 14px; border-radius:var(--radius-sm); border:1px solid var(--glass-border);
+    background:rgba(255,255,255,0.05); color:var(--text); cursor:pointer; font-size:13px; font-weight:500;
+  }
+  .toolbar-actions button.primary{
+    background:var(--accent); color:#0a0e1a; font-weight:600; border:none;
+  }
+  .toolbar-actions button.primary:hover{filter:brightness(1.08);}
+  .results-badge{font-size:12px; color:var(--text-dim); margin-left:auto;}
+
+  /* Mobile responsive cards view */
+  .mobile-cards-wrap{display:none; flex-direction:column; gap:12px;}
+  @media (max-width:860px){
+    .desktop-table-wrap{display:none;}
+    .mobile-cards-wrap{display:flex;}
+  }
+  .order-card{
+    background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius);
+    padding:16px; backdrop-filter:blur(16px); display:flex; flex-direction:column; gap:12px;
+  }
+  .order-card-header{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
+  }
+  .order-card-title{
+    font-size:15px; font-weight:600; color:var(--text); display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  }
+  .order-card-email{font-size:12px; color:var(--text-dim); margin-top:2px; word-break:break-all;}
+  .order-card-attendees{
+    background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.06);
+    border-radius:var(--radius-sm); padding:10px 12px; display:flex; flex-direction:column; gap:8px;
+  }
+  .order-card-attendee{
+    display:flex; justify-content:space-between; align-items:center; gap:10px; font-size:13px;
+  }
+  .order-card-attendee .checkin-toggle{
+    padding:8px 14px; font-size:12px; border-radius:var(--radius-sm);
+  }
+  .order-card-footer{
+    display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;
+    padding-top:10px; border-top:1px solid rgba(255,255,255,0.06);
+  }
+  .order-card-actions{display:flex; gap:6px; align-items:center;}
+
+  /* Toast Notification */
+  .admin-toast{
+    position:fixed; bottom:24px; right:24px; z-index:999;
+    padding:12px 20px; border-radius:var(--radius-sm);
+    background:rgba(19,28,48,0.96); border:1px solid var(--glass-border);
+    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    box-shadow:0 12px 35px rgba(0,0,0,0.6); color:var(--text); font-size:13.5px;
+    display:flex; align-items:center; gap:8px; pointer-events:none;
+    opacity:0; transform:translateY(12px); transition:opacity 0.25s ease, transform 0.25s ease;
+  }
+  .admin-toast.show{opacity:1; transform:translateY(0);}
+  .admin-toast.success{border-color:rgba(127,224,168,0.4); color:var(--success);}
 
   .price-bar{
     display:flex; align-items:center; gap:10px; margin-bottom:20px; padding:14px 16px;
@@ -331,33 +479,94 @@
 </div>
 
 <div class="wrap" id="dashboard" style="display:none;">
-  <h1>Winter Ball · Bestellungen</h1>
-  <div class="sub">30.01.2027 · 17:30 Uhr</div>
+  <div class="admin-header">
+    <div>
+      <div class="admin-title-row">
+        <h1>Winter Ball · Admin &amp; Einlass</h1>
+        <span class="live-pill" id="liveSyncStatus"><span class="pulse-dot"></span> Live Firestore</span>
+      </div>
+      <div class="sub">30. Januar 2027 · 17:30 Uhr · Gymnasium Wilsdruff</div>
+    </div>
+    <div class="admin-header-actions">
+      <button type="button" id="headerRefreshBtn" class="header-action-btn" title="Ansicht neu synchronisieren">🔄 Aktualisieren</button>
+      <button type="button" id="logoutBtn" class="header-action-btn logout" title="Abmelden">Abmelden</button>
+    </div>
+  </div>
 
   <div class="stats">
-    <div class="stat"><div class="num" id="statOrders">0</div><div class="lbl">Bestellungen</div></div>
-    <div class="stat"><div class="num" id="statTickets">0</div><div class="lbl">Tickets gesamt</div></div>
-    <div class="stat"><div class="num" id="statPaid">0</div><div class="lbl">Bezahlt</div></div>
-    <div class="stat"><div class="num" id="statCheckedIn">0</div><div class="lbl">Eingecheckt</div></div>
-    <div class="stat"><div class="num" id="statRevenue">0 €</div><div class="lbl">Umsatz</div></div>
-    <div class="stat"><div class="num" id="statU18Ratio">0 / 0</div><div class="lbl">U18 / Ü18</div></div>
+    <div class="stat">
+      <div class="stat-lbl"><span>📋 Bestellungen</span></div>
+      <div class="num" id="statOrders">0</div>
+      <div class="stat-sub">Buchungen gesamt</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl"><span>🎟️ Tickets gesamt</span></div>
+      <div class="num" id="statTickets">0</div>
+      <div class="stat-sub">Inkl. Begleitungen</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl"><span>💶 Bezahlt</span></div>
+      <div class="num" id="statPaid">0</div>
+      <div class="stat-sub" id="statPaidSub">0 noch unbezahlt</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl"><span>🚪 Eingecheckt</span></div>
+      <div class="num" id="statCheckedIn">0</div>
+      <div class="stat-progress">
+        <div class="stat-progress-fill" id="checkinProgressFill"></div>
+      </div>
+      <div class="stat-sub" id="checkinProgressText">0% anwesend</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl"><span>💰 Umsatz</span></div>
+      <div class="num" id="statRevenue">0,00 €</div>
+      <div class="stat-sub">Bezahlte Tickets</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl"><span>👥 Altersgruppen</span></div>
+      <div class="num" id="statU18Ratio">0 / 0</div>
+      <div class="stat-sub">U18 / Ü18 Gäste</div>
+    </div>
   </div>
 
   <div class="tabs">
-    <button class="tab-btn active" data-tab="orders">Bestellungen</button>
-    <button class="tab-btn" data-tab="insights">Insights</button>
-    <button class="tab-btn" data-tab="ratings">⭐ Bewertungen</button>
-    <button class="tab-btn" data-tab="settings">⚙️ Einstellungen</button>
+    <button class="tab-btn active" data-tab="orders">
+      Bestellungen <span class="tab-badge" id="tabOrdersCount">0</span>
+    </button>
+    <button class="tab-btn" data-tab="insights">
+      Insights
+    </button>
+    <button class="tab-btn" data-tab="ratings">
+      ❄️ Bewertungen <span class="tab-badge" id="tabRatingCount">0</span>
+    </button>
+    <button class="tab-btn" data-tab="settings">
+      ⚙️ Einstellungen
+    </button>
   </div>
 
   <!-- Tab: Bestellungen -->
   <div class="tab-content active" data-tab-content="orders">
-    <div class="toolbar">
-      <input type="text" id="search" placeholder="Nach Name oder E-Mail suchen...">
-      <button id="filterUnpaidBtn">Nur Unbezahlte</button>
-      <button id="addBtn">+ Bestellung hinzufügen</button>
-      <button id="exportBtn">CSV exportieren</button>
-      <button id="logoutBtn">Logout</button>
+    <div class="toolbar-container">
+      <div class="toolbar-top">
+        <div class="search-box-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="search" placeholder="Name, E-Mail oder Ticket-ID suchen... (/ zum Fokussieren)" autocomplete="off">
+          <button type="button" id="searchClearBtn" class="search-clear-btn" style="display:none;" title="Suche leeren">✕</button>
+        </div>
+        <div class="toolbar-actions">
+          <button type="button" id="addBtn" class="primary">+ Bestellung anlegen</button>
+          <button type="button" id="exportBtn">📊 CSV Export</button>
+        </div>
+      </div>
+
+      <div class="filter-chips">
+        <button type="button" class="chip active" data-filter="all">Alle <span class="chip-count" id="chipCountAll">0</span></button>
+        <button type="button" class="chip" data-filter="unpaid">⚠️ Unbezahlt <span class="chip-count" id="chipCountUnpaid">0</span></button>
+        <button type="button" class="chip" data-filter="paid">✅ Bezahlt <span class="chip-count" id="chipCountPaid">0</span></button>
+        <button type="button" class="chip" data-filter="checkedin">🚪 Eingecheckt <span class="chip-count" id="chipCountCheckedIn">0</span></button>
+        <button type="button" class="chip" data-filter="notcheckedin">⏳ Noch offen <span class="chip-count" id="chipCountNotCheckedIn">0</span></button>
+        <span class="results-badge" id="resultsBadge"></span>
+      </div>
     </div>
 
     <div class="add-form" id="addForm">
@@ -383,7 +592,8 @@
       </div>
     </div>
 
-    <div class="table-wrap">
+    <!-- Desktop Table View -->
+    <div class="table-wrap desktop-table-wrap">
       <table>
         <thead>
           <tr><th>Besteller</th><th>Begleitungen</th><th>E-Mail</th><th>Tickets / Check-in</th><th>Bezahlt</th><th>Zeiten</th><th></th></tr>
@@ -391,6 +601,9 @@
         <tbody id="tableBody"></tbody>
       </table>
     </div>
+
+    <!-- Mobile Cards View -->
+    <div class="mobile-cards-wrap" id="mobileCardsWrap"></div>
   </div>
 
   <!-- Tab: Insights -->
@@ -634,6 +847,8 @@
   </div>
 </div>
 
+<div id="adminToast" class="admin-toast"></div>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
   import { getFirestore, collection, addDoc, doc, getDoc, writeBatch, onSnapshot, query, where, orderBy, updateDoc, deleteDoc, setDoc, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
@@ -876,6 +1091,8 @@
     const avg = count ? allRatings.reduce((sum, r) => sum + (Number(r.stars) || 0), 0) / count : 0;
     document.getElementById('statRatingAvg').textContent = count ? avg.toFixed(1) + ' ❄' : '–';
     document.getElementById('statRatingCount').textContent = count;
+    const tabRatingBadge = document.getElementById('tabRatingCount');
+    if (tabRatingBadge) tabRatingBadge.textContent = count;
 
     const distribution = [1,2,3,4,5].map(v => allRatings.filter(r => Number(r.stars) === v).length);
 
@@ -1093,66 +1310,229 @@
     return cat === 'u18' ? 'U18' : cat === 'ue18' ? 'Ü18' : '';
   }
 
-  let showOnlyUnpaid = false;
+  let activeFilter = 'all'; // 'all', 'unpaid', 'paid', 'checkedin', 'notcheckedin'
+
+  function showAdminToast(msg, isSuccess = true){
+    const toast = document.getElementById('adminToast');
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.className = 'admin-toast show ' + (isSuccess ? 'success' : '');
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2500);
+  }
+
+  function playCheckinChime(){
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.22);
+    } catch(e){}
+  }
 
   function render(){
-    const term = document.getElementById('search').value.toLowerCase();
-    const rows = allRegs.filter(r =>
-      (!term || (r.name||'').toLowerCase().includes(term) || (r.email||'').toLowerCase().includes(term)
-      || (r.companions||[]).some(c => (c.name||'').toLowerCase().includes(term)))
-      && (!showOnlyUnpaid || !r.paid)
-    );
+    const searchInput = document.getElementById('search');
+    const term = (searchInput ? searchInput.value : '').trim().toLowerCase();
 
-    const tbody = document.getElementById('tableBody');
-    tbody.innerHTML = rows.map(r => {
+    // Toggle search clear button
+    const clearBtn = document.getElementById('searchClearBtn');
+    if (clearBtn) {
+      clearBtn.style.display = term ? 'flex' : 'none';
+    }
+
+    // Filter computation
+    const rows = allRegs.filter(r => {
       const tickets = ticketsFor(r.id);
-      const companionsHtml = (r.companions||[]).length
-        ? `<ul class="attendee-list">${r.companions.map(c => `<li>${escapeHtml(c.name)} <span class="badge out">${categoryLabel(c.category)}</span></li>`).join('')}</ul>`
-        : '<span style="color:var(--text-dim)">—</span>';
+      const matchesSearch = !term ||
+        (r.name || '').toLowerCase().includes(term) ||
+        (r.email || '').toLowerCase().includes(term) ||
+        (r.companions || []).some(c => (c.name || '').toLowerCase().includes(term)) ||
+        tickets.some(t =>
+          (t.name || '').toLowerCase().includes(term) ||
+          (t.ticketId || '').toLowerCase().includes(term) ||
+          t.id.toLowerCase().includes(term)
+        );
 
-      const ticketsHtml = tickets.length
-        ? `<ul class="ticket-checkin-list">${tickets.map(t => `
-            <li>
-              <span>${escapeHtml(t.name)}</span>
-              <button class="checkin-toggle ${t.checkedIn ? 'in' : ''}" data-ticket-id="${t.id}" data-state="${t.checkedIn ? '1' : '0'}">
+      if (!matchesSearch) return false;
+
+      if (activeFilter === 'unpaid') return !r.paid;
+      if (activeFilter === 'paid') return !!r.paid;
+      if (activeFilter === 'checkedin') return tickets.some(t => t.checkedIn);
+      if (activeFilter === 'notcheckedin') return tickets.some(t => !t.checkedIn);
+      return true;
+    });
+
+    // Update Filter Chip counts
+    const countAll = allRegs.length;
+    const countUnpaid = allRegs.filter(r => !r.paid).length;
+    const countPaid = allRegs.filter(r => r.paid).length;
+    const countCheckedIn = allTickets.filter(t => t.checkedIn).length;
+    const countNotCheckedIn = allTickets.filter(t => !t.checkedIn).length;
+
+    if (document.getElementById('chipCountAll')) document.getElementById('chipCountAll').textContent = countAll;
+    if (document.getElementById('chipCountUnpaid')) document.getElementById('chipCountUnpaid').textContent = countUnpaid;
+    if (document.getElementById('chipCountPaid')) document.getElementById('chipCountPaid').textContent = countPaid;
+    if (document.getElementById('chipCountCheckedIn')) document.getElementById('chipCountCheckedIn').textContent = countCheckedIn;
+    if (document.getElementById('chipCountNotCheckedIn')) document.getElementById('chipCountNotCheckedIn').textContent = countNotCheckedIn;
+
+    // Results badge
+    const resBadge = document.getElementById('resultsBadge');
+    if (resBadge) {
+      if (term || activeFilter !== 'all') {
+        resBadge.textContent = `${rows.length} von ${allRegs.length} angezeigt`;
+      } else {
+        resBadge.textContent = `${allRegs.length} Bestellungen`;
+      }
+    }
+
+    // Tab orders badge
+    const tabOrdersBadge = document.getElementById('tabOrdersCount');
+    if (tabOrdersBadge) tabOrdersBadge.textContent = allRegs.length;
+
+    // 1) Desktop Table View
+    const tbody = document.getElementById('tableBody');
+    if (tbody) {
+      if (rows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:32px 16px; color:var(--text-dim);">Keine passenden Bestellungen gefunden.</td></tr>`;
+      } else {
+        tbody.innerHTML = rows.map(r => {
+          const tickets = ticketsFor(r.id);
+          const companionsHtml = (r.companions||[]).length
+            ? `<ul class="attendee-list">${r.companions.map(c => `<li>${escapeHtml(c.name)} <span class="badge out">${categoryLabel(c.category)}</span></li>`).join('')}</ul>`
+            : '<span style="color:var(--text-dim)">—</span>';
+
+          const ticketsHtml = tickets.length
+            ? `<ul class="ticket-checkin-list">${tickets.map(t => `
+                <li>
+                  <span>${escapeHtml(t.name)}</span>
+                  <button class="checkin-toggle ${t.checkedIn ? 'in' : ''}" data-ticket-id="${t.id}" data-name="${escapeHtml(t.name)}" data-state="${t.checkedIn ? '1' : '0'}">
+                    ${t.checkedIn ? '✓ Eingecheckt' : 'Einchecken'}
+                  </button>
+                </li>`).join('')}</ul>`
+            : '<span style="color:var(--text-dim)">—</span>';
+
+          return `
+          <tr>
+            <td><span class="attendee-list orderer">${escapeHtml(r.name||'')} <span class="badge out">${categoryLabel(r.category)}</span></span></td>
+            <td>
+              ${companionsHtml}
+              <button class="add-companion-btn" data-id="${r.id}" title="Nachträglich eine Begleitung hinzufügen">+ Begleitung</button>
+            </td>
+            <td>${escapeHtml(r.email||'')}</td>
+            <td>${ticketsHtml}</td>
+            <td>
+              <div class="paid-cell">
+                ${r.paid
+                  ? `<span class="badge in">Bezahlt</span>`
+                  : `<button class="pay-btn" data-id="${r.id}">Bezahlen</button>`}
+                ${r.paid ? `<button class="pdf-btn" data-id="${r.id}" title="Tickets als PDF herunterladen">📄 PDF</button>` : ''}
+                ${r.paid ? `<button class="invoice-btn" data-id="${r.id}" title="Quittung als PDF herunterladen">🧾 Quittung</button>` : ''}
+              </div>
+            </td>
+            <td style="font-size:11px; color:var(--text-dim); white-space:nowrap;">
+              <div>Angemeldet:<br>${formatTimestamp(r.createdAt)}</div>
+              ${r.paid ? `<div style="margin-top:6px;">Bezahlt:<br>${formatTimestamp(r.paidAt)}</div>` : ''}
+            </td>
+            <td>
+              <button class="edit-reg-btn" data-id="${r.id}" title="Bestellung bearbeiten">✏️</button>
+              <button class="delete-btn" data-id="${r.id}" title="Bestellung löschen">🗑</button>
+            </td>
+          </tr>`;
+        }).join('');
+      }
+    }
+
+    // 2) Mobile Cards View
+    const mobileCards = document.getElementById('mobileCardsWrap');
+    if (mobileCards) {
+      if (rows.length === 0) {
+        mobileCards.innerHTML = `<div style="text-align:center; padding:32px 16px; color:var(--text-dim); background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius);">Keine passenden Bestellungen gefunden.</div>`;
+      } else {
+        mobileCards.innerHTML = rows.map(r => {
+          const tickets = ticketsFor(r.id);
+          const checkedCount = tickets.filter(t => t.checkedIn).length;
+          const attendeesList = tickets.map(t => `
+            <div class="order-card-attendee">
+              <div>
+                <div style="font-weight:600; color:var(--text);">${escapeHtml(t.name)}</div>
+                <div style="font-size:11px; color:var(--text-dim);">${categoryLabel(t.category)}${t.ticketId ? ' · ' + escapeHtml(t.ticketId) : ''}</div>
+              </div>
+              <button class="checkin-toggle ${t.checkedIn ? 'in' : ''}" data-ticket-id="${t.id}" data-name="${escapeHtml(t.name)}" data-state="${t.checkedIn ? '1' : '0'}">
                 ${t.checkedIn ? '✓ Eingecheckt' : 'Einchecken'}
               </button>
-            </li>`).join('')}</ul>`
-        : '<span style="color:var(--text-dim)">—</span>';
+            </div>
+          `).join('');
 
-      return `
-      <tr>
-        <td><span class="attendee-list orderer">${escapeHtml(r.name||'')} <span class="badge out">${categoryLabel(r.category)}</span></span></td>
-        <td>
-          ${companionsHtml}
-          <button class="add-companion-btn" data-id="${r.id}" title="Nachträglich eine Begleitung hinzufügen">+ Begleitung</button>
-        </td>
-        <td>${escapeHtml(r.email||'')}</td>
-        <td>${ticketsHtml}</td>
-        <td>
-          <div class="paid-cell">
-            ${r.paid
-              ? `<span class="badge in">Bezahlt</span>`
-              : `<button class="pay-btn" data-id="${r.id}">Bezahlen</button>`}
-            ${r.paid ? `<button class="pdf-btn" data-id="${r.id}" title="Tickets als PDF herunterladen">📄 PDF</button>` : ''}
-            ${r.paid ? `<button class="invoice-btn" data-id="${r.id}" title="Quittung als PDF herunterladen">🧾 Quittung</button>` : ''}
-          </div>
-        </td>
-        <td style="font-size:11px; color:var(--text-dim); white-space:nowrap;">
-          <div>Angemeldet:<br>${formatTimestamp(r.createdAt)}</div>
-          ${r.paid ? `<div style="margin-top:6px;">Bezahlt:<br>${formatTimestamp(r.paidAt)}</div>` : ''}
-        </td>
-        <td>
-          <button class="edit-reg-btn" data-id="${r.id}" title="Bestellung bearbeiten">✏️</button>
-          <button class="delete-btn" data-id="${r.id}" title="Bestellung löschen">🗑</button>
-        </td>
-      </tr>`;
-    }).join('');
+          return `
+            <div class="order-card" data-id="${r.id}">
+              <div class="order-card-header">
+                <div>
+                  <div class="order-card-title">
+                    <span>${escapeHtml(r.name || '')}</span>
+                    <span class="badge out">${categoryLabel(r.category)}</span>
+                    <span class="badge ${r.paid ? 'in' : 'out'}" style="${!r.paid ? 'background:rgba(255,210,127,0.15); color:var(--warn); border:1px solid rgba(255,210,127,0.3);' : ''}">
+                      ${r.paid ? 'Bezahlt' : 'Unbezahlt'}
+                    </span>
+                  </div>
+                  <div class="order-card-email">${escapeHtml(r.email || '')}</div>
+                </div>
+                ${!r.paid ? `<button class="pay-btn" data-id="${r.id}" style="padding:6px 14px; font-size:12px;">Bezahlen</button>` : ''}
+              </div>
 
+              <div class="order-card-attendees">
+                <div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-dim); display:flex; justify-content:space-between;">
+                  <span>Tickets (${tickets.length})</span>
+                  <span>${checkedCount}/${tickets.length} da</span>
+                </div>
+                ${attendeesList || '<span style="color:var(--text-dim); font-size:12px;">Keine Tickets</span>'}
+                <button class="add-companion-btn" data-id="${r.id}" style="margin-top:2px;">+ Begleitung hinzufügen</button>
+              </div>
+
+              <div class="order-card-footer">
+                <div style="font-size:11px; color:var(--text-dim);">
+                  ${formatTimestamp(r.createdAt)}
+                </div>
+                <div class="order-card-actions">
+                  ${r.paid ? `<button class="pdf-btn" data-id="${r.id}" title="Tickets als PDF">📄 PDF</button>` : ''}
+                  ${r.paid ? `<button class="invoice-btn" data-id="${r.id}" title="Quittung">🧾 Quittung</button>` : ''}
+                  <button class="edit-reg-btn" data-id="${r.id}" title="Bearbeiten" style="margin-right:0;">✏️</button>
+                  <button class="delete-btn" data-id="${r.id}" title="Löschen">🗑</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    // Stats calculations
     document.getElementById('statOrders').textContent = allRegs.length;
     document.getElementById('statTickets').textContent = allTickets.length;
-    document.getElementById('statPaid').textContent = allRegs.filter(r=>r.paid).length;
-    document.getElementById('statCheckedIn').textContent = allTickets.filter(t=>t.checkedIn).length;
+    document.getElementById('statPaid').textContent = countPaid;
+    if (document.getElementById('statPaidSub')) {
+      document.getElementById('statPaidSub').textContent = `${countUnpaid} noch unbezahlt`;
+    }
+    document.getElementById('statCheckedIn').textContent = countCheckedIn;
+
+    // Checkin progress bar & percentage
+    const checkinPct = allTickets.length > 0 ? Math.round((countCheckedIn / allTickets.length) * 100) : 0;
+    const progressFill = document.getElementById('checkinProgressFill');
+    if (progressFill) progressFill.style.width = checkinPct + '%';
+    const progressTxt = document.getElementById('checkinProgressText');
+    if (progressTxt) progressTxt.textContent = `${checkinPct}% da (${countCheckedIn}/${allTickets.length})`;
+
     const revenue = allTickets
       .filter(t => t.paid)
       .reduce((sum, t) => sum + (t.category === 'u18' ? ticketPrices.u18 : ticketPrices.ue18), 0);
@@ -1161,31 +1541,41 @@
     const ue18Count = allTickets.filter(t => t.category === 'ue18').length;
     document.getElementById('statU18Ratio').textContent = `${u18Count} / ${ue18Count}`;
 
-    tbody.querySelectorAll('.pay-btn').forEach(btn => {
-      btn.addEventListener('click', () => openCashModal(btn.dataset.id));
-    });
-    tbody.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', () => deleteRegistration(btn.dataset.id));
-    });
-    tbody.querySelectorAll('.edit-reg-btn').forEach(btn => {
-      btn.addEventListener('click', () => openEditRegModal(btn.dataset.id));
-    });
-    tbody.querySelectorAll('.checkin-toggle').forEach(btn => {
-      btn.addEventListener('click', () => toggleCheckIn(btn.dataset.ticketId, btn.dataset.state === '1'));
-    });
-    tbody.querySelectorAll('.pdf-btn').forEach(btn => {
-      btn.addEventListener('click', () => downloadTicketsPdf(btn.dataset.id, btn));
-    });
-    tbody.querySelectorAll('.invoice-btn').forEach(btn => {
-      btn.addEventListener('click', () => downloadInvoicePdf(btn.dataset.id, btn));
-    });
-    tbody.querySelectorAll('.add-companion-btn').forEach(btn => {
-      btn.addEventListener('click', () => openAddCompanionModal(btn.dataset.id));
+    // Attach listeners across desktop table and mobile cards
+    const containers = [tbody, mobileCards].filter(Boolean);
+    containers.forEach(container => {
+      container.querySelectorAll('.pay-btn').forEach(btn => {
+        btn.addEventListener('click', () => openCashModal(btn.dataset.id));
+      });
+      container.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', () => deleteRegistration(btn.dataset.id));
+      });
+      container.querySelectorAll('.edit-reg-btn').forEach(btn => {
+        btn.addEventListener('click', () => openEditRegModal(btn.dataset.id));
+      });
+      container.querySelectorAll('.checkin-toggle').forEach(btn => {
+        btn.addEventListener('click', () => toggleCheckIn(btn.dataset.ticketId, btn.dataset.state === '1', btn.dataset.name));
+      });
+      container.querySelectorAll('.pdf-btn').forEach(btn => {
+        btn.addEventListener('click', () => downloadTicketsPdf(btn.dataset.id, btn));
+      });
+      container.querySelectorAll('.invoice-btn').forEach(btn => {
+        btn.addEventListener('click', () => downloadInvoicePdf(btn.dataset.id, btn));
+      });
+      container.querySelectorAll('.add-companion-btn').forEach(btn => {
+        btn.addEventListener('click', () => openAddCompanionModal(btn.dataset.id));
+      });
     });
   }
 
-  async function toggleCheckIn(ticketId, currentlyCheckedIn){
+  async function toggleCheckIn(ticketId, currentlyCheckedIn, attendeeName){
     await updateDoc(doc(db, 'tickets', ticketId), { checkedIn: !currentlyCheckedIn });
+    if (!currentlyCheckedIn) {
+      playCheckinChime();
+      showAdminToast(`✓ ${attendeeName || 'Gast'} erfolgreich eingecheckt!`);
+    } else {
+      showAdminToast(`Check-in für ${attendeeName || 'Gast'} zurückgenommen.`);
+    }
   }
 
   async function downloadTicketsPdf(regId, btnEl){
@@ -1980,14 +2370,49 @@
     }
   });
 
-  document.getElementById('search').addEventListener('input', render);
+  const searchInput = document.getElementById('search');
+  if (searchInput) {
+    searchInput.addEventListener('input', render);
+  }
 
-  document.getElementById('filterUnpaidBtn').addEventListener('click', (e) => {
-    showOnlyUnpaid = !showOnlyUnpaid;
-    e.target.classList.toggle('active', showOnlyUnpaid);
-    e.target.textContent = showOnlyUnpaid ? 'Alle anzeigen' : 'Nur Unbezahlte';
-    render();
+  const searchClearBtn = document.getElementById('searchClearBtn');
+  if (searchClearBtn) {
+    searchClearBtn.addEventListener('click', () => {
+      if (searchInput) {
+        searchInput.value = '';
+        searchInput.focus();
+      }
+      render();
+    });
+  }
+
+  // Keyboard shortcut '/' to focus search quickly
+  window.addEventListener('keydown', (e) => {
+    if (e.key === '/' && document.activeElement !== searchInput && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) {
+      e.preventDefault();
+      searchInput?.focus();
+    }
   });
+
+  // Filter chips listeners
+  document.querySelectorAll('.filter-chips .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.filter-chips .chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeFilter = chip.dataset.filter || 'all';
+      render();
+    });
+  });
+
+  const headerRefreshBtn = document.getElementById('headerRefreshBtn');
+  if (headerRefreshBtn) {
+    headerRefreshBtn.addEventListener('click', () => {
+      render();
+      renderRatings();
+      scheduleCharts();
+      showAdminToast('Dashboard aktualisiert');
+    });
+  }
 
   function exportCsv(filename){
     const header = ['Besteller','Begleitungen','E-Mail','Tickets gesamt','Bezahlt','Angemeldet am','Bezahlt am'];
