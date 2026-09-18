@@ -293,106 +293,183 @@
     margin-top:4px; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-dim);
   }
 
-  /* Responsive layout: on narrower screens / tablets / mobile, arrange as centered floating duo beneath the title */
+  /* Mobile social links row beneath CTA */
+  .hero-mobile-social{
+    display:none; /* hidden on desktop */
+  }
+
+  /* Desktop social slots: flank title on >=1040px */
   @media (max-width:1039px){
+    .desktop-only-social{
+      display:none !important;
+    }
     .hero-title-wrapper{
-      flex-wrap:wrap; gap:12px;
+      display:block; width:auto; max-width:100%; padding:0; margin:0;
     }
     .hero h1{
-      width:100%; text-align:center; order:1; margin-right:0; padding:8px 24px 6px 16px;
+      width:auto; text-align:center; margin-right:0; padding:4px 16px;
     }
-    .hero-social-slot.hero-social-left{
-      order:2;
-    }
-    .hero-social-slot.hero-social-right{
-      order:3;
+    .hero-mobile-social{
+      display:flex; align-items:center; justify-content:center;
+      gap:10px; flex-wrap:wrap; margin-top:22px; width:100%; max-width:440px;
     }
   }
 
-  /* Optimized Mobile View: breathable spacing, proportionally scaled celestial moon, relaxed hierarchy */
+  /* Optimized Mobile View: breathable spacing, elegant celestial moon, harmonious vertical hierarchy */
   @media (max-width:768px){
     .hero{
-      padding:28px 16px 24px;
       min-height:100svh;
-      justify-content:center;
+      display:flex; flex-direction:column; align-items:center;
+      justify-content:flex-start;
+      padding:calc(env(safe-area-inset-top, 0px) + clamp(24px, 4vh, 44px)) 18px calc(env(safe-area-inset-bottom, 0px) + clamp(20px, 3.5vh, 36px));
+      box-sizing:border-box;
+      text-align:center;
     }
     .moon{
-      width:72px; height:72px; margin-bottom:12px;
-      box-shadow:inset -5px -4px 12px rgba(60,70,100,0.25),
-                 0 0 16px 4px rgba(255,255,255,0.45), 0 0 45px 12px rgba(200,220,255,0.35);
+      width:clamp(88px, 14vh, 106px);
+      height:clamp(88px, 14vh, 106px);
+      margin-bottom:clamp(26px, 4.5vh, 48px);
+      box-shadow:
+        inset -6px -5px 14px rgba(60,70,100,0.25),
+        0 0 26px 7px rgba(255,255,255,0.52), 0 0 70px 20px rgba(200,220,255,0.42), 0 0 120px 30px rgba(150,180,255,0.22);
     }
     .hero-title-wrapper{
-      padding:0 8px; gap:8px; margin-bottom:4px;
+      margin-bottom:0;
     }
     .hero h1{
-      font-size:clamp(38px, 11vw, 56px);
-      padding:4px 12px; line-height:1.25;
+      font-size:clamp(46px, 13vw, 68px);
+      padding:6px 16px;
+      line-height:1.25;
     }
-    .hero-floating-social{
-      padding:6px 12px 6px 8px; gap:8px;
-    }
-    .hero-floating-icon{
-      width:28px; height:28px;
-    }
-    .hero-floating-icon svg{width:14px; height:14px;}
-    .hero-floating-platform{font-size:9.5px; letter-spacing:0.8px;}
-    .hero-floating-handle{font-size:11.5px;}
     .hero .subtitle{
-      margin-top:4px; font-size:13px; letter-spacing:2.5px;
+      margin-top:clamp(16px, 2.5vh, 26px);
+      font-size:14px;
+      letter-spacing:3.5px;
     }
     .hero .date{
-      margin-top:14px; font-size:clamp(17px,4.5vw,22px);
+      margin-top:clamp(26px, 4vh, 38px);
+      font-size:clamp(19px, 5vw, 24px);
+      letter-spacing:1px;
     }
     .countdown{
-      margin-top:16px; gap:8px;
+      margin-top:clamp(30px, 4.6vh, 48px);
+      gap:clamp(8px, 2.4vw, 12px);
     }
     .countdown .unit{
-      padding:10px 12px; min-width:64px;
+      padding:clamp(13px, 2vh, 18px) clamp(14px, 3.2vw, 20px);
+      min-width:clamp(66px, 17vw, 76px);
+      border-radius:14px;
+      background:rgba(255,255,255,0.07);
     }
-    .countdown .unit .num{font-size:26px;}
-    .countdown .unit .lbl{font-size:10px; letter-spacing:1px; margin-top:2px;}
+    .countdown .unit .num{
+      font-size:clamp(28px, 4.2vh, 34px);
+      line-height:1.1;
+    }
+    .countdown .unit .lbl{
+      font-size:11px;
+      letter-spacing:1.5px;
+      margin-top:5px;
+    }
     .live-counter{
-      margin-top:12px; font-size:14.5px;
+      margin-top:clamp(26px, 3.8vh, 38px);
+      font-size:15.5px;
     }
     .hero .cta{
-      margin-top:20px; padding:15px 36px; font-size:15px;
+      margin-top:clamp(30px, 4.4vh, 44px);
+      padding:clamp(17px, 2.4vh, 20px) clamp(44px, 9vw, 54px);
+      font-size:16.5px;
+      box-shadow:0 12px 36px rgba(143,180,255,0.45);
+    }
+    .hero-mobile-social{
+      display:flex;
+      margin-top:clamp(28px, 4vh, 42px);
+      gap:clamp(8px, 2.2vw, 12px);
+    }
+    .hero-mobile-social .hero-floating-social{
+      padding:8px 18px 8px 12px;
+      gap:10px;
+      border-radius:100px;
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(170,200,255,0.3);
+      box-shadow:0 6px 18px rgba(10,16,32,0.4);
+    }
+    .hero-mobile-social .hero-floating-icon{
+      width:32px; height:32px;
+    }
+    .hero-mobile-social .hero-floating-icon svg{
+      width:16px; height:16px;
+    }
+    .hero-mobile-social .hero-floating-platform{
+      font-size:10px;
+      letter-spacing:0.8px;
+    }
+    .hero-mobile-social .hero-floating-handle{
+      font-size:12px;
     }
     .hero .scroll-hint{
-      margin-top:28px; font-size:11px;
+      margin-top:auto;
+      padding-top:clamp(40px, 6vh, 70px);
+      padding-bottom:12px;
+      font-size:12.5px;
     }
   }
 
-  @media (max-width:480px){
+  @media (max-width:400px){
     .hero{
-      padding:20px 12px 18px;
+      padding:calc(env(safe-area-inset-top, 0px) + 24px) 12px calc(env(safe-area-inset-bottom, 0px) + 18px);
     }
     .moon{
-      width:58px; height:58px; margin-bottom:8px;
-    }
-    .hero-title-wrapper{
-      gap:6px;
+      width:84px; height:84px; margin-bottom:20px;
     }
     .hero h1{
-      font-size:clamp(34px, 10.5vw, 46px);
+      font-size:clamp(42px, 12.5vw, 52px);
       padding:2px 8px;
     }
-    .hero-floating-social{
-      padding:4px 10px 4px 6px; gap:6px;
-      box-shadow:0 4px 14px rgba(10,16,32,0.3);
+    .hero .subtitle{
+      margin-top:12px; font-size:13px;
     }
-    .hero-floating-icon{width:24px; height:24px;}
-    .hero-floating-icon svg{width:12px; height:12px;}
-    .hero-floating-platform{font-size:8.5px;}
-    .hero-floating-handle{font-size:10.5px;}
-    .hero .subtitle{margin-top:2px; font-size:12px;}
-    .hero .date{margin-top:10px; font-size:16px;}
-    .countdown{margin-top:12px; gap:6px;}
-    .countdown .unit{padding:8px 8px; min-width:58px;}
-    .countdown .unit .num{font-size:22px;}
-    .countdown .unit .lbl{font-size:9px; letter-spacing:0.8px;}
-    .live-counter{margin-top:10px; font-size:13px;}
-    .hero .cta{margin-top:16px; padding:13px 30px; font-size:14.5px;}
-    .hero .scroll-hint{margin-top:18px;}
+    .hero .date{
+      margin-top:20px; font-size:18px;
+    }
+    .countdown{
+      margin-top:22px; gap:7px;
+    }
+    .countdown .unit{
+      padding:11px 11px; min-width:60px;
+    }
+    .countdown .unit .num{
+      font-size:26px;
+    }
+    .countdown .unit .lbl{
+      font-size:9.5px; letter-spacing:1px;
+    }
+    .live-counter{
+      margin-top:20px; font-size:14px;
+    }
+    .hero .cta{
+      margin-top:24px; padding:15px 38px; font-size:15.5px;
+    }
+    .hero-mobile-social{
+      margin-top:22px; gap:8px;
+    }
+    .hero-mobile-social .hero-floating-social{
+      padding:6px 13px 6px 8px; gap:7px;
+    }
+    .hero-mobile-social .hero-floating-icon{
+      width:28px; height:28px;
+    }
+    .hero-mobile-social .hero-floating-icon svg{
+      width:14px; height:14px;
+    }
+    .hero-mobile-social .hero-floating-platform{
+      font-size:9px;
+    }
+    .hero-mobile-social .hero-floating-handle{
+      font-size:11px;
+    }
+    .hero .scroll-hint{
+      padding-top:28px; font-size:11.5px;
+    }
   }
 
   @media (prefers-reduced-motion:reduce){
@@ -601,18 +678,57 @@
   }
 
   /* Kontakt / Footer CTA */
-  .final-cta{text-align:center;}
+  #socialsSection{
+    padding-bottom:28px;
+  }
+  .final-cta{
+    text-align:center;
+    padding-top:20px;
+    padding-bottom:52px;
+  }
+  .final-cta .section-title{
+    margin-bottom:24px;
+  }
   .final-cta .cta{
-    display:inline-block; padding:18px 44px; margin-top:16px;
+    display:inline-block; padding:18px 44px; margin-top:0;
     background:linear-gradient(135deg, var(--accent), var(--accent-glow));
     color:#0a0e1a; font-family:'Segoe UI',system-ui,sans-serif; font-weight:600; font-size:16px;
     border-radius:100px; text-decoration:none; box-shadow:0 8px 30px rgba(143,180,255,0.35);
   }
+  #ratingSection{
+    padding-bottom:18px;
+  }
   footer{
-    text-align:center; padding:40px 24px 60px; color:var(--text-dim); font-size:13px;
+    text-align:center; padding:0 24px 56px; color:var(--text-dim); font-size:13px;
     font-family:'Segoe UI',system-ui,sans-serif; position:relative; z-index:1;
   }
   footer a{color:var(--accent-glow); text-decoration:none;}
+  .creator-bar{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap;
+    margin:0 auto 20px; padding:7px 18px;
+    background:rgba(255,255,255,0.035);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:100px;
+    backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    font-size:12px; color:rgba(200,215,245,0.65);
+    letter-spacing:0.3px;
+    transition:background 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .creator-bar:hover{
+    background:rgba(255,255,255,0.065);
+    border-color:rgba(143,180,255,0.28);
+    color:rgba(225,238,255,0.85);
+    box-shadow:0 4px 18px rgba(10,16,32,0.4);
+  }
+  .creator-name{
+    color:var(--accent-glow);
+    font-weight:600;
+  }
+  @media (max-width:600px){
+    .creator-bar{
+      font-size:11px; padding:6px 14px; gap:6px; margin:0 auto 16px;
+    }
+  }
 
   /* ---------- Scroll-Reveal ---------- */
   .reveal{opacity:0; transform:translateY(32px); transition:opacity 0.7s ease-out, transform 0.7s ease-out;}
@@ -644,6 +760,10 @@
 
   @media (max-width:600px){
     section{padding:64px 20px;}
+    #ratingSection{padding-bottom:14px;}
+    #socialsSection{padding-bottom:18px;}
+    .final-cta{padding-top:14px; padding-bottom:40px;}
+    .final-cta .section-title{margin-bottom:20px;}
     .timeline-item{grid-template-columns:70px 1fr; gap:14px;}
   }
 
@@ -698,10 +818,10 @@
 <section class="hero">
   <div class="moon-wrap" data-parallax-speed="0.15"><div class="moon"></div></div>
   
-  <!-- Title area with floating social media overlays -->
+  <!-- Title area with floating social media overlays (Desktop) -->
   <div class="hero-title-wrapper">
     <!-- Instagram Floating Overlay -->
-    <div class="hero-social-slot hero-social-left">
+    <div class="hero-social-slot hero-social-left desktop-only-social">
       <a href="https://www.instagram.com/gymwilsdruff.abi27?utm_source=ig_web_button_share_sheet&amp;stkn=ZDNlZDc0MzIxNw==" 
          target="_blank" rel="noopener noreferrer" class="hero-floating-social" id="heroInstagramLink" aria-label="Winter Ball auf Instagram">
         <div class="hero-floating-icon">
@@ -721,7 +841,7 @@
     <h1 id="heroTitle">Winter Ball&nbsp;</h1>
 
     <!-- TikTok Floating Overlay -->
-    <div class="hero-social-slot hero-social-right">
+    <div class="hero-social-slot hero-social-right desktop-only-social">
       <a href="https://www.tiktok.com/@thewinner.takes.it.all27" 
          target="_blank" rel="noopener noreferrer" class="hero-floating-social" id="heroTiktokLink" aria-label="Winter Ball auf TikTok">
         <div class="hero-floating-icon">
@@ -744,6 +864,37 @@
     <span class="pulse-dot"></span><span id="liveCounterText"></span>
   </div>
   <a href="anmeldung.html" class="cta">Jetzt anmelden</a>
+
+  <!-- Mobile Social Duo (Below CTA) -->
+  <div class="hero-mobile-social">
+    <a href="https://www.instagram.com/gymwilsdruff.abi27?utm_source=ig_web_button_share_sheet&amp;stkn=ZDNlZDc0MzIxNw==" 
+       target="_blank" rel="noopener noreferrer" class="hero-floating-social" aria-label="Winter Ball auf Instagram">
+      <div class="hero-floating-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+      </div>
+      <div class="hero-floating-info">
+        <span class="hero-floating-platform">Instagram</span>
+        <span class="hero-floating-handle">@gymwilsdruff.abi27</span>
+      </div>
+    </a>
+    <a href="https://www.tiktok.com/@thewinner.takes.it.all27" 
+       target="_blank" rel="noopener noreferrer" class="hero-floating-social" aria-label="Winter Ball auf TikTok">
+      <div class="hero-floating-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+        </svg>
+      </div>
+      <div class="hero-floating-info">
+        <span class="hero-floating-platform">TikTok</span>
+        <span class="hero-floating-handle">@thewinner.takes.it.all27</span>
+      </div>
+    </a>
+  </div>
+
   <div class="scroll-hint">Mehr erfahren<div class="arrow"></div></div>
 </section>
 
@@ -900,8 +1051,16 @@
 </section>
 
 <footer>
-  Winter Ball 2027 · Klassenstufe 12 · <a href="mailto:info@winterball27.de">info@winterball27.de</a> · <a href="https://www.instagram.com/gymwilsdruff.abi27?utm_source=ig_web_button_share_sheet&amp;stkn=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href="https://www.tiktok.com/@thewinner.takes.it.all27" target="_blank" rel="noopener noreferrer">TikTok</a> · <a href="datenschutz.html">Datenschutz</a> · <a href="impressum.html">Impressum</a>
-  <div style="margin-top:8px; opacity:0.6;">© 2026–2027 Winter Ball · Klassenstufe 12, Gymnasium Wilsdruff · Website von Lenny Köllner. Alle Rechte vorbehalten.</div>
+  <div>
+    <div class="creator-bar" id="footerCreatorBar">
+      <span>Konzeption, Design &amp; technische Umsetzung:</span>
+      <span class="creator-name">Lenny Köllner</span>
+    </div>
+  </div>
+  <div class="footer-links">
+    Winter Ball 2027 · Klassenstufe 12 · <a href="mailto:info@winterball27.de">info@winterball27.de</a> · <a href="https://www.instagram.com/gymwilsdruff.abi27?utm_source=ig_web_button_share_sheet&amp;stkn=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href="https://www.tiktok.com/@thewinner.takes.it.all27" target="_blank" rel="noopener noreferrer">TikTok</a> · <a href="datenschutz.html">Datenschutz</a> · <a href="impressum.html">Impressum</a>
+  </div>
+  <div style="margin-top:8px; opacity:0.6;">© 2026–2027 Winter Ball · Klassenstufe 12, Gymnasium Wilsdruff. Alle Rechte vorbehalten.</div>
 </footer>
 
 <script type="module">
