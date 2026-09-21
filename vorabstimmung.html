@@ -267,6 +267,100 @@
     color:var(--text); background:rgba(255,255,255,0.05);
   }
 
+  /* Modal Window (Popup nach dem Abschicken) */
+  .modal-overlay{
+    position:fixed; inset:0; z-index:1000;
+    background:rgba(4, 7, 16, 0.84);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    display:flex; align-items:center; justify-content:center;
+    padding:20px;
+    opacity:0; visibility:hidden;
+    transition:opacity 0.25s ease, visibility 0.25s ease;
+  }
+  .modal-overlay.open{
+    opacity:1; visibility:visible;
+  }
+  .modal-window{
+    background:linear-gradient(145deg, rgba(22, 33, 62, 0.97), rgba(12, 18, 36, 0.98));
+    border:1px solid rgba(143, 180, 255, 0.38);
+    border-radius:20px;
+    padding:28px 22px 22px;
+    max-width:440px; width:100%;
+    box-shadow:0 24px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(143, 180, 255, 0.2);
+    text-align:center;
+    transform:scale(0.92) translateY(12px);
+    transition:transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    position:relative;
+  }
+  .modal-overlay.open .modal-window{
+    transform:scale(1) translateY(0);
+  }
+  .modal-badge{
+    display:inline-flex; align-items:center; gap:6px;
+    background:rgba(143,180,255,0.12); border:1px solid rgba(143,180,255,0.3);
+    border-radius:100px; padding:5px 14px; font-size:12px; font-weight:600;
+    color:var(--accent-glow); margin-bottom:14px; letter-spacing:0.3px;
+  }
+  .modal-title{
+    font-size:23px; font-weight:700; color:#fff; margin-bottom:12px;
+    line-height:1.25;
+  }
+  .modal-text{
+    font-size:14px; color:var(--text); line-height:1.6; margin-bottom:20px;
+    text-align:left;
+  }
+  .modal-text p{margin-bottom:10px;}
+  .modal-text p:last-child{margin-bottom:0;}
+  .modal-site-btn{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    width:100%; padding:14px 18px; border-radius:12px;
+    background:linear-gradient(135deg, #8fb4ff, #c5d8ff);
+    color:#080c16; font-size:15px; font-weight:700; text-decoration:none;
+    box-shadow:0 8px 25px rgba(143,180,255,0.38);
+    transition:all 0.2s ease; margin-bottom:10px;
+  }
+  .modal-site-btn:hover{
+    transform:translateY(-2px); filter:brightness(1.06);
+    box-shadow:0 12px 30px rgba(143,180,255,0.52);
+  }
+  .modal-dismiss-btn{
+    width:100%; padding:11px 16px; border-radius:12px;
+    background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12);
+    color:var(--text-dim); font-size:13.5px; font-weight:500; cursor:pointer;
+    transition:all 0.2s ease;
+  }
+  .modal-dismiss-btn:hover{
+    color:var(--text); background:rgba(255,255,255,0.09); border-color:rgba(255,255,255,0.22);
+  }
+
+  /* Info Callout in success view */
+  .info-callout{
+    background:rgba(143,180,255,0.07); border:1px solid rgba(143,180,255,0.24);
+    border-radius:12px; padding:15px; margin-bottom:20px; text-align:left;
+    display:flex; gap:12px; align-items:flex-start;
+  }
+  .info-callout-icon{
+    font-size:22px; flex-shrink:0; margin-top:2px;
+  }
+  .info-callout-body{
+    font-size:13px; line-height:1.5; color:var(--text); flex:1;
+  }
+  .info-callout-body strong{
+    color:#fff; display:block; margin-bottom:4px; font-size:13.5px;
+  }
+  .info-callout-link{
+    display:inline-flex; align-items:center; gap:6px;
+    color:var(--accent); font-weight:600; text-decoration:none;
+    margin-top:8px; font-size:13px; padding:6px 12px;
+    background:rgba(143,180,255,0.12); border-radius:8px;
+    border:1px solid rgba(143,180,255,0.25);
+    transition:all 0.2s ease;
+  }
+  .info-callout-link:hover{
+    background:rgba(143,180,255,0.22); color:#fff; border-color:rgba(143,180,255,0.45);
+  }
+
   /* Footer */
   .footer-hint{
     margin-top:24px; text-align:center; font-size:12px; color:var(--text-dim);
@@ -391,11 +485,45 @@
       </div>
     </div>
 
+    <!-- Hinweis auf winterball27.de für Preise & Details -->
+    <div class="info-callout">
+      <div class="info-callout-icon">✨</div>
+      <div class="info-callout-body">
+        <strong>Genaueres zu Preisen &amp; Programm?</strong>
+        <span>Alle Details zu Ticketpreisen, Zeitplan, Einlass und Dresscode findest du auf unserer offiziellen Website:</span>
+        <div>
+          <a href="https://winterball27.de" target="_blank" rel="noopener noreferrer" class="info-callout-link">
+            <span>🌐 winterball27.de öffnen</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
     <div class="success-actions">
       <button type="button" class="action-btn primary" id="resetFormBtn">
         Weitere Rückmeldung abgeben
       </button>
     </div>
+  </div>
+</div>
+
+<!-- Danke-Fenster / Modal nach dem Abschicken -->
+<div class="modal-overlay" id="thankYouModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-window">
+    <div class="modal-badge">❄️ Winter Ball 2027</div>
+    <h2 class="modal-title" id="modalTitle">Danke für deine Rückmeldung!</h2>
+    <div class="modal-text">
+      <p>Deine Antwort wurde erfolgreich übermittelt und hilft uns bei der genauen Raum- und Cateringplanung.</p>
+      <p>Falls du schon mal Genaueres zu den <strong>Ticketpreisen, dem Programmablauf und Dresscode</strong> erfahren willst, dann klick auf unsere Website:</p>
+    </div>
+    <a href="https://winterball27.de" target="_blank" rel="noopener noreferrer" class="modal-site-btn" id="modalSiteBtn">
+      <span>🌐 Zu winterball27.de</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    </a>
+    <button type="button" class="modal-dismiss-btn" id="closeModalBtn">
+      Fenster schließen
+    </button>
   </div>
 </div>
 
@@ -594,6 +722,9 @@
       successView.style.display = 'block';
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
+      // Pop-up Fenster mit Dank und Link zu winterball27.de öffnen
+      openThankYouModal();
+
     } catch (err) {
       console.error('Fehler beim Speichern der Vorabstimmung:', err);
       formError.textContent = 'Ein Fehler ist aufgetreten. Bitte versuche es noch einmal.';
@@ -603,7 +734,44 @@
     }
   });
 
+  // Modal Dialog Steuerung
+  const thankYouModal = document.getElementById('thankYouModal');
+  const closeModalBtn = document.getElementById('closeModalBtn');
+
+  function openThankYouModal() {
+    if (thankYouModal) {
+      thankYouModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeThankYouModal() {
+    if (thankYouModal) {
+      thankYouModal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener('click', closeThankYouModal);
+  }
+
+  if (thankYouModal) {
+    thankYouModal.addEventListener('click', (e) => {
+      if (e.target === thankYouModal) {
+        closeThankYouModal();
+      }
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && thankYouModal && thankYouModal.classList.contains('open')) {
+      closeThankYouModal();
+    }
+  });
+
   document.getElementById('resetFormBtn').addEventListener('click', () => {
+    closeThankYouModal();
     pollForm.reset();
     setAttending(true);
     companionsCount = 0;
