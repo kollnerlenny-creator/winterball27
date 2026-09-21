@@ -539,6 +539,9 @@
     <button class="tab-btn" data-tab="ratings">
       ❄️ Bewertungen <span class="tab-badge" id="tabRatingCount">0</span>
     </button>
+    <button class="tab-btn" data-tab="poll">
+      🗳️ Vorabstimmung <span class="tab-badge" id="tabPollCount">0</span>
+    </button>
     <button class="tab-btn" data-tab="settings">
       ⚙️ Einstellungen
     </button>
@@ -642,6 +645,78 @@
         <button id="resetAllRatingsBtn" class="danger-btn" style="padding:6px 12px; font-size:12px;">🗑️ Alle Bewertungen zurücksetzen</button>
       </div>
       <div id="ratingsCommentList" style="display:flex; flex-direction:column; gap:10px;"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Vorabstimmung -->
+  <div class="tab-content" data-tab-content="poll">
+    <div class="stats" style="margin-bottom:20px;">
+      <div class="stat">
+        <div class="stat-lbl"><span>🗳️ Rückmeldungen</span></div>
+        <div class="num" id="statPollTotal">0</div>
+        <div class="stat-sub">Stimmen gesamt</div>
+      </div>
+      <div class="stat">
+        <div class="stat-lbl"><span>🎉 Zusagen (Ja)</span></div>
+        <div class="num" id="statPollYes" style="color:var(--success);">0</div>
+        <div class="stat-sub" id="statPollYesPercent">0% aller Stimmen</div>
+      </div>
+      <div class="stat">
+        <div class="stat-lbl"><span>❄️ Absagen (Nein)</span></div>
+        <div class="num" id="statPollNo" style="color:var(--error);">0</div>
+        <div class="stat-sub" id="statPollNoPercent">0% aller Stimmen</div>
+      </div>
+      <div class="stat">
+        <div class="stat-lbl"><span>👥 Geplante Gäste gesamt</span></div>
+        <div class="num" id="statPollTotalGuests" style="color:var(--accent-glow);">0</div>
+        <div class="stat-sub" id="statPollCompanionsSub">Inkl. Begleitungen</div>
+      </div>
+      <div class="stat">
+        <div class="stat-lbl"><span>🤝 Begleitungen</span></div>
+        <div class="num" id="statPollCompanionsTotal">0</div>
+        <div class="stat-sub" id="statPollAvgCompanions">Ø 0 pro Zusage</div>
+      </div>
+    </div>
+
+    <div class="toolbar-container">
+      <div class="toolbar-top">
+        <div class="search-box-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="pollSearch" placeholder="Nach Name oder Anmerkung suchen..." autocomplete="off">
+        </div>
+        <div class="toolbar-actions">
+          <a href="vorabstimmung.html" target="_blank" class="header-action-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+            🔗 Formular öffnen
+          </a>
+          <button type="button" id="pollExportBtn">📊 CSV Export</button>
+        </div>
+      </div>
+
+      <div class="filter-chips">
+        <button type="button" class="chip active" data-poll-filter="all">Alle <span class="chip-count" id="chipPollAll">0</span></button>
+        <button type="button" class="chip" data-poll-filter="yes">🎉 Nur Zusagen <span class="chip-count" id="chipPollYes">0</span></button>
+        <button type="button" class="chip" data-poll-filter="no">❄️ Nur Absagen <span class="chip-count" id="chipPollNo">0</span></button>
+        <span class="results-badge" id="pollResultsBadge"></span>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Entscheidung</th>
+            <th>Begleitungen</th>
+            <th>Personen gesamt</th>
+            <th>Klasse / Anmerkung</th>
+            <th>Eingereicht am</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="pollTableBody">
+          <tr><td colspan="7" style="text-align:center; padding:32px 16px; color:var(--text-dim);">Lade Vorabstimmungsdaten...</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
@@ -1167,6 +1242,143 @@
     }
   });
 
+  // --- Vorabstimmung (Poll) ---
+  let allPolls = [];
+  let activePollFilter = 'all'; // 'all', 'yes', 'no'
+
+  function renderPolls(){
+    const tabBadge = document.getElementById('tabPollCount');
+    if (tabBadge) tabBadge.textContent = allPolls.length;
+
+    const total = allPolls.length;
+    const yesPolls = allPolls.filter(p => p.attending === true || p.status === 'ja');
+    const noPolls = allPolls.filter(p => p.attending === false || p.status === 'nein');
+    const yesCount = yesPolls.length;
+    const noCount = noPolls.length;
+
+    const yesPct = total > 0 ? Math.round((yesCount / total) * 100) : 0;
+    const noPct = total > 0 ? Math.round((noCount / total) * 100) : 0;
+
+    const totalGuests = yesPolls.reduce((sum, p) => sum + (1 + (Number(p.companionsCount) || 0)), 0);
+    const totalCompanions = yesPolls.reduce((sum, p) => sum + (Number(p.companionsCount) || 0), 0);
+    const avgCompanions = yesCount > 0 ? (totalCompanions / yesCount).toFixed(1) : '0';
+
+    if (document.getElementById('statPollTotal')) document.getElementById('statPollTotal').textContent = total;
+    if (document.getElementById('statPollYes')) document.getElementById('statPollYes').textContent = yesCount;
+    if (document.getElementById('statPollYesPercent')) document.getElementById('statPollYesPercent').textContent = `${yesPct}% aller Stimmen`;
+    if (document.getElementById('statPollNo')) document.getElementById('statPollNo').textContent = noCount;
+    if (document.getElementById('statPollNoPercent')) document.getElementById('statPollNoPercent').textContent = `${noPct}% aller Stimmen`;
+    if (document.getElementById('statPollTotalGuests')) document.getElementById('statPollTotalGuests').textContent = totalGuests;
+    if (document.getElementById('statPollCompanionsSub')) document.getElementById('statPollCompanionsSub').textContent = `${totalCompanions} Begleitung${totalCompanions !== 1 ? 'en' : ''}`;
+    if (document.getElementById('statPollCompanionsTotal')) document.getElementById('statPollCompanionsTotal').textContent = totalCompanions;
+    if (document.getElementById('statPollAvgCompanions')) document.getElementById('statPollAvgCompanions').textContent = `Ø ${avgCompanions} pro Zusage`;
+
+    if (document.getElementById('chipPollAll')) document.getElementById('chipPollAll').textContent = total;
+    if (document.getElementById('chipPollYes')) document.getElementById('chipPollYes').textContent = yesCount;
+    if (document.getElementById('chipPollNo')) document.getElementById('chipPollNo').textContent = noCount;
+
+    const searchVal = (document.getElementById('pollSearch')?.value || '').trim().toLowerCase();
+    const rows = allPolls.filter(p => {
+      const matchesSearch = !searchVal ||
+        (p.name || '').toLowerCase().includes(searchVal) ||
+        (p.note || '').toLowerCase().includes(searchVal);
+      if (!matchesSearch) return false;
+
+      if (activePollFilter === 'yes') return p.attending === true || p.status === 'ja';
+      if (activePollFilter === 'no') return p.attending === false || p.status === 'nein';
+      return true;
+    });
+
+    const resBadge = document.getElementById('pollResultsBadge');
+    if (resBadge) {
+      if (searchVal || activePollFilter !== 'all') {
+        resBadge.textContent = `${rows.length} von ${total} angezeigt`;
+      } else {
+        resBadge.textContent = `${total} Rückmeldungen`;
+      }
+    }
+
+    const tbody = document.getElementById('pollTableBody');
+    if (tbody) {
+      if (rows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:32px 16px; color:var(--text-dim);">Keine passenden Rückmeldungen gefunden.</td></tr>`;
+      } else {
+        tbody.innerHTML = rows.map(p => {
+          const isYes = p.attending === true || p.status === 'ja';
+          const compCount = Number(p.companionsCount) || 0;
+          const totalP = isYes ? (1 + compCount) : 0;
+          const statusBadge = isYes
+            ? `<span class="badge in" style="font-weight:600;">✓ Kommt</span>`
+            : `<span class="badge out" style="color:var(--error); background:rgba(255,128,128,0.12); font-weight:600;">✕ Kommt nicht</span>`;
+          const compBadge = isYes
+            ? (compCount === 0 ? '<span style="color:var(--text-dim);">Keine (nur selbst)</span>' : `<strong>+${compCount}</strong> Begleitung${compCount > 1 ? 'en' : ''}`)
+            : '<span style="color:var(--text-dim); opacity:0.6;">—</span>';
+          const totalBadge = isYes
+            ? `<strong style="color:var(--accent-glow);">${totalP} Person${totalP > 1 ? 'en' : ''}</strong>`
+            : '<span style="color:var(--text-dim); opacity:0.6;">0</span>';
+
+          return `
+            <tr>
+              <td><strong style="color:var(--text); font-size:13.5px;">${escapeHtml(p.name || 'Unbekannt')}</strong></td>
+              <td>${statusBadge}</td>
+              <td>${compBadge}</td>
+              <td>${totalBadge}</td>
+              <td style="color:${p.note ? 'var(--text)' : 'var(--text-dim)'}; font-size:12.5px;">${p.note ? escapeHtml(p.note) : '<span style="opacity:0.5;">—</span>'}</td>
+              <td style="font-size:11.5px; color:var(--text-dim); white-space:nowrap;">${formatTimestamp(p.createdAt)}</td>
+              <td style="text-align:right;">
+                <button type="button" class="delete-btn delete-poll-btn" data-id="${p.id}" title="Eintrag löschen">🗑</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        tbody.querySelectorAll('.delete-poll-btn').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const id = btn.dataset.id;
+            if (!id) return;
+            if (!confirm('Diesen Eintrag aus der Vorabstimmung wirklich löschen?')) return;
+            btn.disabled = true;
+            try {
+              await deleteDoc(doc(db, 'vorabstimmung', id));
+              showAdminToast('Eintrag gelöscht');
+            } catch(e) {
+              alert('Fehler beim Löschen: ' + e.message);
+              btn.disabled = false;
+            }
+          });
+        });
+      }
+    }
+  }
+
+  function exportPollCsv(){
+    if (allPolls.length === 0) {
+      alert('Keine Vorabstimmungs-Daten zum Exportieren vorhanden.');
+      return;
+    }
+    const header = ['Name', 'Entscheidung', 'Begleitungen', 'Personen gesamt', 'Klasse / Anmerkung', 'Eingereicht am'];
+    const rows = allPolls.map(p => {
+      const isYes = p.attending === true || p.status === 'ja';
+      const comp = Number(p.companionsCount) || 0;
+      return [
+        p.name || '',
+        isYes ? 'Kommt' : 'Kommt nicht',
+        isYes ? comp : 0,
+        isYes ? (1 + comp) : 0,
+        p.note || '',
+        formatTimestamp(p.createdAt)
+      ];
+    });
+    const csv = [header, ...rows].map(row => row.map(v => `"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `winterball-vorabstimmung_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   const DEFAULT_SCHEDULE = [
     { time: '17:30', label: 'Einlass', note: 'Ankommen, Garderobe, erste Getränke' },
     { time: '18:00', label: 'Eröffnung', note: 'Begrüßung und Auftakt des Abends' },
@@ -1239,6 +1451,7 @@
       document.querySelector(`[data-tab-content="${btn.dataset.tab}"]`).classList.add('active');
       if (btn.dataset.tab === 'insights') updateCharts();
       if (btn.dataset.tab === 'ratings') renderRatings();
+      if (btn.dataset.tab === 'poll') renderPolls();
     });
   });
 
@@ -1257,6 +1470,10 @@
     onSnapshot(collection(db, 'ratings'), (snap) => {
       allRatings = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderRatings();
+    });
+    onSnapshot(query(collection(db, 'vorabstimmung'), orderBy('createdAt', 'desc')), (snap) => {
+      allPolls = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderPolls();
     });
     onSnapshot(doc(db, 'settings', 'pricing'), (snap) => {
       const data = snap.exists() ? snap.data() : {};
@@ -2395,20 +2612,41 @@
   });
 
   // Filter chips listeners
-  document.querySelectorAll('.filter-chips .chip').forEach(chip => {
+  document.querySelectorAll('.filter-chips .chip[data-filter]').forEach(chip => {
     chip.addEventListener('click', () => {
-      document.querySelectorAll('.filter-chips .chip').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.filter-chips .chip[data-filter]').forEach(c => c.classList.remove('active'));
       chip.classList.add('active');
       activeFilter = chip.dataset.filter || 'all';
       render();
     });
   });
 
+  // Poll search & filter chips listeners
+  const pollSearchInput = document.getElementById('pollSearch');
+  if (pollSearchInput) {
+    pollSearchInput.addEventListener('input', renderPolls);
+  }
+
+  document.querySelectorAll('.filter-chips .chip[data-poll-filter]').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.filter-chips .chip[data-poll-filter]').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activePollFilter = chip.dataset.pollFilter || 'all';
+      renderPolls();
+    });
+  });
+
+  const pollExportBtn = document.getElementById('pollExportBtn');
+  if (pollExportBtn) {
+    pollExportBtn.addEventListener('click', exportPollCsv);
+  }
+
   const headerRefreshBtn = document.getElementById('headerRefreshBtn');
   if (headerRefreshBtn) {
     headerRefreshBtn.addEventListener('click', () => {
       render();
       renderRatings();
+      renderPolls();
       scheduleCharts();
       showAdminToast('Dashboard aktualisiert');
     });
