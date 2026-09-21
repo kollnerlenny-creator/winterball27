@@ -6,56 +6,101 @@
 <title>Winter Ball · Admin</title>
 <style>
   :root{
-    --bg-1:#0a0e1a; --bg-2:#131c30;
-    --glass:rgba(255,255,255,0.06); --glass-border:rgba(255,255,255,0.13);
+    --bg-1:#070b16; --bg-2:#0f172a;
+    --glass:rgba(255,255,255,0.05); --glass-border:rgba(255,255,255,0.11);
+    --glass-hover:rgba(255,255,255,0.09);
     --text:#eef2fb; --text-dim:#9aa7c2;
-    --accent:#8fb4ff; --success:#7fe0a8; --error:#ff8080; --warn:#ffd27f;
+    --accent:#8fb4ff; --accent-glow:#c5d8ff;
+    --success:#7fe0a8; --error:#ff8080; --warn:#ffd27f;
     --radius:16px; --radius-sm:10px;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{
-    font-family:'Segoe UI',system-ui,sans-serif;
-    background:linear-gradient(180deg,var(--bg-1),var(--bg-2));
-    color:var(--text); min-height:100vh; padding:24px 16px;
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:linear-gradient(180deg, var(--bg-1), var(--bg-2));
+    color:var(--text); min-height:100vh; padding:28px 20px;
+    position:relative; overflow-x:hidden;
   }
-  .wrap{max-width:min(1400px, 96vw); margin:0 auto;}
-  h1{font-weight:300; font-size:26px; margin-bottom:4px;}
-  .sub{color:var(--text-dim); font-size:13px; margin-bottom:24px;}
+  /* Ambient glass glow reflections */
+  body::before{
+    content:''; position:fixed; top:-15vw; left:-10vw; width:55vw; height:55vw;
+    background:radial-gradient(circle, rgba(143,180,255,0.12) 0%, transparent 65%);
+    pointer-events:none; z-index:-1;
+    animation:ambientFloat1 18s ease-in-out infinite alternate;
+  }
+  body::after{
+    content:''; position:fixed; bottom:-15vw; right:-10vw; width:55vw; height:55vw;
+    background:radial-gradient(circle, rgba(127,224,168,0.08) 0%, transparent 65%);
+    pointer-events:none; z-index:-1;
+    animation:ambientFloat2 22s ease-in-out infinite alternate;
+  }
+  @keyframes ambientFloat1{
+    0%{ transform:translate(0, 0) scale(1); }
+    100%{ transform:translate(5vw, 3vw) scale(1.08); }
+  }
+  @keyframes ambientFloat2{
+    0%{ transform:translate(0, 0) scale(1); }
+    100%{ transform:translate(-4vw, -3vw) scale(1.06); }
+  }
+
+  .wrap{max-width:min(1420px, 96vw); margin:0 auto;}
+  h1{font-weight:400; font-size:26px; margin-bottom:4px; letter-spacing:-0.3px;}
+  .sub{color:var(--text-dim); font-size:13px; margin-bottom:26px;}
 
   .login-card{
-    max-width:360px; margin:80px auto; padding:32px;
-    background:var(--glass); backdrop-filter:blur(20px); border:1px solid var(--glass-border);
-    border-radius:var(--radius); text-align:center;
+    max-width:380px; margin:90px auto; padding:36px;
+    background:linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+    backdrop-filter:blur(24px) saturate(160%); -webkit-backdrop-filter:blur(24px) saturate(160%);
+    border:1px solid rgba(255,255,255,0.14); border-radius:var(--radius);
+    text-align:center; box-shadow:0 24px 60px rgba(0,0,0,0.5);
   }
   .login-card input{
-    width:100%; padding:12px 14px; margin-top:12px; background:rgba(255,255,255,0.05);
+    width:100%; padding:13px 15px; margin-top:12px; background:rgba(255,255,255,0.05);
     border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:14px;
+    transition:all 0.2s ease;
+  }
+  .login-card input:focus{
+    outline:none; border-color:var(--accent); background:rgba(255,255,255,0.08);
+    box-shadow:0 0 0 3px rgba(143,180,255,0.18);
   }
   .login-card button{
-    width:100%; margin-top:14px; padding:12px; border:none; border-radius:var(--radius-sm);
-    background:var(--accent); color:#0a0e1a; font-weight:600; cursor:pointer;
+    width:100%; margin-top:16px; padding:13px; border:none; border-radius:var(--radius-sm);
+    background:linear-gradient(135deg, #8fb4ff, #adcaff); color:#080c16; font-weight:700; cursor:pointer;
+    font-size:14.5px; box-shadow:0 6px 20px rgba(143,180,255,0.3); transition:all 0.2s ease;
   }
-  .login-error{color:var(--error); font-size:13px; margin-top:10px; display:none;}
+  .login-card button:hover{transform:translateY(-1px); filter:brightness(1.08);}
+  .login-error{color:var(--error); font-size:13px; margin-top:12px; display:none;}
 
   .admin-header{
-    display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px;
-    flex-wrap:wrap; gap:14px;
+    display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px;
+    flex-wrap:wrap; gap:16px;
   }
   .admin-title-row{display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
-  .admin-header-actions{display:flex; align-items:center; gap:8px;}
+  .admin-header-actions{display:flex; align-items:center; gap:10px;}
   .header-action-btn{
-    padding:8px 14px; border-radius:var(--radius-sm); border:1px solid var(--glass-border);
-    background:rgba(255,255,255,0.06); color:var(--text); font-size:13px; font-weight:500;
-    cursor:pointer; transition:background 0.2s, border-color 0.2s;
+    padding:9px 15px; border-radius:var(--radius-sm); border:1px solid var(--glass-border);
+    background:linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+    color:var(--text); font-size:13px; font-weight:600; cursor:pointer;
+    display:inline-flex; align-items:center; gap:7px;
+    transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .header-action-btn:hover{background:rgba(255,255,255,0.12); border-color:rgba(143,180,255,0.35);}
-  .header-action-btn.logout{color:var(--error); border-color:rgba(255,128,128,0.3); background:rgba(255,128,128,0.06);}
-  .header-action-btn.logout:hover{background:rgba(255,128,128,0.15);}
+  .header-action-btn:hover{
+    background:rgba(255,255,255,0.11); border-color:rgba(143,180,255,0.4);
+    transform:translateY(-1px);
+  }
+  .header-action-btn:active{transform:scale(0.97);}
+  .header-action-btn.logout{
+    color:var(--error); border-color:rgba(255,128,128,0.28); background:rgba(255,128,128,0.06);
+  }
+  .header-action-btn.logout:hover{background:rgba(255,128,128,0.14); border-color:rgba(255,128,128,0.45);}
+  .header-action-btn svg{width:15px; height:15px; stroke-width:2.2; flex-shrink:0;}
+
   .live-pill{
-    display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:600;
+    display:inline-flex; align-items:center; gap:7px; font-size:11px; font-weight:700;
     letter-spacing:0.5px; text-transform:uppercase; color:var(--success);
-    background:rgba(127,224,168,0.12); border:1px solid rgba(127,224,168,0.3);
-    border-radius:100px; padding:3px 10px;
+    background:rgba(127,224,168,0.1); border:1px solid rgba(127,224,168,0.3);
+    border-radius:100px; padding:4px 12px; backdrop-filter:blur(10px);
   }
   .pulse-dot{
     width:7px; height:7px; border-radius:50%; background:#7fe0a8;
@@ -67,238 +112,235 @@
     100%{ box-shadow:0 0 0 0 rgba(127,224,168,0); }
   }
 
-  .stats{display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap;}
-  .stat{
-    flex:1; min-width:140px; padding:16px; background:var(--glass); border:1px solid var(--glass-border);
-    border-radius:var(--radius-sm); backdrop-filter:blur(16px); transition:border-color 0.2s, transform 0.2s;
-    display:flex; flex-direction:column; justify-content:space-between;
+  /* Stats Cards Grid */
+  .stats{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));
+    gap:14px; margin-bottom:26px;
   }
-  .stat:hover{border-color:rgba(143,180,255,0.35); transform:translateY(-1px);}
-  .stat .stat-lbl{font-size:12px; color:var(--text-dim); margin-bottom:6px; display:flex; align-items:center; gap:6px;}
-  .stat .num{font-size:26px; font-weight:600; color:var(--accent); line-height:1.2;}
-  .stat .stat-sub{font-size:11px; color:var(--text-dim); margin-top:4px;}
+  .stat{
+    background:linear-gradient(145deg, rgba(255,255,255,0.065) 0%, rgba(255,255,255,0.02) 100%);
+    border:1px solid var(--glass-border); border-radius:var(--radius);
+    padding:18px; backdrop-filter:blur(24px) saturate(160%); -webkit-backdrop-filter:blur(24px) saturate(160%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 30px rgba(0,0,0,0.32);
+    transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    display:flex; flex-direction:column; justify-content:space-between;
+    position:relative; overflow:hidden;
+  }
+  .stat:hover{
+    border-color:rgba(143,180,255,0.38); transform:translateY(-3px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.16), 0 16px 40px rgba(0,0,0,0.5), 0 0 20px rgba(143,180,255,0.12);
+  }
+  .stat-header{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;
+  }
+  .stat-lbl{
+    font-size:12.5px; font-weight:600; color:var(--text-dim); letter-spacing:0.2px;
+  }
+  .stat-icon-wrap{
+    width:32px; height:32px; border-radius:9px;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(143,180,255,0.12); border:1px solid rgba(143,180,255,0.25);
+    color:var(--accent); flex-shrink:0; transition:all 0.2s ease;
+  }
+  .stat-icon-wrap svg{width:16px; height:16px; stroke-width:2;}
+  .stat-icon-wrap.success{background:rgba(127,224,168,0.12); border-color:rgba(127,224,168,0.25); color:var(--success);}
+  .stat-icon-wrap.warn{background:rgba(255,210,127,0.12); border-color:rgba(255,210,127,0.25); color:var(--warn);}
+  .stat-icon-wrap.error{background:rgba(255,128,128,0.12); border-color:rgba(255,128,128,0.25); color:var(--error);}
+  .stat:hover .stat-icon-wrap{transform:scale(1.08);}
+
+  .stat .num{font-size:27px; font-weight:700; color:#fff; line-height:1.15; letter-spacing:-0.5px;}
+  .stat .num.accent{color:var(--accent-glow);}
+  .stat .num.success{color:var(--success);}
+  .stat .num.warn{color:var(--warn);}
+  .stat .stat-sub{font-size:11.5px; color:var(--text-dim); margin-top:6px;}
+
   .stat-progress{
-    margin-top:8px; width:100%; height:4px; border-radius:2px;
+    margin-top:10px; width:100%; height:5px; border-radius:3px;
     background:rgba(255,255,255,0.08); overflow:hidden;
   }
   .stat-progress-fill{
-    height:100%; width:0%; border-radius:2px;
+    height:100%; width:0%; border-radius:3px;
     background:linear-gradient(90deg, var(--accent), var(--success));
-    transition:width 0.4s ease;
+    transition:width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .tabs{display:flex; gap:8px; margin-bottom:20px; border-bottom:1px solid var(--glass-border); flex-wrap:wrap;}
-  .tab-btn{
-    padding:12px 18px; border:none; background:none; color:var(--text-dim); font-size:14px; font-weight:600;
-    cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition:color 0.2s, border-color 0.2s;
-    display:inline-flex; align-items:center; gap:6px;
+  /* Glass Tab Bar */
+  .tabs{
+    display:flex; gap:6px; margin-bottom:24px;
+    background:rgba(255,255,255,0.035); padding:6px; border-radius:var(--radius);
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+    overflow-x:auto; scrollbar-width:none;
   }
-  .tab-btn:hover{color:var(--text);}
-  .tab-btn.active{color:var(--accent); border-bottom-color:var(--accent);}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab-btn{
+    padding:11px 18px; border:1px solid transparent; border-radius:12px;
+    background:transparent; color:var(--text-dim); font-size:13.5px; font-weight:600;
+    cursor:pointer; transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display:inline-flex; align-items:center; gap:8px; white-space:nowrap;
+  }
+  .tab-btn:hover{color:var(--text); background:rgba(255,255,255,0.06);}
+  .tab-btn.active{
+    color:#fff; background:rgba(143,180,255,0.16);
+    border-color:rgba(143,180,255,0.35);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 18px rgba(143,180,255,0.18);
+  }
+  .tab-btn svg{width:16px; height:16px; stroke-width:2.2; flex-shrink:0;}
   .tab-badge{
     font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:100px;
-    background:rgba(255,255,255,0.1); color:var(--text); line-height:1;
+    background:rgba(255,255,255,0.08); color:var(--text); line-height:1;
+    transition:all 0.2s ease;
   }
   .tab-btn.active .tab-badge{
-    background:rgba(143,180,255,0.25); color:var(--accent);
+    background:rgba(143,180,255,0.3); color:#fff;
   }
 
-  .toolbar-container{display:flex; flex-direction:column; gap:12px; margin-bottom:18px;}
-  .toolbar-top{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
-  .search-box-wrap{position:relative; flex:1; min-width:240px; display:flex; align-items:center;}
+  /* Tab switching animation */
+  .tab-content{display:none;}
+  .tab-content.active{
+    display:block;
+    animation:tabFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes tabFadeIn{
+    from{ opacity:0; transform:translateY(10px) scale(0.995); }
+    to{ opacity:1; transform:translateY(0) scale(1); }
+  }
+
+  /* Toolbars & Filters */
+  .toolbar-container{display:flex; flex-direction:column; gap:14px; margin-bottom:20px;}
+  .toolbar-top{display:flex; gap:12px; flex-wrap:wrap; align-items:center;}
+  .search-box-wrap{position:relative; flex:1; min-width:260px; display:flex; align-items:center;}
   .search-box-wrap input{
-    width:100%; padding:10px 38px 10px 36px; background:var(--glass);
+    width:100%; padding:11px 40px 11px 40px;
+    background:linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.025));
+    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
     border:1px solid var(--glass-border); border-radius:var(--radius-sm);
-    color:var(--text); font-size:13.5px; transition:border-color 0.2s, background 0.2s;
+    color:var(--text); font-size:13.5px; transition:all 0.2s ease;
   }
   .search-box-wrap input:focus{
     outline:none; border-color:var(--accent); background:rgba(255,255,255,0.08);
+    box-shadow:0 0 0 3px rgba(143,180,255,0.18);
   }
   .search-icon{
-    position:absolute; left:12px; width:15px; height:15px; color:var(--text-dim); pointer-events:none;
+    position:absolute; left:14px; width:16px; height:16px; color:var(--text-dim); pointer-events:none;
   }
   .search-clear-btn{
-    position:absolute; right:10px; background:rgba(255,255,255,0.1); border:none;
-    color:var(--text-dim); border-radius:50%; width:20px; height:20px; font-size:11px;
+    position:absolute; right:12px; background:rgba(255,255,255,0.1); border:none;
+    color:var(--text-dim); border-radius:50%; width:22px; height:22px; font-size:11px;
     display:flex; align-items:center; justify-content:center; cursor:pointer;
+    transition:all 0.15s ease;
   }
-  .search-clear-btn:hover{color:var(--text); background:rgba(255,255,255,0.2);}
+  .search-clear-btn:hover{color:#fff; background:rgba(255,255,255,0.22);}
+
   .filter-chips{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
   .chip{
-    padding:6px 13px; border-radius:100px; border:1px solid var(--glass-border);
-    background:rgba(255,255,255,0.04); color:var(--text-dim); font-size:12px; font-weight:600;
-    cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.15s ease;
+    padding:7px 14px; border-radius:100px; border:1px solid var(--glass-border);
+    background:rgba(255,255,255,0.04); color:var(--text-dim); font-size:12.5px; font-weight:600;
+    cursor:pointer; display:inline-flex; align-items:center; gap:7px;
+    transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .chip:hover{background:rgba(255,255,255,0.08); color:var(--text); border-color:rgba(143,180,255,0.3);}
+  .chip:hover{
+    background:rgba(255,255,255,0.08); color:var(--text); border-color:rgba(143,180,255,0.3);
+    transform:translateY(-1px);
+  }
   .chip.active{
-    background:rgba(143,180,255,0.18); border-color:var(--accent); color:var(--accent);
+    background:rgba(143,180,255,0.18); border-color:var(--accent); color:#fff;
+    box-shadow:0 3px 12px rgba(143,180,255,0.2);
   }
+  .chip svg{width:13px; height:13px; stroke-width:2.2;}
   .chip-count{
-    font-size:10px; padding:1px 6px; border-radius:10px;
-    background:rgba(255,255,255,0.08); color:inherit;
+    font-size:10.5px; padding:2px 7px; border-radius:10px;
+    background:rgba(255,255,255,0.08); color:inherit; font-weight:700;
   }
-  .toolbar-actions{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
-  .toolbar-actions button{
-    padding:8px 14px; border-radius:var(--radius-sm); border:1px solid var(--glass-border);
-    background:rgba(255,255,255,0.05); color:var(--text); cursor:pointer; font-size:13px; font-weight:500;
-  }
-  .toolbar-actions button.primary{
-    background:var(--accent); color:#0a0e1a; font-weight:600; border:none;
-  }
-  .toolbar-actions button.primary:hover{filter:brightness(1.08);}
+  .chip.active .chip-count{background:rgba(143,180,255,0.3); color:#fff;}
   .results-badge{font-size:12px; color:var(--text-dim); margin-left:auto;}
 
-  /* Mobile responsive cards view */
-  .mobile-cards-wrap{display:none; flex-direction:column; gap:12px;}
-  @media (max-width:860px){
-    .desktop-table-wrap{display:none;}
-    .mobile-cards-wrap{display:flex;}
+  .toolbar-actions{display:flex; gap:9px; align-items:center; flex-wrap:wrap;}
+  .toolbar-actions button{
+    padding:9px 15px; border-radius:var(--radius-sm); border:1px solid var(--glass-border);
+    background:linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+    color:var(--text); cursor:pointer; font-size:13px; font-weight:600;
+    display:inline-flex; align-items:center; gap:7px;
+    transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .order-card{
-    background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius);
-    padding:16px; backdrop-filter:blur(16px); display:flex; flex-direction:column; gap:12px;
+  .toolbar-actions button:hover{
+    background:rgba(255,255,255,0.12); border-color:rgba(143,180,255,0.4);
+    transform:translateY(-1px);
   }
-  .order-card-header{
-    display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
+  .toolbar-actions button:active{transform:scale(0.97);}
+  .toolbar-actions button.primary{
+    background:linear-gradient(135deg, #8fb4ff, #b6d0ff); color:#080c16;
+    font-weight:700; border:none; box-shadow:0 4px 16px rgba(143,180,255,0.32);
   }
-  .order-card-title{
-    font-size:15px; font-weight:600; color:var(--text); display:flex; align-items:center; gap:8px; flex-wrap:wrap;
-  }
-  .order-card-email{font-size:12px; color:var(--text-dim); margin-top:2px; word-break:break-all;}
-  .order-card-attendees{
-    background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.06);
-    border-radius:var(--radius-sm); padding:10px 12px; display:flex; flex-direction:column; gap:8px;
-  }
-  .order-card-attendee{
-    display:flex; justify-content:space-between; align-items:center; gap:10px; font-size:13px;
-  }
-  .order-card-attendee .checkin-toggle{
-    padding:8px 14px; font-size:12px; border-radius:var(--radius-sm);
-  }
-  .order-card-footer{
-    display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;
-    padding-top:10px; border-top:1px solid rgba(255,255,255,0.06);
-  }
-  .order-card-actions{display:flex; gap:6px; align-items:center;}
+  .toolbar-actions button.primary:hover{filter:brightness(1.08); box-shadow:0 6px 22px rgba(143,180,255,0.45);}
+  .toolbar-actions button svg{width:15px; height:15px; stroke-width:2.2;}
 
-  /* Toast Notification */
-  .admin-toast{
-    position:fixed; bottom:24px; right:24px; z-index:999;
-    padding:12px 20px; border-radius:var(--radius-sm);
-    background:rgba(19,28,48,0.96); border:1px solid var(--glass-border);
-    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-    box-shadow:0 12px 35px rgba(0,0,0,0.6); color:var(--text); font-size:13.5px;
-    display:flex; align-items:center; gap:8px; pointer-events:none;
-    opacity:0; transform:translateY(12px); transition:opacity 0.25s ease, transform 0.25s ease;
-  }
-  .admin-toast.show{opacity:1; transform:translateY(0);}
-  .admin-toast.success{border-color:rgba(127,224,168,0.4); color:var(--success);}
-
-  .price-bar{
-    display:flex; align-items:center; gap:10px; margin-bottom:20px; padding:14px 16px;
-    background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius-sm);
-    backdrop-filter:blur(16px); flex-wrap:wrap;
-  }
-  .price-bar label{font-size:13px; color:var(--text-dim);}
-  .price-bar input{
-    width:100px; padding:8px 10px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border);
-    border-radius:var(--radius-sm); color:var(--text); font-size:14px;
-  }
-  .price-bar button{
-    padding:8px 14px; border-radius:var(--radius-sm); border:none; background:var(--accent);
-    color:#0a0e1a; font-weight:600; font-size:13px; cursor:pointer;
-  }
-  .price-saved{color:var(--success); font-size:12px; opacity:0; transition:opacity 0.3s;}
-  .price-saved.show{opacity:1;}
-
-  .settings-section{margin-bottom:32px;}
-  .settings-section-title{
-    font-size:14px; font-weight:600; color:var(--text); margin-bottom:12px;
-    padding-bottom:8px; border-bottom:1px solid var(--glass-border);
-  }
-  .settings-section .info-editor:last-child{margin-bottom:0;}
-
-  .info-editor{
-    margin-bottom:20px; padding:14px 16px;
-    background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius-sm);
-    backdrop-filter:blur(16px);
-  }
-  .info-editor label{display:block; font-size:12px; color:var(--text-dim); margin-bottom:8px;}
-  .info-editor textarea{
-    width:100%; min-height:70px; padding:10px 12px; background:rgba(255,255,255,0.05);
-    border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text);
-    font-size:13px; font-family:inherit; resize:vertical;
-  }
-  .info-editor-actions{display:flex; align-items:center; gap:10px; margin-top:10px;}
-  .info-editor-actions button{
-    padding:8px 14px; border-radius:var(--radius-sm); border:none; background:var(--accent);
-    color:#0a0e1a; font-weight:600; font-size:13px; cursor:pointer;
-  }
-
-  .tabs{display:flex; gap:8px; margin-bottom:20px; border-bottom:1px solid var(--glass-border); flex-wrap:wrap;}
-  .tab-btn{
-    padding:12px 18px; border:none; background:none; color:var(--text-dim); font-size:14px; font-weight:600;
-    cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition:color 0.2s, border-color 0.2s;
-  }
-  .tab-btn:hover{color:var(--text);}
-  .tab-btn.active{color:var(--accent); border-bottom-color:var(--accent);}
-  .tab-content{display:none;}
-  .tab-content.active{display:block;}
-
-  .insights-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px;}
-  .insight-card{
-    background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius);
-    padding:18px; backdrop-filter:blur(16px);
-  }
-  .insight-card.wide{grid-column:1 / -1;}
-  .insight-title{font-size:13px; color:var(--text-dim); margin-bottom:14px; font-weight:600;}
-  .insight-card canvas{max-height:240px;}
-  .insight-empty{color:var(--text-dim); font-size:13px; text-align:center; padding:30px 0;}
-
-  .toolbar{display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;}
-  .toolbar input{
-    flex:1; min-width:180px; padding:10px 14px; background:var(--glass); border:1px solid var(--glass-border);
-    border-radius:var(--radius-sm); color:var(--text); font-size:14px;
-  }
-  .toolbar button{
-    padding:10px 16px; border-radius:var(--radius-sm); border:1px solid var(--glass-border);
-    background:rgba(255,255,255,0.05); color:var(--text); cursor:pointer; font-size:13px;
-  }
-  .toolbar button.active{
-    background:rgba(255,210,127,0.15); border-color:rgba(255,210,127,0.45); color:var(--warn, #ffd27f);
-  }
-
+  /* Glass Formular (Add Order) */
   .add-form{
-    display:none; flex-direction:column; gap:10px; margin-bottom:16px; padding:16px;
-    background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius-sm);
-    backdrop-filter:blur(16px);
+    display:none; flex-direction:column; gap:12px; margin-bottom:20px; padding:20px;
+    background:linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.025) 100%);
+    border:1px solid rgba(143,180,255,0.28); border-radius:var(--radius);
+    backdrop-filter:blur(24px) saturate(160%); -webkit-backdrop-filter:blur(24px) saturate(160%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.1), 0 14px 40px rgba(0,0,0,0.4);
   }
-  .add-form.show{display:flex;}
+  .add-form.show{display:flex; animation:tabFadeIn 0.25s ease;}
   .add-form input{
-    padding:10px 12px; background:rgba(255,255,255,0.05);
-    border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:13px;
+    padding:11px 13px; background:rgba(255,255,255,0.05);
+    border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:13.5px;
+    transition:all 0.2s ease;
+  }
+  .add-form input:focus{
+    outline:none; border-color:var(--accent); background:rgba(255,255,255,0.08);
+    box-shadow:0 0 0 3px rgba(143,180,255,0.18);
   }
   .add-row{display:flex; gap:10px; flex-wrap:wrap;}
   .add-row input{flex:1; min-width:160px;}
-  .add-row select{flex:0 0 100px; padding:10px 8px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:13px;}
+  .add-row select{flex:0 0 100px; padding:11px 10px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:13px;}
   .companions-block{display:flex; flex-direction:column; gap:8px;}
   .add-companion-btn{
-    display:block; margin-top:6px; padding:4px 9px; border-radius:20px; border:1px dashed rgba(143,180,255,0.4);
-    background:rgba(143,180,255,0.06); color:var(--accent); font-size:11px; cursor:pointer;
+    display:inline-flex; align-items:center; gap:6px; margin-top:6px; padding:5px 12px;
+    border-radius:100px; border:1px dashed rgba(143,180,255,0.4);
+    background:rgba(143,180,255,0.07); color:var(--accent); font-size:11.5px; font-weight:600; cursor:pointer;
+    transition:all 0.2s ease;
   }
-  .add-companion-btn:hover{background:rgba(143,180,255,0.14);}
+  .add-companion-btn:hover{background:rgba(143,180,255,0.16); border-color:var(--accent); color:#fff;}
   .companion-add-row{display:flex; gap:8px;}
   .companion-add-row input{flex:1;}
   .companion-add-row select{flex:0 0 90px; padding:10px 8px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:13px;}
+  .companion-add-row button{
+    width:36px; border-radius:var(--radius-sm); border:1px solid rgba(255,128,128,0.3);
+    background:rgba(255,128,128,0.1); color:var(--error); cursor:pointer; font-size:16px;
+    transition:all 0.15s ease;
+  }
+  .companion-add-row button:hover{background:rgba(255,128,128,0.22); border-color:var(--error);}
+  .add-form-actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;}
+  .add-form-actions button{
+    padding:11px 18px; border-radius:var(--radius-sm); border:none; cursor:pointer; font-size:13.5px; font-weight:700;
+    display:inline-flex; align-items:center; gap:6px; transition:all 0.2s ease;
+  }
+  #addSaveBtn{background:linear-gradient(135deg, #8fb4ff, #adcaff); color:#080c16;}
+  #addSaveBtn:hover{filter:brightness(1.08); transform:translateY(-1px);}
+  #addPayNowBtn{box-shadow:0 4px 16px rgba(127,224,168,0.25);}
+  #addPayNowBtn:hover{filter:brightness(1.08); transform:translateY(-1px);}
+  .add-form-actions button.secondary{
+    background:rgba(255,255,255,0.05); color:var(--text); border:1px solid var(--glass-border); font-weight:500;
+  }
+  .add-form-actions button.secondary:hover{background:rgba(255,255,255,0.1);}
+  #addCompanionFieldBtn{
+    align-self:flex-start; background:none; border:none; color:var(--accent); font-size:12.5px; cursor:pointer; padding:4px 0; font-weight:600;
+    display:inline-flex; align-items:center; gap:5px;
+  }
+  #addCompanionFieldBtn:hover{color:#fff;}
 
-  /* Custom-Dropdown statt nativer Browser-Auswahlliste */
+  /* Custom-Dropdown */
   .cs-wrap{position:relative;}
   .cs-wrap select{
     position:absolute; opacity:0; pointer-events:none; width:1px; height:1px; padding:0; border:none;
   }
   .cs-trigger{
     display:flex; align-items:center; justify-content:space-between; gap:8px;
-    padding:10px 12px; font-size:13px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border);
+    padding:11px 13px; font-size:13px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border);
     border-radius:var(--radius-sm); color:var(--text); cursor:pointer; user-select:none;
     transition:border-color 0.2s, background 0.2s;
   }
@@ -309,162 +351,335 @@
   .cs-wrap.open .cs-arrow{transform:rotate(-135deg); margin-top:3px;}
   .cs-panel{
     position:absolute; left:0; right:0; top:calc(100% + 6px); z-index:80;
-    background:rgba(19,28,48,0.98); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    background:rgba(18,26,44,0.98); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
     border:1px solid var(--glass-border); border-radius:var(--radius-sm); overflow:hidden;
-    box-shadow:0 16px 40px rgba(0,0,0,0.5); max-height:220px; overflow-y:auto;
+    box-shadow:0 18px 45px rgba(0,0,0,0.6); max-height:220px; overflow-y:auto;
     display:none; opacity:0; transform:translateY(-4px); transition:opacity 0.15s, transform 0.15s;
   }
   .cs-wrap.open .cs-panel{display:block; opacity:1; transform:translateY(0);}
-  .cs-option{padding:10px 12px; font-size:13px; color:var(--text); cursor:pointer;}
-  .cs-option:hover, .cs-option.active{background:rgba(143,180,255,0.15);}
-  .companion-add-row button{
-    width:36px; border-radius:var(--radius-sm); border:1px solid rgba(255,128,128,0.3);
-    background:rgba(255,128,128,0.1); color:var(--error); cursor:pointer;
-  }
-  .add-form-actions{display:flex; gap:10px;}
-  .add-form-actions button{
-    padding:10px 16px; border-radius:var(--radius-sm); border:none; cursor:pointer; font-size:13px; font-weight:600;
-  }
-  #addSaveBtn{background:var(--accent); color:#0a0e1a;}
-  .add-form-actions button.secondary{background:rgba(255,255,255,0.05); color:var(--text); border:1px solid var(--glass-border); font-weight:400;}
-  #addCompanionFieldBtn{
-    align-self:flex-start; background:none; border:none; color:var(--accent); font-size:12px; cursor:pointer; padding:4px 0;
-  }
+  .cs-option{padding:10px 14px; font-size:13px; color:var(--text); cursor:pointer; transition:background 0.15s;}
+  .cs-option:hover, .cs-option.active{background:rgba(143,180,255,0.16); color:#fff;}
 
-  .schedule-list{display:flex; flex-direction:column; gap:6px; margin-bottom:6px;}
+  /* Glass Table */
+  .table-wrap{
+    background:linear-gradient(145deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.02) 100%);
+    border:1px solid var(--glass-border); border-radius:var(--radius);
+    overflow-x:auto; backdrop-filter:blur(24px) saturate(160%); -webkit-backdrop-filter:blur(24px) saturate(160%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.08), 0 12px 36px rgba(0,0,0,0.36);
+  }
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  thead th{
+    text-align:left; padding:13px 15px; color:var(--text-dim); font-weight:600;
+    border-bottom:1px solid var(--glass-border); font-size:11.5px; text-transform:uppercase; letter-spacing:0.6px;
+    background:rgba(255,255,255,0.025);
+  }
+  tbody tr{
+    border-bottom:1px solid rgba(255,255,255,0.04);
+    transition:all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  tbody tr:hover{
+    background:rgba(143,180,255,0.055);
+    box-shadow:inset 3px 0 0 var(--accent);
+  }
+  tbody td{padding:12px 15px; vertical-align:middle;}
+
+  .badge{
+    display:inline-flex; align-items:center; gap:5px; padding:3px 9px;
+    border-radius:100px; font-size:11px; font-weight:700; flex-shrink:0; white-space:nowrap;
+  }
+  .badge.in{background:rgba(127,224,168,0.14); border:1px solid rgba(127,224,168,0.3); color:var(--success);}
+  .badge.out{background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); color:var(--text-dim);}
+  .badge svg{width:11px; height:11px; stroke-width:2.5;}
+
+  .pay-btn{
+    padding:6px 14px; border-radius:100px; border:1px solid rgba(255,210,127,0.45);
+    background:rgba(255,210,127,0.12); color:var(--warn); font-size:11.5px; font-weight:700; cursor:pointer;
+    white-space:nowrap; flex-shrink:0; transition:all 0.2s ease;
+  }
+  .pay-btn:hover{background:rgba(255,210,127,0.24); border-color:var(--warn); transform:translateY(-1px);}
+  .pay-btn:disabled{opacity:0.5; cursor:default;}
+
+  .action-btn-group{display:inline-flex; align-items:center; gap:6px;}
+  .delete-btn, .edit-reg-btn{
+    border-radius:var(--radius-sm); width:34px; height:34px;
+    cursor:pointer; display:inline-flex; align-items:center; justify-content:center;
+    transition:all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .delete-btn{
+    background:rgba(255,128,128,0.09); border:1px solid rgba(255,128,128,0.25);
+    color:var(--error);
+  }
+  .delete-btn:hover{
+    background:rgba(255,128,128,0.22); border-color:var(--error); transform:translateY(-1px);
+  }
+  .edit-reg-btn{
+    background:rgba(143,180,255,0.09); border:1px solid rgba(143,180,255,0.28);
+    color:var(--accent); margin-right:4px;
+  }
+  .edit-reg-btn:hover{
+    background:rgba(143,180,255,0.22); border-color:var(--accent); transform:translateY(-1px);
+  }
+  .delete-btn svg, .edit-reg-btn svg{width:15px; height:15px; stroke-width:2;}
+
+  .attendee-list{list-style:none; font-size:12px; color:var(--text-dim);}
+  .attendee-list li{margin-bottom:3px; display:flex; align-items:center; gap:6px;}
+  .attendee-list .orderer{color:#fff; font-weight:600; font-size:13px;}
+
+  .ticket-checkin-list{list-style:none; display:flex; flex-direction:column; gap:6px;}
+  .ticket-checkin-list li{display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:12.5px;}
+  .checkin-toggle{
+    padding:5px 12px; border-radius:100px; font-size:11.5px; font-weight:600; cursor:pointer; white-space:nowrap;
+    border:1px solid var(--glass-border); background:rgba(255,255,255,0.05); color:var(--text-dim);
+    display:inline-flex; align-items:center; gap:5px; transition:all 0.2s ease;
+  }
+  .checkin-toggle:hover{background:rgba(255,255,255,0.1); color:var(--text);}
+  .checkin-toggle.in{
+    border-color:rgba(127,224,168,0.45); background:rgba(127,224,168,0.14); color:var(--success);
+  }
+  .checkin-toggle.in:hover{background:rgba(127,224,168,0.22);}
+  .checkin-toggle svg{width:12px; height:12px; stroke-width:2.6;}
+
+  .paid-cell{display:flex; align-items:center; gap:7px; flex-wrap:nowrap; white-space:nowrap;}
+  .pdf-btn, .invoice-btn{
+    padding:5px 10px; border-radius:100px; border:1px solid var(--glass-border);
+    background:rgba(255,255,255,0.05); color:var(--text); font-size:11.5px; font-weight:600;
+    cursor:pointer; white-space:nowrap; flex-shrink:0;
+    display:inline-flex; align-items:center; gap:5px; transition:all 0.2s ease;
+  }
+  .pdf-btn:hover, .invoice-btn:hover{
+    background:rgba(255,255,255,0.12); border-color:rgba(143,180,255,0.35); color:#fff;
+    transform:translateY(-1px);
+  }
+  .pdf-btn svg, .invoice-btn svg{width:12px; height:12px; stroke-width:2;}
+
+  /* Mobile responsive cards view */
+  .mobile-cards-wrap{display:none; flex-direction:column; gap:14px;}
+  @media (max-width:860px){
+    .desktop-table-wrap{display:none;}
+    .mobile-cards-wrap{display:flex;}
+  }
+  .order-card{
+    background:linear-gradient(145deg, rgba(255,255,255,0.065) 0%, rgba(255,255,255,0.02) 100%);
+    border:1px solid var(--glass-border); border-radius:var(--radius);
+    padding:18px; backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+    display:flex; flex-direction:column; gap:12px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 30px rgba(0,0,0,0.35);
+  }
+  .order-card-header{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+  .order-card-title{
+    font-size:15.5px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  }
+  .order-card-email{font-size:12px; color:var(--text-dim); margin-top:3px; word-break:break-all;}
+  .order-card-attendees{
+    background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06);
+    border-radius:var(--radius-sm); padding:12px; display:flex; flex-direction:column; gap:9px;
+  }
+  .order-card-attendee{display:flex; justify-content:space-between; align-items:center; gap:10px; font-size:13px;}
+  .order-card-footer{
+    display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;
+    padding-top:12px; border-top:1px solid rgba(255,255,255,0.06);
+  }
+  .order-card-actions{display:flex; gap:6px; align-items:center;}
+
+  /* Insights Charts */
+  .insights-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:18px;}
+  .insight-card{
+    background:linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+    border:1px solid var(--glass-border); border-radius:var(--radius);
+    padding:20px; backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 30px rgba(0,0,0,0.32);
+  }
+  .insight-card.wide{grid-column:1 / -1;}
+  .insight-title{
+    font-size:13.5px; color:#fff; margin-bottom:16px; font-weight:600;
+    display:flex; align-items:center; gap:8px;
+  }
+  .insight-title svg{width:16px; height:16px; color:var(--accent); stroke-width:2;}
+  .insight-card canvas{max-height:240px;}
+
+  /* Settings Sections */
+  .settings-section{margin-bottom:34px;}
+  .settings-section-title{
+    font-size:14.5px; font-weight:700; color:#fff; margin-bottom:14px;
+    padding-bottom:10px; border-bottom:1px solid var(--glass-border);
+    display:flex; align-items:center; gap:9px; letter-spacing:0.2px;
+  }
+  .settings-section-title svg{width:17px; height:17px; color:var(--accent); stroke-width:2.2;}
+
+  .price-bar{
+    display:flex; align-items:center; gap:12px; margin-bottom:20px; padding:16px 18px;
+    background:linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    border:1px solid var(--glass-border); border-radius:var(--radius);
+    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); flex-wrap:wrap;
+  }
+  .price-bar label{font-size:13px; color:var(--text-dim); font-weight:500;}
+  .price-bar input{
+    width:105px; padding:9px 12px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border);
+    border-radius:var(--radius-sm); color:var(--text); font-size:14px; transition:all 0.2s ease;
+  }
+  .price-bar input:focus{
+    outline:none; border-color:var(--accent); background:rgba(255,255,255,0.08);
+    box-shadow:0 0 0 3px rgba(143,180,255,0.18);
+  }
+  .price-bar button{
+    padding:9px 16px; border-radius:var(--radius-sm); border:none;
+    background:linear-gradient(135deg, #8fb4ff, #b6d0ff); color:#080c16;
+    font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s ease;
+  }
+  .price-bar button:hover{filter:brightness(1.08); transform:translateY(-1px);}
+  .price-saved{color:var(--success); font-size:12.5px; font-weight:600; opacity:0; transition:opacity 0.3s; display:inline-flex; align-items:center; gap:5px;}
+  .price-saved.show{opacity:1;}
+
+  .info-editor{
+    margin-bottom:18px; padding:16px 18px;
+    background:linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    border:1px solid var(--glass-border); border-radius:var(--radius);
+    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  }
+  .info-editor label{display:block; font-size:12.5px; color:var(--text-dim); margin-bottom:9px; line-height:1.5;}
+  .info-editor input, .info-editor textarea{
+    padding:10px 13px; background:rgba(255,255,255,0.05);
+    border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text);
+    font-size:13.5px; font-family:inherit; transition:all 0.2s ease;
+  }
+  .info-editor textarea{width:100%; min-height:75px; resize:vertical;}
+  .info-editor input:focus, .info-editor textarea:focus{
+    outline:none; border-color:var(--accent); background:rgba(255,255,255,0.08);
+    box-shadow:0 0 0 3px rgba(143,180,255,0.18);
+  }
+  .info-editor-actions{display:flex; align-items:center; gap:10px; margin-top:12px; flex-wrap:wrap;}
+  .info-editor-actions button{
+    padding:9px 16px; border-radius:var(--radius-sm); border:none;
+    background:linear-gradient(135deg, #8fb4ff, #b6d0ff); color:#080c16;
+    font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s ease;
+  }
+  .info-editor-actions button:hover{filter:brightness(1.08); transform:translateY(-1px);}
+  .info-editor-actions button.secondary{
+    background:rgba(255,255,255,0.06); color:var(--text); border:1px solid var(--glass-border); font-weight:500;
+  }
+  .info-editor-actions button.secondary:hover{background:rgba(255,255,255,0.12);}
+
+  .schedule-list{display:flex; flex-direction:column; gap:8px; margin-bottom:8px;}
   .schedule-row{
-    display:flex; gap:8px; align-items:center; flex-wrap:wrap;
-    padding:6px; border-radius:var(--radius-sm); transition:background 0.15s, box-shadow 0.15s;
+    display:flex; gap:9px; align-items:center; flex-wrap:wrap;
+    padding:8px 10px; border-radius:var(--radius-sm);
+    background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.06);
+    transition:all 0.2s ease;
   }
   .schedule-row.dragging{opacity:0.35;}
-  .schedule-row:hover{background:rgba(255,255,255,0.03);}
+  .schedule-row:hover{background:rgba(255,255,255,0.05); border-color:rgba(143,180,255,0.25);}
   .drag-handle{
-    cursor:grab; color:var(--text-dim); font-size:16px; padding:0 2px; flex-shrink:0; user-select:none;
+    cursor:grab; color:var(--text-dim); display:flex; align-items:center; justify-content:center;
+    width:20px; height:24px; flex-shrink:0; user-select:none;
   }
   .drag-handle:active{cursor:grabbing;}
+  .drag-handle svg{width:14px; height:14px;}
   .schedule-row input{
-    padding:8px 10px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border);
+    padding:9px 11px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border);
     border-radius:var(--radius-sm); color:var(--text); font-size:13px; font-family:inherit;
   }
-  .schedule-row input.schedule-time{flex:0 0 76px;}
+  .schedule-row input.schedule-time{flex:0 0 80px;}
   .schedule-row input.schedule-label{flex:1 1 160px; min-width:140px;}
   .schedule-row input.schedule-note{flex:1 1 220px; min-width:180px;}
   .schedule-row-actions{display:flex; gap:4px; flex-shrink:0;}
-  .schedule-row-actions button{
-    width:30px; height:34px; border-radius:var(--radius-sm); border:1px solid var(--glass-border);
-    background:rgba(255,255,255,0.05); color:var(--text); cursor:pointer; font-size:13px;
+  .schedule-row-actions button.remove{
+    width:32px; height:34px; border-radius:var(--radius-sm); border:1px solid rgba(255,128,128,0.3);
+    background:rgba(255,128,128,0.1); color:var(--error); cursor:pointer; font-size:16px;
+    display:inline-flex; align-items:center; justify-content:center;
   }
-  .schedule-row-actions button:disabled{opacity:0.3; cursor:default;}
-  .schedule-row-actions button.remove{border-color:rgba(255,128,128,0.3); background:rgba(255,128,128,0.1); color:var(--error);}
+  .schedule-row-actions button.remove:hover{background:rgba(255,128,128,0.22); border-color:var(--error);}
   #scheduleAddBtn{
-    align-self:flex-start; background:none; border:none; color:var(--accent); font-size:12px; cursor:pointer; padding:4px 0;
+    align-self:flex-start; background:none; border:none; color:var(--accent); font-size:12.5px;
+    cursor:pointer; padding:6px 0; font-weight:600; display:inline-flex; align-items:center; gap:5px;
   }
+  #scheduleAddBtn:hover{color:#fff;}
 
   .danger-btn{
-    padding:8px 14px; border-radius:var(--radius-sm); border:1px solid rgba(255,128,128,0.4);
-    background:rgba(255,128,128,0.1); color:var(--error); font-weight:600; font-size:13px; cursor:pointer;
+    padding:10px 16px; border-radius:var(--radius-sm); border:1px solid rgba(255,128,128,0.4);
+    background:rgba(255,128,128,0.12); color:var(--error); font-weight:700; font-size:13px; cursor:pointer;
+    display:inline-flex; align-items:center; gap:8px; transition:all 0.2s ease;
   }
-  .danger-btn:hover{background:rgba(255,128,128,0.2);}
+  .danger-btn:hover{background:rgba(255,128,128,0.24); border-color:var(--error); transform:translateY(-1px);}
+  .danger-btn svg{width:15px; height:15px; stroke-width:2.2;}
 
-  table{width:100%; border-collapse:collapse; font-size:13px;}
-  thead th{
-    text-align:left; padding:10px 12px; color:var(--text-dim); font-weight:500;
-    border-bottom:1px solid var(--glass-border); font-size:12px; text-transform:uppercase; letter-spacing:0.5px;
-  }
-  tbody tr{border-bottom:1px solid rgba(255,255,255,0.05);}
-  tbody tr:hover{background:rgba(255,255,255,0.03);}
-  tbody td{padding:10px 12px; vertical-align:top;}
-  .badge{
-    display:inline-block; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:600; flex-shrink:0; white-space:nowrap;
-  }
-  .badge.in{background:rgba(127,224,168,0.15); color:var(--success);}
-  .badge.out{background:rgba(255,255,255,0.08); color:var(--text-dim);}
-  .pay-btn{
-    padding:5px 12px; border-radius:20px; border:1px solid rgba(255,210,127,0.4);
-    background:rgba(255,210,127,0.1); color:var(--warn); font-size:11px; font-weight:600; cursor:pointer;
-    white-space:nowrap; flex-shrink:0;
-  }
-  .pay-btn:hover{background:rgba(255,210,127,0.2);}
-  .pay-btn:disabled{opacity:0.5; cursor:default;}
-  .delete-btn{
-    background:rgba(255,128,128,0.1); border:1px solid rgba(255,128,128,0.25);
-    color:var(--error); border-radius:var(--radius-sm); width:34px; height:34px;
-    cursor:pointer; font-size:14px;
-  }
-  .delete-btn:hover{background:rgba(255,128,128,0.2);}
-  .edit-reg-btn{
-    background:rgba(143,180,255,0.1); border:1px solid rgba(143,180,255,0.3);
-    color:var(--accent); border-radius:var(--radius-sm); width:34px; height:34px;
-    cursor:pointer; font-size:14px; margin-right:6px;
-  }
-  .edit-reg-btn:hover{background:rgba(143,180,255,0.2);}
-  .attendee-list{list-style:none; font-size:12px; color:var(--text-dim);}
-  .attendee-list li{margin-bottom:2px;}
-  .attendee-list .orderer{color:var(--text); font-weight:600;}
-
-  .ticket-checkin-list{list-style:none; display:flex; flex-direction:column; gap:6px;}
-  .ticket-checkin-list li{display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:12px;}
-  .checkin-toggle{
-    padding:4px 10px; border-radius:20px; font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap;
-    border:1px solid var(--glass-border); background:rgba(255,255,255,0.05); color:var(--text-dim);
-  }
-  .checkin-toggle.in{border-color:rgba(127,224,168,0.4); background:rgba(127,224,168,0.12); color:var(--success);}
-  .paid-cell{display:flex; align-items:center; gap:6px; flex-wrap:nowrap; white-space:nowrap;}
-  .pdf-btn, .invoice-btn{
-    padding:5px 9px; border-radius:20px; border:1px solid var(--glass-border);
-    background:rgba(255,255,255,0.05); color:var(--text); font-size:11px; cursor:pointer; white-space:nowrap; flex-shrink:0;
-  }
-  .pdf-btn:hover, .invoice-btn:hover{background:rgba(255,255,255,0.1);}
-  .table-wrap{
-    background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius);
-    overflow-x:auto; backdrop-filter:blur(16px);
-  }
-
-  /* Kassen-Popup */
+  /* Glass Popups & Modals */
   .modal-overlay{
-    display:none; position:fixed; inset:0; background:rgba(5,7,14,0.72); backdrop-filter:blur(4px);
-    align-items:center; justify-content:center; z-index:300; padding:20px;
+    display:none; position:fixed; inset:0;
+    background:rgba(4,7,16,0.84); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+    align-items:center; justify-content:center; z-index:400; padding:20px;
+    opacity:0; transition:opacity 0.25s ease;
   }
-  .modal-overlay.show{display:flex;}
+  .modal-overlay.show{display:flex; opacity:1;}
   .cash-modal{
-    width:100%; max-width:340px; background:var(--bg-2); border:1px solid var(--glass-border);
-    border-radius:var(--radius); padding:22px; box-shadow:0 24px 70px rgba(0,0,0,0.6);
+    width:100%; max-width:360px;
+    background:linear-gradient(145deg, rgba(22, 33, 62, 0.98), rgba(12, 18, 36, 0.99));
+    border:1px solid rgba(143,180,255,0.36); border-radius:var(--radius); padding:24px;
+    box-shadow:0 24px 70px rgba(0,0,0,0.7), 0 0 35px rgba(143,180,255,0.16);
+    transform:scale(0.93) translateY(12px);
+    transition:transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .cash-modal-name{font-size:15px; font-weight:600; margin-bottom:14px; text-align:center;}
+  .modal-overlay.show .cash-modal{transform:scale(1) translateY(0);}
+  .cash-modal-name{font-size:16px; font-weight:700; margin-bottom:16px; text-align:center; color:#fff;}
   .cash-row{
-    display:flex; justify-content:space-between; align-items:baseline; font-size:13px;
-    color:var(--text-dim); padding:7px 0; border-bottom:1px solid rgba(255,255,255,0.06);
+    display:flex; justify-content:space-between; align-items:baseline; font-size:13.5px;
+    color:var(--text-dim); padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.06);
   }
-  .cash-row strong{font-size:16px; color:var(--text); font-weight:600;}
-  .cash-row.cash-change{border-bottom:none; margin-top:2px;}
-  .cash-row.cash-change strong{font-size:19px; color:var(--success);}
+  .cash-row strong{font-size:16px; color:#fff; font-weight:700;}
+  .cash-row.cash-change{border-bottom:none; margin-top:4px;}
+  .cash-row.cash-change strong{font-size:20px; color:var(--success);}
   .cash-row.cash-change.negative strong{color:var(--warn);}
 
-  .numpad{display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin:16px 0 10px;}
+  .numpad{display:grid; grid-template-columns:repeat(3, 1fr); gap:9px; margin:16px 0 12px;}
   .num-btn{
     padding:14px 0; border-radius:var(--radius-sm); border:1px solid var(--glass-border);
-    background:rgba(255,255,255,0.05); color:var(--text); font-size:18px; font-weight:600; cursor:pointer;
+    background:rgba(255,255,255,0.06); color:#fff; font-size:18px; font-weight:700; cursor:pointer;
+    transition:all 0.15s ease;
   }
-  .num-btn:hover{background:rgba(255,255,255,0.1);}
+  .num-btn:hover{background:rgba(255,255,255,0.14); border-color:rgba(143,180,255,0.4); transform:scale(1.02);}
+  .num-btn:active{transform:scale(0.96);}
   .num-btn.num-clear{color:var(--warn); border-color:rgba(255,210,127,0.35);}
   .num-btn.num-back{color:var(--text-dim);}
 
   .exact-btn{
-    width:100%; padding:9px 0; margin-bottom:14px; border-radius:var(--radius-sm);
-    border:1px solid rgba(143,180,255,0.35); background:rgba(143,180,255,0.1); color:var(--accent);
-    font-size:12.5px; font-weight:600; cursor:pointer;
+    width:100%; padding:10px 0; margin-bottom:14px; border-radius:var(--radius-sm);
+    border:1px solid rgba(143,180,255,0.35); background:rgba(143,180,255,0.12); color:var(--accent-glow);
+    font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s ease;
   }
-  .exact-btn:hover{background:rgba(143,180,255,0.18);}
+  .exact-btn:hover{background:rgba(143,180,255,0.24); border-color:var(--accent);}
 
   .cash-modal-actions{display:flex; gap:10px;}
-  .cash-modal-actions button{flex:1; padding:12px 0; border-radius:var(--radius-sm); font-size:14px; font-weight:600; cursor:pointer;}
+  .cash-modal-actions button{
+    flex:1; padding:12px 0; border-radius:var(--radius-sm); font-size:14px; font-weight:700; cursor:pointer;
+    transition:all 0.2s ease;
+  }
   .cash-modal-actions button:not(.secondary){
-    border:none; background:var(--success); color:#0a0e1a;
+    border:none; background:linear-gradient(135deg, var(--success), #a5f0c3); color:#080c16;
+    box-shadow:0 4px 16px rgba(127,224,168,0.3);
   }
-  .cash-modal-actions button:not(.secondary):disabled{background:rgba(127,224,168,0.25); color:rgba(10,14,26,0.5); cursor:not-allowed;}
+  .cash-modal-actions button:not(.secondary):hover{filter:brightness(1.06); transform:translateY(-1px);}
+  .cash-modal-actions button:not(.secondary):disabled{
+    background:rgba(127,224,168,0.22); color:rgba(255,255,255,0.35); cursor:not-allowed; box-shadow:none;
+  }
   .cash-modal-actions button.secondary{
-    border:1px solid var(--glass-border); background:rgba(255,255,255,0.05); color:var(--text);
+    border:1px solid var(--glass-border); background:rgba(255,255,255,0.06); color:var(--text);
   }
+  .cash-modal-actions button.secondary:hover{background:rgba(255,255,255,0.12);}
+
+  /* Toast Notification */
+  .admin-toast{
+    position:fixed; bottom:24px; right:24px; z-index:999;
+    padding:13px 20px; border-radius:var(--radius-sm);
+    background:linear-gradient(145deg, rgba(22, 33, 62, 0.98), rgba(12, 18, 36, 0.98));
+    border:1px solid rgba(143,180,255,0.35);
+    backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+    box-shadow:0 14px 40px rgba(0,0,0,0.65), 0 0 25px rgba(143,180,255,0.15);
+    color:#fff; font-size:13.5px; font-weight:600;
+    display:flex; align-items:center; gap:10px; pointer-events:none;
+    opacity:0; transform:translateY(14px); transition:all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .admin-toast.show{opacity:1; transform:translateY(0);}
+  .admin-toast.success{border-color:rgba(127,224,168,0.5); color:var(--success);}
+  .admin-toast svg{width:16px; height:16px; stroke-width:2.5; flex-shrink:0;}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
@@ -488,29 +703,55 @@
       <div class="sub">30. Januar 2027 · 17:30 Uhr · Gymnasium Wilsdruff</div>
     </div>
     <div class="admin-header-actions">
-      <button type="button" id="headerRefreshBtn" class="header-action-btn" title="Ansicht neu synchronisieren">🔄 Aktualisieren</button>
-      <button type="button" id="logoutBtn" class="header-action-btn logout" title="Abmelden">Abmelden</button>
+      <button type="button" id="headerRefreshBtn" class="header-action-btn" title="Ansicht neu synchronisieren">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+        <span>Aktualisieren</span>
+      </button>
+      <button type="button" id="logoutBtn" class="header-action-btn logout" title="Abmelden">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        <span>Abmelden</span>
+      </button>
     </div>
   </div>
 
   <div class="stats">
     <div class="stat">
-      <div class="stat-lbl"><span>📋 Bestellungen</span></div>
-      <div class="num" id="statOrders">0</div>
+      <div class="stat-header">
+        <span class="stat-lbl">Bestellungen</span>
+        <div class="stat-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+        </div>
+      </div>
+      <div class="num accent" id="statOrders">0</div>
       <div class="stat-sub">Buchungen gesamt</div>
     </div>
     <div class="stat">
-      <div class="stat-lbl"><span>🎟️ Tickets gesamt</span></div>
+      <div class="stat-header">
+        <span class="stat-lbl">Tickets gesamt</span>
+        <div class="stat-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/><line x1="13" y1="5" x2="13" y2="19" stroke-dasharray="2 2"/></svg>
+        </div>
+      </div>
       <div class="num" id="statTickets">0</div>
       <div class="stat-sub">Inkl. Begleitungen</div>
     </div>
     <div class="stat">
-      <div class="stat-lbl"><span>💶 Bezahlt</span></div>
-      <div class="num" id="statPaid">0</div>
+      <div class="stat-header">
+        <span class="stat-lbl">Bezahlt</span>
+        <div class="stat-icon-wrap success">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+      </div>
+      <div class="num success" id="statPaid">0</div>
       <div class="stat-sub" id="statPaidSub">0 noch unbezahlt</div>
     </div>
     <div class="stat">
-      <div class="stat-lbl"><span>🚪 Eingecheckt</span></div>
+      <div class="stat-header">
+        <span class="stat-lbl">Eingecheckt</span>
+        <div class="stat-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        </div>
+      </div>
       <div class="num" id="statCheckedIn">0</div>
       <div class="stat-progress">
         <div class="stat-progress-fill" id="checkinProgressFill"></div>
@@ -518,12 +759,22 @@
       <div class="stat-sub" id="checkinProgressText">0% anwesend</div>
     </div>
     <div class="stat">
-      <div class="stat-lbl"><span>💰 Umsatz</span></div>
-      <div class="num" id="statRevenue">0,00 €</div>
+      <div class="stat-header">
+        <span class="stat-lbl">Umsatz</span>
+        <div class="stat-icon-wrap warn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 6v12"/></svg>
+        </div>
+      </div>
+      <div class="num warn" id="statRevenue">0,00 €</div>
       <div class="stat-sub">Bezahlte Tickets</div>
     </div>
     <div class="stat">
-      <div class="stat-lbl"><span>👥 Altersgruppen</span></div>
+      <div class="stat-header">
+        <span class="stat-lbl">Altersgruppen</span>
+        <div class="stat-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+      </div>
       <div class="num" id="statU18Ratio">0 / 0</div>
       <div class="stat-sub">U18 / Ü18 Gäste</div>
     </div>
@@ -531,19 +782,24 @@
 
   <div class="tabs">
     <button class="tab-btn active" data-tab="orders">
-      Bestellungen <span class="tab-badge" id="tabOrdersCount">0</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+      <span>Bestellungen</span> <span class="tab-badge" id="tabOrdersCount">0</span>
     </button>
     <button class="tab-btn" data-tab="insights">
-      Insights
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Insights</span>
     </button>
     <button class="tab-btn" data-tab="ratings">
-      ❄️ Bewertungen <span class="tab-badge" id="tabRatingCount">0</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14M12 6l2-2M12 6l-2-2M12 18l2 2M12 18l-2 2M6 12l-2 2M6 12l-2-2M18 12l2 2M18 12l2-2"/></svg>
+      <span>Bewertungen</span> <span class="tab-badge" id="tabRatingCount">0</span>
     </button>
     <button class="tab-btn" data-tab="poll">
-      🗳️ Vorabstimmung <span class="tab-badge" id="tabPollCount">0</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      <span>Vorabstimmung</span> <span class="tab-badge" id="tabPollCount">0</span>
     </button>
     <button class="tab-btn" data-tab="settings">
-      ⚙️ Einstellungen
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span>Einstellungen</span>
     </button>
   </div>
 
@@ -554,20 +810,43 @@
         <div class="search-box-wrap">
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           <input type="text" id="search" placeholder="Name, E-Mail oder Ticket-ID suchen... (/ zum Fokussieren)" autocomplete="off">
-          <button type="button" id="searchClearBtn" class="search-clear-btn" style="display:none;" title="Suche leeren">✕</button>
+          <button type="button" id="searchClearBtn" class="search-clear-btn" style="display:none;" title="Suche leeren">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px; height:12px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
         <div class="toolbar-actions">
-          <button type="button" id="addBtn" class="primary">+ Bestellung anlegen</button>
-          <button type="button" id="exportBtn">📊 CSV Export</button>
+          <button type="button" id="addBtn" class="primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Bestellung anlegen</span>
+          </button>
+          <button type="button" id="exportBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>CSV Export</span>
+          </button>
         </div>
       </div>
 
       <div class="filter-chips">
-        <button type="button" class="chip active" data-filter="all">Alle <span class="chip-count" id="chipCountAll">0</span></button>
-        <button type="button" class="chip" data-filter="unpaid">⚠️ Unbezahlt <span class="chip-count" id="chipCountUnpaid">0</span></button>
-        <button type="button" class="chip" data-filter="paid">✅ Bezahlt <span class="chip-count" id="chipCountPaid">0</span></button>
-        <button type="button" class="chip" data-filter="checkedin">🚪 Eingecheckt <span class="chip-count" id="chipCountCheckedIn">0</span></button>
-        <button type="button" class="chip" data-filter="notcheckedin">⏳ Noch offen <span class="chip-count" id="chipCountNotCheckedIn">0</span></button>
+        <button type="button" class="chip active" data-filter="all">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          <span>Alle</span> <span class="chip-count" id="chipCountAll">0</span>
+        </button>
+        <button type="button" class="chip" data-filter="unpaid">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span>Unbezahlt</span> <span class="chip-count" id="chipCountUnpaid">0</span>
+        </button>
+        <button type="button" class="chip" data-filter="paid">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span>Bezahlt</span> <span class="chip-count" id="chipCountPaid">0</span>
+        </button>
+        <button type="button" class="chip" data-filter="checkedin">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          <span>Eingecheckt</span> <span class="chip-count" id="chipCountCheckedIn">0</span>
+        </button>
+        <button type="button" class="chip" data-filter="notcheckedin">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Noch offen</span> <span class="chip-count" id="chipCountNotCheckedIn">0</span>
+        </button>
         <span class="results-badge" id="resultsBadge"></span>
       </div>
     </div>
@@ -630,19 +909,40 @@
   <!-- Tab: Bewertungen -->
   <div class="tab-content" data-tab-content="ratings">
     <div class="stats" style="margin-bottom:24px;">
-      <div class="stat"><div class="num" id="statRatingAvg">–</div><div class="lbl">Ø Schneeflocken</div></div>
-      <div class="stat"><div class="num" id="statRatingCount">0</div><div class="lbl">Bewertungen</div></div>
+      <div class="stat">
+        <div class="stat-header">
+          <span class="stat-lbl">Durchschnittsbewertung</span>
+          <div class="stat-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14M12 6l2-2M12 6l-2-2M12 18l2 2M12 18l-2 2M6 12l-2 2M6 12l-2-2M18 12l2 2M18 12l2-2"/></svg>
+          </div>
+        </div>
+        <div class="num accent" id="statRatingAvg">–</div>
+        <div class="stat-sub">Ø von 5 Sternen</div>
+      </div>
+      <div class="stat">
+        <div class="stat-header">
+          <span class="stat-lbl">Feedback gesamt</span>
+          <div class="stat-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+        </div>
+        <div class="num" id="statRatingCount">0</div>
+        <div class="stat-sub">Eingereichte Rezensionen</div>
+      </div>
     </div>
     <div class="insights-grid" style="margin-bottom:24px;">
       <div class="insight-card wide">
-        <div class="insight-title">Schneeflocken-Verteilung</div>
+        <div class="insight-title">Bewertungs-Verteilung</div>
         <canvas id="chartRatings"></canvas>
       </div>
     </div>
     <div class="table-wrap" style="padding:16px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
-        <div style="font-size:13px; color:var(--text-dim); font-weight:600;">Kommentare &amp; Bewertungen</div>
-        <button id="resetAllRatingsBtn" class="danger-btn" style="padding:6px 12px; font-size:12px;">🗑️ Alle Bewertungen zurücksetzen</button>
+        <div style="font-size:13px; color:var(--text-dim); font-weight:600;">Kommentare &amp; Feedback</div>
+        <button id="resetAllRatingsBtn" class="danger-btn" style="padding:8px 14px; font-size:12px; display:inline-flex; align-items:center; gap:6px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px; height:14px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          <span>Alle Bewertungen zurücksetzen</span>
+        </button>
       </div>
       <div id="ratingsCommentList" style="display:flex; flex-direction:column; gap:10px;"></div>
     </div>
@@ -652,27 +952,52 @@
   <div class="tab-content" data-tab-content="poll">
     <div class="stats" style="margin-bottom:20px;">
       <div class="stat">
-        <div class="stat-lbl"><span>🗳️ Rückmeldungen</span></div>
-        <div class="num" id="statPollTotal">0</div>
+        <div class="stat-header">
+          <span class="stat-lbl">Rückmeldungen</span>
+          <div class="stat-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+        </div>
+        <div class="num accent" id="statPollTotal">0</div>
         <div class="stat-sub">Stimmen gesamt</div>
       </div>
       <div class="stat">
-        <div class="stat-lbl"><span>🎉 Zusagen (Ja)</span></div>
-        <div class="num" id="statPollYes" style="color:var(--success);">0</div>
+        <div class="stat-header">
+          <span class="stat-lbl">Zusagen (Ja)</span>
+          <div class="stat-icon-wrap success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+        </div>
+        <div class="num success" id="statPollYes">0</div>
         <div class="stat-sub" id="statPollYesPercent">0% aller Stimmen</div>
       </div>
       <div class="stat">
-        <div class="stat-lbl"><span>❄️ Absagen (Nein)</span></div>
+        <div class="stat-header">
+          <span class="stat-lbl">Absagen (Nein)</span>
+          <div class="stat-icon-wrap error">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          </div>
+        </div>
         <div class="num" id="statPollNo" style="color:var(--error);">0</div>
         <div class="stat-sub" id="statPollNoPercent">0% aller Stimmen</div>
       </div>
       <div class="stat">
-        <div class="stat-lbl"><span>👥 Geplante Gäste gesamt</span></div>
-        <div class="num" id="statPollTotalGuests" style="color:var(--accent-glow);">0</div>
+        <div class="stat-header">
+          <span class="stat-lbl">Geplante Gäste</span>
+          <div class="stat-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+        </div>
+        <div class="num accent" id="statPollTotalGuests">0</div>
         <div class="stat-sub" id="statPollCompanionsSub">Inkl. Begleitungen</div>
       </div>
       <div class="stat">
-        <div class="stat-lbl"><span>🤝 Begleitungen</span></div>
+        <div class="stat-header">
+          <span class="stat-lbl">Begleitungen</span>
+          <div class="stat-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+          </div>
+        </div>
         <div class="num" id="statPollCompanionsTotal">0</div>
         <div class="stat-sub" id="statPollAvgCompanions">Ø 0 pro Zusage</div>
       </div>
@@ -685,17 +1010,26 @@
           <input type="text" id="pollSearch" placeholder="Nach Name oder Anmerkung suchen..." autocomplete="off">
         </div>
         <div class="toolbar-actions">
-          <a href="vorabstimmung.html" target="_blank" class="header-action-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
-            🔗 Formular öffnen
-          </a>
-          <button type="button" id="pollExportBtn">📊 CSV Export</button>
+          <button type="button" id="pollExportBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px; height:15px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>CSV Export</span>
+          </button>
         </div>
       </div>
 
       <div class="filter-chips">
-        <button type="button" class="chip active" data-poll-filter="all">Alle <span class="chip-count" id="chipPollAll">0</span></button>
-        <button type="button" class="chip" data-poll-filter="yes">🎉 Nur Zusagen <span class="chip-count" id="chipPollYes">0</span></button>
-        <button type="button" class="chip" data-poll-filter="no">❄️ Nur Absagen <span class="chip-count" id="chipPollNo">0</span></button>
+        <button type="button" class="chip active" data-poll-filter="all">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          <span>Alle</span> <span class="chip-count" id="chipPollAll">0</span>
+        </button>
+        <button type="button" class="chip" data-poll-filter="yes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>Nur Zusagen</span> <span class="chip-count" id="chipPollYes">0</span>
+        </button>
+        <button type="button" class="chip" data-poll-filter="no">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          <span>Nur Absagen</span> <span class="chip-count" id="chipPollNo">0</span>
+        </button>
         <span class="results-badge" id="pollResultsBadge"></span>
       </div>
     </div>
@@ -723,19 +1057,28 @@
   <!-- Tab: Einstellungen -->
   <div class="tab-content" data-tab-content="settings">
     <div class="settings-section">
-      <div class="settings-section-title">💶 Preise</div>
+      <div class="settings-section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-title-svg"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 6v12"/></svg>
+        <span>Preise</span>
+      </div>
       <div class="price-bar">
         <label for="priceU18Input">Preis U18 (€)</label>
         <input type="number" id="priceU18Input" min="0" step="0.5" placeholder="z.B. 10">
         <label for="priceUe18Input">Preis Ü18 (€)</label>
         <input type="number" id="priceUe18Input" min="0" step="0.5" placeholder="z.B. 15">
         <button id="priceSaveBtn">Speichern</button>
-        <span class="price-saved" id="priceSaved">Gespeichert ✓</span>
+        <span class="price-saved" id="priceSaved">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>Gespeichert</span>
+        </span>
       </div>
     </div>
 
     <div class="settings-section">
-      <div class="settings-section-title">🗓️ Anmeldezeitraum &amp; Kapazität</div>
+      <div class="settings-section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-title-svg"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>Anmeldezeitraum &amp; Kapazität</span>
+      </div>
 
       <div class="info-editor">
         <label for="opensAtInput">Anmeldebeginn (davor läuft ein Countdown, Formular gesperrt)</label>
@@ -743,7 +1086,10 @@
         <div class="info-editor-actions">
           <button id="opensAtSaveBtn">Speichern</button>
           <button id="opensAtClearBtn" style="background:rgba(255,255,255,0.05); color:var(--text); border:1px solid var(--glass-border);">Sofort geöffnet</button>
-          <span class="price-saved" id="opensAtSaved">Gespeichert ✓</span>
+          <span class="price-saved" id="opensAtSaved">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Gespeichert</span>
+          </span>
         </div>
       </div>
 
@@ -753,7 +1099,10 @@
         <div class="info-editor-actions">
           <button id="deadlineSaveBtn">Speichern</button>
           <button id="deadlineClearBtn" style="background:rgba(255,255,255,0.05); color:var(--text); border:1px solid var(--glass-border);">Kein Anmeldeschluss</button>
-          <span class="price-saved" id="deadlineSaved">Gespeichert ✓</span>
+          <span class="price-saved" id="deadlineSaved">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Gespeichert</span>
+          </span>
         </div>
       </div>
 
@@ -763,20 +1112,29 @@
         <div class="info-editor-actions">
           <button id="maxTicketsSaveBtn">Speichern</button>
           <button id="maxTicketsClearBtn" style="background:rgba(255,255,255,0.05); color:var(--text); border:1px solid var(--glass-border);">Kein Limit</button>
-          <span class="price-saved" id="maxTicketsSaved">Gespeichert ✓</span>
+          <span class="price-saved" id="maxTicketsSaved">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Gespeichert</span>
+          </span>
         </div>
       </div>
     </div>
 
     <div class="settings-section">
-      <div class="settings-section-title">📢 Infos für Gäste &amp; Mailversand</div>
+      <div class="settings-section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-title-svg"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"/></svg>
+        <span>Infos für Gäste &amp; Mailversand</span>
+      </div>
 
       <div class="info-editor">
         <label for="infoText">Wichtige Infos auf der Anmeldeseite (optional, erscheint dort für alle Gäste)</label>
         <textarea id="infoText" placeholder="z.B. Dresscode: Elegant. Einlass ab 17:00 Uhr. Fragen an ..."></textarea>
         <div class="info-editor-actions">
           <button id="infoSaveBtn">Speichern</button>
-          <span class="price-saved" id="infoSaved">Gespeichert ✓</span>
+          <span class="price-saved" id="infoSaved">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Gespeichert</span>
+          </span>
         </div>
       </div>
 
@@ -785,26 +1143,38 @@
         <input type="number" id="lernsaxThresholdInput" min="1" max="13" style="max-width:120px;" placeholder="z.B. 9">
         <div class="info-editor-actions">
           <button id="lernsaxThresholdSaveBtn">Speichern</button>
-          <span class="price-saved" id="lernsaxThresholdSaved">Gespeichert ✓</span>
+          <span class="price-saved" id="lernsaxThresholdSaved">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Gespeichert</span>
+          </span>
         </div>
       </div>
     </div>
 
     <div class="settings-section">
-      <div class="settings-section-title">🕐 Ablaufplan des Abends</div>
+      <div class="settings-section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-title-svg"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>Ablaufplan des Abends</span>
+      </div>
       <div class="info-editor">
         <label>Erscheint als Zeitstrahl "Ablauf" auf der Winterball-Seite. Zum Sortieren an ⠿ ziehen.</label>
         <div class="schedule-list" id="scheduleList"></div>
         <button type="button" id="scheduleAddBtn">+ Programmpunkt hinzufügen</button>
         <div class="info-editor-actions">
           <button id="scheduleSaveBtn">Speichern</button>
-          <span class="price-saved" id="scheduleSaved">Gespeichert ✓</span>
+          <span class="price-saved" id="scheduleSaved">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Gespeichert</span>
+          </span>
         </div>
       </div>
     </div>
 
     <div class="settings-section">
-      <div class="settings-section-title">🔒 Datenschutz &amp; Löschung</div>
+      <div class="settings-section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-title-svg"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span>Datenschutz &amp; Löschung</span>
+      </div>
       <div class="info-editor">
         <label>Ihr speichert Name, E-Mail, Altersgruppe (U18/Ü18) und Ticket-ID von
           Schüler:innen. Das sind personenbezogene Daten Minderjähriger. Bitte nach der Veranstaltung
@@ -813,7 +1183,10 @@
           ist auf der Anmeldeseite verlinkt und muss vor jeder Anmeldung bestätigt werden.
         </label>
         <div class="info-editor-actions">
-          <button type="button" id="deleteAllDataBtn" class="danger-btn">⚠️ Alle Bestellungs- und Ticketdaten jetzt endgültig löschen</button>
+          <button type="button" id="deleteAllDataBtn" class="danger-btn" style="display:inline-flex; align-items:center; gap:8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span>Alle Bestellungs- und Ticketdaten jetzt endgültig löschen</span>
+          </button>
         </div>
       </div>
     </div>
@@ -1167,7 +1540,7 @@
 
     const count = validRatings.length;
     const avg = count ? validRatings.reduce((sum, r) => sum + (Number(r.stars) || 0), 0) / count : 0;
-    document.getElementById('statRatingAvg').textContent = count ? avg.toFixed(1) + ' ❄' : '–';
+    document.getElementById('statRatingAvg').textContent = count ? avg.toFixed(1) + ' / 5' : '–';
     document.getElementById('statRatingCount').textContent = count;
     const tabRatingBadge = document.getElementById('tabRatingCount');
     if (tabRatingBadge) tabRatingBadge.textContent = count;
@@ -1178,7 +1551,7 @@
     chartRatings = new Chart(ratingsCanvas, {
       type: 'bar',
       data: {
-        labels: ['1 ❄','2 ❄','3 ❄','4 ❄','5 ❄'],
+        labels: ['1 Stern','2 Sterne','3 Sterne','4 Sterne','5 Sterne'],
         datasets: [{ data: distribution, backgroundColor: '#8fb4ff', borderRadius: 6 }]
       },
       options: {
@@ -1191,14 +1564,18 @@
     const sortedRatings = [...validRatings]
       .sort((a, b) => (b.createdAt?.toDate?.() || 0) - (a.createdAt?.toDate?.() || 0));
 
+    const starSvg = (active) => `<svg viewBox="0 0 24 24" fill="${active ? 'var(--accent-glow)' : 'rgba(255,255,255,0.12)'}" stroke="${active ? 'var(--accent)' : 'rgba(255,255,255,0.2)'}" stroke-width="1.5" style="width:13px; height:13px; display:inline-block; vertical-align:middle; margin-right:2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+
     const list = document.getElementById('ratingsCommentList');
     if (!list) return;
     list.innerHTML = sortedRatings.length
-      ? sortedRatings.map(r => `
+      ? sortedRatings.map(r => {
+        const starsHtml = [1,2,3,4,5].map(i => starSvg(i <= (Number(r.stars)||0))).join('');
+        return `
         <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:12px 14px; background:rgba(255,255,255,0.03); border:1px solid var(--glass-border); border-radius:var(--radius-sm);">
           <div style="flex-grow:1;">
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px; flex-wrap:wrap;">
-              <span style="color:#a5d8ff; font-size:15px; letter-spacing:2px;">${'❄'.repeat(Number(r.stars)||0)}</span>
+              <span style="display:inline-flex; align-items:center;">${starsHtml}</span>
               ${r.context === 'registration'
                 ? '<span style="font-size:10.5px; padding:2px 8px; border-radius:12px; background:rgba(143,180,255,0.15); border:1px solid rgba(143,180,255,0.35); color:var(--accent-glow);">Anmeldeprozess</span>'
                 : '<span style="font-size:10.5px; padding:2px 8px; border-radius:12px; background:rgba(255,255,255,0.06); border:1px solid var(--glass-border); color:var(--text-dim);">Website</span>'}
@@ -1208,8 +1585,11 @@
               ${r.comment ? escapeHtml(r.comment) : 'Kein Kommentar hinterlassen'}
             </div>
           </div>
-          <button class="delete-btn delete-rating-btn" data-id="${r.id}" title="Diese Bewertung löschen" style="flex-shrink:0;">🗑</button>
-        </div>`).join('')
+          <button class="delete-btn delete-rating-btn" data-id="${r.id}" title="Diese Bewertung löschen" style="flex-shrink:0;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px; height:14px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+        </div>`;
+      }).join('')
       : '<div style="color:var(--text-dim); font-size:13px;">Noch keine Bewertungen vorhanden.</div>';
 
     list.querySelectorAll('.delete-rating-btn').forEach(btn => {
@@ -1264,19 +1644,46 @@
     });
     // 2. Fallback-Einträge aus 'ratings' (falls 'vorabstimmung' noch nicht in den Firebase-Regeln freigeschaltet war)
     allRatings
-      .filter(r => r.context === 'vorabstimmung' || r.type === 'vorabstimmung')
+      .filter(r => r.context === 'vorabstimmung' || r.type === 'vorabstimmung' || (r.comment && r.comment.includes('[VORABSTIMMUNG]')) || (r.comment && r.comment.includes('[Vorabstimmung]')))
       .forEach(r => {
         if (!map.has(r.id)) {
-          const isAttending = r.pollAttending !== undefined ? r.pollAttending : (r.attending ?? (r.pollStatus === 'ja' || r.status === 'ja'));
-          const compCount = r.pollCompanionsCount !== undefined ? Number(r.pollCompanionsCount) : (Number(r.companionsCount) || 0);
+          let name = r.pollName || r.name;
+          let isAttending = r.pollAttending !== undefined ? r.pollAttending : (r.attending ?? (r.pollStatus === 'ja' || r.status === 'ja'));
+          let compCount = r.pollCompanionsCount !== undefined ? Number(r.pollCompanionsCount) : (Number(r.companionsCount) || 0);
+          let totalPersons = r.pollTotalPersons || 0;
+          let note = r.pollNote || r.note || '';
+
+          if (r.comment && r.comment.includes('[VORABSTIMMUNG]')) {
+            const raw = r.comment.replace(/^.*?\[VORABSTIMMUNG\]\s*/, '').trim();
+            try {
+              if (raw.startsWith('{')) {
+                const parsed = JSON.parse(raw);
+                if (parsed.name) name = parsed.name;
+                if (parsed.attending !== undefined) isAttending = parsed.attending;
+                if (parsed.companionsCount !== undefined) compCount = Number(parsed.companionsCount) || 0;
+                if (parsed.totalPersons !== undefined) totalPersons = Number(parsed.totalPersons) || 0;
+                if (parsed.note !== undefined) note = parsed.note;
+              }
+            } catch(e) {}
+          } else if (r.comment && r.comment.includes('[Vorabstimmung]')) {
+            const match = r.comment.match(/\[Vorabstimmung\]\s*([^:]+):\s*(Kommt|Kommt nicht)/i);
+            if (match) {
+              name = match[1].trim();
+              isAttending = match[2].toLowerCase() === 'kommt';
+            }
+          }
+
+          if (!name) name = 'Unbekannt';
+          if (!totalPersons) totalPersons = isAttending ? (1 + compCount) : 0;
+
           map.set(r.id, {
             id: r.id,
-            name: r.pollName || r.name || 'Unbekannt',
+            name,
             attending: isAttending,
-            status: r.pollStatus || r.status || (isAttending ? 'ja' : 'nein'),
+            status: isAttending ? 'ja' : 'nein',
             companionsCount: compCount,
-            totalPersons: r.pollTotalPersons || (isAttending ? (1 + compCount) : 0),
-            note: r.pollNote || r.note || '',
+            totalPersons,
+            note,
             createdAt: r.createdAt,
             _source: 'ratings'
           });
@@ -1349,8 +1756,8 @@
           const compCount = Number(p.companionsCount) || 0;
           const totalP = isYes ? (1 + compCount) : 0;
           const statusBadge = isYes
-            ? `<span class="badge in" style="font-weight:600;">✓ Kommt</span>`
-            : `<span class="badge out" style="color:var(--error); background:rgba(255,128,128,0.12); font-weight:600;">✕ Kommt nicht</span>`;
+            ? `<span class="badge in" style="font-weight:600; display:inline-flex; align-items:center; gap:5px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px; height:11px;"><polyline points="20 6 9 17 4 12"/></svg><span>Kommt</span></span>`
+            : `<span class="badge out" style="color:var(--error); background:rgba(255,128,128,0.12); font-weight:600; display:inline-flex; align-items:center; gap:5px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px; height:11px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><span>Kommt nicht</span></span>`;
           const compBadge = isYes
             ? (compCount === 0 ? '<span style="color:var(--text-dim);">Keine (nur selbst)</span>' : `<strong>+${compCount}</strong> Begleitung${compCount > 1 ? 'en' : ''}`)
             : '<span style="color:var(--text-dim); opacity:0.6;">—</span>';
@@ -1367,7 +1774,9 @@
               <td style="color:${p.note ? 'var(--text)' : 'var(--text-dim)'}; font-size:12.5px;">${p.note ? escapeHtml(p.note) : '<span style="opacity:0.5;">—</span>'}</td>
               <td style="font-size:11.5px; color:var(--text-dim); white-space:nowrap;">${formatTimestamp(p.createdAt)}</td>
               <td style="text-align:right;">
-                <button type="button" class="delete-btn delete-poll-btn" data-id="${p.id}" data-source="${p._source || 'vorabstimmung'}" title="Eintrag löschen">🗑</button>
+                <button type="button" class="delete-btn delete-poll-btn" data-id="${p.id}" data-source="${p._source || 'vorabstimmung'}" title="Eintrag löschen">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px; height:14px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
               </td>
             </tr>
           `;
@@ -1681,7 +2090,9 @@
                 <li>
                   <span>${escapeHtml(t.name)}</span>
                   <button class="checkin-toggle ${t.checkedIn ? 'in' : ''}" data-ticket-id="${t.id}" data-name="${escapeHtml(t.name)}" data-state="${t.checkedIn ? '1' : '0'}">
-                    ${t.checkedIn ? '✓ Eingecheckt' : 'Einchecken'}
+                    ${t.checkedIn
+                      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px; height:11px; margin-right:4px;"><polyline points="20 6 9 17 4 12"/></svg><span>Eingecheckt</span>'
+                      : '<span>Einchecken</span>'}
                   </button>
                 </li>`).join('')}</ul>`
             : '<span style="color:var(--text-dim)">—</span>';
@@ -1691,7 +2102,10 @@
             <td><span class="attendee-list orderer">${escapeHtml(r.name||'')} <span class="badge out">${categoryLabel(r.category)}</span></span></td>
             <td>
               ${companionsHtml}
-              <button class="add-companion-btn" data-id="${r.id}" title="Nachträglich eine Begleitung hinzufügen">+ Begleitung</button>
+              <button class="add-companion-btn" data-id="${r.id}" title="Nachträglich eine Begleitung hinzufügen" style="display:inline-flex; align-items:center; gap:4px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px; height:11px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>Begleitung</span>
+              </button>
             </td>
             <td>${escapeHtml(r.email||'')}</td>
             <td>${ticketsHtml}</td>
@@ -1700,8 +2114,8 @@
                 ${r.paid
                   ? `<span class="badge in">Bezahlt</span>`
                   : `<button class="pay-btn" data-id="${r.id}">Bezahlen</button>`}
-                ${r.paid ? `<button class="pdf-btn" data-id="${r.id}" title="Tickets als PDF herunterladen">📄 PDF</button>` : ''}
-                ${r.paid ? `<button class="invoice-btn" data-id="${r.id}" title="Quittung als PDF herunterladen">🧾 Quittung</button>` : ''}
+                ${r.paid ? `<button class="pdf-btn" data-id="${r.id}" title="Tickets als PDF herunterladen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px; height:12px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>PDF</span></button>` : ''}
+                ${r.paid ? `<button class="invoice-btn" data-id="${r.id}" title="Quittung als PDF herunterladen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px; height:12px;"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="14" y2="13"/></svg><span>Quittung</span></button>` : ''}
               </div>
             </td>
             <td style="font-size:11px; color:var(--text-dim); white-space:nowrap;">
@@ -1709,8 +2123,14 @@
               ${r.paid ? `<div style="margin-top:6px;">Bezahlt:<br>${formatTimestamp(r.paidAt)}</div>` : ''}
             </td>
             <td>
-              <button class="edit-reg-btn" data-id="${r.id}" title="Bestellung bearbeiten">✏️</button>
-              <button class="delete-btn" data-id="${r.id}" title="Bestellung löschen">🗑</button>
+              <div style="display:inline-flex; align-items:center; gap:4px;">
+                <button class="edit-reg-btn" data-id="${r.id}" title="Bestellung bearbeiten">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px; height:13px;"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                </button>
+                <button class="delete-btn" data-id="${r.id}" title="Bestellung löschen">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px; height:13px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+              </div>
             </td>
           </tr>`;
         }).join('');
@@ -1733,7 +2153,9 @@
                 <div style="font-size:11px; color:var(--text-dim);">${categoryLabel(t.category)}${t.ticketId ? ' · ' + escapeHtml(t.ticketId) : ''}</div>
               </div>
               <button class="checkin-toggle ${t.checkedIn ? 'in' : ''}" data-ticket-id="${t.id}" data-name="${escapeHtml(t.name)}" data-state="${t.checkedIn ? '1' : '0'}">
-                ${t.checkedIn ? '✓ Eingecheckt' : 'Einchecken'}
+                ${t.checkedIn
+                  ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px; height:11px; margin-right:4px;"><polyline points="20 6 9 17 4 12"/></svg><span>Eingecheckt</span>'
+                  : '<span>Einchecken</span>'}
               </button>
             </div>
           `).join('');
@@ -1760,7 +2182,10 @@
                   <span>${checkedCount}/${tickets.length} da</span>
                 </div>
                 ${attendeesList || '<span style="color:var(--text-dim); font-size:12px;">Keine Tickets</span>'}
-                <button class="add-companion-btn" data-id="${r.id}" style="margin-top:2px;">+ Begleitung hinzufügen</button>
+                <button class="add-companion-btn" data-id="${r.id}" style="margin-top:2px; display:inline-flex; align-items:center; gap:4px; align-self:flex-start;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px; height:11px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  <span>Begleitung hinzufügen</span>
+                </button>
               </div>
 
               <div class="order-card-footer">
@@ -1768,10 +2193,14 @@
                   ${formatTimestamp(r.createdAt)}
                 </div>
                 <div class="order-card-actions">
-                  ${r.paid ? `<button class="pdf-btn" data-id="${r.id}" title="Tickets als PDF">📄 PDF</button>` : ''}
-                  ${r.paid ? `<button class="invoice-btn" data-id="${r.id}" title="Quittung">🧾 Quittung</button>` : ''}
-                  <button class="edit-reg-btn" data-id="${r.id}" title="Bearbeiten" style="margin-right:0;">✏️</button>
-                  <button class="delete-btn" data-id="${r.id}" title="Löschen">🗑</button>
+                  ${r.paid ? `<button class="pdf-btn" data-id="${r.id}" title="Tickets als PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px; height:12px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>PDF</span></button>` : ''}
+                  ${r.paid ? `<button class="invoice-btn" data-id="${r.id}" title="Quittung"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px; height:12px;"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="14" y2="13"/></svg><span>Quittung</span></button>` : ''}
+                  <button class="edit-reg-btn" data-id="${r.id}" title="Bearbeiten" style="margin-right:0;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px; height:13px;"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                  </button>
+                  <button class="delete-btn" data-id="${r.id}" title="Löschen">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px; height:13px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  </button>
                 </div>
               </div>
             </div>
@@ -1835,11 +2264,14 @@
     await updateDoc(doc(db, 'tickets', ticketId), { checkedIn: !currentlyCheckedIn });
     if (!currentlyCheckedIn) {
       playCheckinChime();
-      showAdminToast(`✓ ${attendeeName || 'Gast'} erfolgreich eingecheckt!`);
+      showAdminToast(`${attendeeName || 'Gast'} erfolgreich eingecheckt!`);
     } else {
       showAdminToast(`Check-in für ${attendeeName || 'Gast'} zurückgenommen.`);
     }
   }
+
+  const PDF_BTN_CONTENT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px; height:12px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>PDF</span>';
+  const INVOICE_BTN_CONTENT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px; height:12px;"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="14" y2="13"/></svg><span>Quittung</span>';
 
   async function downloadTicketsPdf(regId, btnEl){
     const reg = allRegs.find(r => r.id === regId);
@@ -1847,7 +2279,7 @@
     if(!reg || tickets.length === 0) return;
 
     btnEl.disabled = true;
-    btnEl.textContent = '⏳ ...';
+    btnEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px; height:12px; animation:spin 0.8s linear infinite;"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"/></svg><span>...</span>';
     try {
       const idToken = await auth.currentUser.getIdToken();
       const res = await fetch(WORKER_URL + '/generate-pdf', {
@@ -1873,7 +2305,7 @@
       alert('PDF konnte nicht erstellt werden:\n' + err.message);
     } finally {
       btnEl.disabled = false;
-      btnEl.textContent = '📄 PDF';
+      btnEl.innerHTML = PDF_BTN_CONTENT;
     }
   }
 
@@ -1883,7 +2315,7 @@
     if(!reg || tickets.length === 0) return;
 
     btnEl.disabled = true;
-    btnEl.textContent = '⏳ ...';
+    btnEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px; height:12px; animation:spin 0.8s linear infinite;"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"/></svg><span>...</span>';
     try {
       // Immer die aktuell gültigen Preise nutzen (nicht auf lokalen Cache verlassen)
       const priceSnap = await getDoc(doc(db, 'settings', 'pricing'));
@@ -1918,7 +2350,7 @@
       alert('Quittung konnte nicht erstellt werden:\n' + err.message);
     } finally {
       btnEl.disabled = false;
-      btnEl.textContent = '🧾 Quittung';
+      btnEl.innerHTML = INVOICE_BTN_CONTENT;
     }
   }
 
@@ -2629,7 +3061,7 @@
       alert('Beim Löschen ist ein Fehler aufgetreten. Bitte Konsole prüfen.');
     } finally {
       btn.disabled = false;
-      btn.textContent = '⚠️ Alle Bestellungs- und Ticketdaten jetzt endgültig löschen';
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>Alle Bestellungs- und Ticketdaten jetzt endgültig löschen</span>';
     }
   });
 
