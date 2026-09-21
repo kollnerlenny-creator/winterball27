@@ -1162,14 +1162,17 @@
     const ratingsCanvas = document.getElementById('chartRatings');
     if (!ratingsCanvas) return;
 
-    const count = allRatings.length;
-    const avg = count ? allRatings.reduce((sum, r) => sum + (Number(r.stars) || 0), 0) / count : 0;
+    // Nur reine Feedback-Bewertungen berücksichtigen (keine Vorabstimmungs-Datensätze)
+    const validRatings = allRatings.filter(r => r.context !== 'vorabstimmung' && r.type !== 'vorabstimmung');
+
+    const count = validRatings.length;
+    const avg = count ? validRatings.reduce((sum, r) => sum + (Number(r.stars) || 0), 0) / count : 0;
     document.getElementById('statRatingAvg').textContent = count ? avg.toFixed(1) + ' ❄' : '–';
     document.getElementById('statRatingCount').textContent = count;
     const tabRatingBadge = document.getElementById('tabRatingCount');
     if (tabRatingBadge) tabRatingBadge.textContent = count;
 
-    const distribution = [1,2,3,4,5].map(v => allRatings.filter(r => Number(r.stars) === v).length);
+    const distribution = [1,2,3,4,5].map(v => validRatings.filter(r => Number(r.stars) === v).length);
 
     if (chartRatings) chartRatings.destroy();
     chartRatings = new Chart(ratingsCanvas, {
@@ -1185,7 +1188,7 @@
       }
     });
 
-    const sortedRatings = [...allRatings]
+    const sortedRatings = [...validRatings]
       .sort((a, b) => (b.createdAt?.toDate?.() || 0) - (a.createdAt?.toDate?.() || 0));
 
     const list = document.getElementById('ratingsCommentList');
@@ -1226,15 +1229,21 @@
   }
 
   document.getElementById('resetAllRatingsBtn')?.addEventListener('click', async () => {
-    if (allRatings.length === 0) {
+    const validRatings = allRatings.filter(r => r.context !== 'vorabstimmung' && r.type !== 'vorabstimmung');
+    if (validRatings.length === 0) {
       alert('Keine Bewertungen zum Zurücksetzen vorhanden.');
       return;
     }
-    if (!confirm(`Wirklich ALLE ${allRatings.length} Bewertungen unwiderruflich löschen?`)) return;
+    if (!confirm(`Wirklich ALLE ${validRatings.length} Bewertungen unwiderruflich löschen?`)) return;
     try {
       const snap = await getDocs(collection(db, 'ratings'));
       const batch = writeBatch(db);
-      snap.docs.forEach(d => batch.delete(d.ref));
+      snap.docs.forEach(d => {
+        const data = d.data();
+        if (data.context !== 'vorabstimmung' && data.type !== 'vorabstimmung') {
+          batch.delete(d.ref);
+        }
+      });
       await batch.commit();
       alert('Alle Bewertungen wurden zurückgesetzt.');
     } catch(err) {
@@ -1246,13 +1255,45 @@
   let allPolls = [];
   let activePollFilter = 'all'; // 'all', 'yes', 'no'
 
-  function renderPolls(){
-    const tabBadge = document.getElementById('tabPollCount');
-    if (tabBadge) tabBadge.textContent = allPolls.length;
+  // Führt Daten aus der Collection 'vorabstimmung' und eventuelle Fallback-Einträge aus 'ratings' zusammen
+  function getEffectivePolls(){
+    const map = new Map();
+    // 1. Einträge aus 'vorabstimmung'
+    allPolls.forEach(p => {
+      map.set(p.id, { ...p, _source: p._source || 'vorabstimmung' });
+    });
+    // 2. Fallback-Einträge aus 'ratings' (falls 'vorabstimmung' noch nicht in den Firebase-Regeln freigeschaltet war)
+    allRatings
+      .filter(r => r.context === 'vorabstimmung' || r.type === 'vorabstimmung')
+      .forEach(r => {
+        if (!map.has(r.id)) {
+          const isAttending = r.pollAttending !== undefined ? r.pollAttending : (r.attending ?? (r.pollStatus === 'ja' || r.status === 'ja'));
+          const compCount = r.pollCompanionsCount !== undefined ? Number(r.pollCompanionsCount) : (Number(r.companionsCount) || 0);
+          map.set(r.id, {
+            id: r.id,
+            name: r.pollName || r.name || 'Unbekannt',
+            attending: isAttending,
+            status: r.pollStatus || r.status || (isAttending ? 'ja' : 'nein'),
+            companionsCount: compCount,
+            totalPersons: r.pollTotalPersons || (isAttending ? (1 + compCount) : 0),
+            note: r.pollNote || r.note || '',
+            createdAt: r.createdAt,
+            _source: 'ratings'
+          });
+        }
+      });
+    return Array.from(map.values())
+      .sort((a, b) => (b.createdAt?.toDate?.() || 0) - (a.createdAt?.toDate?.() || 0));
+  }
 
-    const total = allPolls.length;
-    const yesPolls = allPolls.filter(p => p.attending === true || p.status === 'ja');
-    const noPolls = allPolls.filter(p => p.attending === false || p.status === 'nein');
+  function renderPolls(){
+    const effectivePolls = getEffectivePolls();
+    const tabBadge = document.getElementById('tabPollCount');
+    if (tabBadge) tabBadge.textContent = effectivePolls.length;
+
+    const total = effectivePolls.length;
+    const yesPolls = effectivePolls.filter(p => p.attending === true || p.status === 'ja');
+    const noPolls = effectivePolls.filter(p => p.attending === false || p.status === 'nein');
     const yesCount = yesPolls.length;
     const noCount = noPolls.length;
 
@@ -1278,7 +1319,7 @@
     if (document.getElementById('chipPollNo')) document.getElementById('chipPollNo').textContent = noCount;
 
     const searchVal = (document.getElementById('pollSearch')?.value || '').trim().toLowerCase();
-    const rows = allPolls.filter(p => {
+    const rows = effectivePolls.filter(p => {
       const matchesSearch = !searchVal ||
         (p.name || '').toLowerCase().includes(searchVal) ||
         (p.note || '').toLowerCase().includes(searchVal);
@@ -1326,7 +1367,7 @@
               <td style="color:${p.note ? 'var(--text)' : 'var(--text-dim)'}; font-size:12.5px;">${p.note ? escapeHtml(p.note) : '<span style="opacity:0.5;">—</span>'}</td>
               <td style="font-size:11.5px; color:var(--text-dim); white-space:nowrap;">${formatTimestamp(p.createdAt)}</td>
               <td style="text-align:right;">
-                <button type="button" class="delete-btn delete-poll-btn" data-id="${p.id}" title="Eintrag löschen">🗑</button>
+                <button type="button" class="delete-btn delete-poll-btn" data-id="${p.id}" data-source="${p._source || 'vorabstimmung'}" title="Eintrag löschen">🗑</button>
               </td>
             </tr>
           `;
@@ -1335,11 +1376,12 @@
         tbody.querySelectorAll('.delete-poll-btn').forEach(btn => {
           btn.addEventListener('click', async () => {
             const id = btn.dataset.id;
+            const src = btn.dataset.source || 'vorabstimmung';
             if (!id) return;
             if (!confirm('Diesen Eintrag aus der Vorabstimmung wirklich löschen?')) return;
             btn.disabled = true;
             try {
-              await deleteDoc(doc(db, 'vorabstimmung', id));
+              await deleteDoc(doc(db, src, id));
               showAdminToast('Eintrag gelöscht');
             } catch(e) {
               alert('Fehler beim Löschen: ' + e.message);
@@ -1352,12 +1394,13 @@
   }
 
   function exportPollCsv(){
-    if (allPolls.length === 0) {
+    const effectivePolls = getEffectivePolls();
+    if (effectivePolls.length === 0) {
       alert('Keine Vorabstimmungs-Daten zum Exportieren vorhanden.');
       return;
     }
     const header = ['Name', 'Entscheidung', 'Begleitungen', 'Personen gesamt', 'Klasse / Anmerkung', 'Eingereicht am'];
-    const rows = allPolls.map(p => {
+    const rows = effectivePolls.map(p => {
       const isYes = p.attending === true || p.status === 'ja';
       const comp = Number(p.companionsCount) || 0;
       return [
@@ -1470,10 +1513,13 @@
     onSnapshot(collection(db, 'ratings'), (snap) => {
       allRatings = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderRatings();
+      renderPolls();
     });
     onSnapshot(query(collection(db, 'vorabstimmung'), orderBy('createdAt', 'desc')), (snap) => {
-      allPolls = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      allPolls = snap.docs.map(d => ({ id: d.id, ...d.data(), _source: 'vorabstimmung' }));
       renderPolls();
+    }, (err) => {
+      console.warn('Vorabstimmung-Listener: Collection noch nicht freigegeben oder Fehler:', err);
     });
     onSnapshot(doc(db, 'settings', 'pricing'), (snap) => {
       const data = snap.exists() ? snap.data() : {};
