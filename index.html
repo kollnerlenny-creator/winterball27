@@ -46,6 +46,8 @@
   html{scroll-behavior:smooth; background:var(--bg-1);}
   body{
     font-family:'Cormorant Garamond','Segoe UI',system-ui,sans-serif;
+    font-variant-numeric:lining-nums tabular-nums;
+    font-feature-settings:"lnum" 1;
     background:
       radial-gradient(ellipse 900px 600px at 20% 0%, rgba(120,150,220,0.16), transparent 60%),
       radial-gradient(ellipse 700px 500px at 85% 30%, rgba(150,130,220,0.10), transparent 60%),
@@ -255,7 +257,7 @@
     }
     .hero-mobile-social{
       display:flex; align-items:center; justify-content:center;
-      gap:10px; flex-wrap:wrap; margin-top:22px; width:100%; max-width:440px;
+      gap:12px; flex-wrap:wrap; margin-top:22px; width:100%; max-width:440px;
     }
   }
 
@@ -265,154 +267,192 @@
       min-height:100svh;
       display:flex; flex-direction:column; align-items:center;
       justify-content:flex-start;
-      padding:calc(env(safe-area-inset-top, 0px) + clamp(24px, 4vh, 44px)) 18px calc(env(safe-area-inset-bottom, 0px) + clamp(20px, 3.5vh, 36px));
+      padding:calc(env(safe-area-inset-top, 0px) + clamp(16px, 2.8vh, 32px)) 16px calc(env(safe-area-inset-bottom, 0px) + clamp(14px, 2.4vh, 24px));
       box-sizing:border-box;
       text-align:center;
     }
     .moon{
-      width:clamp(88px, 14vh, 106px);
-      height:clamp(88px, 14vh, 106px);
-      margin-bottom:clamp(26px, 4.5vh, 48px);
+      width:clamp(74px, 10.5vh, 90px);
+      height:clamp(74px, 10.5vh, 90px);
+      margin-bottom:clamp(14px, 2.2vh, 22px);
       box-shadow:
-        inset -6px -5px 14px rgba(60,70,100,0.25),
-        0 0 26px 7px rgba(255,255,255,0.52), 0 0 70px 20px rgba(200,220,255,0.42), 0 0 120px 30px rgba(150,180,255,0.22);
+        inset -5px -4px 12px rgba(60,70,100,0.25),
+        0 0 22px 6px rgba(255,255,255,0.48), 0 0 55px 16px rgba(200,220,255,0.35), 0 0 95px 24px rgba(150,180,255,0.18);
     }
     .hero-title-wrapper{
       margin-bottom:0;
     }
     .hero h1{
-      font-size:clamp(46px, 13vw, 68px);
-      padding:6px 16px;
-      line-height:1.25;
+      font-size:clamp(44px, 12vw, 60px);
+      padding:2px 8px;
+      line-height:1.18;
     }
     .hero .subtitle{
-      margin-top:clamp(16px, 2.5vh, 26px);
-      font-size:14px;
-      letter-spacing:3.5px;
+      margin-top:8px;
+      font-size:13.5px;
+      letter-spacing:3px;
+      font-variant-numeric:lining-nums;
+      font-feature-settings:"lnum" 1;
     }
     .hero .date{
-      margin-top:clamp(26px, 4vh, 38px);
-      font-size:clamp(19px, 5vw, 24px);
-      letter-spacing:1px;
+      margin-top:clamp(14px, 2.2vh, 22px);
+      font-size:clamp(17px, 4.4vw, 22px);
+      letter-spacing:0.5px;
+      font-variant-numeric:lining-nums;
+      font-feature-settings:"lnum" 1;
     }
     .countdown{
-      margin-top:clamp(30px, 4.6vh, 48px);
-      gap:clamp(8px, 2.4vw, 12px);
+      margin-top:clamp(16px, 2.5vh, 24px);
+      gap:clamp(6px, 1.8vw, 10px);
+      width:100%;
+      max-width:340px;
+      display:flex;
+      justify-content:center;
     }
     .countdown .unit{
-      padding:clamp(13px, 2vh, 18px) clamp(14px, 3.2vw, 20px);
-      min-width:clamp(66px, 17vw, 76px);
-      border-radius:14px;
-      background:rgba(255,255,255,0.07);
+      flex:1 1 0;
+      min-width:0;
+      padding:10px 4px 8px;
+      border-radius:12px;
+      background:rgba(255,255,255,0.065);
+      border:1px solid rgba(255,255,255,0.11);
+      text-align:center;
     }
     .countdown .unit .num{
-      font-size:clamp(28px, 4.2vh, 34px);
+      font-size:clamp(24px, 6.2vw, 30px);
+      font-weight:600;
       line-height:1.1;
+      font-variant-numeric:tabular-nums;
     }
     .countdown .unit .lbl{
-      font-size:11px;
-      letter-spacing:1.5px;
-      margin-top:5px;
+      font-size:9.5px;
+      letter-spacing:1.2px;
+      margin-top:3px;
+      text-transform:uppercase;
+      color:var(--text-dim);
     }
     .live-counter{
-      margin-top:clamp(26px, 3.8vh, 38px);
-      font-size:15.5px;
+      margin-top:clamp(12px, 1.8vh, 16px);
+      font-size:14.5px;
+      font-variant-numeric:lining-nums;
+      font-feature-settings:"lnum" 1;
     }
     .hero .cta{
-      margin-top:clamp(30px, 4.4vh, 44px);
-      padding:clamp(17px, 2.4vh, 20px) clamp(44px, 9vw, 54px);
-      font-size:16.5px;
-      box-shadow:0 12px 36px rgba(143,180,255,0.45);
+      margin-top:clamp(16px, 2.6vh, 24px);
+      padding:15px clamp(36px, 8vw, 48px);
+      font-size:15.5px;
+      box-shadow:0 10px 30px rgba(143,180,255,0.4);
     }
     .hero-mobile-social{
       display:flex;
-      margin-top:clamp(28px, 4vh, 42px);
-      gap:clamp(8px, 2.2vw, 12px);
-    }
-    .hero-mobile-social .hero-floating-social{
-      padding:8px 18px 8px 12px;
+      flex-direction:row;
+      align-items:center;
+      justify-content:center;
       gap:10px;
-      border-radius:100px;
-      background:rgba(255,255,255,0.08);
-      border:1px solid rgba(170,200,255,0.3);
-      box-shadow:0 6px 18px rgba(10,16,32,0.4);
-    }
-    .hero-mobile-social .hero-floating-icon{
-      width:32px; height:32px;
-    }
-    .hero-mobile-social .hero-floating-icon svg{
-      width:16px; height:16px;
-    }
-    .hero-mobile-social .hero-floating-platform{
-      font-size:10px;
-      letter-spacing:0.8px;
-    }
-    .hero-mobile-social .hero-floating-handle{
-      font-size:12px;
-    }
-    .hero .scroll-hint{
-      margin-top:auto;
-      padding-top:clamp(40px, 6vh, 70px);
-      padding-bottom:12px;
-      font-size:12.5px;
-    }
-  }
-
-  @media (max-width:400px){
-    .hero{
-      padding:calc(env(safe-area-inset-top, 0px) + 24px) 12px calc(env(safe-area-inset-bottom, 0px) + 18px);
-    }
-    .moon{
-      width:84px; height:84px; margin-bottom:20px;
-    }
-    .hero h1{
-      font-size:clamp(42px, 12.5vw, 52px);
-      padding:2px 8px;
-    }
-    .hero .subtitle{
-      margin-top:12px; font-size:13px;
-    }
-    .hero .date{
-      margin-top:20px; font-size:18px;
-    }
-    .countdown{
-      margin-top:22px; gap:7px;
-    }
-    .countdown .unit{
-      padding:11px 11px; min-width:60px;
-    }
-    .countdown .unit .num{
-      font-size:26px;
-    }
-    .countdown .unit .lbl{
-      font-size:9.5px; letter-spacing:1px;
-    }
-    .live-counter{
-      margin-top:20px; font-size:14px;
-    }
-    .hero .cta{
-      margin-top:24px; padding:15px 38px; font-size:15.5px;
-    }
-    .hero-mobile-social{
-      margin-top:22px; gap:8px;
+      width:100%;
+      max-width:350px;
+      margin-top:clamp(14px, 2.2vh, 20px);
     }
     .hero-mobile-social .hero-floating-social{
-      padding:6px 13px 6px 8px; gap:7px;
+      flex:1 1 0;
+      min-width:0;
+      padding:7px 10px;
+      gap:8px;
+      border-radius:100px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(170,200,255,0.25);
+      box-shadow:0 4px 14px rgba(10,16,32,0.35);
+      justify-content:center;
     }
     .hero-mobile-social .hero-floating-icon{
       width:28px; height:28px;
+      flex-shrink:0;
     }
     .hero-mobile-social .hero-floating-icon svg{
       width:14px; height:14px;
     }
+    .hero-mobile-social .hero-floating-info{
+      min-width:0;
+      overflow:hidden;
+      text-align:left;
+      line-height:1.15;
+    }
     .hero-mobile-social .hero-floating-platform{
-      font-size:9px;
+      font-size:9.5px;
+      letter-spacing:0.6px;
+      font-weight:700;
     }
     .hero-mobile-social .hero-floating-handle{
       font-size:11px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      display:block;
     }
     .hero .scroll-hint{
-      padding-top:28px; font-size:11.5px;
+      margin-top:auto;
+      padding-top:clamp(16px, 2.5vh, 28px);
+      padding-bottom:8px;
+      font-size:11px;
+      letter-spacing:2px;
+    }
+  }
+
+  @media (max-width:380px){
+    .hero{
+      padding:calc(env(safe-area-inset-top, 0px) + 14px) 12px calc(env(safe-area-inset-bottom, 0px) + 12px);
+    }
+    .moon{
+      width:70px; height:70px; margin-bottom:12px;
+    }
+    .hero h1{
+      font-size:clamp(40px, 11.5vw, 48px);
+      padding:1px 6px;
+    }
+    .hero .subtitle{
+      margin-top:6px; font-size:12.5px; letter-spacing:2.5px;
+    }
+    .hero .date{
+      margin-top:12px; font-size:16.5px;
+    }
+    .countdown{
+      margin-top:14px; gap:5px;
+    }
+    .countdown .unit{
+      padding:8px 3px 6px;
+    }
+    .countdown .unit .num{
+      font-size:22px;
+    }
+    .countdown .unit .lbl{
+      font-size:9px; letter-spacing:0.8px;
+    }
+    .live-counter{
+      margin-top:10px; font-size:13.5px;
+    }
+    .hero .cta{
+      margin-top:14px; padding:13px 32px; font-size:14.5px;
+    }
+    .hero-mobile-social{
+      margin-top:12px; gap:8px;
+    }
+    .hero-mobile-social .hero-floating-social{
+      padding:6px 8px; gap:6px;
+    }
+    .hero-mobile-social .hero-floating-icon{
+      width:24px; height:24px;
+    }
+    .hero-mobile-social .hero-floating-icon svg{
+      width:12px; height:12px;
+    }
+    .hero-mobile-social .hero-floating-platform{
+      font-size:8.5px;
+    }
+    .hero-mobile-social .hero-floating-handle{
+      font-size:10px;
+    }
+    .hero .scroll-hint{
+      padding-top:14px; font-size:10px;
     }
   }
 
