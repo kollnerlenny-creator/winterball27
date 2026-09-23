@@ -2,6 +2,30 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+<script>
+  // Circular-safe JSON.stringify guard to prevent host logger crashes on circular references
+  (function(){
+    const _orig = JSON.stringify;
+    JSON.stringify = function(val, replacer, space) {
+      const seen = new WeakSet();
+      function safeReplacer(k, v) {
+        if (typeof v === 'object' && v !== null) {
+          if (seen.has(v)) return '[Circular]';
+          seen.add(v);
+        }
+        return typeof replacer === 'function' ? replacer.call(this, k, v) : v;
+      }
+      try {
+        return _orig.call(JSON, val, replacer, space);
+      } catch (err) {
+        if (err && err.message && err.message.includes('circular')) {
+          try { return _orig.call(JSON, val, safeReplacer, space); } catch (_) { return '"{}"'; }
+        }
+        throw err;
+      }
+    };
+  })();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Winter Ball · Admin</title>
 <style>
@@ -1430,7 +1454,7 @@
       try {
         await setDoc(doc(db, 'settings', 'stats'), { ticketCount: allTickets.length }, { merge: true });
       } catch (err) {
-        console.error('Ticketzähler konnte nicht synchronisiert werden:', err);
+        console.error('Ticketzähler konnte nicht synchronisiert werden:', err.message || err.code || 'Unbekannter Fehler');
       }
     }, 1500);
   }
@@ -1908,55 +1932,65 @@
   });
 
   function startListening(){
+    const onErr = (name) => (err) => console.warn(`Listener ${name}:`, err ? (err.message || err.code || 'Snapshot-Fehler') : 'Fehler');
+
     onSnapshot(query(collection(db, 'registrations'), orderBy('createdAt', 'desc')), (snap) => {
       allRegs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       scheduleRender();
       scheduleCharts();
-    });
+    }, onErr('registrations'));
+
     onSnapshot(collection(db, 'tickets'), (snap) => {
       allTickets = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       scheduleRender();
       syncStatsCounter();
       scheduleCharts();
-    });
+    }, onErr('tickets'));
+
     onSnapshot(collection(db, 'ratings'), (snap) => {
       allRatings = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderRatings();
       renderPolls();
-    });
+    }, onErr('ratings'));
+
     onSnapshot(query(collection(db, 'vorabstimmung'), orderBy('createdAt', 'desc')), (snap) => {
       allPolls = snap.docs.map(d => ({ id: d.id, ...d.data(), _source: 'vorabstimmung' }));
       renderPolls();
-    }, (err) => {
-      console.warn('Vorabstimmung-Listener: Collection noch nicht freigegeben oder Fehler:', err);
-    });
+    }, onErr('vorabstimmung'));
+
     onSnapshot(doc(db, 'settings', 'pricing'), (snap) => {
       const data = snap.exists() ? snap.data() : {};
       ticketPrices = { u18: Number(data.u18 || 0), ue18: Number(data.ue18 || 0) };
       document.getElementById('priceU18Input').value = ticketPrices.u18 || '';
       document.getElementById('priceUe18Input').value = ticketPrices.ue18 || '';
       scheduleRender();
-    });
+    }, onErr('pricing'));
+
     onSnapshot(doc(db, 'settings', 'info'), (snap) => {
       document.getElementById('infoText').value = snap.exists() ? (snap.data().text || '') : '';
-    });
+    }, onErr('info'));
+
     onSnapshot(doc(db, 'settings', 'deadline'), (snap) => {
       const iso = snap.exists() ? snap.data().timestamp : null;
       document.getElementById('deadlineInput').value = iso ? isoToLocalInputValue(iso) : '';
-    });
+    }, onErr('deadline'));
+
     onSnapshot(doc(db, 'settings', 'opensAt'), (snap) => {
       const iso = snap.exists() ? snap.data().timestamp : null;
       document.getElementById('opensAtInput').value = iso ? isoToLocalInputValue(iso) : '';
-    });
+    }, onErr('opensAt'));
+
     onSnapshot(doc(db, 'settings', 'lernsaxThreshold'), (snap) => {
       const grade = snap.exists() ? snap.data().grade : null;
       document.getElementById('lernsaxThresholdInput').value = grade || '';
       lernsaxThreshold = grade || null;
-    });
+    }, onErr('lernsaxThreshold'));
+
     onSnapshot(doc(db, 'settings', 'capacity'), (snap) => {
       const max = snap.exists() ? snap.data().maxTickets : null;
       document.getElementById('maxTicketsInput').value = max || '';
-    });
+    }, onErr('capacity'));
+
     onSnapshot(doc(db, 'settings', 'schedule'), (snap) => {
       // Nur beim allerersten Laden rendern, damit ein laufender Bearbeitungsvorgang
       // (z.B. neue, noch leere Zeile) nicht durch den Snapshot überschrieben wird.
@@ -1965,7 +1999,7 @@
       const items = (snap.exists() && Array.isArray(snap.data().items) && snap.data().items.length)
         ? snap.data().items : DEFAULT_SCHEDULE;
       renderScheduleRows(items);
-    });
+    }, onErr('schedule'));
   }
 
   function isoToLocalInputValue(iso){
@@ -2301,7 +2335,7 @@
       a.click();
       URL.revokeObjectURL(url);
     } catch(err){
-      console.error(err);
+      console.error(err.message || String(err));
       alert('PDF konnte nicht erstellt werden:\n' + err.message);
     } finally {
       btnEl.disabled = false;
@@ -2346,7 +2380,7 @@
       a.click();
       URL.revokeObjectURL(url);
     } catch(err){
-      console.error(err);
+      console.error(err.message || String(err));
       alert('Quittung konnte nicht erstellt werden:\n' + err.message);
     } finally {
       btnEl.disabled = false;
@@ -2639,7 +2673,7 @@
 
       closeEditRegModal();
     } catch (err) {
-      console.error(err);
+      console.error(err.message || String(err));
       alert('Änderungen konnten nicht vollständig gespeichert werden: ' + err.message);
     } finally {
       saveBtn.disabled = false;
@@ -2687,7 +2721,7 @@
         throw new Error(errData.error || `Server meldet HTTP ${res.status}`);
       }
     } catch(err){
-      console.error(err);
+      console.error(err.message || String(err));
       alert('Als bezahlt markiert, aber Ticket-Mail konnte nicht verschickt werden:\n\n' + err.message);
       btnEl.disabled = false;
       btnEl.textContent = 'Erneut versuchen';
@@ -2775,7 +2809,7 @@
 
       closeAddCompanionModal();
     } catch (err) {
-      console.error(err);
+      console.error(err.message || String(err));
       alert('Begleitung konnte nicht hinzugefügt werden: ' + err.message);
     } finally {
       confirmBtn.disabled = false;
@@ -3093,7 +3127,7 @@
       }
       alert('Alle Bestellungs- und Ticketdaten wurden gelöscht. Ein Backup liegt in deinem Downloads-Ordner.');
     } catch (err) {
-      console.error(err);
+      console.error(err.message || String(err));
       alert('Beim Löschen ist ein Fehler aufgetreten. Bitte Konsole prüfen.');
     } finally {
       btn.disabled = false;

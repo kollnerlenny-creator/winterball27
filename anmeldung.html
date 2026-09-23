@@ -2,6 +2,30 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+<script>
+  // Circular-safe JSON.stringify guard to prevent host logger crashes on circular references
+  (function(){
+    const _orig = JSON.stringify;
+    JSON.stringify = function(val, replacer, space) {
+      const seen = new WeakSet();
+      function safeReplacer(k, v) {
+        if (typeof v === 'object' && v !== null) {
+          if (seen.has(v)) return '[Circular]';
+          seen.add(v);
+        }
+        return typeof replacer === 'function' ? replacer.call(this, k, v) : v;
+      }
+      try {
+        return _orig.call(JSON, val, replacer, space);
+      } catch (err) {
+        if (err && err.message && err.message.includes('circular')) {
+          try { return _orig.call(JSON, val, safeReplacer, space); } catch (_) { return '"{}"'; }
+        }
+        throw err;
+      }
+    };
+  })();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Winter Ball 2027 · Anmeldung</title>
 <meta name="robots" content="noindex, nofollow">
@@ -861,7 +885,7 @@
       try {
         await updateDoc(doc(db, 'settings', 'stats'), { ticketCount: increment(allAttendees.length) });
       } catch (err) {
-        console.warn('Live-Ticketzähler konnte nicht aktualisiert werden:', err);
+        console.warn('Live-Ticketzähler konnte nicht aktualisiert werden:', err ? (err.message || err.code || 'Fehler') : 'Fehler');
       }
 
       // Bestätigungsmail direkt nach der Anmeldung anstoßen (Ticket-Mail folgt erst nach Bezahlung)
@@ -877,7 +901,7 @@
           body: JSON.stringify({ name, email, attendeeNames: allAttendees.map(a => a.name), useLernSax })
         });
       } catch (mailErr) {
-        console.error('Bestätigungsmail fehlgeschlagen:', mailErr);
+        console.error('Bestätigungsmail fehlgeschlagen:', mailErr ? (mailErr.message || String(mailErr)) : 'Fehler');
       }
 
       document.getElementById('formView').classList.remove('show');
@@ -889,7 +913,7 @@
       }, 700);
 
     } catch(err){
-      console.error(err);
+      console.error(err ? (err.message || String(err)) : 'Fehler');
       statusEl.className = 'status error';
       statusEl.textContent = 'Etwas ist schiefgelaufen. Bitte versuch es erneut.';
       submitBtn.disabled = false;
@@ -971,7 +995,7 @@
         closeRatingModal();
       }, 1600);
     } catch (err) {
-      console.error('Bewertung konnte nicht gespeichert werden:', err);
+      console.error('Bewertung konnte nicht gespeichert werden:', err ? (err.message || err.code || 'Fehler') : 'Fehler');
       alert('Feedback konnte leider nicht übertragen werden. Bitte erneut versuchen.');
       btn.disabled = false;
       btn.textContent = 'Feedback abschicken';

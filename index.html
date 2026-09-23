@@ -2,6 +2,30 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+<script>
+  // Circular-safe JSON.stringify guard to prevent host logger crashes on circular references
+  (function(){
+    const _orig = JSON.stringify;
+    JSON.stringify = function(val, replacer, space) {
+      const seen = new WeakSet();
+      function safeReplacer(k, v) {
+        if (typeof v === 'object' && v !== null) {
+          if (seen.has(v)) return '[Circular]';
+          seen.add(v);
+        }
+        return typeof replacer === 'function' ? replacer.call(this, k, v) : v;
+      }
+      try {
+        return _orig.call(JSON, val, replacer, space);
+      } catch (err) {
+        if (err && err.message && err.message.includes('circular')) {
+          try { return _orig.call(JSON, val, safeReplacer, space); } catch (_) { return '"{}"'; }
+        }
+        throw err;
+      }
+    };
+  })();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Winter Ball 2027</title>
 <meta name="robots" content="noindex, nofollow">
@@ -1305,6 +1329,8 @@
     document.getElementById('liveCounterText').textContent =
       count === 1 ? 'Schon 1 Person dabei!' : `Schon ${count} Leute dabei!`;
     wrap.style.display = 'inline-flex';
+  }, (err) => {
+    console.warn('Live-Counter:', err.message || err.code || 'Snapshot error');
   });
 
   function escapeHtml(str){
@@ -1380,7 +1406,7 @@
       document.getElementById('ratingCard').classList.add('submitted');
       document.getElementById('ratingThanks').classList.add('show');
     } catch (err) {
-      console.error('Bewertung konnte nicht gespeichert werden:', err);
+      console.error('Bewertung konnte nicht gespeichert werden:', err.message || err.code || 'Unbekannter Fehler');
       alert('Da ist leider was schiefgegangen — magst du es nochmal versuchen?');
       btn.disabled = false;
       btn.textContent = 'Bewertung abschicken';

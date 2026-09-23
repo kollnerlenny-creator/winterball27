@@ -2,6 +2,30 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+<script>
+  // Circular-safe JSON.stringify guard to prevent host logger crashes on circular references
+  (function(){
+    const _orig = JSON.stringify;
+    JSON.stringify = function(val, replacer, space) {
+      const seen = new WeakSet();
+      function safeReplacer(k, v) {
+        if (typeof v === 'object' && v !== null) {
+          if (seen.has(v)) return '[Circular]';
+          seen.add(v);
+        }
+        return typeof replacer === 'function' ? replacer.call(this, k, v) : v;
+      }
+      try {
+        return _orig.call(JSON, val, replacer, space);
+      } catch (err) {
+        if (err && err.message && err.message.includes('circular')) {
+          try { return _orig.call(JSON, val, safeReplacer, space); } catch (_) { return '"{}"'; }
+        }
+        throw err;
+      }
+    };
+  })();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Winter Ball 2027 · Impressum</title>
 <meta name="robots" content="noindex, nofollow">
