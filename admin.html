@@ -2493,8 +2493,8 @@
     });
 
     document.getElementById('editRegHint').textContent = reg.paid
-      ? 'Bestellung ist bereits bezahlt. Neu hinzugefügte Begleitungen bekommen sofort eine eigene Ticket-Mail — bestehende Tickets werden nicht automatisch neu verschickt.'
-      : 'Bestellung ist noch nicht bezahlt — Änderungen wirken sich erst beim Bezahlen auf die verschickten Tickets aus.';
+      ? 'Bestellung ist bereits bezahlt: Beim Speichern wird automatisch eine neue E-Mail mit den aktualisierten Tickets verschickt.'
+      : 'Bestellung ist noch nicht bezahlt: Beim Speichern wird eine aktualisierte Bestätigungs-E-Mail verschickt.';
 
     document.getElementById('editRegModalOverlay').classList.add('show');
   }
@@ -2549,22 +2549,30 @@
 
       // 2) Ticket des Bestellers mitziehen (umbenennen/Kategorie ändern), oder
       //    anlegen, falls aus irgendeinem Grund noch keins existiert
+      let ordererTicketIdVal = ordererTicket ? ordererTicket.ticketId : null;
       if (ordererTicket) {
         batch.update(doc(db, 'tickets', ordererTicket.id), { name, category, email });
       } else {
         const ref = doc(collection(db, 'tickets'));
+        ordererTicketIdVal = genTicketId();
         batch.set(ref, {
           registrationId: regId, name, category, email,
-          ticketId: genTicketId(), paid: reg.paid, checkedIn: false, createdAt: serverTimestamp()
+          ticketId: ordererTicketIdVal, paid: reg.paid, checkedIn: false, createdAt: serverTimestamp()
         });
       }
 
       // 3) Begleitungen abgleichen: bestehende Tickets updaten, entfernte löschen,
       //    neue anlegen
-      const newCompanionTickets = []; // für ggf. Ticket-Mail, falls schon bezahlt
+      const allUpdatedAttendees = [
+        { name, category, ticketId: ordererTicketIdVal }
+      ];
+
       companionEntries.forEach(c => {
         if (c.ticketId) {
-          batch.update(doc(db, 'tickets', c.ticketId), { name: c.name, category: c.category });
+          batch.update(doc(db, 'tickets', c.ticketId), { name: c.name, category: c.category, email });
+          const existingTicket = tickets.find(t => t.id === c.ticketId);
+          const tId = existingTicket ? existingTicket.ticketId : genTicketId();
+          allUpdatedAttendees.push({ name: c.name, category: c.category, ticketId: tId });
         } else {
           const ref = doc(collection(db, 'tickets'));
           const ticketId = genTicketId();
@@ -2572,7 +2580,7 @@
             registrationId: regId, name: c.name, category: c.category, email,
             ticketId, paid: reg.paid, checkedIn: false, createdAt: serverTimestamp()
           });
-          newCompanionTickets.push({ name: c.name, category: c.category, ticketId });
+          allUpdatedAttendees.push({ name: c.name, category: c.category, ticketId });
         }
       });
       tickets.forEach(t => {
@@ -2581,24 +2589,46 @@
 
       await batch.commit();
 
-      // 4) Ist die Bestellung schon bezahlt und es kamen neue Begleitungen dazu,
-      //    dafür sofort eine eigene Ticket-Mail verschicken (wie beim separaten
-      //    "+ Begleitung"-Button)
-      if (reg.paid && newCompanionTickets.length) {
+      // 4) E-Mail mit den aktualisierten Daten verschicken
+      if (reg.paid) {
+        saveBtn.textContent = 'Ticket-Mail wird gesendet...';
         const priceSnap = await getDoc(doc(db, 'settings', 'pricing'));
         const freshPrices = priceSnap.exists()
           ? { u18: Number(priceSnap.data().u18 || 0), ue18: Number(priceSnap.data().ue18 || 0) }
           : { u18: 0, ue18: 0 };
         const idToken = await auth.currentUser.getIdToken();
-        await fetch(WORKER_URL + '/send-tickets', {
+        const res = await fetch(WORKER_URL + '/send-tickets', {
           method: 'POST',
           headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
           body: JSON.stringify({
-            email, ordererName: name,
-            attendees: newCompanionTickets.map(t => ({ ...t, price: freshPrices[t.category] || 0 })),
+            email,
+            ordererName: name,
+            attendees: allUpdatedAttendees.map(t => ({
+              ...t,
+              price: freshPrices[t.category] || 0
+            })),
             useLernSax: shouldUseLernSax(email)
           })
         });
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error || `Ticket-Mail konnte nicht gesendet werden (${res.status})`);
+        }
+      } else {
+        saveBtn.textContent = 'Bestätigung wird gesendet...';
+        const res = await fetch(WORKER_URL + '/send-confirmation', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({
+            name,
+            email,
+            attendeeNames: allUpdatedAttendees.map(t => t.name),
+            useLernSax: shouldUseLernSax(email)
+          })
+        });
+        if (!res.ok) {
+          console.warn('Aktualisierte Bestätigungsmail konnte nicht gesendet werden');
+        }
       }
 
       closeEditRegModal();
@@ -2646,10 +2676,13 @@
         })
       });
 
-      if(!res.ok) throw new Error('Ticket-Mail fehlgeschlagen');
+      if(!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `Server meldet HTTP ${res.status}`);
+      }
     } catch(err){
       console.error(err);
-      alert('Als bezahlt markiert, aber Ticket-Mail konnte nicht verschickt werden. Bitte manuell prüfen.');
+      alert('Als bezahlt markiert, aber Ticket-Mail konnte nicht verschickt werden:\n\n' + err.message);
       btnEl.disabled = false;
       btnEl.textContent = 'Erneut versuchen';
     }

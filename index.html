@@ -619,6 +619,78 @@
     transform:translateX(5px);
   }
 
+  /* FAQ (Häufige Fragen - Akkordeon) */
+  .faq-subtitle{
+    text-align:center; color:var(--text-dim); font-size:15px; max-width:520px;
+    margin:-18px auto 36px; font-family:'Segoe UI',system-ui,sans-serif; line-height:1.6;
+  }
+  .faq-wrap{
+    max-width:660px; margin:0 auto; display:flex; flex-direction:column; gap:14px;
+  }
+  .faq-item{
+    background:var(--glass); border:1px solid var(--glass-border); border-radius:18px;
+    overflow:hidden; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+    transition:border-color 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
+  }
+  .faq-item:hover{
+    border-color:rgba(143,180,255,0.38);
+    background:rgba(255,255,255,0.08);
+  }
+  .faq-item.open{
+    border-color:rgba(143,180,255,0.55);
+    background:rgba(19,28,48,0.78);
+    box-shadow:0 12px 34px -8px rgba(0,0,0,0.45), 0 0 25px rgba(143,180,255,0.12);
+  }
+  .faq-question{
+    width:100%; padding:20px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px;
+    background:transparent; border:none; color:var(--text); text-align:left;
+    font-family:'Segoe UI',system-ui,sans-serif; font-size:16.5px; font-weight:600; line-height:1.45;
+    user-select:none;
+    transition:color 0.25s ease;
+  }
+  .faq-item.open .faq-question{
+    color:#ffffff;
+  }
+  .faq-icon{
+    flex-shrink:0; width:32px; height:32px; border-radius:50%;
+    background:rgba(143,180,255,0.12); border:1px solid rgba(143,180,255,0.28);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--accent-glow);
+    transition:transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease, border-color 0.3s ease;
+  }
+  .faq-icon svg{
+    width:16px; height:16px;
+    transition:transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .faq-item.open .faq-icon{
+    transform:rotate(180deg);
+    background:rgba(143,180,255,0.25);
+    border-color:rgba(143,180,255,0.55);
+  }
+  .faq-answer{
+    display:grid; grid-template-rows:0fr;
+    transition:grid-template-rows 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .faq-item.open .faq-answer{
+    grid-template-rows:1fr;
+  }
+  .faq-answer-inner{
+    overflow:hidden;
+    padding:0 24px;
+    color:var(--text-dim); font-family:'Segoe UI',system-ui,sans-serif; font-size:15px; line-height:1.68;
+    transition:padding 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .faq-answer-inner a{
+    color:var(--accent-glow); text-decoration:underline; text-underline-offset:3px;
+    transition:color 0.2s ease;
+  }
+  .faq-answer-inner a:hover{
+    color:#ffffff;
+  }
+  .faq-item.open .faq-answer-inner{
+    padding:0 24px 22px;
+  }
+
   /* Bewertung mit Schneeflocken */
   .rating-card{
     max-width:560px; width:100%; margin:0 auto; background:rgba(18,26,46,0.72); border:1px solid rgba(143,180,255,0.18);
@@ -1013,6 +1085,136 @@
   </div>
 </section>
 
+<!-- Häufige Fragen (FAQ) -->
+<section class="reveal" id="faqSection">
+  <div class="eyebrow">Häufige Fragen</div>
+  <div class="section-title">Alles Wichtige auf einen Blick</div>
+  <p class="faq-subtitle">
+    Du hast Fragen zu Tickets, Bezahlung oder dem Abend? Hier findest du die wichtigsten Antworten.
+  </p>
+
+  <div class="faq-wrap reveal-group">
+    <!-- 1. Ticket-Bestellung -->
+    <div class="faq-item reveal-item">
+      <button type="button" class="faq-question" aria-expanded="false">
+        <span>Wie funktioniert die Ticket-Bestellung?</span>
+        <div class="faq-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          Du meldest dich online über das Anmeldeformular auf dieser Website an. Gib einfach deinen Namen, deine E-Mail-Adresse und ggf. eine Begleitperson an. Nach dem Absenden ist dein Ticket verbindlich reserviert und du erhältst sofort eine Bestätigung per E-Mail mit allen Informationen zur Bezahlung.
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Wann & wo Ticket bezahlen -->
+    <div class="faq-item reveal-item">
+      <button type="button" class="faq-question" aria-expanded="false">
+        <span>Wann und wo kann ich mein Ticket bezahlen?</span>
+        <div class="faq-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          Die Bezahlung erfolgt bar an der Vorverkaufskasse direkt am Gymnasium Wilsdruff während der großen Pausen. Die genauen Vorverkaufstage und der Raum werden rechtzeitig in der Schule sowie über unsere Social-Media-Kanäle bekanntgegeben. Sobald bezahlt ist, wird dein Ticket aktiviert und dir per Mail zugeschickt.
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Stornierung & Weitergabe -->
+    <div class="faq-item reveal-item">
+      <button type="button" class="faq-question" aria-expanded="false">
+        <span>Kann ich mein Ticket stornieren oder weitergeben?</span>
+        <div class="faq-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          Bereits bezahlte Tickets sind verbindlich gebucht und können laut gesetzlicher Regelung für terminierte Freizeitveranstaltungen (§ 312g Abs. 2 Nr. 9 BGB) nicht storniert oder erstattet werden. Solltest du am Abend doch verhindert sein, kannst du dein Ticket jedoch gerne an eine andere Person weitergeben. Bitte kontaktiere uns in diesem Fall rechtzeitig per E-Mail unter <a href="mailto:info@winterball27.de">info@winterball27.de</a>, damit wir den Namen auf dem Ticket im Einlass-System umschreiben können.
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Ticket ausdrucken -->
+    <div class="faq-item reveal-item">
+      <button type="button" class="faq-question" aria-expanded="false">
+        <span>Muss ich das Ticket ausdrucken?</span>
+        <div class="faq-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          Nein, das musst du nicht! Du kannst den QR-Code deines Tickets am Einlass ganz bequem auf deinem Smartphone vorzeigen (direkt aus der E-Mail, als angehängtes PDF oder in deiner Apple bzw. Google Wallet). Wer möchte, kann das PDF natürlich trotzdem ausgedruckt auf Papier mitbringen.
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Abendkasse -->
+    <div class="faq-item reveal-item">
+      <button type="button" class="faq-question" aria-expanded="false">
+        <span>Gibt es eine Abendkasse vor Ort?</span>
+        <div class="faq-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          Eine Abendkasse wird es voraussichtlich nur dann geben, falls nach dem Vorverkauf in der Schule noch Restkarten verfügbar sind. Da die Plätze im Ballsaal aus Sicherheitsgründen begrenzt sind, empfehlen wir dringend, dein Ticket rechtzeitig online zu sichern.
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Begleitperson -->
+    <div class="faq-item reveal-item">
+      <button type="button" class="faq-question" aria-expanded="false">
+        <span>Darf ich eine Begleitperson mitbringen?</span>
+        <div class="faq-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          Ja, sehr gerne! Du kannst bei deiner Online-Anmeldung unkompliziert eine Begleitperson mit anmelden — auch dann, wenn sie nicht auf das Gymnasium Wilsdruff geht. Für jede Begleitperson wird ein eigenes, personalisiertes Ticket ausgestellt.
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Garderobe -->
+    <div class="faq-item reveal-item">
+      <button type="button" class="faq-question" aria-expanded="false">
+        <span>Gibt es vor Ort eine Garderobe?</span>
+        <div class="faq-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          Ja! Vor Ort gibt es eine betreute Garderobe, an der du Jacken, Mäntel und Taschen sicher abgeben kannst, damit du den Abend entspannt und unbeschwert genießen kannst.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- Finaler CTA -->
 <section class="final-cta reveal">
   <div class="section-title">Bereit für einen zauberhaften Abend?</div>
@@ -1322,6 +1524,26 @@
       if (!el.classList.contains('timeline-item')) {
         el.style.transitionDelay = `${i * 100}ms`;
       }
+    });
+  });
+
+  // --- FAQ Akkordeon ---
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+
+      // Andere schließen für ein aufgeräumtes Erscheinungsbild
+      document.querySelectorAll('.faq-item.open').forEach(other => {
+        if (other !== item) {
+          other.classList.remove('open');
+          const otherBtn = other.querySelector('.faq-question');
+          if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      item.classList.toggle('open', !isOpen);
+      btn.setAttribute('aria-expanded', String(!isOpen));
     });
   });
 
