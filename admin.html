@@ -2493,7 +2493,7 @@
     });
 
     document.getElementById('editRegHint').textContent = reg.paid
-      ? 'Bestellung ist bereits bezahlt: Beim Speichern wird automatisch eine neue E-Mail mit den aktualisierten Tickets verschickt.'
+      ? 'Bestellung ist bezahlt. Werden neue Begleitungen hinzugefügt, gelten diese als unbezahlt und müssen erst an der Vorverkaufskasse bezahlt werden.'
       : 'Bestellung ist noch nicht bezahlt: Beim Speichern wird eine aktualisierte Bestätigungs-E-Mail verschickt.';
 
     document.getElementById('editRegModalOverlay').classList.add('show');
@@ -2529,6 +2529,8 @@
       category: row.querySelector('.edit-companion-category').value
     })).filter(c => c.name);
 
+    const hasNewCompanions = companionEntries.some(c => !c.ticketId);
+
     const saveBtn = document.getElementById('editRegSaveBtn');
     saveBtn.disabled = true;
     saveBtn.textContent = 'Speichern...';
@@ -2541,10 +2543,14 @@
 
       const batch = writeBatch(db);
 
+      // Falls neue Begleitungen hinzugefügt wurden, ist die Bestellung noch nicht voll bezahlt:
+      const updatedPaidStatus = hasNewCompanions ? false : !!reg.paid;
+
       // 1) Bestellungs-Grunddaten aktualisieren
       batch.update(doc(db, 'registrations', regId), {
         name, email, category,
-        companions: companionEntries.map(c => ({ name: c.name, category: c.category }))
+        companions: companionEntries.map(c => ({ name: c.name, category: c.category })),
+        paid: updatedPaidStatus
       });
 
       // 2) Ticket des Bestellers mitziehen (umbenennen/Kategorie ändern), oder
@@ -2557,12 +2563,12 @@
         ordererTicketIdVal = genTicketId();
         batch.set(ref, {
           registrationId: regId, name, category, email,
-          ticketId: ordererTicketIdVal, paid: reg.paid, checkedIn: false, createdAt: serverTimestamp()
+          ticketId: ordererTicketIdVal, paid: !!reg.paid, checkedIn: false, createdAt: serverTimestamp()
         });
       }
 
       // 3) Begleitungen abgleichen: bestehende Tickets updaten, entfernte löschen,
-      //    neue anlegen
+      //    neue anlegen (neu hinzugefügte Begleitungen sind IMMER unbezahlt: paid: false)
       const allUpdatedAttendees = [
         { name, category, ticketId: ordererTicketIdVal }
       ];
@@ -2578,7 +2584,7 @@
           const ticketId = genTicketId();
           batch.set(ref, {
             registrationId: regId, name: c.name, category: c.category, email,
-            ticketId, paid: reg.paid, checkedIn: false, createdAt: serverTimestamp()
+            ticketId, paid: false, checkedIn: false, createdAt: serverTimestamp()
           });
           allUpdatedAttendees.push({ name: c.name, category: c.category, ticketId });
         }
@@ -2590,7 +2596,7 @@
       await batch.commit();
 
       // 4) E-Mail mit den aktualisierten Daten verschicken
-      if (reg.paid) {
+      if (updatedPaidStatus) {
         saveBtn.textContent = 'Ticket-Mail wird gesendet...';
         const priceSnap = await getDoc(doc(db, 'settings', 'pricing'));
         const freshPrices = priceSnap.exists()
@@ -2703,9 +2709,8 @@
     document.getElementById('addCompanionModalNameInput').value = '';
     document.getElementById('addCompanionModalCategory').value = '';
     resetCustomSelectVisual(document.getElementById('addCompanionModalCategory'));
-    document.getElementById('addCompanionModalHint').textContent = reg.paid
-      ? 'Die Bestellung ist schon bezahlt — die Begleitung bekommt sofort eine eigene Ticket-Mail.'
-      : 'Die Bestellung ist noch nicht bezahlt — die Begleitung bekommt ihr Ticket automatisch mit, sobald bezahlt wird.';
+    document.getElementById('addCompanionModalHint').textContent =
+      'Die neue Begleitung wird als unbezahlt angelegt und muss erst an der Vorverkaufskasse bezahlt werden. Sobald bezahlt wurde, wird das Ticket aktiviert und per Mail verschickt.';
     document.getElementById('addCompanionModalOverlay').classList.add('show');
   }
   function closeAddCompanionModal(){
@@ -2736,44 +2741,42 @@
       const newCompanion = { name, category };
 
       // 1) Begleitung in der Bestellung ergänzen + neues Ticket dafür anlegen
-      //    (bereits bezahlt, falls die Bestellung selbst schon bezahlt ist)
+      // WICHTIG: Die neue Begleitung ist UNBEZAHLT!
+      // Da die Bestellung nun ein offenes Ticket hat, wird die Bestellung auf paid: false gesetzt,
+      // damit in der Übersicht der "Bezahlen"-Button für die Nachzahlung erscheint!
       const batch = writeBatch(db);
       batch.update(doc(db, 'registrations', regId), {
-        companions: [...(reg.companions || []), newCompanion]
+        companions: [...(reg.companions || []), newCompanion],
+        paid: false
       });
       const ticketRef = doc(collection(db, 'tickets'));
       batch.set(ticketRef, {
         registrationId: regId, name, category, email: reg.email,
-        ticketId, paid: reg.paid, checkedIn: false, createdAt: serverTimestamp()
+        ticketId, paid: false, checkedIn: false, createdAt: serverTimestamp()
       });
       await batch.commit();
 
-      // 2) Ist die Bestellung schon bezahlt, sofort eine eigene Ticket-Mail nur
-      //    für die neue Begleitung verschicken (mit frischem Preis + Quittung).
-      if (reg.paid) {
-        const priceSnap = await getDoc(doc(db, 'settings', 'pricing'));
-        const freshPrices = priceSnap.exists()
-          ? { u18: Number(priceSnap.data().u18 || 0), ue18: Number(priceSnap.data().ue18 || 0) }
-          : { u18: 0, ue18: 0 };
-
-        const idToken = await auth.currentUser.getIdToken();
-        const res = await fetch(WORKER_URL + '/send-tickets', {
+      // 2) Bestätigungs-Mail über die hinzugefügte Begleitung senden (keine Ticket-Mail, da noch unbezahlt)
+      try {
+        const attendeeNames = [reg.name, ...(reg.companions || []).map(c => c.name), name];
+        await fetch(WORKER_URL + '/send-confirmation', {
           method: 'POST',
-          headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
+          headers: {'Content-Type':'application/json'},
           body: JSON.stringify({
+            name: reg.name,
             email: reg.email,
-            ordererName: reg.name,
-            attendees: [{ name, category, ticketId, price: freshPrices[category] || 0 }],
+            attendeeNames,
             useLernSax: shouldUseLernSax(reg.email)
           })
         });
-        if (!res.ok) throw new Error('Ticket-Mail für die neue Begleitung konnte nicht verschickt werden.');
+      } catch (mailErr) {
+        console.warn('Bestätigungsmail für Begleitung konnte nicht verschickt werden:', mailErr);
       }
 
       closeAddCompanionModal();
     } catch (err) {
       console.error(err);
-      alert('Begleitung wurde ggf. gespeichert, aber es gab ein Problem: ' + err.message);
+      alert('Begleitung konnte nicht hinzugefügt werden: ' + err.message);
     } finally {
       confirmBtn.disabled = false;
       confirmBtn.textContent = 'Hinzufügen';
