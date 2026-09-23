@@ -141,14 +141,15 @@
   .hero-social-slot{
     display:inline-flex; align-items:center; justify-content:center;
     flex-shrink:0; z-index:5;
+    will-change:transform;
   }
   .hero-social-left{
     order:1;
-    animation:floatLeft 7s ease-in-out infinite alternate;
+    animation:floatLeft 4.6s ease-in-out infinite alternate;
   }
   .hero-social-right{
     order:3;
-    animation:floatRight 7.5s ease-in-out infinite alternate;
+    animation:floatRight 5.2s ease-in-out infinite alternate;
   }
 
   /* Floating social media cards/badges next to Winter Ball */
@@ -195,14 +196,44 @@
   .hero-floating-platform{font-family:'Segoe UI',system-ui,sans-serif; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--accent-glow);}
   .hero-floating-handle{font-family:'Segoe UI',system-ui,sans-serif; font-size:13px; font-weight:500; color:var(--text); white-space:nowrap;}
 
-  /* Sanfte, subtile Floating-Animation */
+  /* Ausgeprägte, harmonische Schwingung (Floating Animation) */
   @keyframes floatLeft{
-    0%{ transform:translateY(0px); }
-    100%{ transform:translateY(-3px); }
+    0%{
+      transform:translateY(5px) rotate(1deg);
+    }
+    50%{
+      transform:translateY(-6px) rotate(-1.2deg);
+    }
+    100%{
+      transform:translateY(-13px) rotate(-2.2deg);
+    }
   }
   @keyframes floatRight{
-    0%{ transform:translateY(-2px); }
-    100%{ transform:translateY(2px); }
+    0%{
+      transform:translateY(-12px) rotate(-1.8deg);
+    }
+    50%{
+      transform:translateY(3px) rotate(0.8deg);
+    }
+    100%{
+      transform:translateY(11px) rotate(2deg);
+    }
+  }
+  @keyframes floatMobileLeft{
+    0%{
+      transform:translateY(3px) rotate(0.8deg);
+    }
+    100%{
+      transform:translateY(-7px) rotate(-1.2deg);
+    }
+  }
+  @keyframes floatMobileRight{
+    0%{
+      transform:translateY(-6px) rotate(-1deg);
+    }
+    100%{
+      transform:translateY(4px) rotate(1deg);
+    }
   }
 
   .hero .subtitle{
@@ -370,6 +401,13 @@
       box-shadow:0 4px 16px rgba(10,16,32,0.35);
       text-decoration:none;
       color:var(--text);
+      will-change:transform;
+    }
+    .hero-mobile-social .hero-floating-social:first-child{
+      animation:floatMobileLeft 4.4s ease-in-out infinite alternate;
+    }
+    .hero-mobile-social .hero-floating-social:last-child{
+      animation:floatMobileRight 4.9s ease-in-out infinite alternate;
     }
     .hero-mobile-social .hero-floating-icon{
       width:26px; height:26px;
@@ -430,7 +468,7 @@
   }
 
   @media (prefers-reduced-motion:reduce){
-    .hero-social-left, .hero-social-right{animation:none !important;}
+    .hero-social-left, .hero-social-right, .hero-mobile-social .hero-floating-social{animation:none !important;}
   }
 
 
