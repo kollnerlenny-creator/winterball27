@@ -1306,6 +1306,113 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
+  // --- DSGVO-freundliches Live-Präsenz & Besuchs-Tracking ---
+  (function initLivePresenceAndTracking(){
+    try {
+      const pageTitle = 'Startseite';
+      const pagePath = 'index.html';
+
+      // Anonyme Sitzungs-ID für diesen Browser-Tab/Session
+      let sid = sessionStorage.getItem('wb27_sid');
+      if (!sid) {
+        sid = 's_' + Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-4);
+        sessionStorage.setItem('wb27_sid', sid);
+      }
+
+      const ua = navigator.userAgent || '';
+      let device = 'desktop';
+      if (/iPad|tablet|(android(?!.*mobile))|(windows(?!.*phone)(.*touch))|kindle|playbook|silk/i.test(ua)) {
+        device = 'tablet';
+      } else if (/Mobile|iPhone|Android|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)) {
+        device = 'mobile';
+      }
+
+      let os = 'Anderes';
+      if (/iPhone|iPad|iPod/i.test(ua)) os = 'iOS';
+      else if (/Android/i.test(ua)) os = 'Android';
+      else if (/Windows/i.test(ua)) os = 'Windows';
+      else if (/Macintosh|Mac OS/i.test(ua)) os = 'macOS';
+      else if (/Linux/i.test(ua)) os = 'Linux';
+
+      let browser = 'Anderer';
+      if (/Instagram/i.test(ua)) browser = 'Instagram';
+      else if (/TikTok/i.test(ua)) browser = 'TikTok';
+      else if (/Edg/i.test(ua)) browser = 'Edge';
+      else if (/Chrome/i.test(ua) && !/Edg/i.test(ua)) browser = 'Chrome';
+      else if (/Safari/i.test(ua) && !/Chrome/i.test(ua)) browser = 'Safari';
+      else if (/Firefox/i.test(ua)) browser = 'Firefox';
+
+      // 1) Einmaliger Pageview für die Verlaufs-Diagramme (1x pro Sitzung)
+      const sessionKey = 'wb27_view_' + pagePath;
+      if (!sessionStorage.getItem(sessionKey)) {
+        sessionStorage.setItem(sessionKey, '1');
+        let refSource = 'Direkt';
+        const ref = document.referrer || '';
+        if (ref.includes('instagram.com')) refSource = 'Instagram';
+        else if (ref.includes('tiktok.com')) refSource = 'TikTok';
+        else if (ref.includes('lernsax.de')) refSource = 'LernSax';
+        else if (ref.includes('google.')) refSource = 'Google';
+        else if (ref && !ref.includes(window.location.host)) refSource = 'Extern';
+
+        addDoc(collection(db, 'vorabstimmung'), {
+          type: 'pageview',
+          device,
+          os,
+          browser,
+          ref: refSource,
+          path: pagePath,
+          screen: `${window.innerWidth}x${window.innerHeight}`,
+          createdAt: serverTimestamp()
+        }).catch(() => {});
+      }
+
+      // 2) Live-Präsenz Heartbeat (Firestore + API)
+      function sendPing() {
+        if (document.visibilityState === 'hidden') return;
+        addDoc(collection(db, 'vorabstimmung'), {
+          type: 'presence',
+          sid,
+          page: pageTitle,
+          device,
+          os,
+          browser,
+          createdAt: serverTimestamp()
+        }).catch(() => {});
+
+        fetch('/api/presence/ping', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sid, page: pageTitle, device, os, browser })
+        }).catch(() => {});
+      }
+
+      sendPing();
+      const pingTimer = setInterval(sendPing, 45000);
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          sendPing();
+        } else if (document.visibilityState === 'hidden') {
+          addDoc(collection(db, 'vorabstimmung'), {
+            type: 'presence_leave',
+            sid,
+            createdAt: serverTimestamp()
+          }).catch(() => {});
+
+          fetch('/api/presence/leave', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sid })
+          }).catch(() => {});
+        }
+      });
+
+      window.addEventListener('beforeunload', () => {
+        clearInterval(pingTimer);
+      });
+    } catch(e) {}
+  })();
+
   // --- Countdown bis zum Ball (auf die Sekunde genau) ---
   const EVENT_DATE = new Date('2027-01-30T17:30:00+01:00');
   function updateCountdown(){

@@ -723,6 +723,10 @@
       <div class="admin-title-row">
         <h1>Winter Ball · Admin &amp; Einlass</h1>
         <span class="live-pill" id="liveSyncStatus"><span class="pulse-dot"></span> Live Firestore</span>
+        <span class="live-pill" id="headerLiveVisitors" style="cursor:pointer; background:rgba(127,224,168,0.12); border-color:rgba(127,224,168,0.35); color:#7fe0a8;" title="Gerade online – Klicken für Insights">
+          <span class="pulse-dot" style="background:#7fe0a8; box-shadow:0 0 8px #7fe0a8;"></span>
+          <span id="headerLiveVisitorsText">0 online</span>
+        </span>
       </div>
       <div class="sub">30. Januar 2027 · 17:30 Uhr · Gymnasium Wilsdruff</div>
     </div>
@@ -811,7 +815,7 @@
     </button>
     <button class="tab-btn" data-tab="insights">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-      <span>Insights</span>
+      <span>Insights</span> <span class="tab-badge" id="tabLiveBadge" style="background:rgba(127,224,168,0.22); color:#7fe0a8; font-weight:700;">0 live</span>
     </button>
     <button class="tab-btn" data-tab="ratings">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14M12 6l2-2M12 6l-2-2M12 18l2 2M12 18l-2 2M6 12l-2 2M6 12l-2-2M18 12l2 2M18 12l2-2"/></svg>
@@ -914,18 +918,137 @@
 
   <!-- Tab: Insights -->
   <div class="tab-content" data-tab-content="insights">
+    <!-- Live-Besucher Echtzeit-Panel -->
+    <div class="live-visitor-banner" id="liveVisitorBanner" style="margin-bottom:24px; padding:20px 24px; background:linear-gradient(135deg, rgba(16,28,48,0.92) 0%, rgba(13,44,38,0.65) 100%); border:1px solid rgba(127,224,168,0.35); border-radius:var(--radius-md); box-shadow:0 8px 32px rgba(0,0,0,0.28); backdrop-filter:blur(16px);">
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span style="position:relative; display:inline-flex; width:12px; height:12px;">
+            <span style="position:absolute; inset:0; border-radius:50%; background:#7fe0a8; opacity:0.75; animation:pulseGreen 1.8s infinite;"></span>
+            <span style="position:relative; display:inline-block; border-radius:50%; width:12px; height:12px; background:#7fe0a8; box-shadow:0 0 10px #7fe0a8;"></span>
+          </span>
+          <span style="font-size:16px; font-weight:700; color:#fff; letter-spacing:0.3px;">Besucher gerade live auf der Website</span>
+          <span class="chip-count" id="badgeActiveVisitors" style="background:#7fe0a8; color:#0b1915; font-weight:800; font-size:13px; padding:3px 12px; border-radius:100px;">0</span>
+        </div>
+        <div style="font-size:12px; color:#9aa7c2;" id="livePresenceSummary">Sekundengenaue Erfassung über alle Seiten</div>
+      </div>
+
+      <div id="liveVisitorsContainer">
+        <div id="liveVisitorsEmpty" style="padding:14px 16px; background:rgba(255,255,255,0.03); border:1px dashed rgba(255,255,255,0.12); border-radius:var(--radius-sm); font-size:13px; color:#9aa7c2; display:flex; align-items:center; gap:12px;">
+          <svg style="width:18px; height:18px; color:#7fe0a8; flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Aktuell befindet sich niemand auf der Website. Sobald jemand eine Seite (Startseite, Anmeldung, Vorabstimmung) öffnet, erscheint er hier live im Sekundentakt.</span>
+        </div>
+        <div id="liveVisitorsList" style="display:none; flex-wrap:wrap; gap:10px;"></div>
+      </div>
+    </div>
+
+    <!-- Stat-Kacheln für Aufrufe & Live-Besucher -->
+    <div class="stats" style="margin-bottom:24px;">
+      <div class="stat" id="statCardLive" style="border-color:rgba(127,224,168,0.35); background:linear-gradient(135deg, rgba(127,224,168,0.08) 0%, rgba(19,28,48,0.6) 100%);">
+        <div class="stat-header">
+          <span class="stat-lbl" style="color:#7fe0a8;">Gerade online</span>
+          <div class="stat-icon-wrap" style="background:rgba(127,224,168,0.18); border-color:rgba(127,224,168,0.4); color:#7fe0a8;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+        </div>
+        <div class="num" id="statLiveCount" style="color:#7fe0a8; display:flex; align-items:center; gap:8px;">0</div>
+        <div class="stat-sub" id="statLiveSub">0 Personen aktiv</div>
+      </div>
+      <div class="stat">
+        <div class="stat-header">
+          <span class="stat-lbl">Aufrufe heute</span>
+          <div class="stat-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+        </div>
+        <div class="num accent" id="statViewsToday">0</div>
+        <div class="stat-sub" id="statViewsTodaySub">Heute erfasste Besuche</div>
+      </div>
+      <div class="stat">
+        <div class="stat-header">
+          <span class="stat-lbl">Aufrufe gesamt</span>
+          <div class="stat-icon-wrap success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+        </div>
+        <div class="num success" id="statViewsTotal">0</div>
+        <div class="stat-sub" id="statViewsTotalSub">Seit Aufzeichnungsstart</div>
+      </div>
+      <div class="stat">
+        <div class="stat-header">
+          <span class="stat-lbl">Mobil-Anteil</span>
+          <div class="stat-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          </div>
+        </div>
+        <div class="num" id="statMobilePercent" style="color:#7fe0a8;">0%</div>
+        <div class="stat-sub" id="statMobileSub">0 Smartphone-Aufrufe</div>
+      </div>
+      <div class="stat">
+        <div class="stat-header">
+          <span class="stat-lbl">Häufigstes System</span>
+          <div class="stat-icon-wrap warn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+        </div>
+        <div class="num" id="statTopPlatform" style="font-size:22px; font-weight:700; color:#c7d7f7; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">–</div>
+        <div class="stat-sub" id="statTopPlatformSub">Betriebssystem</div>
+      </div>
+    </div>
+
+    <!-- Insights Charts Grid -->
     <div class="insights-grid">
+      <!-- 1. Website-Aufrufe im Zeitverlauf (Tage) -->
+      <div class="insight-card wide">
+        <div class="insight-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          Website-Aufrufe im Zeitverlauf (Tage)
+        </div>
+        <canvas id="chartViewsDaily"></canvas>
+      </div>
+
+      <!-- 2. Gerätetyp (Smartphone vs PC vs Tablet) -->
       <div class="insight-card">
-        <div class="insight-title">U18 / Ü18-Verteilung</div>
+        <div class="insight-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          Gerätetyp (Smartphone / PC / Tablet)
+        </div>
+        <canvas id="chartDevice"></canvas>
+      </div>
+
+      <!-- 3. Betriebssysteme (iOS, Android, Windows...) -->
+      <div class="insight-card">
+        <div class="insight-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Betriebssysteme (iOS, Android, Windows...)
+        </div>
+        <canvas id="chartOS"></canvas>
+      </div>
+
+      <!-- 4. Ticket-Anmeldungen pro Tag -->
+      <div class="insight-card wide">
+        <div class="insight-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Ticket-Bestellungen pro Tag
+        </div>
+        <canvas id="chartDaily"></canvas>
+      </div>
+
+      <!-- 5. U18 / Ü18 Verteilung -->
+      <div class="insight-card">
+        <div class="insight-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          U18 / Ü18-Verteilung (Gäste)
+        </div>
         <canvas id="chartCategory"></canvas>
       </div>
+
+      <!-- 6. Bezahlt vs. Offen -->
       <div class="insight-card">
-        <div class="insight-title">Bezahlt vs. offen</div>
+        <div class="insight-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Bezahlt vs. offen
+        </div>
         <canvas id="chartPaid"></canvas>
-      </div>
-      <div class="insight-card wide">
-        <div class="insight-title">Anmeldungen pro Tag</div>
-        <canvas id="chartDaily"></canvas>
       </div>
     </div>
   </div>
@@ -1471,6 +1594,7 @@
     console.error('Chart.js konnte nicht geladen werden — Diagramme sind deaktiviert, der Rest funktioniert normal.');
   }
 
+  let chartViewsDaily = null, chartDevice = null, chartOS = null;
   let chartCategory = null, chartPaid = null, chartDaily = null, chartRatings = null;
 
   function tsToDate(ts){
@@ -1481,75 +1605,240 @@
 
   function updateCharts(){
     if (typeof Chart === 'undefined') return; // Chart.js nicht verfügbar — Diagramme einfach überspringen
-    const catCanvas = document.getElementById('chartCategory');
-    const paidCanvas = document.getElementById('chartPaid');
-    const dailyCanvas = document.getElementById('chartDaily');
-    if (!catCanvas || !paidCanvas || !dailyCanvas) return;
 
-    // 1) U18 / Ü18-Verteilung (über alle Tickets, nicht nur Bestellungen)
-    const u18Count = allTickets.filter(t => t.category === 'u18').length;
-    const ue18Count = allTickets.filter(t => t.category === 'ue18').length;
+    // --- 0) KPI-Kacheln für Aufrufe & Besucher ---
+    const totalViews = allPageviews.length;
+    const todayKey = new Date().toISOString().slice(0, 10);
+    const viewsToday = allPageviews.filter(p => {
+      const d = tsToDate(p.createdAt);
+      return d && d.toISOString().slice(0, 10) === todayKey;
+    }).length;
 
-    if (chartCategory) chartCategory.destroy();
-    chartCategory = new Chart(catCanvas, {
-      type: 'doughnut',
-      data: {
-        labels: ['Unter 18', '18 oder älter'],
-        datasets: [{ data: [u18Count, ue18Count], backgroundColor: ['#8fb4ff', '#7fe0a8'], borderColor: '#131c30', borderWidth: 2 }]
-      },
-      options: { plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: true }
+    const mobileCount = allPageviews.filter(p => p.device === 'mobile').length;
+    const desktopCount = allPageviews.filter(p => p.device === 'desktop').length;
+    const tabletCount = allPageviews.filter(p => p.device === 'tablet').length;
+    const mobilePct = totalViews > 0 ? Math.round((mobileCount / totalViews) * 100) : 0;
+
+    const osCounts = {};
+    allPageviews.forEach(p => {
+      const os = p.os || 'Anderes';
+      osCounts[os] = (osCounts[os] || 0) + 1;
     });
+    const sortedOSKeys = Object.keys(osCounts).sort((a, b) => osCounts[b] - osCounts[a]);
+    const topOS = sortedOSKeys[0];
+    const topOSPct = topOS && totalViews > 0 ? Math.round((osCounts[topOS] / totalViews) * 100) : 0;
 
-    // 2) Bezahlt vs. offen (auf Bestellungs-Ebene)
-    const paidCount = allRegs.filter(r => r.paid).length;
-    const openCount = allRegs.length - paidCount;
+    const elViewsToday = document.getElementById('statViewsToday');
+    if (elViewsToday) elViewsToday.textContent = viewsToday;
+    const elViewsTodaySub = document.getElementById('statViewsTodaySub');
+    if (elViewsTodaySub) elViewsTodaySub.textContent = viewsToday === 1 ? '1 Aufruf heute' : `${viewsToday} Aufrufe heute`;
+    const elViewsTotal = document.getElementById('statViewsTotal');
+    if (elViewsTotal) elViewsTotal.textContent = totalViews;
+    const elMobilePct = document.getElementById('statMobilePercent');
+    if (elMobilePct) elMobilePct.textContent = `${mobilePct}%`;
+    const elMobileSub = document.getElementById('statMobileSub');
+    if (elMobileSub) elMobileSub.textContent = `${mobileCount} von ${totalViews} Aufrufen`;
+    const elTopPlatform = document.getElementById('statTopPlatform');
+    if (elTopPlatform) elTopPlatform.textContent = topOS ? `${topOS} (${topOSPct}%)` : '–';
 
-    if (chartPaid) chartPaid.destroy();
-    chartPaid = new Chart(paidCanvas, {
-      type: 'doughnut',
-      data: {
-        labels: ['Bezahlt', 'Offen'],
-        datasets: [{ data: [paidCount, openCount], backgroundColor: ['#7fe0a8', '#ffd27f'], borderColor: '#131c30', borderWidth: 2 }]
-      },
-      options: { plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: true }
-    });
+    // --- 1) Website-Aufrufe im Zeitverlauf (Line-Chart: X=Tage, Y=Aufrufe) ---
+    const viewsDailyCanvas = document.getElementById('chartViewsDaily');
+    if (viewsDailyCanvas) {
+      const viewsByDay = {};
+      allPageviews.forEach(p => {
+        const d = tsToDate(p.createdAt);
+        if (!d) return;
+        const key = d.toISOString().slice(0, 10);
+        viewsByDay[key] = (viewsByDay[key] || 0) + 1;
+      });
 
-    // 3) Anmeldungen pro Tag (Anzahl neuer Bestellungen je Kalendertag)
-    const dayCounts = {};
-    allRegs.forEach(r => {
-      const d = tsToDate(r.createdAt);
-      if (!d) return;
-      const key = d.toISOString().slice(0, 10);
-      dayCounts[key] = (dayCounts[key] || 0) + 1;
-    });
-    const sortedDays = Object.keys(dayCounts).sort();
-    const dayLabels = sortedDays.map(k => {
-      const [y,m,dd] = k.split('-');
-      return `${dd}.${m}.`;
-    });
+      const sortedDays = Object.keys(viewsByDay).sort();
+      const dayLabels = sortedDays.map(k => {
+        const [y, m, dd] = k.split('-');
+        return `${dd}.${m}.`;
+      });
 
-    if (chartDaily) chartDaily.destroy();
-    if (sortedDays.length === 0) {
-      const ctx = dailyCanvas.getContext('2d');
-      ctx.clearRect(0, 0, dailyCanvas.width, dailyCanvas.height);
-    } else {
-      chartDaily = new Chart(dailyCanvas, {
-        type: 'line',
+      if (chartViewsDaily) chartViewsDaily.destroy();
+
+      if (sortedDays.length === 0) {
+        const ctx = viewsDailyCanvas.getContext('2d');
+        ctx.clearRect(0, 0, viewsDailyCanvas.width, viewsDailyCanvas.height);
+      } else {
+        const ctx = viewsDailyCanvas.getContext('2d');
+        const grad = ctx.createLinearGradient(0, 0, 0, 220);
+        grad.addColorStop(0, 'rgba(143, 180, 255, 0.38)');
+        grad.addColorStop(1, 'rgba(143, 180, 255, 0.02)');
+
+        chartViewsDaily = new Chart(viewsDailyCanvas, {
+          type: 'line',
+          data: {
+            labels: dayLabels,
+            datasets: [{
+              label: 'Aufrufe',
+              data: sortedDays.map(k => viewsByDay[k]),
+              borderColor: '#8fb4ff',
+              backgroundColor: grad,
+              fill: true,
+              tension: 0.32,
+              pointRadius: 4,
+              pointHoverRadius: 6,
+              pointBackgroundColor: '#8fb4ff',
+              pointBorderColor: '#0e1626',
+              pointBorderWidth: 2,
+              borderWidth: 2.5
+            }]
+          },
+          options: {
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => ` ${ctx.parsed.y} Aufruf${ctx.parsed.y !== 1 ? 'e' : ''}`
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: { precision: 0, color: '#9aa7c2' },
+                grid: { color: 'rgba(255,255,255,0.06)' }
+              },
+              x: {
+                ticks: { color: '#9aa7c2' },
+                grid: { display: false }
+              }
+            },
+            maintainAspectRatio: true
+          }
+        });
+      }
+    }
+
+    // --- 2) Gerätetypen (Smartphone vs PC vs Tablet) ---
+    const deviceCanvas = document.getElementById('chartDevice');
+    if (deviceCanvas) {
+      if (chartDevice) chartDevice.destroy();
+      const totalDev = mobileCount + desktopCount + tabletCount;
+      chartDevice = new Chart(deviceCanvas, {
+        type: 'doughnut',
         data: {
-          labels: dayLabels,
+          labels: ['Smartphone', 'Desktop / PC', 'Tablet'],
           datasets: [{
-            label: 'Neue Anmeldungen',
-            data: sortedDays.map(k => dayCounts[k]),
-            borderColor: '#8fb4ff', backgroundColor: 'rgba(143,180,255,0.15)',
-            fill: true, tension: 0.3, pointRadius: 3,
+            data: totalDev > 0 ? [mobileCount, desktopCount, tabletCount] : [0, 0, 0],
+            backgroundColor: ['#8fb4ff', '#7fe0a8', '#ffd27f'],
+            borderColor: '#131c30',
+            borderWidth: 2
           }]
         },
         options: {
-          plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
+          plugins: {
+            legend: { position: 'bottom' }
+          },
           maintainAspectRatio: true,
+          cutout: '62%'
         }
       });
+    }
+
+    // --- 3) Betriebssysteme (iOS, Android, Windows, macOS...) ---
+    const osCanvas = document.getElementById('chartOS');
+    if (osCanvas) {
+      if (chartOS) chartOS.destroy();
+      const osPalette = ['#8fb4ff', '#a78bfa', '#7fe0a8', '#ffd27f', '#f472b6', '#94a3b8'];
+      chartOS = new Chart(osCanvas, {
+        type: 'doughnut',
+        data: {
+          labels: sortedOSKeys.length > 0 ? sortedOSKeys : ['Keine Daten'],
+          datasets: [{
+            data: sortedOSKeys.length > 0 ? sortedOSKeys.map(k => osCounts[k]) : [1],
+            backgroundColor: sortedOSKeys.length > 0 ? sortedOSKeys.map((_, i) => osPalette[i % osPalette.length]) : ['rgba(255,255,255,0.08)'],
+            borderColor: '#131c30',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          plugins: {
+            legend: { position: 'bottom' }
+          },
+          maintainAspectRatio: true,
+          cutout: '62%'
+        }
+      });
+    }
+
+    // --- 4) U18 / Ü18-Verteilung ---
+    const catCanvas = document.getElementById('chartCategory');
+    if (catCanvas) {
+      const u18Count = allTickets.filter(t => t.category === 'u18').length;
+      const ue18Count = allTickets.filter(t => t.category === 'ue18').length;
+
+      if (chartCategory) chartCategory.destroy();
+      chartCategory = new Chart(catCanvas, {
+        type: 'doughnut',
+        data: {
+          labels: ['Unter 18', '18 oder älter'],
+          datasets: [{ data: [u18Count, ue18Count], backgroundColor: ['#8fb4ff', '#7fe0a8'], borderColor: '#131c30', borderWidth: 2 }]
+        },
+        options: { plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: true, cutout: '62%' }
+      });
+    }
+
+    // --- 5) Bezahlt vs. offen (auf Bestellungs-Ebene) ---
+    const paidCanvas = document.getElementById('chartPaid');
+    if (paidCanvas) {
+      const paidCount = allRegs.filter(r => r.paid).length;
+      const openCount = allRegs.length - paidCount;
+
+      if (chartPaid) chartPaid.destroy();
+      chartPaid = new Chart(paidCanvas, {
+        type: 'doughnut',
+        data: {
+          labels: ['Bezahlt', 'Offen'],
+          datasets: [{ data: [paidCount, openCount], backgroundColor: ['#7fe0a8', '#ffd27f'], borderColor: '#131c30', borderWidth: 2 }]
+        },
+        options: { plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: true, cutout: '62%' }
+      });
+    }
+
+    // --- 6) Anmeldungen pro Tag (Anzahl neuer Bestellungen je Kalendertag) ---
+    const dailyCanvas = document.getElementById('chartDaily');
+    if (dailyCanvas) {
+      const dayCounts = {};
+      allRegs.forEach(r => {
+        const d = tsToDate(r.createdAt);
+        if (!d) return;
+        const key = d.toISOString().slice(0, 10);
+        dayCounts[key] = (dayCounts[key] || 0) + 1;
+      });
+      const sortedDays = Object.keys(dayCounts).sort();
+      const dayLabels = sortedDays.map(k => {
+        const [y,m,dd] = k.split('-');
+        return `${dd}.${m}.`;
+      });
+
+      if (chartDaily) chartDaily.destroy();
+      if (sortedDays.length === 0) {
+        const ctx = dailyCanvas.getContext('2d');
+        ctx.clearRect(0, 0, dailyCanvas.width, dailyCanvas.height);
+      } else {
+        chartDaily = new Chart(dailyCanvas, {
+          type: 'line',
+          data: {
+            labels: dayLabels,
+            datasets: [{
+              label: 'Neue Anmeldungen',
+              data: sortedDays.map(k => dayCounts[k]),
+              borderColor: '#8fb4ff', backgroundColor: 'rgba(143,180,255,0.15)',
+              fill: true, tension: 0.3, pointRadius: 3,
+            }]
+          },
+          options: {
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
+            maintainAspectRatio: true,
+          }
+        });
+      }
     }
   }
 
@@ -1559,8 +1848,8 @@
     const ratingsCanvas = document.getElementById('chartRatings');
     if (!ratingsCanvas) return;
 
-    // Nur reine Feedback-Bewertungen berücksichtigen (keine Vorabstimmungs-Datensätze)
-    const validRatings = allRatings.filter(r => r.context !== 'vorabstimmung' && r.type !== 'vorabstimmung');
+    // Nur reine Feedback-Bewertungen berücksichtigen (keine Vorabstimmungs- oder Pageview-Datensätze)
+    const validRatings = allRatings.filter(r => r.context !== 'vorabstimmung' && r.type !== 'vorabstimmung' && r.type !== 'pageview');
 
     const count = validRatings.length;
     const avg = count ? validRatings.reduce((sum, r) => sum + (Number(r.stars) || 0), 0) / count : 0;
@@ -1655,6 +1944,186 @@
     }
   });
 
+  // --- Analytics & Live Presence ---
+  let allPageviews = [];
+  let allPresenceEvents = [];
+  let apiActiveVisitors = [];
+  let lastPresenceCleanup = 0;
+
+  async function fetchServerPresence(){
+    try {
+      const res = await fetch('/api/presence');
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.visitors)) {
+          apiActiveVisitors = data.visitors;
+          renderLivePresence();
+        }
+      }
+    } catch(e) {}
+  }
+  setInterval(fetchServerPresence, 15000);
+  fetchServerPresence();
+
+  function getActiveVisitors(){
+    const now = Date.now();
+    const TIMEOUT_MS = 90 * 1000;
+    const sessionMap = new Map();
+
+    allPresenceEvents.forEach(ev => {
+      const sid = ev.sid;
+      if (!sid || sessionMap.has(sid)) return;
+      const ts = tsToDate(ev.createdAt);
+      if (!ts) return;
+      const ageMs = now - ts.getTime();
+
+      if (ev.type === 'presence_leave') {
+        sessionMap.set(sid, { active: false });
+        return;
+      }
+
+      if (ageMs <= TIMEOUT_MS && ageMs >= -30000) {
+        sessionMap.set(sid, {
+          active: true,
+          sid,
+          page: ev.page || 'Startseite',
+          device: ev.device || 'desktop',
+          os: ev.os || 'Anderes',
+          browser: ev.browser || 'Browser',
+          lastSeenAgoSec: Math.max(1, Math.round(ageMs / 1000)),
+          lastSeenDate: ts
+        });
+      } else {
+        sessionMap.set(sid, { active: false });
+      }
+    });
+
+    apiActiveVisitors.forEach(v => {
+      const sid = v.sid;
+      if (!sessionMap.has(sid)) {
+        sessionMap.set(sid, {
+          active: true,
+          sid,
+          page: v.page || 'Startseite',
+          device: v.device || 'desktop',
+          os: v.os || 'Anderes',
+          browser: v.browser || 'Browser',
+          lastSeenAgoSec: v.lastSeenAgoSec || 1,
+          lastSeenDate: new Date()
+        });
+      }
+    });
+
+    const activeList = [];
+    sessionMap.forEach(info => {
+      if (info.active) activeList.push(info);
+    });
+    activeList.sort((a, b) => a.lastSeenAgoSec - b.lastSeenAgoSec);
+    return activeList;
+  }
+
+  function renderLivePresence(){
+    const activeVisitors = getActiveVisitors();
+    const count = activeVisitors.length;
+
+    // Header Pill
+    const elHeaderPill = document.getElementById('headerLiveVisitorsText');
+    if (elHeaderPill) {
+      elHeaderPill.textContent = count === 1 ? '1 online' : `${count} online`;
+    }
+
+    // Tab Badge
+    const elTabBadge = document.getElementById('tabLiveBadge');
+    if (elTabBadge) {
+      elTabBadge.textContent = `${count} live`;
+      elTabBadge.style.background = count > 0 ? 'rgba(127,224,168,0.3)' : 'rgba(127,224,168,0.15)';
+      elTabBadge.style.color = count > 0 ? '#7fe0a8' : '#9aa7c2';
+    }
+
+    // Insights Live Card Count
+    const elStatLiveCount = document.getElementById('statLiveCount');
+    if (elStatLiveCount) {
+      elStatLiveCount.innerHTML = `<span>${count}</span><span class="pulse-dot" style="width:8px; height:8px; display:${count > 0 ? 'inline-block' : 'none'};"></span>`;
+    }
+    const elStatLiveSub = document.getElementById('statLiveSub');
+    if (elStatLiveSub) {
+      elStatLiveSub.textContent = count === 1 ? '1 Person aktiv' : `${count} Personen aktiv`;
+    }
+
+    const elBadgeActive = document.getElementById('badgeActiveVisitors');
+    if (elBadgeActive) {
+      elBadgeActive.textContent = count;
+    }
+
+    const elSummary = document.getElementById('livePresenceSummary');
+    if (elSummary) {
+      const timeStr = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      elSummary.textContent = `Stand: ${timeStr} · aktualisiert sich live`;
+    }
+
+    // Visitors List in Banner
+    const emptyEl = document.getElementById('liveVisitorsEmpty');
+    const listEl = document.getElementById('liveVisitorsList');
+    if (emptyEl && listEl) {
+      if (count === 0) {
+        emptyEl.style.display = 'flex';
+        listEl.style.display = 'none';
+        listEl.innerHTML = '';
+      } else {
+        emptyEl.style.display = 'none';
+        listEl.style.display = 'flex';
+
+        listEl.innerHTML = activeVisitors.map(v => {
+          let iconSvg = '';
+          if (v.device === 'mobile') {
+            iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px; height:14px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>';
+          } else if (v.device === 'tablet') {
+            iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px; height:14px;"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>';
+          } else {
+            iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px; height:14px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>';
+          }
+
+          const secAgo = v.lastSeenAgoSec;
+          const timeText = secAgo < 60 ? `vor ${secAgo}s` : `vor ${Math.round(secAgo/60)} Min.`;
+
+          return `
+            <div style="display:inline-flex; align-items:center; gap:9px; padding:7px 14px; background:rgba(255,255,255,0.06); border:1px solid rgba(127,224,168,0.28); border-radius:100px; font-size:12.5px; color:#f0f4fc; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+              <span style="display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:rgba(127,224,168,0.18); color:#7fe0a8; flex-shrink:0;">
+                ${iconSvg}
+              </span>
+              <span style="font-weight:700; color:#fff;">${escapeHtml(v.page)}</span>
+              <span style="color:#9aa7c2; font-size:11.5px;">• ${escapeHtml(v.os)} (${escapeHtml(v.browser)})</span>
+              <span style="background:rgba(127,224,168,0.15); color:#7fe0a8; border:1px solid rgba(127,224,168,0.3); padding:2px 8px; border-radius:100px; font-size:11px; font-weight:700; white-space:nowrap;">${timeText}</span>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+  }
+
+  setInterval(renderLivePresence, 4000);
+
+  async function triggerPresenceCleanup(){
+    if (!auth.currentUser) return;
+    const now = Date.now();
+    if (now - lastPresenceCleanup < 3 * 60 * 1000) return;
+    lastPresenceCleanup = now;
+
+    const tenMinAgo = now - 10 * 60 * 1000;
+    const toDelete = allPresenceEvents.filter(ev => {
+      const d = tsToDate(ev.createdAt);
+      return d && d.getTime() < tenMinAgo;
+    }).slice(0, 30);
+
+    if (toDelete.length > 0) {
+      try {
+        const batch = writeBatch(db);
+        toDelete.forEach(item => batch.delete(doc(db, 'vorabstimmung', item.id)));
+        await batch.commit();
+      } catch(e) {}
+    }
+  }
+
   // --- Vorabstimmung (Poll) ---
   let allPolls = [];
   let activePollFilter = 'all'; // 'all', 'yes', 'no'
@@ -1662,13 +2131,15 @@
   // Führt Daten aus der Collection 'vorabstimmung' und eventuelle Fallback-Einträge aus 'ratings' zusammen
   function getEffectivePolls(){
     const map = new Map();
-    // 1. Einträge aus 'vorabstimmung'
-    allPolls.forEach(p => {
-      map.set(p.id, { ...p, _source: p._source || 'vorabstimmung' });
-    });
+    // 1. Einträge aus 'vorabstimmung' (ohne Seitenaufrufe/Pageviews & Live-Präsenz)
+    allPolls
+      .filter(p => !['pageview', 'presence', 'presence_leave'].includes(p.type) && (p.name || p.attending !== undefined || p.status))
+      .forEach(p => {
+        map.set(p.id, { ...p, _source: p._source || 'vorabstimmung' });
+      });
     // 2. Fallback-Einträge aus 'ratings' (falls 'vorabstimmung' noch nicht in den Firebase-Regeln freigeschaltet war)
     allRatings
-      .filter(r => r.context === 'vorabstimmung' || r.type === 'vorabstimmung' || (r.comment && r.comment.includes('[VORABSTIMMUNG]')) || (r.comment && r.comment.includes('[Vorabstimmung]')))
+      .filter(r => !['pageview', 'presence', 'presence_leave'].includes(r.type) && (r.context === 'vorabstimmung' || r.type === 'vorabstimmung' || (r.comment && r.comment.includes('[VORABSTIMMUNG]')) || (r.comment && r.comment.includes('[Vorabstimmung]'))))
       .forEach(r => {
         if (!map.has(r.id)) {
           let name = r.pollName || r.name;
@@ -1919,16 +2390,27 @@
 
   document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
+  function switchToTab(tabName){
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabName));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.dataset.tabContent === tabName));
+    if (tabName === 'insights') {
+      updateCharts();
+      renderLivePresence();
+    }
+    if (tabName === 'ratings') renderRatings();
+    if (tabName === 'poll') renderPolls();
+  }
+
   document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      btn.classList.add('active');
-      document.querySelector(`[data-tab-content="${btn.dataset.tab}"]`).classList.add('active');
-      if (btn.dataset.tab === 'insights') updateCharts();
-      if (btn.dataset.tab === 'ratings') renderRatings();
-      if (btn.dataset.tab === 'poll') renderPolls();
-    });
+    btn.addEventListener('click', () => switchToTab(btn.dataset.tab));
+  });
+
+  document.getElementById('headerLiveVisitors')?.addEventListener('click', () => {
+    switchToTab('insights');
+    const banner = document.getElementById('liveVisitorBanner');
+    if (banner) {
+      banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   });
 
   function startListening(){
@@ -1954,8 +2436,14 @@
     }, onErr('ratings'));
 
     onSnapshot(query(collection(db, 'vorabstimmung'), orderBy('createdAt', 'desc')), (snap) => {
-      allPolls = snap.docs.map(d => ({ id: d.id, ...d.data(), _source: 'vorabstimmung' }));
+      const raw = snap.docs.map(d => ({ id: d.id, ...d.data(), _source: 'vorabstimmung' }));
+      allPolls = raw.filter(d => !['pageview', 'presence', 'presence_leave'].includes(d.type) && (d.name || d.attending !== undefined || d.status));
+      allPageviews = raw.filter(d => d.type === 'pageview');
+      allPresenceEvents = raw.filter(d => d.type === 'presence' || d.type === 'presence_leave');
       renderPolls();
+      scheduleCharts();
+      renderLivePresence();
+      triggerPresenceCleanup();
     }, onErr('vorabstimmung'));
 
     onSnapshot(doc(db, 'settings', 'pricing'), (snap) => {
