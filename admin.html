@@ -505,7 +505,7 @@
   }
   .order-card-actions{display:flex; gap:6px; align-items:center;}
 
-  /* Insights Charts */
+  /* Insights Charts & Widget Dashboard */
   .insights-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:18px;}
   .insight-card{
     background:linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
@@ -520,6 +520,164 @@
   }
   .insight-title svg{width:16px; height:16px; color:var(--accent); stroke-width:2;}
   .insight-card canvas{max-height:240px;}
+
+  /* One-Glance Widget Dashboard for Insights */
+  .insights-top-bar{
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;
+    flex-wrap:wrap; gap:8px;
+  }
+  .insights-top-title{
+    font-size:13px; font-weight:600; color:var(--text-dim); display:flex; align-items:center; gap:8px;
+  }
+  .insights-top-title .hint-badge{
+    font-size:11px; background:rgba(143,180,255,0.12); color:#8fb4ff;
+    border:1px solid rgba(143,180,255,0.25); padding:2px 8px; border-radius:100px; font-weight:600;
+  }
+  .insights-widget-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-bottom:16px;
+  }
+  @media (max-width: 1024px){
+    .insights-widget-grid{grid-template-columns:repeat(2, 1fr);}
+  }
+  @media (max-width: 640px){
+    .insights-widget-grid{grid-template-columns:1fr;}
+  }
+
+  .widget-card{
+    position:relative;
+    background:linear-gradient(145deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.02) 100%);
+    border:1px solid var(--glass-border); border-radius:var(--radius);
+    padding:13px 15px; backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 24px rgba(0,0,0,0.26);
+    cursor:pointer; transition:all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    display:flex; flex-direction:column; justify-content:space-between;
+    height:195px; user-select:none; overflow:hidden;
+  }
+  .widget-card:hover{
+    transform:translateY(-2px);
+    border-color:rgba(143,180,255,0.45);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.15), 0 14px 32px rgba(143,180,255,0.12);
+    background:linear-gradient(145deg, rgba(255,255,255,0.085) 0%, rgba(255,255,255,0.035) 100%);
+  }
+  .widget-card.widget-card-live{
+    background:linear-gradient(145deg, rgba(16,28,48,0.85) 0%, rgba(13,44,38,0.45) 100%);
+    border-color:rgba(127,224,168,0.3);
+  }
+  .widget-card.widget-card-live:hover{
+    border-color:rgba(127,224,168,0.55);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.15), 0 14px 32px rgba(127,224,168,0.12);
+  }
+  .widget-card-header{
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;
+  }
+  .widget-card-title{
+    font-size:12.5px; font-weight:700; color:#fff; display:flex; align-items:center; gap:7px; letter-spacing:0.2px;
+  }
+  .widget-card-title svg{width:14px; height:14px; color:var(--accent); stroke-width:2.2;}
+  .widget-expand-hint{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:22px; border-radius:6px;
+    background:rgba(255,255,255,0.05); color:var(--text-dim);
+    opacity:0.6; transition:all 0.2s ease;
+  }
+  .widget-card:hover .widget-expand-hint{
+    opacity:1; color:#fff; background:rgba(143,180,255,0.25);
+  }
+  .widget-card canvas{
+    max-height:100px !important; width:100% !important;
+  }
+  .widget-card-footer{
+    display:flex; align-items:center; justify-content:space-between;
+    font-size:11px; color:var(--text-dim); padding-top:6px;
+    border-top:1px solid rgba(255,255,255,0.05);
+  }
+  .widget-card-footer .zoom-text{
+    color:#8fb4ff; font-weight:600; opacity:0; transform:translateX(-4px); transition:all 0.2s ease;
+  }
+  .widget-card:hover .widget-card-footer .zoom-text{
+    opacity:1; transform:translateX(0);
+  }
+
+  /* Widget Modal Overlay (Vergrößerte Detailansicht) */
+  .widget-modal-backdrop{
+    position:fixed; inset:0; background:rgba(6,10,18,0.85);
+    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+    z-index:10000; display:flex; align-items:center; justify-content:center;
+    padding:20px; opacity:0; pointer-events:none;
+    transition:opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .widget-modal-backdrop.open{opacity:1; pointer-events:auto;}
+  .widget-modal-dialog{
+    background:linear-gradient(150deg, #131c30 0%, #0d1526 100%);
+    border:1px solid rgba(143,180,255,0.3); border-radius:16px;
+    box-shadow:0 24px 64px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.12);
+    width:100%; max-width:860px; max-height:90vh;
+    display:flex; flex-direction:column; overflow:hidden;
+    transform:scale(0.96) translateY(8px);
+    transition:transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .widget-modal-backdrop.open .widget-modal-dialog{
+    transform:scale(1) translateY(0);
+  }
+  .widget-modal-header{
+    padding:16px 22px; border-bottom:1px solid rgba(255,255,255,0.08);
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+  .widget-modal-header-left{display:flex; align-items:center; gap:12px;}
+  .widget-modal-icon{
+    width:36px; height:36px; border-radius:10px;
+    background:rgba(143,180,255,0.15); color:#8fb4ff;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .widget-modal-icon svg{width:20px; height:20px; stroke-width:2.2;}
+  .widget-modal-title{font-size:16px; font-weight:700; color:#fff; letter-spacing:0.2px;}
+  .widget-modal-subtitle{font-size:12px; color:var(--text-dim); margin-top:1px;}
+  .widget-modal-close-btn{
+    display:inline-flex; align-items:center; gap:6px; padding:6px 12px;
+    border-radius:8px; background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.1); color:var(--text-dim);
+    font-size:12px; cursor:pointer; transition:all 0.18s ease;
+  }
+  .widget-modal-close-btn:hover{
+    background:rgba(255,255,255,0.12); color:#fff; border-color:rgba(255,255,255,0.2);
+  }
+  .widget-modal-body{
+    padding:22px; overflow-y:auto; display:flex; flex-direction:column; gap:20px;
+  }
+  .widget-modal-kpis{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:12px;
+  }
+  .widget-modal-kpi-card{
+    background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08);
+    border-radius:12px; padding:12px 14px;
+  }
+  .widget-modal-kpi-lbl{
+    font-size:11px; color:var(--text-dim); text-transform:uppercase;
+    letter-spacing:0.4px; font-weight:600;
+  }
+  .widget-modal-kpi-val{font-size:22px; font-weight:800; color:#fff; margin-top:4px;}
+  .widget-modal-kpi-sub{font-size:11px; color:#9aa7c2; margin-top:2px;}
+  .widget-modal-chart-box{
+    background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07);
+    border-radius:12px; padding:18px; min-height:300px; position:relative;
+  }
+  .widget-modal-chart-box canvas{
+    width:100% !important; max-height:320px !important;
+  }
+  .widget-modal-table-box{
+    background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07);
+    border-radius:12px; overflow:hidden;
+  }
+  .widget-modal-table{width:100%; border-collapse:collapse; font-size:12.5px;}
+  .widget-modal-table th{
+    background:rgba(255,255,255,0.04); padding:10px 14px;
+    text-align:left; font-weight:600; color:#9aa7c2;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .widget-modal-table td{
+    padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.04); color:#fff;
+  }
+  .widget-modal-table tr:last-child td{border-bottom:none;}
 
   /* Settings Sections */
   .settings-section{margin-bottom:34px;}
@@ -742,7 +900,7 @@
     </div>
   </div>
 
-  <div class="stats">
+  <div class="stats" id="globalStatsBar">
     <div class="stat">
       <div class="stat-header">
         <span class="stat-lbl">Bestellungen</span>
@@ -916,139 +1074,237 @@
     <div class="mobile-cards-wrap" id="mobileCardsWrap"></div>
   </div>
 
-  <!-- Tab: Insights -->
+  <!-- Tab: Insights (Kompaktes Widget-Dashboard auf einen Blick) -->
   <div class="tab-content" data-tab-content="insights">
-    <!-- Live-Besucher Echtzeit-Panel -->
-    <div class="live-visitor-banner" id="liveVisitorBanner" style="margin-bottom:24px; padding:20px 24px; background:linear-gradient(135deg, rgba(16,28,48,0.92) 0%, rgba(13,44,38,0.65) 100%); border:1px solid rgba(127,224,168,0.35); border-radius:var(--radius-md); box-shadow:0 8px 32px rgba(0,0,0,0.28); backdrop-filter:blur(16px);">
-      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
-        <div style="display:flex; align-items:center; gap:12px;">
-          <span style="position:relative; display:inline-flex; width:12px; height:12px;">
-            <span style="position:absolute; inset:0; border-radius:50%; background:#7fe0a8; opacity:0.75; animation:pulseGreen 1.8s infinite;"></span>
-            <span style="position:relative; display:inline-block; border-radius:50%; width:12px; height:12px; background:#7fe0a8; box-shadow:0 0 10px #7fe0a8;"></span>
+    <!-- Top Bar mit Titel & Hinweis -->
+    <div class="insights-top-bar">
+      <div class="insights-top-title">
+        <span>Insights Dashboard</span>
+        <span class="hint-badge">💡 Klicke auf ein Widget für Details &amp; Vollbild</span>
+      </div>
+      <div style="font-size:12px; color:#9aa7c2; display:flex; align-items:center; gap:8px;">
+        <span class="pulse-dot" style="background:#7fe0a8; width:7px; height:7px;"></span>
+        <span id="insightsLiveTimestamp">Live aktualisiert</span>
+      </div>
+    </div>
+
+    <!-- 6 Interaktive Widget-Kacheln (3x2 Grid auf Laptop, kein Scrollen nötig) -->
+    <div class="insights-widget-grid">
+      <!-- 1. Widget: Live auf der Website -->
+      <div class="widget-card widget-card-live" data-widget="live" title="Klicken für Live-Besucher-Details">
+        <div class="widget-card-header">
+          <div class="widget-card-title">
+            <span class="pulse-dot" style="background:#7fe0a8; box-shadow:0 0 8px #7fe0a8;"></span>
+            <span>Live auf der Seite</span>
+          </div>
+          <span class="widget-expand-hint" title="Vergrößern">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
           </span>
-          <span style="font-size:16px; font-weight:700; color:#fff; letter-spacing:0.3px;">Besucher gerade live auf der Website</span>
-          <span class="chip-count" id="badgeActiveVisitors" style="background:#7fe0a8; color:#0b1915; font-weight:800; font-size:13px; padding:3px 12px; border-radius:100px;">0</span>
         </div>
-        <div style="font-size:12px; color:#9aa7c2;" id="livePresenceSummary">Sekundengenaue Erfassung über alle Seiten</div>
+        <div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="font-size:32px; font-weight:800; color:#7fe0a8; line-height:1;" id="widgetLiveCount">0</div>
+            <div>
+              <div style="font-size:13px; font-weight:700; color:#fff;" id="widgetLiveSub">0 online</div>
+              <div style="font-size:11px; color:#9aa7c2;">Echtzeit-Heartbeat</div>
+            </div>
+          </div>
+          <div id="widgetLiveMiniChips" style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap; max-height:48px; overflow:hidden;">
+            <span style="font-size:11px; color:#9aa7c2; background:rgba(255,255,255,0.04); padding:3px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">Warte auf Besucher...</span>
+          </div>
+        </div>
+        <div class="widget-card-footer">
+          <span>Sekundengenaue Erfassung</span>
+          <span class="zoom-text">Vergrößern ➔</span>
+        </div>
       </div>
 
-      <div id="liveVisitorsContainer">
-        <div id="liveVisitorsEmpty" style="padding:14px 16px; background:rgba(255,255,255,0.03); border:1px dashed rgba(255,255,255,0.12); border-radius:var(--radius-sm); font-size:13px; color:#9aa7c2; display:flex; align-items:center; gap:12px;">
-          <svg style="width:18px; height:18px; color:#7fe0a8; flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          <span>Aktuell befindet sich niemand auf der Website. Sobald jemand eine Seite (Startseite, Anmeldung, Vorabstimmung) öffnet, erscheint er hier live im Sekundentakt.</span>
+      <!-- 2. Widget: Website-Aufrufe im Zeitverlauf -->
+      <div class="widget-card" data-widget="views" title="Klicken für Tagesverlauf & Details">
+        <div class="widget-card-header">
+          <div class="widget-card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            <span>Website-Aufrufe</span>
+          </div>
+          <span class="widget-expand-hint" title="Vergrößern">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </span>
         </div>
-        <div id="liveVisitorsList" style="display:none; flex-wrap:wrap; gap:10px;"></div>
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
+            <div>
+              <span style="font-size:22px; font-weight:800; color:#fff;" id="widgetViewsToday">0</span>
+              <span style="font-size:11px; color:#9aa7c2;"> heute</span>
+            </div>
+            <div style="font-size:11px; color:#8fb4ff; font-weight:600;">
+              <span id="widgetViewsTotal">0</span> gesamt
+            </div>
+          </div>
+          <div style="height:92px; width:100%; position:relative;">
+            <canvas id="chartViewsDaily"></canvas>
+          </div>
+        </div>
+        <div class="widget-card-footer">
+          <span>Tageskurve der Aufrufe</span>
+          <span class="zoom-text">Vergrößern ➔</span>
+        </div>
       </div>
-    </div>
 
-    <!-- Stat-Kacheln für Aufrufe & Live-Besucher -->
-    <div class="stats" style="margin-bottom:24px;">
-      <div class="stat" id="statCardLive" style="border-color:rgba(127,224,168,0.35); background:linear-gradient(135deg, rgba(127,224,168,0.08) 0%, rgba(19,28,48,0.6) 100%);">
-        <div class="stat-header">
-          <span class="stat-lbl" style="color:#7fe0a8;">Gerade online</span>
-          <div class="stat-icon-wrap" style="background:rgba(127,224,168,0.18); border-color:rgba(127,224,168,0.4); color:#7fe0a8;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          </div>
-        </div>
-        <div class="num" id="statLiveCount" style="color:#7fe0a8; display:flex; align-items:center; gap:8px;">0</div>
-        <div class="stat-sub" id="statLiveSub">0 Personen aktiv</div>
-      </div>
-      <div class="stat">
-        <div class="stat-header">
-          <span class="stat-lbl">Aufrufe heute</span>
-          <div class="stat-icon-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          </div>
-        </div>
-        <div class="num accent" id="statViewsToday">0</div>
-        <div class="stat-sub" id="statViewsTodaySub">Heute erfasste Besuche</div>
-      </div>
-      <div class="stat">
-        <div class="stat-header">
-          <span class="stat-lbl">Aufrufe gesamt</span>
-          <div class="stat-icon-wrap success">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          </div>
-        </div>
-        <div class="num success" id="statViewsTotal">0</div>
-        <div class="stat-sub" id="statViewsTotalSub">Seit Aufzeichnungsstart</div>
-      </div>
-      <div class="stat">
-        <div class="stat-header">
-          <span class="stat-lbl">Mobil-Anteil</span>
-          <div class="stat-icon-wrap">
+      <!-- 3. Widget: Gerätetypen (Smartphone vs PC vs Tablet) -->
+      <div class="widget-card" data-widget="device" title="Klicken für Geräteaufschlüsselung">
+        <div class="widget-card-header">
+          <div class="widget-card-title">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            <span>Gerätetypen</span>
+          </div>
+          <span class="widget-expand-hint" title="Vergrößern">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </span>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; height:100px;">
+          <div style="width:90px; height:90px; flex-shrink:0; position:relative;">
+            <canvas id="chartDevice"></canvas>
+          </div>
+          <div style="flex:1; min-width:0;">
+            <div style="font-size:20px; font-weight:800; color:#7fe0a8;" id="widgetMobilePct">0%</div>
+            <div style="font-size:12px; font-weight:600; color:#fff;">Smartphones</div>
+            <div style="font-size:11px; color:#9aa7c2; margin-top:2px;" id="widgetDeviceBreakdown">0 Mobil · 0 PC</div>
           </div>
         </div>
-        <div class="num" id="statMobilePercent" style="color:#7fe0a8;">0%</div>
-        <div class="stat-sub" id="statMobileSub">0 Smartphone-Aufrufe</div>
+        <div class="widget-card-footer">
+          <span>Mobil vs. Desktop vs. Tablet</span>
+          <span class="zoom-text">Vergrößern ➔</span>
+        </div>
       </div>
-      <div class="stat">
-        <div class="stat-header">
-          <span class="stat-lbl">Häufigstes System</span>
-          <div class="stat-icon-wrap warn">
+
+      <!-- 4. Widget: Betriebssysteme & Plattformen -->
+      <div class="widget-card" data-widget="os" title="Klicken für Betriebssystem-Details">
+        <div class="widget-card-header">
+          <div class="widget-card-title">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            <span>Betriebssysteme</span>
+          </div>
+          <span class="widget-expand-hint" title="Vergrößern">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </span>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; height:100px;">
+          <div style="width:90px; height:90px; flex-shrink:0; position:relative;">
+            <canvas id="chartOS"></canvas>
+          </div>
+          <div style="flex:1; min-width:0;">
+            <div style="font-size:18px; font-weight:800; color:#c7d7f7; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" id="widgetTopOS">–</div>
+            <div style="font-size:12px; font-weight:600; color:#fff;">Häufigste Plattform</div>
+            <div style="font-size:11px; color:#9aa7c2; margin-top:2px;" id="widgetOSCount">0 Systeme erkannt</div>
           </div>
         </div>
-        <div class="num" id="statTopPlatform" style="font-size:22px; font-weight:700; color:#c7d7f7; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">–</div>
-        <div class="stat-sub" id="statTopPlatformSub">Betriebssystem</div>
+        <div class="widget-card-footer">
+          <span>iOS, Android, Windows &amp; Co.</span>
+          <span class="zoom-text">Vergrößern ➔</span>
+        </div>
+      </div>
+
+      <!-- 5. Widget: Ticket-Bestellungen -->
+      <div class="widget-card" data-widget="orders" title="Klicken für Buchungsanalyse">
+        <div class="widget-card-header">
+          <div class="widget-card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <span>Ticket-Buchungen</span>
+          </div>
+          <span class="widget-expand-hint" title="Vergrößern">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </span>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
+            <div>
+              <span style="font-size:22px; font-weight:800; color:#ffd27f;" id="widgetOrdersCount">0</span>
+              <span style="font-size:11px; color:#9aa7c2;"> Buchungen</span>
+            </div>
+            <div style="font-size:11px; color:#ffd27f; font-weight:600;">
+              <span id="widgetTicketsCount">0</span> Tickets
+            </div>
+          </div>
+          <div style="height:92px; width:100%; position:relative;">
+            <canvas id="chartDaily"></canvas>
+          </div>
+        </div>
+        <div class="widget-card-footer">
+          <span>Verkaufskurve pro Tag</span>
+          <span class="zoom-text">Vergrößern ➔</span>
+        </div>
+      </div>
+
+      <!-- 6. Widget: Gäste-Demografie & Finanzen -->
+      <div class="widget-card" data-widget="demographics" title="Klicken für Demografie & Kasse">
+        <div class="widget-card-header">
+          <div class="widget-card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>Gäste &amp; Finanzen</span>
+          </div>
+          <span class="widget-expand-hint" title="Vergrößern">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </span>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; height:100px;">
+          <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
+            <div style="width:70px; height:70px; position:relative;">
+              <canvas id="chartCategory"></canvas>
+            </div>
+            <div style="font-size:11px; color:#8fb4ff; font-weight:700; margin-top:2px;" id="widgetCatRatio">0 U18 / 0 Ü18</div>
+          </div>
+          <div style="width:1px; height:60px; background:rgba(255,255,255,0.08);"></div>
+          <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
+            <div style="width:70px; height:70px; position:relative;">
+              <canvas id="chartPaid"></canvas>
+            </div>
+            <div style="font-size:11px; color:#7fe0a8; font-weight:700; margin-top:2px;" id="widgetPaidRatio">0 bezahlt</div>
+          </div>
+        </div>
+        <div class="widget-card-footer">
+          <span>U18 vs. Ü18 &amp; Bezahlquote</span>
+          <span class="zoom-text">Vergrößern ➔</span>
+        </div>
       </div>
     </div>
+  </div>
 
-    <!-- Insights Charts Grid -->
-    <div class="insights-grid">
-      <!-- 1. Website-Aufrufe im Zeitverlauf (Tage) -->
-      <div class="insight-card wide">
-        <div class="insight-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-          Website-Aufrufe im Zeitverlauf (Tage)
+  <!-- Reusable Magnified Widget Modal -->
+  <div class="widget-modal-backdrop" id="widgetModal">
+    <div class="widget-modal-dialog">
+      <div class="widget-modal-header">
+        <div class="widget-modal-header-left">
+          <div class="widget-modal-icon" id="modalWidgetIcon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+          </div>
+          <div>
+            <div class="widget-modal-title" id="modalWidgetTitle">Widget Details</div>
+            <div class="widget-modal-subtitle" id="modalWidgetSubtitle">Ausführliche Auswertung</div>
+          </div>
         </div>
-        <canvas id="chartViewsDaily"></canvas>
+        <button type="button" class="widget-modal-close-btn" id="modalWidgetCloseBtn" title="Schließen (Esc)">
+          <span>Schließen</span>
+          <kbd style="background:rgba(255,255,255,0.12); padding:1px 5px; border-radius:4px; font-size:10px;">Esc</kbd>
+          <svg style="width:14px; height:14px; margin-left:2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
+      <div class="widget-modal-body">
+        <!-- Top KPIs -->
+        <div class="widget-modal-kpis" id="modalKpiRow"></div>
 
-      <!-- 2. Gerätetyp (Smartphone vs PC vs Tablet) -->
-      <div class="insight-card">
-        <div class="insight-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-          Gerätetyp (Smartphone / PC / Tablet)
+        <!-- Chart Box -->
+        <div class="widget-modal-chart-box" id="modalChartBox" style="display:none;">
+          <canvas id="modalChartCanvas"></canvas>
         </div>
-        <canvas id="chartDevice"></canvas>
-      </div>
 
-      <!-- 3. Betriebssysteme (iOS, Android, Windows...) -->
-      <div class="insight-card">
-        <div class="insight-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          Betriebssysteme (iOS, Android, Windows...)
-        </div>
-        <canvas id="chartOS"></canvas>
-      </div>
+        <!-- Live Box (for live presence) -->
+        <div id="modalLiveBox" style="display:none;"></div>
 
-      <!-- 4. Ticket-Anmeldungen pro Tag -->
-      <div class="insight-card wide">
-        <div class="insight-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          Ticket-Bestellungen pro Tag
-        </div>
-        <canvas id="chartDaily"></canvas>
-      </div>
+        <!-- Demographics Box (for dual charts in modal) -->
+        <div id="modalDemographicsBox" style="display:none;"></div>
 
-      <!-- 5. U18 / Ü18 Verteilung -->
-      <div class="insight-card">
-        <div class="insight-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          U18 / Ü18-Verteilung (Gäste)
-        </div>
-        <canvas id="chartCategory"></canvas>
-      </div>
-
-      <!-- 6. Bezahlt vs. Offen -->
-      <div class="insight-card">
-        <div class="insight-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-          Bezahlt vs. offen
-        </div>
-        <canvas id="chartPaid"></canvas>
+        <!-- Detail Table Box -->
+        <div class="widget-modal-table-box" id="modalDetailBox" style="display:none;"></div>
       </div>
     </div>
   </div>
@@ -1628,6 +1884,7 @@
     const topOS = sortedOSKeys[0];
     const topOSPct = topOS && totalViews > 0 ? Math.round((osCounts[topOS] / totalViews) * 100) : 0;
 
+    // Stat Kacheln & Widget-Karten aktualisieren
     const elViewsToday = document.getElementById('statViewsToday');
     if (elViewsToday) elViewsToday.textContent = viewsToday;
     const elViewsTodaySub = document.getElementById('statViewsTodaySub');
@@ -1641,7 +1898,25 @@
     const elTopPlatform = document.getElementById('statTopPlatform');
     if (elTopPlatform) elTopPlatform.textContent = topOS ? `${topOS} (${topOSPct}%)` : '–';
 
-    // --- 1) Website-Aufrufe im Zeitverlauf (Line-Chart: X=Tage, Y=Aufrufe) ---
+    // Widget Elemente
+    const elWViewsToday = document.getElementById('widgetViewsToday');
+    if (elWViewsToday) elWViewsToday.textContent = viewsToday;
+    const elWViewsTotal = document.getElementById('widgetViewsTotal');
+    if (elWViewsTotal) elWViewsTotal.textContent = totalViews;
+    const elWMobilePct = document.getElementById('widgetMobilePct');
+    if (elWMobilePct) elWMobilePct.textContent = `${mobilePct}%`;
+    const elWDevBreakdown = document.getElementById('widgetDeviceBreakdown');
+    if (elWDevBreakdown) elWDevBreakdown.textContent = `${mobileCount} Mobil · ${desktopCount} PC`;
+    const elWTopOS = document.getElementById('widgetTopOS');
+    if (elWTopOS) elWTopOS.textContent = topOS ? `${topOS} (${topOSPct}%)` : '–';
+    const elWOSCount = document.getElementById('widgetOSCount');
+    if (elWOSCount) elWOSCount.textContent = `${sortedOSKeys.length} System${sortedOSKeys.length !== 1 ? 'e' : ''} erkannt`;
+    const elWOrders = document.getElementById('widgetOrdersCount');
+    if (elWOrders) elWOrders.textContent = allRegs.length;
+    const elWTickets = document.getElementById('widgetTicketsCount');
+    if (elWTickets) elWTickets.textContent = allTickets.length;
+
+    // --- 1) Website-Aufrufe im Zeitverlauf (Line-Chart) ---
     const viewsDailyCanvas = document.getElementById('chartViewsDaily');
     if (viewsDailyCanvas) {
       const viewsByDay = {};
@@ -1665,8 +1940,8 @@
         ctx.clearRect(0, 0, viewsDailyCanvas.width, viewsDailyCanvas.height);
       } else {
         const ctx = viewsDailyCanvas.getContext('2d');
-        const grad = ctx.createLinearGradient(0, 0, 0, 220);
-        grad.addColorStop(0, 'rgba(143, 180, 255, 0.38)');
+        const grad = ctx.createLinearGradient(0, 0, 0, 110);
+        grad.addColorStop(0, 'rgba(143, 180, 255, 0.42)');
         grad.addColorStop(1, 'rgba(143, 180, 255, 0.02)');
 
         chartViewsDaily = new Chart(viewsDailyCanvas, {
@@ -1679,16 +1954,18 @@
               borderColor: '#8fb4ff',
               backgroundColor: grad,
               fill: true,
-              tension: 0.32,
-              pointRadius: 4,
-              pointHoverRadius: 6,
+              tension: 0.35,
+              pointRadius: 3,
+              pointHoverRadius: 5,
               pointBackgroundColor: '#8fb4ff',
               pointBorderColor: '#0e1626',
-              pointBorderWidth: 2,
-              borderWidth: 2.5
+              pointBorderWidth: 1.5,
+              borderWidth: 2
             }]
           },
           options: {
+            responsive: true,
+            maintainAspectRatio: false,
             plugins: {
               legend: { display: false },
               tooltip: {
@@ -1700,15 +1977,14 @@
             scales: {
               y: {
                 beginAtZero: true,
-                ticks: { precision: 0, color: '#9aa7c2' },
+                ticks: { precision: 0, color: '#9aa7c2', font: { size: 10 } },
                 grid: { color: 'rgba(255,255,255,0.06)' }
               },
               x: {
-                ticks: { color: '#9aa7c2' },
+                ticks: { color: '#9aa7c2', font: { size: 10 } },
                 grid: { display: false }
               }
-            },
-            maintainAspectRatio: true
+            }
           }
         });
       }
@@ -1725,17 +2001,23 @@
           labels: ['Smartphone', 'Desktop / PC', 'Tablet'],
           datasets: [{
             data: totalDev > 0 ? [mobileCount, desktopCount, tabletCount] : [0, 0, 0],
-            backgroundColor: ['#8fb4ff', '#7fe0a8', '#ffd27f'],
+            backgroundColor: ['#7fe0a8', '#8fb4ff', '#ffd27f'],
             borderColor: '#131c30',
             borderWidth: 2
           }]
         },
         options: {
+          responsive: true,
+          maintainAspectRatio: false,
           plugins: {
-            legend: { position: 'bottom' }
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => ` ${ctx.label}: ${ctx.raw} (${totalDev > 0 ? Math.round((ctx.raw/totalDev)*100) : 0}%)`
+              }
+            }
           },
-          maintainAspectRatio: true,
-          cutout: '62%'
+          cutout: '66%'
         }
       });
     }
@@ -1757,21 +2039,29 @@
           }]
         },
         options: {
+          responsive: true,
+          maintainAspectRatio: false,
           plugins: {
-            legend: { position: 'bottom' }
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => ` ${ctx.label}: ${ctx.raw}`
+              }
+            }
           },
-          maintainAspectRatio: true,
-          cutout: '62%'
+          cutout: '66%'
         }
       });
     }
 
     // --- 4) U18 / Ü18-Verteilung ---
+    const u18Count = allTickets.filter(t => t.category === 'u18').length;
+    const ue18Count = allTickets.filter(t => t.category === 'ue18').length;
+    const elCatRatio = document.getElementById('widgetCatRatio');
+    if (elCatRatio) elCatRatio.textContent = `${u18Count} U18 / ${ue18Count} Ü18`;
+
     const catCanvas = document.getElementById('chartCategory');
     if (catCanvas) {
-      const u18Count = allTickets.filter(t => t.category === 'u18').length;
-      const ue18Count = allTickets.filter(t => t.category === 'ue18').length;
-
       if (chartCategory) chartCategory.destroy();
       chartCategory = new Chart(catCanvas, {
         type: 'doughnut',
@@ -1779,16 +2069,23 @@
           labels: ['Unter 18', '18 oder älter'],
           datasets: [{ data: [u18Count, ue18Count], backgroundColor: ['#8fb4ff', '#7fe0a8'], borderColor: '#131c30', borderWidth: 2 }]
         },
-        options: { plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: true, cutout: '62%' }
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          cutout: '64%'
+        }
       });
     }
 
-    // --- 5) Bezahlt vs. offen (auf Bestellungs-Ebene) ---
+    // --- 5) Bezahlt vs. offen ---
+    const paidCount = allRegs.filter(r => r.paid).length;
+    const openCount = allRegs.length - paidCount;
+    const elPaidRatio = document.getElementById('widgetPaidRatio');
+    if (elPaidRatio) elPaidRatio.textContent = `${paidCount} bezahlt`;
+
     const paidCanvas = document.getElementById('chartPaid');
     if (paidCanvas) {
-      const paidCount = allRegs.filter(r => r.paid).length;
-      const openCount = allRegs.length - paidCount;
-
       if (chartPaid) chartPaid.destroy();
       chartPaid = new Chart(paidCanvas, {
         type: 'doughnut',
@@ -1796,11 +2093,16 @@
           labels: ['Bezahlt', 'Offen'],
           datasets: [{ data: [paidCount, openCount], backgroundColor: ['#7fe0a8', '#ffd27f'], borderColor: '#131c30', borderWidth: 2 }]
         },
-        options: { plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: true, cutout: '62%' }
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          cutout: '64%'
+        }
       });
     }
 
-    // --- 6) Anmeldungen pro Tag (Anzahl neuer Bestellungen je Kalendertag) ---
+    // --- 6) Anmeldungen pro Tag ---
     const dailyCanvas = document.getElementById('chartDaily');
     if (dailyCanvas) {
       const dayCounts = {};
@@ -1821,6 +2123,11 @@
         const ctx = dailyCanvas.getContext('2d');
         ctx.clearRect(0, 0, dailyCanvas.width, dailyCanvas.height);
       } else {
+        const ctx = dailyCanvas.getContext('2d');
+        const grad = ctx.createLinearGradient(0, 0, 0, 110);
+        grad.addColorStop(0, 'rgba(255, 210, 127, 0.42)');
+        grad.addColorStop(1, 'rgba(255, 210, 127, 0.02)');
+
         chartDaily = new Chart(dailyCanvas, {
           type: 'line',
           data: {
@@ -1828,17 +2135,789 @@
             datasets: [{
               label: 'Neue Anmeldungen',
               data: sortedDays.map(k => dayCounts[k]),
-              borderColor: '#8fb4ff', backgroundColor: 'rgba(143,180,255,0.15)',
-              fill: true, tension: 0.3, pointRadius: 3,
+              borderColor: '#ffd27f',
+              backgroundColor: grad,
+              fill: true,
+              tension: 0.3,
+              pointRadius: 3,
+              pointHoverRadius: 5,
+              pointBackgroundColor: '#ffd27f',
+              pointBorderColor: '#0e1626',
+              pointBorderWidth: 1.5,
+              borderWidth: 2
             }]
           },
           options: {
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
-            maintainAspectRatio: true,
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: { callbacks: { label: (ctx) => ` ${ctx.parsed.y} Buchung${ctx.parsed.y !== 1 ? 'en' : ''}` } }
+            },
+            scales: {
+              y: { beginAtZero: true, ticks: { precision: 0, color: '#9aa7c2', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.06)' } },
+              x: { ticks: { color: '#9aa7c2', font: { size: 10 } }, grid: { display: false } }
+            }
           }
         });
       }
+    }
+
+    // Falls gerade ein vergrößertes Modal aktiv ist (außer 'live'), direkt aktualisieren
+    if (currentModalWidget && currentModalWidget !== 'live') {
+      renderModalContent(currentModalWidget);
+    }
+  }
+
+  // ==========================================
+  // WIDGET DETAIL MODAL (Vergrößerte Ansicht)
+  // ==========================================
+  let currentModalWidget = null;
+  let modalChart = null;
+  let modalChartDemographicsA = null;
+  let modalChartDemographicsB = null;
+
+  function openWidgetModal(widgetType){
+    currentModalWidget = widgetType;
+    const modal = document.getElementById('widgetModal');
+    if (!modal) return;
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    renderModalContent(widgetType);
+  }
+
+  function closeWidgetModal(){
+    currentModalWidget = null;
+    const modal = document.getElementById('widgetModal');
+    if (!modal) return;
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+    if (modalChart) { modalChart.destroy(); modalChart = null; }
+    if (modalChartDemographicsA) { modalChartDemographicsA.destroy(); modalChartDemographicsA = null; }
+    if (modalChartDemographicsB) { modalChartDemographicsB.destroy(); modalChartDemographicsB = null; }
+  }
+
+  function renderModalContent(widgetType){
+    const modal = document.getElementById('widgetModal');
+    if (!modal) return;
+    const iconEl = document.getElementById('modalWidgetIcon');
+    const titleEl = document.getElementById('modalWidgetTitle');
+    const subEl = document.getElementById('modalWidgetSubtitle');
+    const kpiEl = document.getElementById('modalKpiRow');
+    const chartBox = document.getElementById('modalChartBox');
+    const liveBox = document.getElementById('modalLiveBox');
+    const demoBox = document.getElementById('modalDemographicsBox');
+    const detailBox = document.getElementById('modalDetailBox');
+    const canvas = document.getElementById('modalChartCanvas');
+
+    if (modalChart) { modalChart.destroy(); modalChart = null; }
+    if (modalChartDemographicsA) { modalChartDemographicsA.destroy(); modalChartDemographicsA = null; }
+    if (modalChartDemographicsB) { modalChartDemographicsB.destroy(); modalChartDemographicsB = null; }
+
+    chartBox.style.display = 'none';
+    liveBox.style.display = 'none';
+    demoBox.style.display = 'none';
+    detailBox.style.display = 'none';
+
+    // 1. LIVE PRESENCE MODAL
+    if (widgetType === 'live') {
+      iconEl.innerHTML = '<span class="pulse-dot" style="background:#7fe0a8; box-shadow:0 0 10px #7fe0a8; width:12px; height:12px;"></span>';
+      iconEl.style.background = 'rgba(127,224,168,0.18)';
+      iconEl.style.color = '#7fe0a8';
+      titleEl.textContent = 'Besucher gerade live auf der Website';
+      subEl.textContent = 'Echtzeit-Sitzungen aller Besucher der letzten 90 Sekunden';
+
+      liveBox.style.display = 'block';
+      const active = getActiveVisitors();
+      renderModalLivePresence(active);
+      return;
+    }
+
+    // 2. WEBSITE VIEWS MODAL
+    if (widgetType === 'views') {
+      iconEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>';
+      iconEl.style.background = 'rgba(143,180,255,0.18)';
+      iconEl.style.color = '#8fb4ff';
+      titleEl.textContent = 'Website-Aufrufe im Zeitverlauf';
+      subEl.textContent = 'Tagesverlauf und Aufrufentwicklung seit Aufzeichnungsstart';
+
+      const totalViews = allPageviews.length;
+      const todayKey = new Date().toISOString().slice(0, 10);
+      const viewsToday = allPageviews.filter(p => {
+        const d = tsToDate(p.createdAt);
+        return d && d.toISOString().slice(0, 10) === todayKey;
+      }).length;
+
+      const viewsByDay = {};
+      allPageviews.forEach(p => {
+        const d = tsToDate(p.createdAt);
+        if (!d) return;
+        const key = d.toISOString().slice(0, 10);
+        viewsByDay[key] = (viewsByDay[key] || 0) + 1;
+      });
+
+      const sortedDays = Object.keys(viewsByDay).sort();
+      let peakDayKey = '–';
+      let peakCount = 0;
+      sortedDays.forEach(k => {
+        if (viewsByDay[k] > peakCount) {
+          peakCount = viewsByDay[k];
+          peakDayKey = k;
+        }
+      });
+      const peakFormatted = peakDayKey !== '–' ? `${peakDayKey.split('-')[2]}.${peakDayKey.split('-')[1]}.` : '–';
+      const avgViews = sortedDays.length > 0 ? Math.round(totalViews / sortedDays.length) : 0;
+
+      kpiEl.innerHTML = `
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">Aufrufe heute</div>
+          <div class="widget-modal-kpi-val" style="color:#8fb4ff;">${viewsToday}</div>
+          <div class="widget-modal-kpi-sub">Heute erfasste Besuche</div>
+        </div>
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">Aufrufe gesamt</div>
+          <div class="widget-modal-kpi-val" style="color:#7fe0a8;">${totalViews}</div>
+          <div class="widget-modal-kpi-sub">Seit Aufzeichnungsstart</div>
+        </div>
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">Ø pro Tag</div>
+          <div class="widget-modal-kpi-val">${avgViews}</div>
+          <div class="widget-modal-kpi-sub">Über ${sortedDays.length} erfasste Tage</div>
+        </div>
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">Stärkster Tag</div>
+          <div class="widget-modal-kpi-val" style="color:#ffd27f;">${peakCount}</div>
+          <div class="widget-modal-kpi-sub">am ${peakFormatted}</div>
+        </div>
+      `;
+
+      chartBox.style.display = 'block';
+      const dayLabels = sortedDays.map(k => {
+        const [y, m, dd] = k.split('-');
+        return `${dd}.${m}.`;
+      });
+
+      const ctx = canvas.getContext('2d');
+      const grad = ctx.createLinearGradient(0, 0, 0, 300);
+      grad.addColorStop(0, 'rgba(143, 180, 255, 0.45)');
+      grad.addColorStop(1, 'rgba(143, 180, 255, 0.02)');
+
+      modalChart = new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels: dayLabels.length ? dayLabels : ['Keine Daten'],
+          datasets: [{
+            label: 'Seitenaufrufe',
+            data: sortedDays.length ? sortedDays.map(k => viewsByDay[k]) : [0],
+            borderColor: '#8fb4ff',
+            backgroundColor: grad,
+            fill: true,
+            tension: 0.35,
+            pointRadius: 5,
+            pointHoverRadius: 8,
+            pointBackgroundColor: '#8fb4ff',
+            pointBorderColor: '#0e1626',
+            pointBorderWidth: 2,
+            borderWidth: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => ` ${ctx.parsed.y} Aufruf${ctx.parsed.y !== 1 ? 'e' : ''}`
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { precision: 0, color: '#9aa7c2' },
+              grid: { color: 'rgba(255,255,255,0.06)' }
+            },
+            x: {
+              ticks: { color: '#9aa7c2' },
+              grid: { display: false }
+            }
+          }
+        }
+      });
+
+      detailBox.style.display = 'block';
+      detailBox.innerHTML = `
+        <table class="widget-modal-table">
+          <thead>
+            <tr>
+              <th>Datum</th>
+              <th>Aufrufe</th>
+              <th>Anteil an Gesamtaufrufen</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${[...sortedDays].reverse().map(k => {
+              const [y, m, dd] = k.split('-');
+              const count = viewsByDay[k];
+              const pct = totalViews > 0 ? Math.round((count / totalViews) * 100) : 0;
+              return `
+                <tr>
+                  <td style="font-weight:600; color:#fff;">${dd}.${m}.${y}</td>
+                  <td style="font-weight:700; color:#8fb4ff;">${count}</td>
+                  <td>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:100px; overflow:hidden; max-width:180px;">
+                        <div style="height:100%; width:${pct}%; background:#8fb4ff; border-radius:100px;"></div>
+                      </div>
+                      <span style="font-size:11px; color:#9aa7c2;">${pct}%</span>
+                    </div>
+                  </td>
+                </tr>
+              `;
+            }).join('') || '<tr><td colspan="3" style="text-align:center; color:#9aa7c2;">Noch keine Aufrufe vorhanden</td></tr>'}
+          </tbody>
+        </table>
+      `;
+      return;
+    }
+
+    // 3. DEVICE TYPES MODAL
+    if (widgetType === 'device') {
+      iconEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>';
+      iconEl.style.background = 'rgba(127,224,168,0.18)';
+      iconEl.style.color = '#7fe0a8';
+      titleEl.textContent = 'Gerätetypen der Website-Besucher';
+      subEl.textContent = 'Verteilung nach Smartphone, Desktop/PC und Tablet';
+
+      const totalViews = allPageviews.length;
+      const mobileCount = allPageviews.filter(p => p.device === 'mobile').length;
+      const desktopCount = allPageviews.filter(p => p.device === 'desktop').length;
+      const tabletCount = allPageviews.filter(p => p.device === 'tablet').length;
+      const mobilePct = totalViews > 0 ? Math.round((mobileCount / totalViews) * 100) : 0;
+      const desktopPct = totalViews > 0 ? Math.round((desktopCount / totalViews) * 100) : 0;
+      const tabletPct = totalViews > 0 ? Math.round((tabletCount / totalViews) * 100) : 0;
+
+      kpiEl.innerHTML = `
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">Smartphones</div>
+          <div class="widget-modal-kpi-val" style="color:#7fe0a8;">${mobileCount}</div>
+          <div class="widget-modal-kpi-sub">${mobilePct}% aller Aufrufe</div>
+        </div>
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">Desktop / PC</div>
+          <div class="widget-modal-kpi-val" style="color:#8fb4ff;">${desktopCount}</div>
+          <div class="widget-modal-kpi-sub">${desktopPct}% aller Aufrufe</div>
+        </div>
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">Tablets</div>
+          <div class="widget-modal-kpi-val" style="color:#ffd27f;">${tabletCount}</div>
+          <div class="widget-modal-kpi-sub">${tabletPct}% aller Aufrufe</div>
+        </div>
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">Gesamtaufrufe</div>
+          <div class="widget-modal-kpi-val">${totalViews}</div>
+          <div class="widget-modal-kpi-sub">Alle erfassten Sitzungen</div>
+        </div>
+      `;
+
+      chartBox.style.display = 'block';
+      modalChart = new Chart(canvas, {
+        type: 'doughnut',
+        data: {
+          labels: ['Smartphone', 'Desktop / PC', 'Tablet'],
+          datasets: [{
+            data: totalViews > 0 ? [mobileCount, desktopCount, tabletCount] : [0, 0, 0],
+            backgroundColor: ['#7fe0a8', '#8fb4ff', '#ffd27f'],
+            borderColor: '#131c30',
+            borderWidth: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { color: '#c7d7f7', font: { size: 13, weight: '600' } } }
+          },
+          cutout: '58%'
+        }
+      });
+
+      detailBox.style.display = 'block';
+      detailBox.innerHTML = `
+        <table class="widget-modal-table">
+          <thead>
+            <tr>
+              <th>Gerätekategorie</th>
+              <th>Anzahl Aufrufe</th>
+              <th>Anteil</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600; color:#fff;">📱 Smartphone (Mobiltelefon)</td>
+              <td style="font-weight:700; color:#7fe0a8;">${mobileCount}</td>
+              <td>${mobilePct}%</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600; color:#fff;">💻 Desktop / Laptop / PC</td>
+              <td style="font-weight:700; color:#8fb4ff;">${desktopCount}</td>
+              <td>${desktopPct}%</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600; color:#fff;">📟 Tablet (iPad, Android Tablet)</td>
+              <td style="font-weight:700; color:#ffd27f;">${tabletCount}</td>
+              <td>${tabletPct}%</td>
+            </tr>
+          </tbody>
+        </table>
+      `;
+      return;
+    }
+
+    // 4. OPERATING SYSTEMS MODAL
+    if (widgetType === 'os') {
+      iconEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>';
+      iconEl.style.background = 'rgba(199,215,247,0.18)';
+      iconEl.style.color = '#c7d7f7';
+      titleEl.textContent = 'Betriebssysteme & Plattformen';
+      subEl.textContent = 'Erkannte Betriebssysteme der Website-Besucher';
+
+      const totalViews = allPageviews.length;
+      const osCounts = {};
+      allPageviews.forEach(p => {
+        const os = p.os || 'Anderes';
+        osCounts[os] = (osCounts[os] || 0) + 1;
+      });
+      const sortedOSKeys = Object.keys(osCounts).sort((a, b) => osCounts[b] - osCounts[a]);
+      const topOS = sortedOSKeys[0] || '–';
+      const topOSPct = topOS !== '–' && totalViews > 0 ? Math.round((osCounts[topOS] / totalViews) * 100) : 0;
+      const iosCount = osCounts['iOS'] || 0;
+      const iosPct = totalViews > 0 ? Math.round((iosCount / totalViews) * 100) : 0;
+      const androidCount = osCounts['Android'] || 0;
+      const androidPct = totalViews > 0 ? Math.round((androidCount / totalViews) * 100) : 0;
+
+      kpiEl.innerHTML = `
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">Häufigstes System</div>
+          <div class="widget-modal-kpi-val" style="color:#c7d7f7;">${topOS}</div>
+          <div class="widget-modal-kpi-sub">${topOSPct}% aller Besucher</div>
+        </div>
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">iOS (iPhone/iPad)</div>
+          <div class="widget-modal-kpi-val" style="color:#8fb4ff;">${iosCount}</div>
+          <div class="widget-modal-kpi-sub">${iosPct}% Anteil</div>
+        </div>
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">Android</div>
+          <div class="widget-modal-kpi-val" style="color:#7fe0a8;">${androidCount}</div>
+          <div class="widget-modal-kpi-sub">${androidPct}% Anteil</div>
+        </div>
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">Systeme erkannt</div>
+          <div class="widget-modal-kpi-val">${sortedOSKeys.length}</div>
+          <div class="widget-modal-kpi-sub">Verschiedene Plattformen</div>
+        </div>
+      `;
+
+      chartBox.style.display = 'block';
+      const osPalette = ['#8fb4ff', '#a78bfa', '#7fe0a8', '#ffd27f', '#f472b6', '#38bdf8', '#fb7185', '#94a3b8'];
+
+      modalChart = new Chart(canvas, {
+        type: 'doughnut',
+        data: {
+          labels: sortedOSKeys.length > 0 ? sortedOSKeys : ['Keine Daten'],
+          datasets: [{
+            data: sortedOSKeys.length > 0 ? sortedOSKeys.map(k => osCounts[k]) : [1],
+            backgroundColor: sortedOSKeys.length > 0 ? sortedOSKeys.map((_, i) => osPalette[i % osPalette.length]) : ['rgba(255,255,255,0.08)'],
+            borderColor: '#131c30',
+            borderWidth: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { color: '#c7d7f7', font: { size: 13, weight: '600' } } }
+          },
+          cutout: '58%'
+        }
+      });
+
+      detailBox.style.display = 'block';
+      detailBox.innerHTML = `
+        <table class="widget-modal-table">
+          <thead>
+            <tr>
+              <th>Betriebssystem</th>
+              <th>Aufrufe</th>
+              <th>Anteil</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${sortedOSKeys.map(k => {
+              const count = osCounts[k];
+              const pct = totalViews > 0 ? Math.round((count / totalViews) * 100) : 0;
+              return `
+                <tr>
+                  <td style="font-weight:600; color:#fff;">${k}</td>
+                  <td style="font-weight:700; color:#8fb4ff;">${count}</td>
+                  <td>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <div style="flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:100px; overflow:hidden; max-width:180px;">
+                        <div style="height:100%; width:${pct}%; background:#8fb4ff; border-radius:100px;"></div>
+                      </div>
+                      <span style="font-size:11px; color:#9aa7c2;">${pct}%</span>
+                    </div>
+                  </td>
+                </tr>
+              `;
+            }).join('') || '<tr><td colspan="3" style="text-align:center; color:#9aa7c2;">Noch keine Daten</td></tr>'}
+          </tbody>
+        </table>
+      `;
+      return;
+    }
+
+    // 5. TICKET ORDERS MODAL
+    if (widgetType === 'orders') {
+      iconEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>';
+      iconEl.style.background = 'rgba(255,210,127,0.18)';
+      iconEl.style.color = '#ffd27f';
+      titleEl.textContent = 'Ticket-Bestellungen im Zeitverlauf';
+      subEl.textContent = 'Entwicklung der Buchungseingänge je Kalendertag';
+
+      const totalRegs = allRegs.length;
+      const totalTickets = allTickets.length;
+      const paidRegs = allRegs.filter(r => r.paid).length;
+      const paidPct = totalRegs > 0 ? Math.round((paidRegs / totalRegs) * 100) : 0;
+      const avgTickets = totalRegs > 0 ? (totalTickets / totalRegs).toFixed(1) : '0';
+
+      const dayCounts = {};
+      allRegs.forEach(r => {
+        const d = tsToDate(r.createdAt);
+        if (!d) return;
+        const key = d.toISOString().slice(0, 10);
+        dayCounts[key] = (dayCounts[key] || 0) + 1;
+      });
+      const sortedDays = Object.keys(dayCounts).sort();
+
+      kpiEl.innerHTML = `
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">Buchungen gesamt</div>
+          <div class="widget-modal-kpi-val" style="color:#ffd27f;">${totalRegs}</div>
+          <div class="widget-modal-kpi-sub">Bestellvorgänge</div>
+        </div>
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">Tickets gesamt</div>
+          <div class="widget-modal-kpi-val" style="color:#8fb4ff;">${totalTickets}</div>
+          <div class="widget-modal-kpi-sub">Inkl. Begleitpersonen</div>
+        </div>
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">Ø Tickets / Buchung</div>
+          <div class="widget-modal-kpi-val">${avgTickets}</div>
+          <div class="widget-modal-kpi-sub">Gäste pro Registrierung</div>
+        </div>
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">Bezahlquote</div>
+          <div class="widget-modal-kpi-val" style="color:#7fe0a8;">${paidPct}%</div>
+          <div class="widget-modal-kpi-sub">${paidRegs} von ${totalRegs} bezahlt</div>
+        </div>
+      `;
+
+      chartBox.style.display = 'block';
+      const dayLabels = sortedDays.map(k => {
+        const [y, m, dd] = k.split('-');
+        return `${dd}.${m}.`;
+      });
+
+      const ctx = canvas.getContext('2d');
+      const grad = ctx.createLinearGradient(0, 0, 0, 300);
+      grad.addColorStop(0, 'rgba(255, 210, 127, 0.45)');
+      grad.addColorStop(1, 'rgba(255, 210, 127, 0.02)');
+
+      modalChart = new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels: dayLabels.length ? dayLabels : ['Keine Daten'],
+          datasets: [{
+            label: 'Neue Buchungen',
+            data: sortedDays.length ? sortedDays.map(k => dayCounts[k]) : [0],
+            borderColor: '#ffd27f',
+            backgroundColor: grad,
+            fill: true,
+            tension: 0.3,
+            pointRadius: 5,
+            pointHoverRadius: 8,
+            pointBackgroundColor: '#ffd27f',
+            pointBorderColor: '#0e1626',
+            pointBorderWidth: 2,
+            borderWidth: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: (ctx) => ` ${ctx.parsed.y} Buchung${ctx.parsed.y !== 1 ? 'en' : ''}` } }
+          },
+          scales: {
+            y: { beginAtZero: true, ticks: { precision: 0, color: '#9aa7c2' }, grid: { color: 'rgba(255,255,255,0.06)' } },
+            x: { ticks: { color: '#9aa7c2' }, grid: { display: false } }
+          }
+        }
+      });
+
+      detailBox.style.display = 'block';
+      detailBox.innerHTML = `
+        <table class="widget-modal-table">
+          <thead>
+            <tr>
+              <th>Datum</th>
+              <th>Neue Bestellungen</th>
+              <th>Anteil</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${[...sortedDays].reverse().map(k => {
+              const [y, m, dd] = k.split('-');
+              const count = dayCounts[k];
+              const pct = totalRegs > 0 ? Math.round((count / totalRegs) * 100) : 0;
+              return `
+                <tr>
+                  <td style="font-weight:600; color:#fff;">${dd}.${m}.${y}</td>
+                  <td style="font-weight:700; color:#ffd27f;">${count}</td>
+                  <td>${pct}%</td>
+                </tr>
+              `;
+            }).join('') || '<tr><td colspan="3" style="text-align:center; color:#9aa7c2;">Noch keine Buchungen</td></tr>'}
+          </tbody>
+        </table>
+      `;
+      return;
+    }
+
+    // 6. DEMOGRAPHICS & PAYMENTS MODAL
+    if (widgetType === 'demographics') {
+      iconEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>';
+      iconEl.style.background = 'rgba(143,180,255,0.18)';
+      iconEl.style.color = '#8fb4ff';
+      titleEl.textContent = 'Gäste-Demografie & Zahlungsstatus';
+      subEl.textContent = 'Altersverteilung (U18 / Ü18) und Bezahlstatus im Detail';
+
+      const totalTickets = allTickets.length;
+      const u18Count = allTickets.filter(t => t.category === 'u18').length;
+      const ue18Count = allTickets.filter(t => t.category === 'ue18').length;
+      const u18Pct = totalTickets > 0 ? Math.round((u18Count / totalTickets) * 100) : 0;
+      const ue18Pct = totalTickets > 0 ? Math.round((ue18Count / totalTickets) * 100) : 0;
+
+      const totalRegs = allRegs.length;
+      const paidCount = allRegs.filter(r => r.paid).length;
+      const openCount = totalRegs - paidCount;
+      const paidPct = totalRegs > 0 ? Math.round((paidCount / totalRegs) * 100) : 0;
+
+      kpiEl.innerHTML = `
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">U18 Gäste</div>
+          <div class="widget-modal-kpi-val" style="color:#8fb4ff;">${u18Count}</div>
+          <div class="widget-modal-kpi-sub">${u18Pct}% der Gäste (Muttizettel nötig)</div>
+        </div>
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">Ü18 Gäste</div>
+          <div class="widget-modal-kpi-val" style="color:#7fe0a8;">${ue18Count}</div>
+          <div class="widget-modal-kpi-sub">${ue18Pct}% volljährige Gäste</div>
+        </div>
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">Bereits bezahlt</div>
+          <div class="widget-modal-kpi-val" style="color:#7fe0a8;">${paidCount}</div>
+          <div class="widget-modal-kpi-sub">${paidPct}% aller Buchungen</div>
+        </div>
+        <div class="widget-modal-kpi-card">
+          <div class="widget-modal-kpi-lbl">Noch offen</div>
+          <div class="widget-modal-kpi-val" style="color:#ffd27f;">${openCount}</div>
+          <div class="widget-modal-kpi-sub">Ausstehende Zahlungen</div>
+        </div>
+      `;
+
+      demoBox.style.display = 'block';
+      demoBox.innerHTML = `
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
+          <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:18px;">
+            <div style="font-size:13.5px; font-weight:700; color:#fff; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+              <span style="width:8px; height:8px; border-radius:50%; background:#8fb4ff;"></span> Altersverteilung (Gäste)
+            </div>
+            <div style="height:220px; position:relative;">
+              <canvas id="modalDemoCatCanvas"></canvas>
+            </div>
+          </div>
+          <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:18px;">
+            <div style="font-size:13.5px; font-weight:700; color:#fff; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+              <span style="width:8px; height:8px; border-radius:50%; background:#7fe0a8;"></span> Zahlungsstatus (Buchungen)
+            </div>
+            <div style="height:220px; position:relative;">
+              <canvas id="modalDemoPaidCanvas"></canvas>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const demoCatCanvas = document.getElementById('modalDemoCatCanvas');
+      const demoPaidCanvas = document.getElementById('modalDemoPaidCanvas');
+      if (demoCatCanvas) {
+        modalChartDemographicsA = new Chart(demoCatCanvas, {
+          type: 'doughnut',
+          data: {
+            labels: ['Unter 18 (U18)', '18 oder älter (Ü18)'],
+            datasets: [{ data: [u18Count, ue18Count], backgroundColor: ['#8fb4ff', '#7fe0a8'], borderColor: '#131c30', borderWidth: 3 }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { color: '#c7d7f7', font: { size: 12, weight: '600' } } } },
+            cutout: '58%'
+          }
+        });
+      }
+      if (demoPaidCanvas) {
+        modalChartDemographicsB = new Chart(demoPaidCanvas, {
+          type: 'doughnut',
+          data: {
+            labels: ['Bezahlt', 'Noch offen'],
+            datasets: [{ data: [paidCount, openCount], backgroundColor: ['#7fe0a8', '#ffd27f'], borderColor: '#131c30', borderWidth: 3 }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { color: '#c7d7f7', font: { size: 12, weight: '600' } } } },
+            cutout: '58%'
+          }
+        });
+      }
+
+      detailBox.style.display = 'block';
+      detailBox.innerHTML = `
+        <table class="widget-modal-table">
+          <thead>
+            <tr>
+              <th>Kennzahl</th>
+              <th>Wert</th>
+              <th>Anmerkung</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600; color:#fff;">Unter 18 Jahre (U18)</td>
+              <td style="font-weight:700; color:#8fb4ff;">${u18Count} Personen (${u18Pct}%)</td>
+              <td style="color:#9aa7c2;">Erziehungsbeauftragung / Muttizettel erforderlich</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600; color:#fff;">18 Jahre oder älter (Ü18)</td>
+              <td style="font-weight:700; color:#7fe0a8;">${ue18Count} Personen (${ue18Pct}%)</td>
+              <td style="color:#9aa7c2;">Volljährig</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600; color:#fff;">Bezahlte Buchungen</td>
+              <td style="font-weight:700; color:#7fe0a8;">${paidCount} (${paidPct}%)</td>
+              <td style="color:#9aa7c2;">Ticket-PDF versendet & bezahlt</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600; color:#fff;">Offene Zahlungen</td>
+              <td style="font-weight:700; color:#ffd27f;">${openCount} (${100 - paidPct}%)</td>
+              <td style="color:#9aa7c2;">Überweisung oder Barzahlung steht noch aus</td>
+            </tr>
+          </tbody>
+        </table>
+      `;
+      return;
+    }
+  }
+
+  function renderModalLivePresence(activeVisitors){
+    const kpiEl = document.getElementById('modalKpiRow');
+    const liveBox = document.getElementById('modalLiveBox');
+    const detailBox = document.getElementById('modalDetailBox');
+    const count = activeVisitors.length;
+
+    kpiEl.innerHTML = `
+      <div class="widget-modal-kpi-card" style="border-color:rgba(127,224,168,0.3); background:rgba(127,224,168,0.06);">
+        <div class="widget-modal-kpi-lbl" style="color:#7fe0a8;">Aktuell online</div>
+        <div class="widget-modal-kpi-val" style="color:#7fe0a8; display:flex; align-items:center; gap:8px;">
+          <span>${count}</span>
+          <span class="pulse-dot" style="background:#7fe0a8; width:8px; height:8px; display:${count > 0 ? 'inline-block' : 'none'};"></span>
+        </div>
+        <div class="widget-modal-kpi-sub">${count === 1 ? '1 Besucher aktiv' : `${count} Besucher aktiv`}</div>
+      </div>
+      <div class="widget-modal-kpi-card">
+        <div class="widget-modal-kpi-lbl">Aktivitäts-Status</div>
+        <div class="widget-modal-kpi-val" style="font-size:18px;">${count > 0 ? '🟢 Verbunden' : '⚪ Keine Aktivität'}</div>
+        <div class="widget-modal-kpi-sub">Letzte 90 Sekunden</div>
+      </div>
+      <div class="widget-modal-kpi-card">
+        <div class="widget-modal-kpi-lbl">Heartbeat-Signal</div>
+        <div class="widget-modal-kpi-val" style="font-size:18px; color:#8fb4ff;">Alle 45 Sek.</div>
+        <div class="widget-modal-kpi-sub">Automatischer Timeout</div>
+      </div>
+      <div class="widget-modal-kpi-card">
+        <div class="widget-modal-kpi-lbl">Datenschutz</div>
+        <div class="widget-modal-kpi-val" style="font-size:18px; color:#7fe0a8;">DSGVO-konform</div>
+        <div class="widget-modal-kpi-sub">Keine IP, keine Tracking-Cookies</div>
+      </div>
+    `;
+
+    if (count === 0) {
+      liveBox.innerHTML = `
+        <div style="padding:34px 20px; text-align:center; background:rgba(255,255,255,0.03); border:1px dashed rgba(255,255,255,0.12); border-radius:14px; color:#9aa7c2;">
+          <div style="width:48px; height:48px; border-radius:50%; background:rgba(127,224,168,0.1); color:#7fe0a8; display:flex; align-items:center; justify-content:center; margin:0 auto 12px auto;">
+            <svg style="width:24px; height:24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div style="font-size:15px; font-weight:700; color:#fff;">Aktuell befindet sich niemand auf der Website</div>
+          <div style="font-size:12.5px; margin-top:6px; max-width:440px; margin-left:auto; margin-right:auto;">
+            Sobald ein Nutzer die Startseite, Ticket-Anmeldung oder Vorabstimmung aufruft, erscheint die aktive Sitzung hier im Sekundentakt live.
+          </div>
+        </div>
+      `;
+      detailBox.style.display = 'none';
+    } else {
+      liveBox.innerHTML = `
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:12px;">
+          ${activeVisitors.map(v => {
+            let iconSvg = '';
+            if (v.device === 'mobile') {
+              iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>';
+            } else if (v.device === 'tablet') {
+              iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px;"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>';
+            } else {
+              iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>';
+            }
+            const secAgo = v.lastSeenAgoSec;
+            const timeText = secAgo < 60 ? `vor ${secAgo}s aktiv` : `vor ${Math.round(secAgo/60)} Min. aktiv`;
+
+            return `
+              <div style="background:rgba(255,255,255,0.035); border:1px solid rgba(127,224,168,0.3); border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:8px;">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:8px; background:rgba(127,224,168,0.18); color:#7fe0a8;">
+                      ${iconSvg}
+                    </span>
+                    <span style="font-weight:700; color:#fff; font-size:13.5px;">${escapeHtml(v.page)}</span>
+                  </div>
+                  <span style="background:rgba(127,224,168,0.15); color:#7fe0a8; border:1px solid rgba(127,224,168,0.3); padding:2px 8px; border-radius:100px; font-size:10.5px; font-weight:700;">${timeText}</span>
+                </div>
+                <div style="font-size:12px; color:#9aa7c2; display:flex; align-items:center; gap:6px;">
+                  <span>💻 ${escapeHtml(v.os)}</span>
+                  <span>•</span>
+                  <span>🌐 ${escapeHtml(v.browser)}</span>
+                </div>
+                <div style="font-size:11px; color:rgba(255,255,255,0.3); font-family:monospace; margin-top:2px;">
+                  Sitzungs-ID: #${escapeHtml((v.sid || '').slice(0, 10))}
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+      detailBox.style.display = 'none';
     }
   }
 
@@ -2040,7 +3119,7 @@
       elTabBadge.style.color = count > 0 ? '#7fe0a8' : '#9aa7c2';
     }
 
-    // Insights Live Card Count
+    // Insights Live Card Count (legacy elements if present)
     const elStatLiveCount = document.getElementById('statLiveCount');
     if (elStatLiveCount) {
       elStatLiveCount.innerHTML = `<span>${count}</span><span class="pulse-dot" style="width:8px; height:8px; display:${count > 0 ? 'inline-block' : 'none'};"></span>`;
@@ -2055,13 +3134,40 @@
       elBadgeActive.textContent = count;
     }
 
+    // Widget 1: Live auf der Seite
+    const elWidgetLiveCount = document.getElementById('widgetLiveCount');
+    if (elWidgetLiveCount) {
+      elWidgetLiveCount.textContent = count;
+    }
+    const elWidgetLiveSub = document.getElementById('widgetLiveSub');
+    if (elWidgetLiveSub) {
+      elWidgetLiveSub.textContent = count === 1 ? '1 Person online' : `${count} Personen online`;
+    }
+    const elWidgetMiniChips = document.getElementById('widgetLiveMiniChips');
+    if (elWidgetMiniChips) {
+      if (count === 0) {
+        elWidgetMiniChips.innerHTML = '<span style="font-size:11px; color:#9aa7c2; background:rgba(255,255,255,0.04); padding:3px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">Aktuell niemand online</span>';
+      } else {
+        elWidgetMiniChips.innerHTML = activeVisitors.slice(0, 3).map(v => {
+          let devIcon = v.device === 'mobile' ? '📱' : (v.device === 'tablet' ? '📟' : '💻');
+          return `<span style="font-size:11px; font-weight:600; color:#e0f7eb; background:rgba(127,224,168,0.15); border:1px solid rgba(127,224,168,0.3); padding:2px 7px; border-radius:6px; white-space:nowrap; display:inline-flex; align-items:center; gap:4px;">${devIcon} ${escapeHtml(v.page)}</span>`;
+        }).join('') + (count > 3 ? `<span style="font-size:11px; color:#7fe0a8; padding:2px 4px; font-weight:700;">+${count - 3}</span>` : '');
+      }
+    }
+
+    const elInsightsLiveTs = document.getElementById('insightsLiveTimestamp');
+    if (elInsightsLiveTs) {
+      const timeStr = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      elInsightsLiveTs.textContent = `Stand: ${timeStr} · Live`;
+    }
+
     const elSummary = document.getElementById('livePresenceSummary');
     if (elSummary) {
       const timeStr = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       elSummary.textContent = `Stand: ${timeStr} · aktualisiert sich live`;
     }
 
-    // Visitors List in Banner
+    // Visitors List in Banner (falls noch vorhanden)
     const emptyEl = document.getElementById('liveVisitorsEmpty');
     const listEl = document.getElementById('liveVisitorsList');
     if (emptyEl && listEl) {
@@ -2098,6 +3204,11 @@
           `;
         }).join('');
       }
+    }
+
+    // Wenn aktuell das Live-Modal geöffnet ist, Daten live im Modal aktualisieren!
+    if (currentModalWidget === 'live') {
+      renderModalLivePresence(activeVisitors);
     }
   }
 
@@ -2393,6 +3504,10 @@
   function switchToTab(tabName){
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabName));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.dataset.tabContent === tabName));
+    const globalStats = document.getElementById('globalStatsBar');
+    if (globalStats) {
+      globalStats.style.display = (tabName === 'insights') ? 'none' : 'grid';
+    }
     if (tabName === 'insights') {
       updateCharts();
       renderLivePresence();
@@ -2405,12 +3520,27 @@
     btn.addEventListener('click', () => switchToTab(btn.dataset.tab));
   });
 
+  // Klick auf Widget-Kacheln öffnet vergrößertes Detail-Modal
+  document.querySelectorAll('.widget-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const widgetType = card.dataset.widget;
+      if (widgetType) openWidgetModal(widgetType);
+    });
+  });
+
+  // Modal-Schließen Event-Listener
+  document.getElementById('modalWidgetCloseBtn')?.addEventListener('click', closeWidgetModal);
+  document.getElementById('widgetModal')?.addEventListener('click', (e) => {
+    if (e.target === document.getElementById('widgetModal')) closeWidgetModal();
+  });
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && currentModalWidget) closeWidgetModal();
+  });
+
+  // Klick auf Live-Besucher-Pille im Header
   document.getElementById('headerLiveVisitors')?.addEventListener('click', () => {
     switchToTab('insights');
-    const banner = document.getElementById('liveVisitorBanner');
-    if (banner) {
-      banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    openWidgetModal('live');
   });
 
   function startListening(){
