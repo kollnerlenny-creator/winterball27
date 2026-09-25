@@ -1,0 +1,70 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function deadlineOk() {
+      return !exists(/databases/$(database)/documents/settings/deadline)
+        || get(/databases/$(database)/documents/settings/deadline).data.timestamp == null
+        || (get(/databases/$(database)/documents/settings/deadline).data.timestamp is string);
+    }
+
+    function opensAtOk() {
+      return !exists(/databases/$(database)/documents/settings/opensAt)
+        || get(/databases/$(database)/documents/settings/opensAt).data.timestamp == null
+        || (get(/databases/$(database)/documents/settings/opensAt).data.timestamp is string);
+    }
+
+    match /registrations/{regId} {
+      // Jeder darf sich selbst anmelden (unbezahlt, nur mit Name und E-Mail).
+      // Admins (eingeloggt) dürfen jederzeit manuell Bestellungen anlegen.
+      allow create: if (request.resource.data.name is string
+                        && request.resource.data.email is string
+                        && request.resource.data.paid == false
+                        && deadlineOk()
+                        && opensAtOk())
+                    || request.auth != null;
+
+      // Read/Update/Delete nur für eingeloggte Admins.
+      // Ausnahme: Einzelabfrage (limit 1) für die E-Mail-Duplikatsprüfung im Formular.
+      allow get, update, delete: if request.auth != null;
+      allow list: if request.auth != null || request.query.limit <= 1;
+    }
+
+    match /vorabstimmung/{id} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
+    }
+
+    match /tickets/{ticketId} {
+      // Tickets dürfen bei der Anmeldung erzeugt werden (müssen unbezahlt sein).
+      allow create: if (request.resource.data.name is string
+                        && request.resource.data.email is string
+                        && request.resource.data.ticketId is string
+                        && request.resource.data.paid == false)
+                    || request.auth != null;
+      allow read, update, delete: if request.auth != null;
+    }
+
+    match /settings/{docId} {
+      // Öffentliche Anzeigeeinstellungen dürfen von Gästen gelesen werden.
+      allow get: if docId == 'info' || docId == 'deadline' || docId == 'opensAt' || docId == 'lernsaxThreshold' || docId == 'pricing' || docId == 'schedule' || docId == 'stats' || docId == 'capacity' || request.auth != null;
+      allow list: if request.auth != null;
+      allow write: if request.auth != null;
+
+      // Live-Ticketzähler: darf beim Anmelden um die Ticketanzahl erhöht werden.
+      allow update: if docId == 'stats'
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ticketCount'])
+                    && request.resource.data.ticketCount is int
+                    && request.resource.data.ticketCount >= resource.data.ticketCount;
+    }
+
+    match /ratings/{ratingId} {
+      // Sternebewertungen (1-5 Sterne) öffentlich abgebbar.
+      allow create: if request.resource.data.stars is int
+                    && request.resource.data.stars >= 1
+                    && request.resource.data.stars <= 5
+                    && (!('comment' in request.resource.data) || request.resource.data.comment is string);
+      allow read, update, delete: if request.auth != null;
+    }
+  }
+}

@@ -1600,6 +1600,7 @@
 <div class="modal-overlay" id="cashModalOverlay">
   <div class="cash-modal">
     <div class="cash-modal-name" id="cashModalName"></div>
+    <div id="cashModalSubtitle" style="margin-top:-6px; margin-bottom:14px;"></div>
 
     <div class="cash-row">
       <span>Fälliger Betrag</span>
@@ -3733,6 +3734,12 @@
       } else {
         tbody.innerHTML = rows.map(r => {
           const tickets = ticketsFor(r.id);
+          const hasExplicitlyPaid = tickets.some(t => t.paid === true);
+          const hasUnpaid = tickets.some(t => !t.paid);
+          const isPartial = hasExplicitlyPaid && hasUnpaid;
+          const dueCents = ticketsDueCents(r.id);
+          const paidCount = tickets.filter(t => t.paid).length;
+
           const companionsHtml = (r.companions||[]).length
             ? `<ul class="attendee-list">${r.companions.map(c => `<li>${escapeHtml(c.name)} <span class="badge out">${categoryLabel(c.category)}</span></li>`).join('')}</ul>`
             : '<span style="color:var(--text-dim)">—</span>';
@@ -3740,7 +3747,10 @@
           const ticketsHtml = tickets.length
             ? `<ul class="ticket-checkin-list">${tickets.map(t => `
                 <li>
-                  <span>${escapeHtml(t.name)}</span>
+                  <span style="display:inline-flex; align-items:center; gap:5px; flex-wrap:wrap;">
+                    <span>${escapeHtml(t.name)}</span>
+                    ${!t.paid && hasExplicitlyPaid ? '<span class="badge out" style="font-size:9.5px; padding:1px 5px; color:#ffd27f; border-color:rgba(255,210,127,0.3); background:rgba(255,210,127,0.12);">Offen</span>' : ''}
+                  </span>
                   <button class="checkin-toggle ${t.checkedIn ? 'in' : ''}" data-ticket-id="${t.id}" data-name="${escapeHtml(t.name)}" data-state="${t.checkedIn ? '1' : '0'}">
                     ${t.checkedIn
                       ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px; height:11px; margin-right:4px;"><polyline points="20 6 9 17 4 12"/></svg><span>Eingecheckt</span>'
@@ -3765,9 +3775,14 @@
               <div class="paid-cell">
                 ${r.paid
                   ? `<span class="badge in">Bezahlt</span>`
-                  : `<button class="pay-btn" data-id="${r.id}">Bezahlen</button>`}
-                ${r.paid ? `<button class="pdf-btn" data-id="${r.id}" title="Tickets als PDF herunterladen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px; height:12px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>PDF</span></button>` : ''}
-                ${r.paid ? `<button class="invoice-btn" data-id="${r.id}" title="Quittung als PDF herunterladen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px; height:12px;"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="14" y2="13"/></svg><span>Quittung</span></button>` : ''}
+                  : (isPartial
+                      ? `<span class="badge out" style="background:rgba(255,210,127,0.15); color:#ffd27f; border:1px solid rgba(255,210,127,0.35); font-size:11px;" title="${paidCount} von ${tickets.length} Tickets bezahlt">${paidCount}/${tickets.length} bezahlt</span>
+                         <button class="pay-btn" data-id="${r.id}" style="background:linear-gradient(135deg, #ffd27f, #f59e0b); color:#0e1626; font-weight:700; border:none;" title="Nachzahlung für unbezahlte Begleitung">Nachzahlen (${formatCents(dueCents)})</button>`
+                      : `<button class="pay-btn" data-id="${r.id}">Bezahlen</button>`
+                    )
+                }
+                ${(r.paid || isPartial) ? `<button class="pdf-btn" data-id="${r.id}" title="Tickets als PDF herunterladen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px; height:12px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>PDF</span></button>` : ''}
+                ${(r.paid || isPartial) ? `<button class="invoice-btn" data-id="${r.id}" title="Quittung als PDF herunterladen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px; height:12px;"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="14" y2="13"/></svg><span>Quittung</span></button>` : ''}
               </div>
             </td>
             <td style="font-size:11px; color:var(--text-dim); white-space:nowrap;">
@@ -3797,11 +3812,19 @@
       } else {
         mobileCards.innerHTML = rows.map(r => {
           const tickets = ticketsFor(r.id);
+          const hasExplicitlyPaid = tickets.some(t => t.paid === true);
+          const hasUnpaid = tickets.some(t => !t.paid);
+          const isPartial = hasExplicitlyPaid && hasUnpaid;
+          const dueCents = ticketsDueCents(r.id);
+          const paidCount = tickets.filter(t => t.paid).length;
           const checkedCount = tickets.filter(t => t.checkedIn).length;
           const attendeesList = tickets.map(t => `
             <div class="order-card-attendee">
               <div>
-                <div style="font-weight:600; color:var(--text);">${escapeHtml(t.name)}</div>
+                <div style="font-weight:600; color:var(--text); display:flex; align-items:center; gap:6px;">
+                  <span>${escapeHtml(t.name)}</span>
+                  ${!t.paid && hasExplicitlyPaid ? '<span style="font-size:9.5px; font-weight:700; color:#ffd27f; background:rgba(255,210,127,0.15); border:1px solid rgba(255,210,127,0.3); padding:1px 5px; border-radius:4px;">Offen</span>' : ''}
+                </div>
                 <div style="font-size:11px; color:var(--text-dim);">${categoryLabel(t.category)}${t.ticketId ? ' · ' + escapeHtml(t.ticketId) : ''}</div>
               </div>
               <button class="checkin-toggle ${t.checkedIn ? 'in' : ''}" data-ticket-id="${t.id}" data-name="${escapeHtml(t.name)}" data-state="${t.checkedIn ? '1' : '0'}">
@@ -3820,12 +3843,12 @@
                     <span>${escapeHtml(r.name || '')}</span>
                     <span class="badge out">${categoryLabel(r.category)}</span>
                     <span class="badge ${r.paid ? 'in' : 'out'}" style="${!r.paid ? 'background:rgba(255,210,127,0.15); color:var(--warn); border:1px solid rgba(255,210,127,0.3);' : ''}">
-                      ${r.paid ? 'Bezahlt' : 'Unbezahlt'}
+                      ${r.paid ? 'Bezahlt' : (isPartial ? `${paidCount}/${tickets.length} bezahlt` : 'Unbezahlt')}
                     </span>
                   </div>
                   <div class="order-card-email">${escapeHtml(r.email || '')}</div>
                 </div>
-                ${!r.paid ? `<button class="pay-btn" data-id="${r.id}" style="padding:6px 14px; font-size:12px;">Bezahlen</button>` : ''}
+                ${!r.paid ? `<button class="pay-btn" data-id="${r.id}" style="padding:6px 14px; font-size:12px; ${isPartial ? 'background:linear-gradient(135deg, #ffd27f, #f59e0b); color:#0e1626; font-weight:700; border:none;' : ''}">${isPartial ? `Nachzahlen (${formatCents(dueCents)})` : 'Bezahlen'}</button>` : ''}
               </div>
 
               <div class="order-card-attendees">
@@ -3845,8 +3868,8 @@
                   ${formatTimestamp(r.createdAt)}
                 </div>
                 <div class="order-card-actions">
-                  ${r.paid ? `<button class="pdf-btn" data-id="${r.id}" title="Tickets als PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px; height:12px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>PDF</span></button>` : ''}
-                  ${r.paid ? `<button class="invoice-btn" data-id="${r.id}" title="Quittung"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px; height:12px;"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="14" y2="13"/></svg><span>Quittung</span></button>` : ''}
+                  ${(r.paid || isPartial) ? `<button class="pdf-btn" data-id="${r.id}" title="Tickets als PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px; height:12px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>PDF</span></button>` : ''}
+                  ${(r.paid || isPartial) ? `<button class="invoice-btn" data-id="${r.id}" title="Quittung"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px; height:12px;"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="14" y2="13"/></svg><span>Quittung</span></button>` : ''}
                   <button class="edit-reg-btn" data-id="${r.id}" title="Bearbeiten" style="margin-right:0;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px; height:13px;"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
                   </button>
@@ -3889,7 +3912,7 @@
     const containers = [tbody, mobileCards].filter(Boolean);
     containers.forEach(container => {
       container.querySelectorAll('.pay-btn').forEach(btn => {
-        btn.addEventListener('click', () => openCashModal(btn.dataset.id));
+        btn.addEventListener('click', () => openCashModal(btn.dataset.id, btn));
       });
       container.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', () => deleteRegistration(btn.dataset.id));
@@ -3930,6 +3953,9 @@
     const tickets = ticketsFor(regId);
     if(!reg || tickets.length === 0) return;
 
+    const paidTickets = tickets.filter(t => t.paid);
+    const ticketsToDownload = (paidTickets.length > 0) ? paidTickets : tickets;
+
     btnEl.disabled = true;
     btnEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px; height:12px; animation:spin 0.8s linear infinite;"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"/></svg><span>...</span>';
     try {
@@ -3938,7 +3964,7 @@
         method: 'POST',
         headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
         body: JSON.stringify({
-          attendees: tickets.map(t => ({ name: t.name, ticketId: t.ticketId, category: t.category }))
+          attendees: ticketsToDownload.map(t => ({ name: t.name, ticketId: t.ticketId, category: t.category }))
         })
       });
       if(!res.ok) {
@@ -3966,6 +3992,9 @@
     const tickets = ticketsFor(regId);
     if(!reg || tickets.length === 0) return;
 
+    const paidTickets = tickets.filter(t => t.paid);
+    const ticketsToInvoice = (paidTickets.length > 0) ? paidTickets : tickets;
+
     btnEl.disabled = true;
     btnEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px; height:12px; animation:spin 0.8s linear infinite;"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"/></svg><span>...</span>';
     try {
@@ -3981,7 +4010,7 @@
         headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
         body: JSON.stringify({
           ordererName: reg.name,
-          attendees: tickets.map(t => ({
+          attendees: ticketsToInvoice.map(t => ({
             name: t.name, category: t.category, price: freshPrices[t.category] || 0
           }))
         })
@@ -4035,7 +4064,19 @@
 
   function ticketsDueCents(regId){
     const tickets = ticketsFor(regId);
-    const total = tickets.reduce((sum, t) => sum + (ticketPrices[t.category] || 0), 0);
+    if (!tickets.length) return 0;
+
+    // Hat mindestens ein Ticket dieser Bestellung bereits bezahlt?
+    const hasExplicitlyPaid = tickets.some(t => t.paid === true);
+
+    // Falls ein Teil bereits bezahlt ist (z. B. Besteller hat bereits bezahlt, neue Begleitung ist unbezahlt):
+    // Nur noch die unbezahlten Tickets berechnen!
+    // Falls noch kein Ticket bezahlt ist: alle Tickets berechnen.
+    const unpaid = hasExplicitlyPaid
+      ? tickets.filter(t => !t.paid)
+      : tickets;
+
+    const total = unpaid.reduce((sum, t) => sum + (ticketPrices[t.category] || 0), 0);
     return Math.round(total * 100);
   }
 
@@ -4053,13 +4094,53 @@
     document.getElementById('cashConfirmBtn').disabled = cashModalState.givenCents < cashModalState.dueCents;
   }
 
-  function openCashModal(regId){
+  function openCashModal(regId, customBtnEl){
     const reg = allRegs.find(r => r.id === regId);
-    const btnEl = document.getElementById('tableBody').querySelector(`.pay-btn[data-id="${regId}"]`);
-    if (!reg || !btnEl) return;
+    const btnEl = customBtnEl || document.querySelector(`.pay-btn[data-id="${regId}"]`);
+    if (!reg) return;
 
-    cashModalState = { regId, btnEl, dueCents: ticketsDueCents(regId), givenCents: 0 };
+    const tickets = ticketsFor(regId);
+    const hasExplicitlyPaid = tickets.some(t => t.paid === true);
+    const unpaidTickets = hasExplicitlyPaid ? tickets.filter(t => !t.paid) : tickets;
+    const paidTickets = hasExplicitlyPaid ? tickets.filter(t => t.paid) : [];
+    const isPartial = paidTickets.length > 0 && unpaidTickets.length > 0;
+    const dueCents = ticketsDueCents(regId);
+
+    cashModalState = { regId, btnEl, dueCents, givenCents: 0 };
     document.getElementById('cashModalName').textContent = reg.name;
+
+    const subEl = document.getElementById('cashModalSubtitle');
+    if (subEl) {
+      if (isPartial) {
+        const unpaidNames = unpaidTickets.map(t => `<span style="font-weight:700; color:#fff;">${escapeHtml(t.name)}</span> <span style="color:#9aa7c2;">(${categoryLabel(t.category)} · ${formatCents(Math.round((ticketPrices[t.category]||0)*100))})</span>`).join(', ');
+        const paidNames = paidTickets.map(t => `<span style="color:#7fe0a8; font-weight:600;">${escapeHtml(t.name)}</span>`).join(', ');
+        subEl.innerHTML = `
+          <div style="background:rgba(255,210,127,0.08); border:1px solid rgba(255,210,127,0.25); border-radius:8px; padding:8px 11px; text-align:left; font-size:12px; line-height:1.45;">
+            <div style="color:#ffd27f; font-weight:700; display:flex; align-items:center; gap:5px; margin-bottom:4px;">
+              <span>⚠️</span>
+              <span>Nachzahlung nur für offene Begleitung(en):</span>
+            </div>
+            <div style="margin-bottom:4px;">${unpaidNames}</div>
+            <div style="font-size:11.5px; border-top:1px dashed rgba(255,255,255,0.08); padding-top:4px; color:#9aa7c2;">
+              ✓ Bereits bezahlt: ${paidNames}
+            </div>
+          </div>
+        `;
+      } else if (tickets.length > 1) {
+        subEl.innerHTML = `
+          <div style="color:var(--text-dim); font-size:12px; text-align:center;">
+            ${tickets.length} Tickets · Alle noch unbezahlt
+          </div>
+        `;
+      } else {
+        subEl.innerHTML = `
+          <div style="color:var(--text-dim); font-size:12px; text-align:center;">
+            1 Ticket (${categoryLabel(reg.category)})
+          </div>
+        `;
+      }
+    }
+
     updateCashDisplay();
     document.getElementById('cashModalOverlay').classList.add('show');
   }
@@ -4067,6 +4148,8 @@
   function closeCashModal(){
     document.getElementById('cashModalOverlay').classList.remove('show');
     cashModalState = { regId: null, btnEl: null, dueCents: 0, givenCents: 0 };
+    const subEl = document.getElementById('cashModalSubtitle');
+    if (subEl) subEl.innerHTML = '';
   }
 
   document.querySelectorAll('.num-btn[data-num]').forEach(btn => {
@@ -4196,7 +4279,9 @@
       const batch = writeBatch(db);
 
       // Falls neue Begleitungen hinzugefügt wurden, ist die Bestellung noch nicht voll bezahlt:
-      const updatedPaidStatus = hasNewCompanions ? false : !!reg.paid;
+      const keptTickets = tickets.filter(t => keptTicketIds.has(t.id));
+      const allKeptArePaid = keptTickets.length > 0 && keptTickets.every(t => t.paid);
+      const updatedPaidStatus = hasNewCompanions ? false : (allKeptArePaid || !!reg.paid);
 
       // 1) Bestellungs-Grunddaten aktualisieren
       batch.update(doc(db, 'registrations', regId), {
@@ -4300,8 +4385,10 @@
   });
 
   async function markAsPaid(regId, btnEl){
-    btnEl.disabled = true;
-    btnEl.textContent = 'Wird verarbeitet...';
+    if (btnEl) {
+      btnEl.disabled = true;
+      btnEl.textContent = 'Wird verarbeitet...';
+    }
     const reg = allRegs.find(r => r.id === regId);
     const tickets = ticketsFor(regId);
     if(!reg || tickets.length === 0) return;
@@ -4338,11 +4425,15 @@
         const errData = await res.json().catch(() => ({}));
         throw new Error(errData.error || `Server meldet HTTP ${res.status}`);
       }
+
+      showAdminToast('Zahlung erfasst & Tickets erfolgreich per E-Mail versendet!');
     } catch(err){
       console.error(err.message || String(err));
       alert('Als bezahlt markiert, aber Ticket-Mail konnte nicht verschickt werden:\n\n' + err.message);
-      btnEl.disabled = false;
-      btnEl.textContent = 'Erneut versuchen';
+      if (btnEl) {
+        btnEl.disabled = false;
+        btnEl.textContent = 'Erneut versuchen';
+      }
     }
   }
 
@@ -4361,8 +4452,9 @@
     document.getElementById('addCompanionModalNameInput').value = '';
     document.getElementById('addCompanionModalCategory').value = '';
     resetCustomSelectVisual(document.getElementById('addCompanionModalCategory'));
-    document.getElementById('addCompanionModalHint').textContent =
-      'Die neue Begleitung wird als unbezahlt angelegt und muss erst an der Vorverkaufskasse bezahlt werden. Sobald bezahlt wurde, wird das Ticket aktiviert und per Mail verschickt.';
+    document.getElementById('addCompanionModalHint').textContent = reg.paid
+      ? 'Der Besteller hat bereits bezahlt. Die Begleitung wird hinzugefügt und kann an der Kasse separat nachgezahlt werden (nur der Betrag für die neue Begleitung wird fällig).'
+      : 'Die neue Begleitung wird als unbezahlt angelegt und muss an der Vorverkaufskasse bezahlt werden.';
     document.getElementById('addCompanionModalOverlay').classList.add('show');
   }
   function closeAddCompanionModal(){
@@ -4426,6 +4518,7 @@
       }
 
       closeAddCompanionModal();
+      showAdminToast(`Begleitung "${name}" hinzugefügt! Nachzahlung an der Kasse möglich.`);
     } catch (err) {
       console.error(err.message || String(err));
       alert('Begleitung konnte nicht hinzugefügt werden: ' + err.message);
