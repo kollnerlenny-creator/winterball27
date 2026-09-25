@@ -593,7 +593,7 @@
         }).catch(() => {});
       }
 
-      // 2) Live-Präsenz Heartbeat (Firestore + API)
+      // 2) Live-Präsenz Heartbeat (über Firestore)
       function sendPing() {
         if (document.visibilityState === 'hidden') return;
         addDoc(collection(db, 'vorabstimmung'), {
@@ -604,12 +604,6 @@
           os,
           browser,
           createdAt: serverTimestamp()
-        }).catch(() => {});
-
-        fetch('/api/presence/ping', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ sid, page: pageTitle, device, os, browser })
         }).catch(() => {});
       }
 
@@ -624,12 +618,6 @@
             type: 'presence_leave',
             sid,
             createdAt: serverTimestamp()
-          }).catch(() => {});
-
-          fetch('/api/presence/leave', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ sid })
           }).catch(() => {});
         }
       });
