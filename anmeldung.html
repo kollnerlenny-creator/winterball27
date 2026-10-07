@@ -193,12 +193,13 @@
     font-size:14.5px; font-weight:600; cursor:pointer;
   }
   .add-companion:hover{background:rgba(143,180,255,0.12);}
-  .companion-row{display:flex; gap:8px; margin-bottom:8px;}
-  .companion-row input{flex:2;}
-  .companion-row select{flex:1; padding:14px 8px; font-size:13px;}
+  .companion-row{display:flex; gap:8px; margin-bottom:8px; align-items:center; flex-wrap:wrap;}
+  .companion-row .companion-name{flex:3; min-width:140px;}
+  .companion-row .companion-category{flex:2; min-width:100px; padding:14px 8px; font-size:13px;}
+  .companion-row .companion-class{flex:2; min-width:90px; padding:14px 12px; font-size:13.5px;}
   .remove-companion{
     background:rgba(255,128,128,0.1); border:1px solid rgba(255,128,128,0.25);
-    color:var(--error); border-radius:var(--radius-sm); width:40px; cursor:pointer; font-size:16px; flex-shrink:0;
+    color:var(--error); border-radius:var(--radius-sm); width:40px; height:48px; cursor:pointer; font-size:16px; flex-shrink:0;
   }
 
   .consent-field{display:flex; align-items:flex-start; gap:10px; margin-bottom:18px;}
@@ -415,6 +416,12 @@
           <option value="u18">Unter 18</option>
           <option value="ue18">18 oder älter</option>
         </select>
+      </div>
+
+      <div class="field" id="schoolClassField" style="display:none;">
+        <label for="schoolClass">Deine Klasse <span style="color:var(--accent-glow);">*</span></label>
+        <input type="text" id="schoolClass" placeholder="z.B. 10b oder 11/1" autocomplete="off">
+        <div style="font-size:11.5px; color:var(--text-dim); margin-top:6px;">Pflichtangabe für alle Minderjährigen (U18) zur Zuordnung und für den Jugendschutz.</div>
       </div>
 
       <div class="field">
@@ -798,6 +805,23 @@
     });
   }
 
+  // Dynamische Anzeige des Klassenfelds für den Besteller bei U18
+  const categorySelect = document.getElementById('category');
+  const schoolClassField = document.getElementById('schoolClassField');
+  const schoolClassInput = document.getElementById('schoolClass');
+
+  function updateMainClassVisibility(){
+    if (categorySelect.value === 'u18') {
+      schoolClassField.style.display = 'block';
+      schoolClassInput.required = true;
+    } else {
+      schoolClassField.style.display = 'none';
+      schoolClassInput.required = false;
+      schoolClassInput.value = '';
+    }
+  }
+  categorySelect.addEventListener('change', updateMainClassVisibility);
+
   const companionsList = document.getElementById('companionsList');
   const companionsSection = document.getElementById('companionsSection');
   const companionYesBtn = document.getElementById('companionYesBtn');
@@ -828,11 +852,24 @@
         <option value="u18">U18</option>
         <option value="ue18">Ü18</option>
       </select>
+      <input type="text" class="companion-class" placeholder="Klasse (z.B. 10b)" style="display:none;" autocomplete="off">
       <button type="button" class="remove-companion">×</button>
     `;
+    const catSelect = row.querySelector('.companion-category');
+    const classInput = row.querySelector('.companion-class');
+
+    catSelect.addEventListener('change', () => {
+      if (catSelect.value === 'u18') {
+        classInput.style.display = 'block';
+      } else {
+        classInput.style.display = 'none';
+        classInput.value = '';
+      }
+    });
+
     row.querySelector('.remove-companion').addEventListener('click', () => row.remove());
     companionsList.appendChild(row);
-    enhanceSelect(row.querySelector('.companion-category'));
+    enhanceSelect(catSelect);
   }
 
   const form = document.getElementById('regForm');
@@ -879,11 +916,13 @@
     const name = document.getElementById('name').value.trim();
     const email = document.getElementById('email').value.trim();
     const category = document.getElementById('category').value;
+    const schoolClass = document.getElementById('schoolClass').value.trim();
 
     const companionRows = Array.from(document.querySelectorAll('.companion-row'));
     const companions = companionRows.map(row => ({
       name: row.querySelector('.companion-name').value.trim(),
-      category: row.querySelector('.companion-category').value
+      category: row.querySelector('.companion-category').value,
+      schoolClass: (row.querySelector('.companion-class')?.value || '').trim()
     })).filter(c => c.name.length > 0);
 
     if(!name || !email || !category){
@@ -896,6 +935,11 @@
       statusEl.textContent = 'Bitte gib deinen vollständigen Vor- und Nachnamen an.';
       return;
     }
+    if(category === 'u18' && !schoolClass){
+      statusEl.className = 'status error';
+      statusEl.textContent = 'Da du unter 18 bist, gib bitte deine Klasse an.';
+      return;
+    }
     if(companions.some(c => !isFullName(c.name))){
       statusEl.className = 'status error';
       statusEl.textContent = 'Bitte bei jeder Begleitung Vor- und Nachname angeben.';
@@ -904,6 +948,11 @@
     if(companions.some(c => !c.category)){
       statusEl.className = 'status error';
       statusEl.textContent = 'Bitte bei jeder Begleitung die Altersgruppe angeben.';
+      return;
+    }
+    if(companions.some(c => c.category === 'u18' && !c.schoolClass)){
+      statusEl.className = 'status error';
+      statusEl.textContent = 'Bitte für alle minderjährigen Begleitpersonen (U18) die Klasse angeben.';
       return;
     }
     if(!document.getElementById('privacyConsent').checked){
@@ -946,23 +995,37 @@
         }
       }
 
-      // 1) Bestellung anlegen (unbezahlt) — enthält den Besteller + Begleitungen mit Altersgruppe
+      // 1) Bestellung anlegen (unbezahlt) — enthält den Besteller + Begleitungen mit Altersgruppe & Klasse
       const regRef = await addDoc(collection(db, 'registrations'), {
-        name, email, category, companions,
-        paid: false, createdAt: serverTimestamp(),
-        privacyConsent: true, privacyConsentAt: serverTimestamp()
+        name,
+        email,
+        category,
+        schoolClass: category === 'u18' ? schoolClass : null,
+        companions: companions.map(c => ({
+          name: c.name,
+          category: c.category,
+          schoolClass: c.category === 'u18' ? (c.schoolClass || null) : null
+        })),
+        paid: false,
+        createdAt: serverTimestamp(),
+        privacyConsent: true,
+        privacyConsentAt: serverTimestamp()
       });
 
       // 2) Ein eigenes Ticket pro Person (Besteller + jede Begleitung), alle mit
       //    derselben E-Mail und registrationId verknüpft, jedes mit eigenem QR-Code.
       const batch = writeBatch(db);
-      const allAttendees = [{ name, category }, ...companions];
+      const allAttendees = [
+        { name, category, schoolClass: category === 'u18' ? schoolClass : null },
+        ...companions.map(c => ({ name: c.name, category: c.category, schoolClass: c.category === 'u18' ? (c.schoolClass || null) : null }))
+      ];
       allAttendees.forEach(attendee => {
         const ticketRef = doc(collection(db, 'tickets'));
         batch.set(ticketRef, {
           registrationId: regRef.id,
           name: attendee.name,
           category: attendee.category,
+          schoolClass: attendee.schoolClass || null,
           email,
           ticketId: genTicketId(),
           paid: false,

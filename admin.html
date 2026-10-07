@@ -329,12 +329,13 @@
     transition:all 0.2s ease;
   }
   .add-companion-btn:hover{background:rgba(143,180,255,0.16); border-color:var(--accent); color:#fff;}
-  .companion-add-row{display:flex; gap:8px;}
-  .companion-add-row input{flex:1;}
+  .companion-add-row{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+  .companion-add-row input{flex:1; min-width:130px;}
+  .companion-add-row .companion-class-input{flex:0 0 110px; min-width:90px;}
   .companion-add-row select{flex:0 0 90px; padding:10px 8px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:13px;}
   .companion-add-row button{
-    width:36px; border-radius:var(--radius-sm); border:1px solid rgba(255,128,128,0.3);
-    background:rgba(255,128,128,0.1); color:var(--error); cursor:pointer; font-size:16px;
+    width:36px; height:38px; border-radius:var(--radius-sm); border:1px solid rgba(255,128,128,0.3);
+    background:rgba(255,128,128,0.1); color:var(--error); cursor:pointer; font-size:16px; flex-shrink:0;
     transition:all 0.15s ease;
   }
   .companion-add-row button:hover{background:rgba(255,128,128,0.22); border-color:var(--error);}
@@ -1656,6 +1657,11 @@
         <option value="ue18">Ü18</option>
       </select>
     </div>
+    <div id="addCompanionModalClassRow" style="display:none; flex-direction:column; gap:4px; margin-top:10px;">
+      <label style="font-size:12px; color:var(--text-dim);" for="addCompanionModalClassInput">Klasse der Begleitung (U18)</label>
+      <input type="text" id="addCompanionModalClassInput" placeholder="z.B. 10b oder 11/1"
+        style="padding:10px 12px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:14px;">
+    </div>
     <div id="addCompanionModalHint" style="font-size:12px; color:var(--text-dim); margin:12px 0 4px;"></div>
     <div class="cash-modal-actions" style="margin-top:14px;">
       <button type="button" class="secondary" id="addCompanionModalCancelBtn">Abbrechen</button>
@@ -1685,6 +1691,11 @@
         <option value="u18">U18</option>
         <option value="ue18">Ü18</option>
       </select>
+    </div>
+    <div id="editRegClassRow" style="display:none; flex-direction:column; gap:4px; margin-bottom:16px;">
+      <label style="font-size:12px; color:var(--text-dim);" for="editRegClassInput">Klasse des Bestellers (U18)</label>
+      <input type="text" id="editRegClassInput" placeholder="z.B. 10b oder 11/1"
+        style="padding:10px 12px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:14px;">
     </div>
 
     <div style="font-size:12px; color:var(--text-dim); font-weight:600; margin-bottom:8px;">Begleitungen</div>
@@ -3683,10 +3694,12 @@
       const matchesSearch = !term ||
         (r.name || '').toLowerCase().includes(term) ||
         (r.email || '').toLowerCase().includes(term) ||
-        (r.companions || []).some(c => (c.name || '').toLowerCase().includes(term)) ||
+        (r.schoolClass || '').toLowerCase().includes(term) ||
+        (r.companions || []).some(c => (c.name || '').toLowerCase().includes(term) || (c.schoolClass || '').toLowerCase().includes(term)) ||
         tickets.some(t =>
           (t.name || '').toLowerCase().includes(term) ||
           (t.ticketId || '').toLowerCase().includes(term) ||
+          (t.schoolClass || '').toLowerCase().includes(term) ||
           t.id.toLowerCase().includes(term)
         );
 
@@ -3740,8 +3753,12 @@
           const dueCents = ticketsDueCents(r.id);
           const paidCount = tickets.filter(t => t.paid).length;
 
+          const ordererClassBadge = (r.category === 'u18' && r.schoolClass)
+            ? `<span class="badge out" style="color:var(--accent-glow); border-color:rgba(143,180,255,0.35); background:rgba(143,180,255,0.12);" title="Klasse: ${escapeHtml(r.schoolClass)}">Kl. ${escapeHtml(r.schoolClass)}</span>`
+            : '';
+
           const companionsHtml = (r.companions||[]).length
-            ? `<ul class="attendee-list">${r.companions.map(c => `<li>${escapeHtml(c.name)} <span class="badge out">${categoryLabel(c.category)}</span></li>`).join('')}</ul>`
+            ? `<ul class="attendee-list">${r.companions.map(c => `<li>${escapeHtml(c.name)} <span class="badge out">${categoryLabel(c.category)}</span>${c.category === 'u18' && c.schoolClass ? ` <span class="badge out" style="color:var(--accent-glow); border-color:rgba(143,180,255,0.35); background:rgba(143,180,255,0.12);">Kl. ${escapeHtml(c.schoolClass)}</span>` : ''}</li>`).join('')}</ul>`
             : '<span style="color:var(--text-dim)">—</span>';
 
           const ticketsHtml = tickets.length
@@ -3749,6 +3766,7 @@
                 <li>
                   <span style="display:inline-flex; align-items:center; gap:5px; flex-wrap:wrap;">
                     <span>${escapeHtml(t.name)}</span>
+                    ${t.category === 'u18' && (t.schoolClass || (t.name === r.name ? r.schoolClass : null)) ? `<span class="badge out" style="font-size:9.5px; padding:1px 5px; color:var(--accent-glow); border-color:rgba(143,180,255,0.3); background:rgba(143,180,255,0.1);">Kl. ${escapeHtml(t.schoolClass || r.schoolClass)}</span>` : ''}
                     ${!t.paid && hasExplicitlyPaid ? '<span class="badge out" style="font-size:9.5px; padding:1px 5px; color:#ffd27f; border-color:rgba(255,210,127,0.3); background:rgba(255,210,127,0.12);">Offen</span>' : ''}
                   </span>
                   <button class="checkin-toggle ${t.checkedIn ? 'in' : ''}" data-ticket-id="${t.id}" data-name="${escapeHtml(t.name)}" data-state="${t.checkedIn ? '1' : '0'}">
@@ -3761,7 +3779,7 @@
 
           return `
           <tr>
-            <td><span class="attendee-list orderer">${escapeHtml(r.name||'')} <span class="badge out">${categoryLabel(r.category)}</span></span></td>
+            <td><span class="attendee-list orderer">${escapeHtml(r.name||'')} <span class="badge out">${categoryLabel(r.category)}</span> ${ordererClassBadge}</span></td>
             <td>
               ${companionsHtml}
               <button class="add-companion-btn" data-id="${r.id}" title="Nachträglich eine Begleitung hinzufügen" style="display:inline-flex; align-items:center; gap:4px;">
@@ -3818,11 +3836,14 @@
           const dueCents = ticketsDueCents(r.id);
           const paidCount = tickets.filter(t => t.paid).length;
           const checkedCount = tickets.filter(t => t.checkedIn).length;
-          const attendeesList = tickets.map(t => `
+          const attendeesList = tickets.map(t => {
+            const tClass = t.schoolClass || (t.name === r.name ? r.schoolClass : null);
+            return `
             <div class="order-card-attendee">
               <div>
-                <div style="font-weight:600; color:var(--text); display:flex; align-items:center; gap:6px;">
+                <div style="font-weight:600; color:var(--text); display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                   <span>${escapeHtml(t.name)}</span>
+                  ${t.category === 'u18' && tClass ? `<span style="font-size:9.5px; font-weight:700; color:var(--accent-glow); background:rgba(143,180,255,0.15); border:1px solid rgba(143,180,255,0.3); padding:1px 5px; border-radius:4px;">Kl. ${escapeHtml(tClass)}</span>` : ''}
                   ${!t.paid && hasExplicitlyPaid ? '<span style="font-size:9.5px; font-weight:700; color:#ffd27f; background:rgba(255,210,127,0.15); border:1px solid rgba(255,210,127,0.3); padding:1px 5px; border-radius:4px;">Offen</span>' : ''}
                 </div>
                 <div style="font-size:11px; color:var(--text-dim);">${categoryLabel(t.category)}${t.ticketId ? ' · ' + escapeHtml(t.ticketId) : ''}</div>
@@ -3833,7 +3854,8 @@
                   : '<span>Einchecken</span>'}
               </button>
             </div>
-          `).join('');
+          `;
+          }).join('');
 
           return `
             <div class="order-card" data-id="${r.id}">
@@ -3842,6 +3864,7 @@
                   <div class="order-card-title">
                     <span>${escapeHtml(r.name || '')}</span>
                     <span class="badge out">${categoryLabel(r.category)}</span>
+                    ${r.category === 'u18' && r.schoolClass ? `<span class="badge out" style="color:var(--accent-glow); border-color:rgba(143,180,255,0.35); background:rgba(143,180,255,0.12);">Kl. ${escapeHtml(r.schoolClass)}</span>` : ''}
                     <span class="badge ${r.paid ? 'in' : 'out'}" style="${!r.paid ? 'background:rgba(255,210,127,0.15); color:var(--warn); border:1px solid rgba(255,210,127,0.3);' : ''}">
                       ${r.paid ? 'Bezahlt' : (isPartial ? `${paidCount}/${tickets.length} bezahlt` : 'Unbezahlt')}
                     </span>
@@ -4184,21 +4207,38 @@
   // --- Bestellung vollständig bearbeiten (Name, E-Mail, Kategorie, Begleitungen) ---
   let editRegId = null;
 
+  const editRegCatEl = document.getElementById('editRegCategory');
+  if (editRegCatEl) {
+    editRegCatEl.addEventListener('change', () => {
+      const classRow = document.getElementById('editRegClassRow');
+      if (classRow) classRow.style.display = editRegCatEl.value === 'u18' ? 'flex' : 'none';
+    });
+  }
+
   function makeEditCompanionRow(companion, ticketId){
     const row = document.createElement('div');
     row.className = 'companion-add-row';
     row.dataset.ticketId = ticketId || ''; // vorhandenes Ticket, das mit dieser Zeile verknüpft ist (leer = neu)
+    const isU18 = companion.category !== 'ue18';
     row.innerHTML = `
       <input type="text" class="edit-companion-name" value="${(companion.name||'').replace(/"/g,'&quot;')}" placeholder="Vor- und Nachname"
-        style="padding:10px 12px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:13px;">
-      <select class="edit-companion-category">
+        style="padding:10px 12px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:13px; flex:2;">
+      <select class="edit-companion-category" style="flex:1;">
         <option value="u18">U18</option>
         <option value="ue18">Ü18</option>
       </select>
+      <input type="text" class="edit-companion-class" value="${(companion.schoolClass||'').replace(/"/g,'&quot;')}" placeholder="Klasse (z.B. 10b)"
+        style="${isU18 ? 'display:block;' : 'display:none;'} max-width:115px; padding:10px 10px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:13px;">
       <button type="button" title="Begleitung entfernen">×</button>`;
-    row.querySelector('.edit-companion-category').value = companion.category === 'ue18' ? 'ue18' : 'u18';
+    const catSelect = row.querySelector('.edit-companion-category');
+    const classInput = row.querySelector('.edit-companion-class');
+    catSelect.value = isU18 ? 'u18' : 'ue18';
+    catSelect.addEventListener('change', () => {
+      classInput.style.display = catSelect.value === 'u18' ? 'block' : 'none';
+      if (catSelect.value !== 'u18') classInput.value = '';
+    });
     row.querySelector('button').addEventListener('click', () => row.remove());
-    enhanceSelect(row.querySelector('.edit-companion-category'));
+    enhanceSelect(catSelect);
     return row;
   }
 
@@ -4209,8 +4249,14 @@
 
     document.getElementById('editRegNameInput').value = reg.name || '';
     document.getElementById('editRegEmailInput').value = reg.email || '';
-    document.getElementById('editRegCategory').value = reg.category === 'ue18' ? 'ue18' : 'u18';
+    const catVal = reg.category === 'ue18' ? 'ue18' : 'u18';
+    document.getElementById('editRegCategory').value = catVal;
     resetCustomSelectVisual(document.getElementById('editRegCategory'));
+
+    const classInput = document.getElementById('editRegClassInput');
+    const classRow = document.getElementById('editRegClassRow');
+    if (classInput) classInput.value = reg.schoolClass || '';
+    if (classRow) classRow.style.display = catVal === 'u18' ? 'flex' : 'none';
 
     // Bestehende Tickets so gut wie möglich den Begleitungen zuordnen (per Name +
     // Kategorie), damit beim Speichern genau die richtigen Ticket-Dokumente
@@ -4240,7 +4286,7 @@
   }
 
   document.getElementById('editRegAddCompanionBtn').addEventListener('click', () => {
-    document.getElementById('editRegCompanionsList').appendChild(makeEditCompanionRow({ name: '', category: 'u18' }, ''));
+    document.getElementById('editRegCompanionsList').appendChild(makeEditCompanionRow({ name: '', category: 'u18', schoolClass: '' }, ''));
   });
   document.getElementById('editRegCancelBtn').addEventListener('click', closeEditRegModal);
   document.getElementById('editRegModalOverlay').addEventListener('click', (e) => {
@@ -4255,14 +4301,20 @@
     const name = document.getElementById('editRegNameInput').value.trim();
     const email = document.getElementById('editRegEmailInput').value.trim();
     const category = document.getElementById('editRegCategory').value;
+    const schoolClass = category === 'u18' ? (document.getElementById('editRegClassInput')?.value || '').trim() : null;
     if (!name || !email) { alert('Name und E-Mail dürfen nicht leer sein.'); return; }
 
     const companionRows = Array.from(document.getElementById('editRegCompanionsList').children);
-    const companionEntries = companionRows.map(row => ({
-      ticketId: row.dataset.ticketId || null,
-      name: row.querySelector('.edit-companion-name').value.trim(),
-      category: row.querySelector('.edit-companion-category').value
-    })).filter(c => c.name);
+    const companionEntries = companionRows.map(row => {
+      const cCat = row.querySelector('.edit-companion-category').value;
+      const cClass = (row.querySelector('.edit-companion-class')?.value || '').trim();
+      return {
+        ticketId: row.dataset.ticketId || null,
+        name: row.querySelector('.edit-companion-name').value.trim(),
+        category: cCat,
+        schoolClass: cCat === 'u18' ? (cClass || null) : null
+      };
+    }).filter(c => c.name);
 
     const hasNewCompanions = companionEntries.some(c => !c.ticketId);
 
@@ -4286,7 +4338,8 @@
       // 1) Bestellungs-Grunddaten aktualisieren
       batch.update(doc(db, 'registrations', regId), {
         name, email, category,
-        companions: companionEntries.map(c => ({ name: c.name, category: c.category })),
+        schoolClass: schoolClass || null,
+        companions: companionEntries.map(c => ({ name: c.name, category: c.category, schoolClass: c.schoolClass || null })),
         paid: updatedPaidStatus
       });
 
@@ -4294,12 +4347,12 @@
       //    anlegen, falls aus irgendeinem Grund noch keins existiert
       let ordererTicketIdVal = ordererTicket ? ordererTicket.ticketId : null;
       if (ordererTicket) {
-        batch.update(doc(db, 'tickets', ordererTicket.id), { name, category, email });
+        batch.update(doc(db, 'tickets', ordererTicket.id), { name, category, schoolClass: schoolClass || null, email });
       } else {
         const ref = doc(collection(db, 'tickets'));
         ordererTicketIdVal = genTicketId();
         batch.set(ref, {
-          registrationId: regId, name, category, email,
+          registrationId: regId, name, category, schoolClass: schoolClass || null, email,
           ticketId: ordererTicketIdVal, paid: !!reg.paid, checkedIn: false, createdAt: serverTimestamp()
         });
       }
@@ -4307,23 +4360,23 @@
       // 3) Begleitungen abgleichen: bestehende Tickets updaten, entfernte löschen,
       //    neue anlegen (neu hinzugefügte Begleitungen sind IMMER unbezahlt: paid: false)
       const allUpdatedAttendees = [
-        { name, category, ticketId: ordererTicketIdVal }
+        { name, category, schoolClass: schoolClass || null, ticketId: ordererTicketIdVal }
       ];
 
       companionEntries.forEach(c => {
         if (c.ticketId) {
-          batch.update(doc(db, 'tickets', c.ticketId), { name: c.name, category: c.category, email });
+          batch.update(doc(db, 'tickets', c.ticketId), { name: c.name, category: c.category, schoolClass: c.schoolClass || null, email });
           const existingTicket = tickets.find(t => t.id === c.ticketId);
           const tId = existingTicket ? existingTicket.ticketId : genTicketId();
-          allUpdatedAttendees.push({ name: c.name, category: c.category, ticketId: tId });
+          allUpdatedAttendees.push({ name: c.name, category: c.category, schoolClass: c.schoolClass || null, ticketId: tId });
         } else {
           const ref = doc(collection(db, 'tickets'));
           const ticketId = genTicketId();
           batch.set(ref, {
-            registrationId: regId, name: c.name, category: c.category, email,
+            registrationId: regId, name: c.name, category: c.category, schoolClass: c.schoolClass || null, email,
             ticketId, paid: false, checkedIn: false, createdAt: serverTimestamp()
           });
-          allUpdatedAttendees.push({ name: c.name, category: c.category, ticketId });
+          allUpdatedAttendees.push({ name: c.name, category: c.category, schoolClass: c.schoolClass || null, ticketId });
         }
       });
       tickets.forEach(t => {
@@ -4444,6 +4497,14 @@
   // --- Nachträglich eine Begleitung zu einer bestehenden Bestellung hinzufügen ---
   let addCompanionRegId = null;
 
+  const addCompCatEl = document.getElementById('addCompanionModalCategory');
+  if (addCompCatEl) {
+    addCompCatEl.addEventListener('change', () => {
+      const classRow = document.getElementById('addCompanionModalClassRow');
+      if (classRow) classRow.style.display = addCompCatEl.value === 'u18' ? 'flex' : 'none';
+    });
+  }
+
   function openAddCompanionModal(regId){
     const reg = allRegs.find(r => r.id === regId);
     if (!reg) return;
@@ -4452,6 +4513,10 @@
     document.getElementById('addCompanionModalNameInput').value = '';
     document.getElementById('addCompanionModalCategory').value = '';
     resetCustomSelectVisual(document.getElementById('addCompanionModalCategory'));
+    const classInput = document.getElementById('addCompanionModalClassInput');
+    const classRow = document.getElementById('addCompanionModalClassRow');
+    if (classInput) classInput.value = '';
+    if (classRow) classRow.style.display = 'none';
     document.getElementById('addCompanionModalHint').textContent = reg.paid
       ? 'Der Besteller hat bereits bezahlt. Die Begleitung wird hinzugefügt und kann an der Kasse separat nachgezahlt werden (nur der Betrag für die neue Begleitung wird fällig).'
       : 'Die neue Begleitung wird als unbezahlt angelegt und muss an der Vorverkaufskasse bezahlt werden.';
@@ -4471,8 +4536,13 @@
     const reg = allRegs.find(r => r.id === regId);
     const name = document.getElementById('addCompanionModalNameInput').value.trim();
     const category = document.getElementById('addCompanionModalCategory').value;
+    const compClass = (document.getElementById('addCompanionModalClassInput')?.value || '').trim();
     if (!reg || !name || !category) {
       alert('Bitte Name und Altersgruppe der Begleitung ausfüllen.');
+      return;
+    }
+    if (category === 'u18' && !compClass) {
+      alert('Bitte die Klasse der minderjährigen Begleitperson angeben.');
       return;
     }
 
@@ -4482,7 +4552,8 @@
 
     try {
       const ticketId = genTicketId();
-      const newCompanion = { name, category };
+      const schoolClassVal = category === 'u18' ? compClass : null;
+      const newCompanion = { name, category, schoolClass: schoolClassVal };
 
       // 1) Begleitung in der Bestellung ergänzen + neues Ticket dafür anlegen
       // WICHTIG: Die neue Begleitung ist UNBEZAHLT!
@@ -4495,7 +4566,7 @@
       });
       const ticketRef = doc(collection(db, 'tickets'));
       batch.set(ticketRef, {
-        registrationId: regId, name, category, email: reg.email,
+        registrationId: regId, name, category, schoolClass: schoolClassVal, email: reg.email,
         ticketId, paid: false, checkedIn: false, createdAt: serverTimestamp()
       });
       await batch.commit();
@@ -4536,16 +4607,23 @@
     const row = document.createElement('div');
     row.className = 'companion-add-row';
     row.innerHTML = `
-      <input type="text" class="add-companion-name" placeholder="Name der Begleitung">
-      <select class="add-companion-category">
+      <input type="text" class="add-companion-name" placeholder="Name der Begleitung" style="flex:2;">
+      <select class="add-companion-category" style="flex:1;">
         <option value="">Alter?</option>
         <option value="u18">U18</option>
         <option value="ue18">Ü18</option>
       </select>
+      <input type="text" class="add-companion-class" placeholder="Klasse" style="display:none; max-width:85px; padding:10px 8px; font-size:13px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text);" autocomplete="off">
       <button type="button">×</button>`;
+    const catSelect = row.querySelector('.add-companion-category');
+    const classInput = row.querySelector('.add-companion-class');
+    catSelect.addEventListener('change', () => {
+      classInput.style.display = catSelect.value === 'u18' ? 'block' : 'none';
+      if (catSelect.value !== 'u18') classInput.value = '';
+    });
     row.querySelector('button').addEventListener('click', () => row.remove());
     companionsBlock.appendChild(row);
-    enhanceSelect(row.querySelector('.add-companion-category'));
+    enhanceSelect(catSelect);
   }
 
   document.getElementById('addBtn').addEventListener('click', () => {
@@ -4582,12 +4660,14 @@
   // Registrations-ID zurück, oder null bei einem Validierungsfehler.
   async function createManualRegistration(){
     const name = document.getElementById('addName').value.trim();
+    const klasse = document.getElementById('addKlasse').value.trim();
     const email = document.getElementById('addEmail').value.trim();
     const category = document.getElementById('addCategory').value;
     const companionRows = Array.from(document.querySelectorAll('.companion-add-row'));
     const companions = companionRows.map(row => ({
       name: row.querySelector('.add-companion-name').value.trim(),
-      category: row.querySelector('.add-companion-category').value
+      category: row.querySelector('.add-companion-category').value,
+      schoolClass: (row.querySelector('.add-companion-class')?.value || '').trim() || null
     })).filter(c => c.name.length > 0);
 
     if(!name || !email || !category){
@@ -4599,16 +4679,18 @@
       return null;
     }
 
+    const schoolClassVal = category === 'u18' ? (klasse || null) : null;
+
     const regRef = await addDoc(collection(db, 'registrations'), {
-      name, email, category, companions, paid: false, createdAt: serverTimestamp()
+      name, email, category, schoolClass: schoolClassVal, companions, paid: false, createdAt: serverTimestamp()
     });
 
-    const attendees = [{ name, category }, ...companions];
+    const attendees = [{ name, category, schoolClass: schoolClassVal }, ...companions];
     const ticketRefs = attendees.map(() => doc(collection(db, 'tickets')));
     const batch = writeBatch(db);
     attendees.forEach((attendee, i) => {
       batch.set(ticketRefs[i], {
-        registrationId: regRef.id, name: attendee.name, category: attendee.category, email,
+        registrationId: regRef.id, name: attendee.name, category: attendee.category, schoolClass: attendee.schoolClass || null, email,
         ticketId: genTicketId(), paid: false, checkedIn: false, createdAt: serverTimestamp()
       });
     });
@@ -4621,13 +4703,13 @@
     // hier zur Sicherheit auf Duplikate prüfen, statt blind einzufügen.
     const now = new Date();
     if (!allRegs.some(r => r.id === regRef.id)) {
-      allRegs.unshift({ id: regRef.id, name, email, category, companions, paid: false, createdAt: now });
+      allRegs.unshift({ id: regRef.id, name, email, category, schoolClass: schoolClassVal, companions, paid: false, createdAt: now });
     }
     attendees.forEach((attendee, i) => {
       const ticketDocId = ticketRefs[i].id;
       if (!allTickets.some(t => t.id === ticketDocId)) {
         allTickets.push({
-          id: ticketDocId, registrationId: regRef.id, name: attendee.name, category: attendee.category,
+          id: ticketDocId, registrationId: regRef.id, name: attendee.name, category: attendee.category, schoolClass: attendee.schoolClass || null,
           email, ticketId: null, paid: false, checkedIn: false, createdAt: now
         });
       }
@@ -4912,10 +4994,17 @@
   }
 
   function exportCsv(filename){
-    const header = ['Besteller','Begleitungen','E-Mail','Tickets gesamt','Bezahlt','Angemeldet am','Bezahlt am'];
+    const header = ['Besteller','Altersgruppe','Klasse','Begleitungen','E-Mail','Tickets gesamt','Bezahlt','Angemeldet am','Bezahlt am'];
     const rows = allRegs.map(r => [
-      r.name, (r.companions||[]).map(c => `${c.name} (${categoryLabel(c.category)})`).join('; '), r.email,
-      ticketsFor(r.id).length, r.paid ? 'ja':'nein', formatTimestamp(r.createdAt), r.paid ? formatTimestamp(r.paidAt) : ''
+      r.name,
+      categoryLabel(r.category),
+      r.schoolClass || '',
+      (r.companions||[]).map(c => `${c.name} (${categoryLabel(c.category)}${c.category === 'u18' && c.schoolClass ? ', Kl. ' + c.schoolClass : ''})`).join('; '),
+      r.email,
+      ticketsFor(r.id).length,
+      r.paid ? 'ja':'nein',
+      formatTimestamp(r.createdAt),
+      r.paid ? formatTimestamp(r.paidAt) : ''
     ]);
     const csv = [header, ...rows].map(row => row.map(v => `"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
     const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
