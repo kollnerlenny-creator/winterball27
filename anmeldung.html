@@ -1322,7 +1322,6 @@
         console.error('Bestätigungsmail fehlgeschlagen:', mailErr ? (mailErr.message || String(mailErr)) : 'Fehler');
       }
 
-      lastRegisteredName = name;
       document.getElementById('formView').classList.remove('show');
       document.getElementById('successView').classList.add('active');
 
@@ -1342,7 +1341,6 @@
 
   // --- Bewertungs-Modal nach erfolgreicher Anmeldung ---
   let modalSelectedRating = 0;
-  let lastRegisteredName = '';
   const modalBackdrop = document.getElementById('ratingModalBackdrop');
   const modalFlakeButtons = Array.from(document.querySelectorAll('#modalSnowflakes .modal-snowflake-btn'));
   const reopenRatingBtn = document.getElementById('reopenRatingBtn');
@@ -1393,19 +1391,13 @@
     btn.disabled = true;
     btn.textContent = 'Wird gesendet...';
 
-    const authorName = (lastRegisteredName || '').trim();
-
     try {
-      const ratingData = {
+      await addDoc(collection(db, 'ratings'), {
         stars: modalSelectedRating,
         comment: document.getElementById('modalRatingComment').value.trim().slice(0, 500),
         context: 'registration',
         createdAt: serverTimestamp()
-      };
-      if (authorName) {
-        ratingData.name = authorName.slice(0, 70);
-      }
-      await addDoc(collection(db, 'ratings'), ratingData);
+      });
       document.getElementById('modalRatingActions').style.display = 'none';
       document.getElementById('modalSnowflakes').style.pointerEvents = 'none';
       document.getElementById('modalSnowflakes').style.opacity = '0.5';
