@@ -496,7 +496,7 @@
         <input type="hidden" id="email" name="email">
 
         <div class="email-hint" id="emailHint">
-          💡 Gib nur deinen Benutzernamen vor dem @ ein (z. B. <strong>vorname.nachname2026</strong>).
+          💡 Gib nur deinen Benutzernamen vor dem @ ein
         </div>
       </div>
       <div class="field">
@@ -908,29 +908,72 @@
   const emailLabel = document.getElementById('emailLabel');
   const lernsaxSuffix = document.getElementById('lernsaxSuffix');
 
+  // Bereinigt fehlerhafte E-Mail-Eingaben, insbesondere versehentlich doppelte
+  // Domain-Endungen wie "@gymwilsdruff.lernsax.de@gymwilsdruff.lernsax.de"
+  function sanitizeEmail(emailStr){
+    if (!emailStr) return '';
+    let str = String(emailStr).trim().toLowerCase();
+
+    // 1) Doppeltes oder mehrfaches @gymwilsdruff.lernsax.de oder @lernsax.de
+    // z. B. "max.mustermann@gymwilsdruff.lernsax.de@gymwilsdruff.lernsax.de"
+    // oder "max.mustermann@gymwilsdruff.lernsax.degymwilsdruff.lernsax.de"
+    // oder "max.mustermann@gymwilsdruff.lernsax.de@lernsax.de"
+    const doubleDomainRegex = /(@(?:gymwilsdruff\.)?lernsax\.de)(?:\s*@?(?:gymwilsdruff\.)?lernsax\.de)+/gi;
+    if (doubleDomainRegex.test(str)) {
+      str = str.replace(doubleDomainRegex, '$1');
+    }
+
+    // 2) Falls nach dem ersten Bereinigen immer noch mehr als ein @ vorhanden ist
+    // und eine lernsax.de-Domain darin vorkommt:
+    if ((str.match(/@/g) || []).length > 1 && str.includes('lernsax.de')) {
+      const parts = str.split('@');
+      const local = parts[0].trim();
+      const domain = parts.find(p => p.includes('lernsax.de')) || 'gymwilsdruff.lernsax.de';
+      str = `${local}@${domain}`;
+    }
+
+    return str;
+  }
+
   function syncEmail(){
     if (emailMode === 'lernsax') {
       let raw = (lernsaxUsername.value || '').trim().toLowerCase();
-      // Falls der Nutzer aus Versehen @ oder die ganze Domain eingibt oder einfügt:
-      if (raw.includes('@')) {
-        raw = raw.split('@')[0].trim();
+      let hadDomain = false;
+      // Falls der Nutzer aus Versehen @ oder die ganze Domain (auch mehrfach) eingibt oder einfügt:
+      if (raw.includes('@') || /lernsax\.de/i.test(raw)) {
+        hadDomain = true;
+        raw = raw.split('@')[0].replace(/(?:@?gymwilsdruff)?\.?lernsax\.de$/i, '').trim();
         lernsaxUsername.value = raw;
       }
       const full = raw ? `${raw}@gymwilsdruff.lernsax.de` : '';
       hiddenEmail.value = full;
       if (raw) {
         emailHint.className = 'email-hint highlight';
-        emailHint.innerHTML = `✓ Vollständige Adresse: <strong>${full}</strong>`;
+        emailHint.innerHTML = hadDomain
+          ? `ℹ️ <strong>"@gymwilsdruff.lernsax.de"</strong> ist bereits vorgegeben und wurde im Feld entfernt. Deine E-Mail: <strong>${full}</strong>`
+          : `✓ Vollständige Adresse: <strong>${full}</strong>`;
       } else {
         emailHint.className = 'email-hint';
-        emailHint.innerHTML = '💡 Gib nur deinen Benutzernamen vor dem @ ein (z. B. <strong>vorname.nachname2026</strong>).';
+        emailHint.innerHTML = '💡 Gib nur deinen Benutzernamen vor dem @ ein.';
       }
     } else {
-      const raw = (otherEmailInput.value || '').trim().toLowerCase();
+      let raw = (otherEmailInput.value || '').trim().toLowerCase();
+      const cleaned = sanitizeEmail(raw);
+      let wasCorrected = false;
+      if (cleaned !== raw && raw.length > 0) {
+        wasCorrected = true;
+        raw = cleaned;
+        otherEmailInput.value = cleaned;
+      }
       hiddenEmail.value = raw;
       if (raw) {
-        emailHint.className = 'email-hint';
-        emailHint.textContent = `✉️ Bestätigung & Ticket gehen an: ${raw}`;
+        if (wasCorrected) {
+          emailHint.className = 'email-hint highlight';
+          emailHint.innerHTML = `⚠️ <strong>Doppeltes "@gymwilsdruff.lernsax.de" erkannt:</strong> Wurde automatisch korrigiert zu <strong>${raw}</strong>`;
+        } else {
+          emailHint.className = 'email-hint';
+          emailHint.textContent = `✉️ Bestätigung & Ticket gehen an: ${raw}`;
+        }
       } else {
         emailHint.className = 'email-hint';
         emailHint.textContent = '💡 Sowohl LernSax- als auch private E-Mail-Adressen (z. B. Gmail, GMX, Web.de) funktionieren.';
@@ -1097,7 +1140,8 @@
 
     syncEmail();
     const name = document.getElementById('name').value.trim();
-    const email = document.getElementById('email').value.trim();
+    let email = sanitizeEmail(document.getElementById('email').value.trim());
+    document.getElementById('email').value = email;
     const category = document.getElementById('category').value;
     const schoolClass = document.getElementById('schoolClass').value.trim();
 
@@ -1133,6 +1177,11 @@
     if(!email || !email.includes('@') || !email.includes('.')){
       statusEl.className = 'status error';
       statusEl.textContent = 'Bitte gib eine gültige E-Mail-Adresse an.';
+      return;
+    }
+    if(email.split('@').length > 2){
+      statusEl.className = 'status error';
+      statusEl.textContent = 'Die E-Mail-Adresse enthält mehr als ein "@"-Zeichen. Bitte überprüfe deine Eingabe.';
       return;
     }
     if(!category){

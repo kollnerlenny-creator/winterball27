@@ -4293,13 +4293,30 @@
     if (e.target.id === 'editRegModalOverlay') closeEditRegModal();
   });
 
+  // Bereinigt fehlerhafte E-Mail-Eingaben (z. B. doppelte Domain-Endung)
+  function sanitizeEmail(emailStr){
+    if (!emailStr) return '';
+    let str = String(emailStr).trim().toLowerCase();
+    const doubleDomainRegex = /(@(?:gymwilsdruff\.)?lernsax\.de)(?:\s*@?(?:gymwilsdruff\.)?lernsax\.de)+/gi;
+    if (doubleDomainRegex.test(str)) {
+      str = str.replace(doubleDomainRegex, '$1');
+    }
+    if ((str.match(/@/g) || []).length > 1 && str.includes('lernsax.de')) {
+      const parts = str.split('@');
+      const local = parts[0].trim();
+      const domain = parts.find(p => p.includes('lernsax.de')) || 'gymwilsdruff.lernsax.de';
+      str = `${local}@${domain}`;
+    }
+    return str;
+  }
+
   document.getElementById('editRegSaveBtn').addEventListener('click', async () => {
     const regId = editRegId;
     const reg = allRegs.find(r => r.id === regId);
     if (!reg) return;
 
     const name = document.getElementById('editRegNameInput').value.trim();
-    const email = document.getElementById('editRegEmailInput').value.trim();
+    const email = sanitizeEmail(document.getElementById('editRegEmailInput').value.trim());
     const category = document.getElementById('editRegCategory').value;
     const schoolClass = category === 'u18' ? (document.getElementById('editRegClassInput')?.value || '').trim() : null;
     if (!name || !email) { alert('Name und E-Mail dürfen nicht leer sein.'); return; }
@@ -4661,7 +4678,7 @@
   async function createManualRegistration(){
     const name = document.getElementById('addName').value.trim();
     const klasse = document.getElementById('addKlasse').value.trim();
-    const email = document.getElementById('addEmail').value.trim();
+    const email = sanitizeEmail(document.getElementById('addEmail').value.trim());
     const category = document.getElementById('addCategory').value;
     const companionRows = Array.from(document.querySelectorAll('.companion-add-row'));
     const companions = companionRows.map(row => ({
