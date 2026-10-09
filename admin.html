@@ -1051,6 +1051,10 @@
           <option value="u18">U18</option>
           <option value="ue18">Ü18</option>
         </select>
+        <select id="addSalutation" style="max-width:130px;">
+          <option value="du">Anrede: Du</option>
+          <option value="sie">Anrede: Sie</option>
+        </select>
       </div>
       <div class="companions-block" id="companionsBlock"></div>
       <button type="button" id="addCompanionFieldBtn">+ Begleitung hinzufügen</button>
@@ -1684,6 +1688,13 @@
       <label style="font-size:12px; color:var(--text-dim);" for="editRegEmailInput">E-Mail</label>
       <input type="email" id="editRegEmailInput"
         style="padding:10px 12px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:14px;">
+    </div>
+    <div style="display:flex; flex-direction:column; gap:4px; margin-bottom:12px;">
+      <label style="font-size:12px; color:var(--text-dim);" for="editRegSalutation">Anrede (Du / Sie)</label>
+      <select id="editRegSalutation">
+        <option value="du">Du (persönlich)</option>
+        <option value="sie">Sie (formell)</option>
+      </select>
     </div>
     <div style="display:flex; flex-direction:column; gap:4px; margin-bottom:16px;">
       <label style="font-size:12px; color:var(--text-dim);" for="editRegCategory">Altersgruppe des Bestellers</label>
@@ -3753,6 +3764,10 @@
           const dueCents = ticketsDueCents(r.id);
           const paidCount = tickets.filter(t => t.paid).length;
 
+          const salutationBadge = (r.salutation === 'sie' || r.anrede === 'Sie')
+            ? '<span class="badge out" style="color:#c4b5fd; border-color:rgba(196,181,253,0.35); background:rgba(196,181,253,0.12); font-weight:700;" title="Anrede: Sie (formell)">Sie</span>'
+            : '<span class="badge out" style="color:var(--text-dim); border-color:rgba(255,255,255,0.12); background:rgba(255,255,255,0.03);" title="Anrede: Du (persönlich)">Du</span>';
+
           const ordererClassBadge = (r.category === 'u18' && r.schoolClass)
             ? `<span class="badge out" style="color:var(--accent-glow); border-color:rgba(143,180,255,0.35); background:rgba(143,180,255,0.12);" title="Klasse: ${escapeHtml(r.schoolClass)}">Kl. ${escapeHtml(r.schoolClass)}</span>`
             : '';
@@ -3779,7 +3794,7 @@
 
           return `
           <tr>
-            <td><span class="attendee-list orderer">${escapeHtml(r.name||'')} <span class="badge out">${categoryLabel(r.category)}</span> ${ordererClassBadge}</span></td>
+            <td><span class="attendee-list orderer">${escapeHtml(r.name||'')} ${salutationBadge} <span class="badge out">${categoryLabel(r.category)}</span> ${ordererClassBadge}</span></td>
             <td>
               ${companionsHtml}
               <button class="add-companion-btn" data-id="${r.id}" title="Nachträglich eine Begleitung hinzufügen" style="display:inline-flex; align-items:center; gap:4px;">
@@ -3857,12 +3872,17 @@
           `;
           }).join('');
 
+          const salutationBadge = (r.salutation === 'sie' || r.anrede === 'Sie')
+            ? '<span class="badge out" style="color:#c4b5fd; border-color:rgba(196,181,253,0.35); background:rgba(196,181,253,0.12); font-weight:700;" title="Anrede: Sie (formell)">Sie</span>'
+            : '<span class="badge out" style="color:var(--text-dim); border-color:rgba(255,255,255,0.12); background:rgba(255,255,255,0.03);" title="Anrede: Du (persönlich)">Du</span>';
+
           return `
             <div class="order-card" data-id="${r.id}">
               <div class="order-card-header">
                 <div>
                   <div class="order-card-title">
                     <span>${escapeHtml(r.name || '')}</span>
+                    ${salutationBadge}
                     <span class="badge out">${categoryLabel(r.category)}</span>
                     ${r.category === 'u18' && r.schoolClass ? `<span class="badge out" style="color:var(--accent-glow); border-color:rgba(143,180,255,0.35); background:rgba(143,180,255,0.12);">Kl. ${escapeHtml(r.schoolClass)}</span>` : ''}
                     <span class="badge ${r.paid ? 'in' : 'out'}" style="${!r.paid ? 'background:rgba(255,210,127,0.15); color:var(--warn); border:1px solid rgba(255,210,127,0.3);' : ''}">
@@ -4253,6 +4273,13 @@
     document.getElementById('editRegCategory').value = catVal;
     resetCustomSelectVisual(document.getElementById('editRegCategory'));
 
+    const salutationVal = reg.salutation || (reg.anrede === 'Sie' ? 'sie' : 'du');
+    const salEl = document.getElementById('editRegSalutation');
+    if (salEl) {
+      salEl.value = salutationVal;
+      resetCustomSelectVisual(salEl);
+    }
+
     const classInput = document.getElementById('editRegClassInput');
     const classRow = document.getElementById('editRegClassRow');
     if (classInput) classInput.value = reg.schoolClass || '';
@@ -4353,23 +4380,29 @@
       const updatedPaidStatus = hasNewCompanions ? false : (allKeptArePaid || !!reg.paid);
 
       // 1) Bestellungs-Grunddaten aktualisieren
+      const salutation = (document.getElementById('editRegSalutation')?.value || reg.salutation || 'du').toLowerCase();
+      const anrede = salutation === 'sie' ? 'Sie' : 'Du';
+
       batch.update(doc(db, 'registrations', regId), {
-        name, email, category,
+        name, email, salutation, anrede, category,
         schoolClass: schoolClass || null,
         companions: companionEntries.map(c => ({ name: c.name, category: c.category, schoolClass: c.schoolClass || null })),
         paid: updatedPaidStatus
       });
+      reg.salutation = salutation;
+      reg.anrede = anrede;
 
       // 2) Ticket des Bestellers mitziehen (umbenennen/Kategorie ändern), oder
       //    anlegen, falls aus irgendeinem Grund noch keins existiert
       let ordererTicketIdVal = ordererTicket ? ordererTicket.ticketId : null;
       if (ordererTicket) {
-        batch.update(doc(db, 'tickets', ordererTicket.id), { name, category, schoolClass: schoolClass || null, email });
+        batch.update(doc(db, 'tickets', ordererTicket.id), { name, category, schoolClass: schoolClass || null, email, salutation, anrede });
       } else {
         const ref = doc(collection(db, 'tickets'));
         ordererTicketIdVal = genTicketId();
         batch.set(ref, {
           registrationId: regId, name, category, schoolClass: schoolClass || null, email,
+          salutation, anrede,
           ticketId: ordererTicketIdVal, paid: !!reg.paid, checkedIn: false, createdAt: serverTimestamp()
         });
       }
@@ -4416,6 +4449,11 @@
           body: JSON.stringify({
             email,
             ordererName: name,
+            salutation,
+            anrede,
+            isFormal: salutation === 'sie',
+            formell: salutation === 'sie',
+            greeting: salutation === 'sie' ? `Sehr geehrte(r) Frau/Herr ${name}` : `Hallo ${name}`,
             attendees: allUpdatedAttendees.map(t => ({
               ...t,
               price: freshPrices[t.category] || 0
@@ -4435,6 +4473,11 @@
           body: JSON.stringify({
             name,
             email,
+            salutation,
+            anrede,
+            isFormal: salutation === 'sie',
+            formell: salutation === 'sie',
+            greeting: salutation === 'sie' ? `Sehr geehrte(r) Frau/Herr ${name}` : `Hallo ${name}`,
             attendeeNames: allUpdatedAttendees.map(t => t.name),
             useLernSax: shouldUseLernSax(email)
           })
@@ -4477,12 +4520,19 @@
         : { u18: 0, ue18: 0 };
 
       const idToken = await auth.currentUser.getIdToken();
+      const salutation = reg.salutation || (reg.anrede === 'Sie' ? 'sie' : 'du');
+      const anrede = salutation === 'sie' ? 'Sie' : 'Du';
       const res = await fetch(WORKER_URL + '/send-tickets', {
         method: 'POST',
         headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
         body: JSON.stringify({
           email: reg.email,
           ordererName: reg.name,
+          salutation,
+          anrede,
+          isFormal: salutation === 'sie',
+          formell: salutation === 'sie',
+          greeting: salutation === 'sie' ? `Sehr geehrte(r) Frau/Herr ${reg.name}` : `Hallo ${reg.name}`,
           attendees: tickets.map(t => ({
             name: t.name, ticketId: t.ticketId, category: t.category,
             price: freshPrices[t.category] || 0
@@ -4591,12 +4641,19 @@
       // 2) Bestätigungs-Mail über die hinzugefügte Begleitung senden (keine Ticket-Mail, da noch unbezahlt)
       try {
         const attendeeNames = [reg.name, ...(reg.companions || []).map(c => c.name), name];
+        const salutation = reg.salutation || (reg.anrede === 'Sie' ? 'sie' : 'du');
+        const anrede = salutation === 'sie' ? 'Sie' : 'Du';
         await fetch(WORKER_URL + '/send-confirmation', {
           method: 'POST',
           headers: {'Content-Type':'application/json'},
           body: JSON.stringify({
             name: reg.name,
             email: reg.email,
+            salutation,
+            anrede,
+            isFormal: salutation === 'sie',
+            formell: salutation === 'sie',
+            greeting: salutation === 'sie' ? `Sehr geehrte(r) Frau/Herr ${reg.name}` : `Hallo ${reg.name}`,
             attendeeNames,
             useLernSax: shouldUseLernSax(reg.email)
           })
@@ -4697,9 +4754,11 @@
     }
 
     const schoolClassVal = category === 'u18' ? (klasse || null) : null;
+    const salutation = (document.getElementById('addSalutation')?.value || 'du').toLowerCase();
+    const anrede = salutation === 'sie' ? 'Sie' : 'Du';
 
     const regRef = await addDoc(collection(db, 'registrations'), {
-      name, email, category, schoolClass: schoolClassVal, companions, paid: false, createdAt: serverTimestamp()
+      name, email, salutation, anrede, category, schoolClass: schoolClassVal, companions, paid: false, createdAt: serverTimestamp()
     });
 
     const attendees = [{ name, category, schoolClass: schoolClassVal }, ...companions];
@@ -4708,6 +4767,7 @@
     attendees.forEach((attendee, i) => {
       batch.set(ticketRefs[i], {
         registrationId: regRef.id, name: attendee.name, category: attendee.category, schoolClass: attendee.schoolClass || null, email,
+        salutation, anrede,
         ticketId: genTicketId(), paid: false, checkedIn: false, createdAt: serverTimestamp()
       });
     });
@@ -4720,14 +4780,14 @@
     // hier zur Sicherheit auf Duplikate prüfen, statt blind einzufügen.
     const now = new Date();
     if (!allRegs.some(r => r.id === regRef.id)) {
-      allRegs.unshift({ id: regRef.id, name, email, category, schoolClass: schoolClassVal, companions, paid: false, createdAt: now });
+      allRegs.unshift({ id: regRef.id, name, email, salutation, anrede, category, schoolClass: schoolClassVal, companions, paid: false, createdAt: now });
     }
     attendees.forEach((attendee, i) => {
       const ticketDocId = ticketRefs[i].id;
       if (!allTickets.some(t => t.id === ticketDocId)) {
         allTickets.push({
           id: ticketDocId, registrationId: regRef.id, name: attendee.name, category: attendee.category, schoolClass: attendee.schoolClass || null,
-          email, ticketId: null, paid: false, checkedIn: false, createdAt: now
+          email, salutation, anrede, ticketId: null, paid: false, checkedIn: false, createdAt: now
         });
       }
     });
@@ -4738,6 +4798,11 @@
     document.getElementById('addEmail').value = '';
     document.getElementById('addCategory').value = '';
     resetCustomSelectVisual(document.getElementById('addCategory'));
+    const addSalEl = document.getElementById('addSalutation');
+    if (addSalEl) {
+      addSalEl.value = 'du';
+      resetCustomSelectVisual(addSalEl);
+    }
     document.getElementById('addKlasse').value = '';
     companionsBlock.innerHTML = '';
 
@@ -5011,9 +5076,10 @@
   }
 
   function exportCsv(filename){
-    const header = ['Besteller','Altersgruppe','Klasse','Begleitungen','E-Mail','Tickets gesamt','Bezahlt','Angemeldet am','Bezahlt am'];
+    const header = ['Besteller','Anrede','Altersgruppe','Klasse','Begleitungen','E-Mail','Tickets gesamt','Bezahlt','Angemeldet am','Bezahlt am'];
     const rows = allRegs.map(r => [
       r.name,
+      r.salutation === 'sie' || r.anrede === 'Sie' ? 'Sie' : 'Du',
       categoryLabel(r.category),
       r.schoolClass || '',
       (r.companions||[]).map(c => `${c.name} (${categoryLabel(c.category)}${c.category === 'u18' && c.schoolClass ? ', Kl. ' + c.schoolClass : ''})`).join('; '),

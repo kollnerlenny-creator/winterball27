@@ -177,6 +177,21 @@
     display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;
   }
   .companions-label label{margin-bottom:0;}
+  .salutation-toggle{display:flex; gap:10px; margin-top:6px;}
+  .salutation-toggle-btn{
+    flex:1; padding:12px 14px; border-radius:var(--radius-sm); border:1px solid var(--glass-border);
+    background:rgba(255,255,255,0.04); color:var(--text); font-size:14.5px; font-weight:600; cursor:pointer;
+    transition:background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .salutation-toggle-btn:hover{
+    background:rgba(255,255,255,0.08); border-color:rgba(143,180,255,0.35);
+  }
+  .salutation-toggle-btn.active{
+    background:rgba(143,180,255,0.18); border-color:var(--accent-glow); color:var(--accent-glow);
+    box-shadow:0 2px 12px rgba(143,180,255,0.2);
+  }
+
   .companion-toggle{display:flex; gap:10px; margin-top:6px;}
   .companion-toggle-btn{
     flex:1; padding:14px; border-radius:var(--radius-sm); border:1px solid var(--glass-border);
@@ -466,7 +481,22 @@
       </div>
 
       <div class="field">
-        <label for="name">Dein Vor- und Nachname</label>
+        <label id="salutationLabel">Bevorzugte Anrede</label>
+        <div class="salutation-toggle" role="radiogroup" aria-labelledby="salutationLabel">
+          <button type="button" class="salutation-toggle-btn active" id="salutationDuBtn" data-salutation="du" role="radio" aria-checked="true">
+            <span>Du</span>
+            <small style="opacity:0.7; font-size:11.5px; margin-left:3px;">(persönlich)</small>
+          </button>
+          <button type="button" class="salutation-toggle-btn" id="salutationSieBtn" data-salutation="sie" role="radio" aria-checked="false">
+            <span>Sie</span>
+            <small style="opacity:0.7; font-size:11.5px; margin-left:3px;">(formell)</small>
+          </button>
+        </div>
+        <input type="hidden" id="salutation" name="salutation" value="du">
+      </div>
+
+      <div class="field">
+        <label for="name" id="nameLabel">Dein Vor- und Nachname</label>
         <input type="text" id="name" placeholder="Max Mustermann" required>
       </div>
       <div class="field" id="emailField">
@@ -501,7 +531,7 @@
         </div>
       </div>
       <div class="field">
-        <label for="category">Deine Altersgruppe</label>
+        <label for="category" id="categoryLabel">Deine Altersgruppe</label>
         <select id="category">
           <option value="">Bitte wählen</option>
           <option value="u18">Unter 18</option>
@@ -510,13 +540,13 @@
       </div>
 
       <div class="field" id="schoolClassField" style="display:none;">
-        <label for="schoolClass">Deine Klasse <span style="color:var(--accent-glow);">*</span></label>
+        <label for="schoolClass" id="schoolClassLabel">Deine Klasse <span style="color:var(--accent-glow);">*</span></label>
         <input type="text" id="schoolClass" placeholder="z.B. 10b oder 11/1" autocomplete="off">
         <div style="font-size:11.5px; color:var(--text-dim); margin-top:6px;">Pflichtangabe für alle Minderjährigen (U18) zur Zuordnung und für den Jugendschutz.</div>
       </div>
 
       <div class="field">
-        <label>Bringst du eine Begleitung mit?</label>
+        <label id="companionQuestionLabel">Bringst du eine Begleitung mit?</label>
         <div class="companion-toggle">
           <button type="button" class="companion-toggle-btn" id="companionYesBtn">Ja</button>
           <button type="button" class="companion-toggle-btn active" id="companionNoBtn">Nein</button>
@@ -551,7 +581,7 @@
   <div class="success-view" id="successView">
     <div class="success-icon">✓</div>
     <h2>Anmeldung eingegangen!</h2>
-    <p>Bitte bezahle dein Ticket bar an der Vorverkaufskasse in der Schule.<br>Dein Ticket mit QR-Code bekommst du danach automatisch per E-Mail zugeschickt.</p>
+    <p id="successInfoText">Bitte bezahle dein Ticket bar an der Vorverkaufskasse in der Schule.<br>Dein Ticket mit QR-Code bekommst du danach automatisch per E-Mail zugeschickt.</p>
     <div class="success-feedback-prompt">
       <button type="button" id="reopenRatingBtn" class="feedback-prompt-btn">
         ❄️ Wie fandest du die Anmeldung? Feedback geben
@@ -592,7 +622,7 @@
     <button type="button" class="modal-close" id="closeRatingModalBtn" aria-label="Schließen">×</button>
     <div class="rating-modal-icon">❄️</div>
     <h3 id="ratingModalTitle">Wie fandest du den Anmeldeprozess?</h3>
-    <p>Dein Feedback hilft uns sehr, den Winter Ball und den Ticketkauf noch besser zu machen!</p>
+    <p id="ratingModalSubtitle">Dein Feedback hilft uns sehr, den Winter Ball und den Ticketkauf noch besser zu machen!</p>
 
     <div class="modal-snowflakes" id="modalSnowflakes">
       <button type="button" class="modal-snowflake-btn" data-value="1" aria-label="1 Schneeflocke">❄</button>
@@ -1031,6 +1061,73 @@
   }
   syncEmail();
 
+  // --- Anrede-Umschaltung: Du vs. Sie ---
+  const salutationDuBtn = document.getElementById('salutationDuBtn');
+  const salutationSieBtn = document.getElementById('salutationSieBtn');
+  const salutationInput = document.getElementById('salutation');
+  const nameLabel = document.getElementById('nameLabel');
+  const categoryLabel = document.getElementById('categoryLabel');
+  const schoolClassLabel = document.getElementById('schoolClassLabel');
+  const companionQuestionLabel = document.getElementById('companionQuestionLabel');
+  const successInfoText = document.getElementById('successInfoText');
+  const reopenRatingBtn = document.getElementById('reopenRatingBtn');
+  const ratingModalTitle = document.getElementById('ratingModalTitle');
+  const ratingModalSubtitle = document.getElementById('ratingModalSubtitle');
+  const modalRatingComment = document.getElementById('modalRatingComment');
+  const modalRatingThanks = document.getElementById('modalRatingThanks');
+
+  function setSalutation(val){
+    const isSie = val === 'sie';
+    if (salutationInput) salutationInput.value = isSie ? 'sie' : 'du';
+    if (salutationDuBtn) {
+      salutationDuBtn.classList.toggle('active', !isSie);
+      salutationDuBtn.setAttribute('aria-checked', !isSie ? 'true' : 'false');
+    }
+    if (salutationSieBtn) {
+      salutationSieBtn.classList.toggle('active', isSie);
+      salutationSieBtn.setAttribute('aria-checked', isSie ? 'true' : 'false');
+    }
+
+    if (nameLabel) nameLabel.textContent = isSie ? 'Ihr Vor- und Nachname' : 'Dein Vor- und Nachname';
+    if (emailLabel) emailLabel.textContent = isSie ? 'Ihre E-Mail-Adresse' : 'Deine E-Mail-Adresse';
+    if (categoryLabel) categoryLabel.textContent = isSie ? 'Ihre Altersgruppe' : 'Deine Altersgruppe';
+    if (schoolClassLabel) schoolClassLabel.innerHTML = (isSie ? 'Ihre Klasse' : 'Deine Klasse') + ' <span style="color:var(--accent-glow);">*</span>';
+    if (companionQuestionLabel) companionQuestionLabel.textContent = isSie ? 'Bringen Sie eine Begleitung mit?' : 'Bringst du eine Begleitung mit?';
+    if (successInfoText) {
+      successInfoText.innerHTML = isSie
+        ? 'Bitte bezahlen Sie Ihr Ticket bar an der Vorverkaufskasse in der Schule.<br>Ihr Ticket mit QR-Code bekommen Sie danach automatisch per E-Mail zugeschickt.'
+        : 'Bitte bezahle dein Ticket bar an der Vorverkaufskasse in der Schule.<br>Dein Ticket mit QR-Code bekommst du danach automatisch per E-Mail zugeschickt.';
+    }
+    if (reopenRatingBtn) {
+      reopenRatingBtn.textContent = isSie
+        ? '❄️ Wie fanden Sie die Anmeldung? Feedback geben'
+        : '❄️ Wie fandest du die Anmeldung? Feedback geben';
+    }
+    if (ratingModalTitle) {
+      ratingModalTitle.textContent = isSie
+        ? 'Wie fanden Sie den Anmeldeprozess?'
+        : 'Wie fandest du den Anmeldeprozess?';
+    }
+    if (ratingModalSubtitle) {
+      ratingModalSubtitle.textContent = isSie
+        ? 'Ihr Feedback hilft uns sehr, den Winter Ball und den Ticketkauf noch besser zu machen!'
+        : 'Dein Feedback hilft uns sehr, den Winter Ball und den Ticketkauf noch besser zu machen!';
+    }
+    if (modalRatingComment) {
+      modalRatingComment.placeholder = isSie
+        ? 'Möchten Sie uns noch etwas mitteilen? (optional)'
+        : 'Möchtest du uns noch etwas mitteilen? (optional)';
+    }
+    if (modalRatingThanks) {
+      modalRatingThanks.textContent = isSie
+        ? 'Vielen Dank für Ihr Feedback! ❄️💙'
+        : 'Vielen Dank für dein Feedback! ❄️💙';
+    }
+  }
+
+  if (salutationDuBtn) salutationDuBtn.addEventListener('click', () => setSalutation('du'));
+  if (salutationSieBtn) salutationSieBtn.addEventListener('click', () => setSalutation('sie'));
+
   // Dynamische Anzeige des Klassenfelds für den Besteller bei U18
   const categorySelect = document.getElementById('category');
   const schoolClassField = document.getElementById('schoolClassField');
@@ -1257,9 +1354,14 @@
       }
 
       // 1) Bestellung anlegen (unbezahlt) — enthält den Besteller + Begleitungen mit Altersgruppe & Klasse
+      const salutation = (document.getElementById('salutation')?.value || 'du').toLowerCase();
+      const anrede = salutation === 'sie' ? 'Sie' : 'Du';
+
       const regRef = await addDoc(collection(db, 'registrations'), {
         name,
         email,
+        salutation,
+        anrede,
         category,
         schoolClass: category === 'u18' ? schoolClass : null,
         companions: companions.map(c => ({
@@ -1288,6 +1390,8 @@
           category: attendee.category,
           schoolClass: attendee.schoolClass || null,
           email,
+          salutation,
+          anrede,
           ticketId: genTicketId(),
           paid: false,
           checkedIn: false,
@@ -1316,7 +1420,17 @@
         await fetch(WORKER_URL + '/send-confirmation', {
           method: 'POST',
           headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ name, email, attendeeNames: allAttendees.map(a => a.name), useLernSax })
+          body: JSON.stringify({
+            name,
+            email,
+            attendeeNames: allAttendees.map(a => a.name),
+            useLernSax,
+            salutation,
+            anrede,
+            isFormal: salutation === 'sie',
+            formell: salutation === 'sie',
+            greeting: salutation === 'sie' ? `Sehr geehrte(r) Frau/Herr ${name}` : `Hallo ${name}`
+          })
         });
       } catch (mailErr) {
         console.error('Bestätigungsmail fehlgeschlagen:', mailErr ? (mailErr.message || String(mailErr)) : 'Fehler');
