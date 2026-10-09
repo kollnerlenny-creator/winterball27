@@ -4453,7 +4453,7 @@
             anrede,
             isFormal: salutation === 'sie',
             formell: salutation === 'sie',
-            greeting: salutation === 'sie' ? `Sehr geehrte(r) Frau/Herr ${name}` : `Hallo ${name}`,
+            greeting: salutation === 'sie' ? `Guten Tag ${name}` : `Hallo ${name}`,
             attendees: allUpdatedAttendees.map(t => ({
               ...t,
               price: freshPrices[t.category] || 0
@@ -4477,7 +4477,7 @@
             anrede,
             isFormal: salutation === 'sie',
             formell: salutation === 'sie',
-            greeting: salutation === 'sie' ? `Sehr geehrte(r) Frau/Herr ${name}` : `Hallo ${name}`,
+            greeting: salutation === 'sie' ? `Guten Tag ${name}` : `Hallo ${name}`,
             attendeeNames: allUpdatedAttendees.map(t => t.name),
             useLernSax: shouldUseLernSax(email)
           })
@@ -4532,7 +4532,7 @@
           anrede,
           isFormal: salutation === 'sie',
           formell: salutation === 'sie',
-          greeting: salutation === 'sie' ? `Sehr geehrte(r) Frau/Herr ${reg.name}` : `Hallo ${reg.name}`,
+          greeting: salutation === 'sie' ? `Guten Tag ${reg.name}` : `Hallo ${reg.name}`,
           attendees: tickets.map(t => ({
             name: t.name, ticketId: t.ticketId, category: t.category,
             price: freshPrices[t.category] || 0
@@ -4653,7 +4653,7 @@
             anrede,
             isFormal: salutation === 'sie',
             formell: salutation === 'sie',
-            greeting: salutation === 'sie' ? `Sehr geehrte(r) Frau/Herr ${reg.name}` : `Hallo ${reg.name}`,
+            greeting: salutation === 'sie' ? `Guten Tag ${reg.name}` : `Hallo ${reg.name}`,
             attendeeNames,
             useLernSax: shouldUseLernSax(reg.email)
           })
