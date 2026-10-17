@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0a0e1a">
+<title>Winter Ball · Einlass-Scanner</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root{
+    --bg-1:#0a0e1a; --bg-2:#131c30;
+    --glass:rgba(255,255,255,0.07); --glass-border:rgba(255,255,255,0.14);
+    --text:#eef2fb; --text-dim:#9aa7c2;
+    --success:#7fe0a8; --error:#ff8080; --warn:#ffd27f;
+    --radius:18px; --radius-sm:12px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+  body{
+    font-family:'Segoe UI',system-ui,sans-serif;
+    background:linear-gradient(180deg,var(--bg-1),var(--bg-2));
+    color:var(--text); min-height:100vh; display:flex; flex-direction:column; align-items:center;
+    padding:16px 14px 40px; overflow-x:hidden;
+  }
+  h1{font-weight:300; font-size:20px; margin-bottom:12px; text-align:center; letter-spacing:0.5px;}
+
+  /* --- Vollbild-Farbflash --- */
+  .screen-flash{
+    position:fixed; inset:0; pointer-events:none; z-index:9999;
+    opacity:0; transition:opacity 0.12s ease-out;
+  }
+  .screen-flash.flash-valid{
+    background:radial-gradient(circle, rgba(127,224,168,0.25) 0%, rgba(127,224,168,0.65) 100%);
+    box-shadow:inset 0 0 100px rgba(127,224,168,0.85); opacity:1;
+  }
+  .screen-flash.flash-used{
+    background:radial-gradient(circle, rgba(255,210,127,0.25) 0%, rgba(255,210,127,0.65) 100%);
+    box-shadow:inset 0 0 100px rgba(255,210,127,0.85); opacity:1;
+  }
+  .screen-flash.flash-invalid{
+    background:radial-gradient(circle, rgba(255,128,128,0.25) 0%, rgba(255,128,128,0.65) 100%);
+    box-shadow:inset 0 0 100px rgba(255,128,128,0.85); opacity:1;
+  }
+
+  /* --- Login --- */
+  .login-card{
+    max-width:340px; margin-top:60px; padding:28px;
+    background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius);
+    text-align:center; backdrop-filter:blur(20px);
+  }
+  .login-card input{
+    width:100%; padding:12px 14px; margin-top:12px; background:rgba(255,255,255,0.05);
+    border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:14px;
+    outline:none;
+  }
+  .login-card button{
+    width:100%; margin-top:14px; padding:12px; border:none; border-radius:var(--radius-sm);
+    background:#8fb4ff; color:#0a0e1a; font-weight:600; cursor:pointer; font-size:14px;
+  }
+
+  #dashboardArea{display:none; width:100%; max-width:400px; align-items:center; flex-direction:column;}
+
+  /* --- Online Badge --- */
+  .conn-badge{
+    display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--text-dim);
+    margin-bottom:10px; padding:5px 12px; border-radius:20px; background:rgba(255,255,255,0.05);
+    border:1px solid var(--glass-border);
+  }
+  .conn-dot{width:7px; height:7px; border-radius:50%; background:var(--success); flex-shrink:0;}
+  .conn-dot.offline{background:var(--warn);}
+  .conn-badge.offline-text{color:var(--warn);}
+
+  /* --- Live-Einlasszähler --- */
+  .stats-card{
+    width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--glass-border);
+    border-radius:14px; padding:10px 14px; margin-bottom:12px;
+  }
+  .stats-header{
+    display:flex; justify-content:space-between; align-items:center; font-size:11.5px;
+    color:var(--text-dim); margin-bottom:6px; font-weight:500;
+  }
+  .stats-percent{
+    color:var(--success); font-weight:700; font-size:12.5px;
+  }
+  .stats-numbers{
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;
+  }
+  .stats-item{
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .stats-item strong{
+    font-size:18px; font-weight:600; color:#ffffff;
+  }
+  .stats-item small{
+    font-size:10.5px; color:var(--text-dim); margin-top:1px;
+  }
+  .stats-divider{
+    color:rgba(255,255,255,0.2); font-size:14px;
+  }
+  .stats-bar-track{
+    width:100%; height:6px; background:rgba(255,255,255,0.08); border-radius:10px; overflow:hidden;
+  }
+  .stats-bar-fill{
+    height:100%; width:0%; background:linear-gradient(90deg, #7fe0a8, #8fb4ff);
+    border-radius:10px; transition:width 0.4s ease-out;
+  }
+
+  /* --- Kamera & Tools Leiste --- */
+  .scanner-toolbar{
+    width:100%; display:flex; gap:8px; margin-bottom:10px; align-items:center;
+  }
+  .camera-select{
+    flex:1; background:rgba(19,28,48,0.85); border:1px solid var(--glass-border);
+    border-radius:10px; color:var(--text); padding:9px 10px; font-size:12.5px;
+    outline:none; cursor:pointer; appearance:auto; min-width:0;
+  }
+  .tool-btn{
+    display:inline-flex; align-items:center; gap:5px; background:rgba(255,255,255,0.07);
+    border:1px solid var(--glass-border); border-radius:10px; color:var(--text);
+    padding:8px 12px; font-size:12.5px; cursor:pointer; transition:all 0.2s; white-space:nowrap;
+  }
+  .tool-btn:hover{background:rgba(255,255,255,0.12);}
+  .tool-btn.active{
+    background:#ffd27f; color:#0a0e1a; font-weight:600; border-color:#ffd27f;
+    box-shadow:0 0 15px rgba(255,210,127,0.5);
+  }
+
+  /* --- Kamera-Sucher --- */
+  #reader{
+    width:100%; border-radius:var(--radius); overflow:hidden;
+    border:1px solid var(--glass-border); background:#000; position:relative;
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+  }
+  #reader video{
+    border-radius:var(--radius); object-fit:cover;
+  }
+
+  /* --- Ergebnis-Karte --- */
+  .result-card{
+    width:100%; margin-top:14px; padding:18px 20px;
+    background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius);
+    text-align:center; display:none; backdrop-filter:blur(20px);
+    opacity:0; transform:scale(0.92); transition:opacity 0.22s ease-out, transform 0.22s ease-out;
+  }
+  .result-card.show{display:block; opacity:1; transform:scale(1);}
+  .result-card.hide{opacity:0; transform:scale(0.92);}
+  .result-card.valid{border-color:rgba(127,224,168,0.6); background:rgba(127,224,168,0.1);}
+  .result-card.used{border-color:rgba(255,210,127,0.6); background:rgba(255,210,127,0.1);}
+  .result-card.invalid{border-color:rgba(255,128,128,0.6); background:rgba(255,128,128,0.1);}
+  .result-icon{font-size:36px; margin-bottom:4px;}
+  .result-name{font-size:19px; font-weight:600; margin-bottom:3px;}
+  .result-sub{font-size:13px; color:var(--text-dim);}
+  .result-detail{font-size:12px; margin-top:6px; opacity:0.85;}
+
+  /* --- Aktions-Buttons --- */
+  .action-row{
+    width:100%; display:flex; gap:10px; margin-top:14px;
+  }
+  .btn-search{
+    flex:1; padding:11px 14px; border-radius:12px; border:1px solid var(--glass-border);
+    background:rgba(255,255,255,0.06); color:var(--text); font-size:13px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:6px; font-weight:500;
+  }
+  .btn-search:hover{background:rgba(255,255,255,0.12);}
+  .btn-logout{
+    padding:11px 14px; border-radius:12px; border:1px solid var(--glass-border);
+    background:rgba(255,255,255,0.04); color:var(--text-dim); font-size:12.5px; cursor:pointer;
+  }
+
+  /* --- Modal für manuelle Suche --- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(10,14,26,0.85); backdrop-filter:blur(12px);
+    z-index:9000; display:flex; align-items:flex-start; justify-content:center;
+    padding:20px 14px; overflow-y:auto;
+  }
+  .modal-card{
+    width:100%; max-width:440px; background:linear-gradient(180deg,#141d33,#0f1626);
+    border:1px solid var(--glass-border); border-radius:20px; padding:20px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.6); margin-top:10px;
+  }
+  .modal-header{
+    display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;
+  }
+  .modal-header h2{font-size:17px; font-weight:600;}
+  .modal-close{
+    background:none; border:none; color:var(--text-dim); font-size:24px; cursor:pointer;
+    line-height:1; padding:0 4px;
+  }
+  .search-input{
+    width:100%; padding:12px 14px; background:rgba(255,255,255,0.06);
+    border:1px solid var(--glass-border); border-radius:12px; color:var(--text); font-size:14px;
+    outline:none; margin-bottom:14px;
+  }
+  .search-input:focus{border-color:#8fb4ff;}
+  .search-results{
+    max-height:55vh; overflow-y:auto; display:flex; flex-direction:column; gap:8px;
+    padding-right:4px;
+  }
+  .ticket-item{
+    background:rgba(255,255,255,0.04); border:1px solid var(--glass-border);
+    border-radius:12px; padding:12px 14px; display:flex; justify-content:space-between;
+    align-items:center; gap:10px;
+  }
+  .ticket-info{flex:1; min-width:0;}
+  .ticket-name{font-size:14.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .ticket-meta{font-size:11.5px; color:var(--text-dim); margin-top:2px;}
+  .btn-checkin{
+    background:#7fe0a8; color:#0a0e1a; font-weight:600; font-size:12.5px;
+    border:none; border-radius:8px; padding:8px 12px; cursor:pointer; white-space:nowrap;
+  }
+  .status-badge{
+    font-size:11px; padding:5px 9px; border-radius:6px; font-weight:600; white-space:nowrap;
+  }
+  .badge-used{background:rgba(255,210,127,0.15); color:var(--warn); border:1px solid rgba(255,210,127,0.3);}
+  .badge-unpaid{background:rgba(255,128,128,0.15); color:var(--error); border:1px solid rgba(255,128,128,0.3);}
+</style>
+</head>
+<body>
+
+<div class="screen-flash" id="screenFlash" aria-hidden="true"></div>
+
+<div class="login-card" id="loginCard">
+  <h1>Scanner Login</h1>
+  <input type="email" id="loginEmail" placeholder="E-Mail">
+  <input type="password" id="loginPass" placeholder="Passwort">
+  <button id="loginBtn">Anmelden</button>
+</div>
+
+<div id="dashboardArea">
+  <h1>Winter Ball · Einlass</h1>
+  <div class="conn-badge" id="connBadge">
+    <span class="conn-dot" id="connDot"></span>
+    <span id="connText">Online</span>
+  </div>
+
+  <!-- 1. Live-Einlasszähler -->
+  <div class="stats-card" id="statsCard">
+    <div class="stats-header">
+      <span>Gäste im Saal</span>
+      <span class="stats-percent" id="statsPercent">0%</span>
+    </div>
+    <div class="stats-numbers">
+      <div class="stats-item">
+        <strong id="statCheckedIn">0</strong>
+        <small>Eingecheckt</small>
+      </div>
+      <div class="stats-divider">/</div>
+      <div class="stats-item">
+        <strong id="statPaidTotal">0</strong>
+        <small>Bezahlt</small>
+      </div>
+      <div class="stats-divider">·</div>
+      <div class="stats-item">
+        <strong id="statRemaining">0</strong>
+        <small>Offen</small>
+      </div>
+    </div>
+    <div class="stats-bar-track">
+      <div class="stats-bar-fill" id="statsBarFill"></div>
+    </div>
+  </div>
+
+  <!-- 2. Toolbar mit Kamera-Auswahl & Taschenlampe -->
+  <div class="scanner-toolbar" id="scannerToolbar">
+    <select id="cameraSelect" class="camera-select" aria-label="Kamera auswählen"></select>
+    <button type="button" id="torchToggleBtn" class="tool-btn" style="display:none;" title="Taschenlampe ein-/ausschalten">
+      🔦 <span>Licht</span>
+    </button>
+  </div>
+
+  <!-- 3. Kamera-Sucher -->
+  <div id="reader"></div>
+
+  <!-- 4. Ergebnis-Karte -->
+  <div class="result-card" id="resultCard">
+    <div class="result-icon" id="resultIcon"></div>
+    <div class="result-name" id="resultName"></div>
+    <div class="result-sub" id="resultSub"></div>
+    <div class="result-detail" id="resultDetail"></div>
+  </div>
+
+  <!-- 5. Aktionen: Manuelle Suche & Logout -->
+  <div class="action-row">
+    <button type="button" class="btn-search" id="openManualSearchBtn">
+      🔍 Manuelle Suche / Check-in
+    </button>
+    <button type="button" class="btn-logout" id="logoutBtn">
+      Logout
+    </button>
+  </div>
+</div>
+
+<!-- Modal für Notfall- / Manuelle Suche -->
+<div class="modal-overlay" id="manualSearchModal" style="display:none;">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2>Gast manuell einchecken</h2>
+      <button type="button" class="modal-close" id="closeManualSearchBtn">&times;</button>
+    </div>
+    <input type="text" id="manualSearchInput" class="search-input" placeholder="Name oder Ticket-ID (z. B. Max oder WB27-...)">
+    <div class="search-results" id="manualSearchResults">
+      <div style="text-align:center; color:var(--text-dim); padding:20px; font-size:13px;">
+        Name oder Ticket-ID eintippen...
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import {
+    initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
+    collection, onSnapshot, updateDoc, doc
+  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDQaRxga3bFrNkyU6E_sQpp5_0G4ApInOg",
+    authDomain: "winterball-27.firebaseapp.com",
+    projectId: "winterball-27",
+    storageBucket: "winterball-27.firebasestorage.app",
+    messagingSenderId: "487160103602",
+    appId: "1:487160103602:web:961a10f85bfdf77d3f7fab"
+  };
+
+  const app = initializeApp(firebaseConfig);
+
+  // Persistenter Offline-Cache (IndexedDB): Funktioniert auch ohne Internetverbindung
+  const db = initializeFirestore(app, {
+    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+  });
+  const auth = getAuth(app);
+
+  let allTickets = [];
+  onSnapshot(collection(db, 'tickets'), (snap) => {
+    allTickets = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    updateStats();
+    renderSearchResults();
+  });
+
+  onAuthStateChanged(auth, (user) => {
+    document.getElementById('loginCard').style.display = user ? 'none' : 'block';
+    document.getElementById('dashboardArea').style.display = user ? 'flex' : 'none';
+    if(user) startScanner();
+  });
+
+  document.getElementById('loginBtn').addEventListener('click', async () => {
+    const email = document.getElementById('loginEmail').value;
+    const pass = document.getElementById('loginPass').value;
+    try { await signInWithEmailAndPassword(auth, email, pass); }
+    catch(e){ alert('Login fehlgeschlagen'); }
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    if (qrScannerInstance) {
+      qrScannerInstance.stop().catch(() => {});
+    }
+    signOut(auth);
+  });
+
+  function updateConnBadge(){
+    const online = navigator.onLine;
+    document.getElementById('connDot').classList.toggle('offline', !online);
+    document.getElementById('connText').textContent = online ? 'Online' : 'Offline — Check-ins werden lokal gespeichert';
+    document.getElementById('connBadge').classList.toggle('offline-text', !online);
+  }
+  window.addEventListener('online', updateConnBadge);
+  window.addEventListener('offline', updateConnBadge);
+  updateConnBadge();
+
+  // --- Live-Statistiken aktualisieren ---
+  function updateStats(){
+    const paidTickets = allTickets.filter(t => t.paid);
+    const checkedIn = paidTickets.filter(t => t.checkedIn).length;
+    const totalPaid = paidTickets.length;
+    const remaining = Math.max(0, totalPaid - checkedIn);
+    const percent = totalPaid > 0 ? Math.round((checkedIn / totalPaid) * 100) : 0;
+
+    const elChecked = document.getElementById('statCheckedIn');
+    const elTotal = document.getElementById('statPaidTotal');
+    const elRem = document.getElementById('statRemaining');
+    const elPct = document.getElementById('statsPercent');
+    const elBar = document.getElementById('statsBarFill');
+
+    if(elChecked) elChecked.textContent = checkedIn;
+    if(elTotal) elTotal.textContent = totalPaid;
+    if(elRem) elRem.textContent = remaining;
+    if(elPct) elPct.textContent = percent + '%';
+    if(elBar) elBar.style.width = percent + '%';
+  }
+
+  // --- Sound-Feedback (erweitert für unterschiedliche Töne) ---
+  function playSound(type = 'valid'){
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if (type === 'valid') {
+        // Fröhlicher, aufsteigender Zweiklang
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        osc.frequency.setValueAtTime(1320, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.25, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.3);
+      } else if (type === 'used') {
+        // Warn-Ton (absteigend)
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(520, ctx.currentTime);
+        osc.frequency.setValueAtTime(390, ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.35);
+      } else {
+        // Fehler-Brummton
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(220, ctx.currentTime);
+        osc.frequency.setValueAtTime(180, ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.35, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.4);
+      }
+    } catch(e){}
+  }
+
+  // --- Haptisches Feedback (Vibration) ---
+  function triggerHaptic(type = 'valid'){
+    if (!navigator.vibrate) return;
+    try {
+      if (type === 'valid') {
+        navigator.vibrate([80]);
+      } else if (type === 'used') {
+        navigator.vibrate([140, 80, 140]);
+      } else {
+        navigator.vibrate([260, 100, 260]);
+      }
+    } catch(e){}
+  }
+
+  // --- Vollbild-Farbflash ---
+  function triggerScreenFlash(type = 'valid'){
+    const flash = document.getElementById('screenFlash');
+    if (!flash) return;
+    flash.className = 'screen-flash';
+    void flash.offsetWidth; // Reflow erzwingen
+    flash.classList.add(`flash-${type}`);
+    setTimeout(() => {
+      flash.className = 'screen-flash';
+    }, 450);
+  }
+
+  let scanning = true;
+  let qrScannerInstance = null;
+  let activeCameraId = null;
+  let availableCameras = [];
+  let isTorchOn = false;
+
+  // Wählt gezielt die normale 1x Hauptkamera aus (filtert Ultra-Wide heraus)
+  function pickNormalCamera(cameras) {
+    if (!cameras || cameras.length === 0) return null;
+    const saved = localStorage.getItem('wb_scanner_camera');
+    if (saved && cameras.some(c => c.id === saved)) return saved;
+
+    const isFront = (l) => /front|user|selfie|vorne/i.test(l);
+    const isUltra = (l) => /ultra|0\.5|weitwinkel|tele|macro|virtual|depth/i.test(l);
+
+    const backCams = cameras.filter(c => !isFront(c.label));
+    const normalBackCams = backCams.filter(c => !isUltra(c.label));
+
+    if (normalBackCams.length > 0) {
+      const preferred = normalBackCams.find(c => /main|primary|standard|1x/i.test(c.label)) || normalBackCams[0];
+      return preferred.id;
+    }
+    if (backCams.length > 0) return backCams[0].id;
+    return cameras[0].id;
+  }
+
+  // Taschenlampen-Button Steuerung
+  function setupTorchButton(scanner){
+    const torchBtn = document.getElementById('torchToggleBtn');
+    if (!torchBtn) return;
+
+    try {
+      const caps = scanner.getRunningTrackCapabilities();
+      if (caps && caps.torch) {
+        torchBtn.style.display = 'inline-flex';
+        torchBtn.onclick = async () => {
+          try {
+            isTorchOn = !isTorchOn;
+            await scanner.applyVideoConstraints({ advanced: [{ torch: isTorchOn }] });
+            torchBtn.classList.toggle('active', isTorchOn);
+            torchBtn.querySelector('span').textContent = isTorchOn ? 'Licht an' : 'Licht';
+          } catch(err) {
+            console.warn('Taschenlampe umschalten fehlgeschlagen:', err);
+          }
+        };
+      } else {
+        torchBtn.style.display = 'none';
+      }
+    } catch(e) {
+      torchBtn.style.display = 'none';
+    }
+  }
+
+  function updateCameraDropdown(cameras, selectedId) {
+    const select = document.getElementById('cameraSelect');
+    if (!cameras || cameras.length === 0) return;
+
+    select.innerHTML = '';
+    cameras.forEach(cam => {
+      const opt = document.createElement('option');
+      opt.value = cam.id;
+      let label = cam.label || `Kamera (${cam.id.slice(0, 6)}...)`;
+      if (/ultra|0\.5|weitwinkel/i.test(label)) {
+        label = `🔭 Weitwinkel: ${label}`;
+      } else if (!/front|user|selfie/i.test(label)) {
+        label = `📸 Hauptkamera (1x): ${label}`;
+      }
+      opt.textContent = label;
+      if (cam.id === selectedId) opt.selected = true;
+      select.appendChild(opt);
+    });
+
+    select.onchange = async () => {
+      const newId = select.value;
+      localStorage.setItem('wb_scanner_camera', newId);
+      isTorchOn = false;
+      const torchBtn = document.getElementById('torchToggleBtn');
+      if (torchBtn) {
+        torchBtn.classList.remove('active');
+        torchBtn.querySelector('span').textContent = 'Licht';
+      }
+      await startScanner(newId);
+    };
+  }
+
+  async function startScanner(targetCamId = null){
+    if (qrScannerInstance) {
+      try { await qrScannerInstance.stop(); } catch(e) {}
+    }
+
+    const qrScanner = new Html5Qrcode("reader");
+    qrScannerInstance = qrScanner;
+
+    try {
+      const cameras = await Html5Qrcode.getCameras().catch(() => []);
+      availableCameras = cameras;
+
+      let chosenId = targetCamId || pickNormalCamera(cameras);
+      activeCameraId = chosenId;
+      const cameraConfig = chosenId ? chosenId : { facingMode: "environment" };
+
+      await qrScanner.start(
+        cameraConfig,
+        { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 },
+        async (decodedText) => {
+          if(!scanning) return;
+          scanning = false;
+          await handleScan(decodedText.trim());
+          setTimeout(() => {
+            document.getElementById('resultCard').classList.add('hide');
+          }, 1800);
+          setTimeout(() => { scanning = true; }, 2400);
+        },
+        () => {}
+      );
+
+      // Kamera-Dropdown aktualisieren
+      if (!availableCameras || availableCameras.length <= 1 || !availableCameras[0].label) {
+        Html5Qrcode.getCameras().then(freshCams => {
+          availableCameras = freshCams;
+          updateCameraDropdown(freshCams, activeCameraId);
+        }).catch(() => {});
+      } else {
+        updateCameraDropdown(availableCameras, activeCameraId);
+      }
+
+      // Hardware-Zoom ausgleichen
+      try {
+        const caps = qrScanner.getRunningTrackCapabilities();
+        if (caps && caps.zoom && caps.zoom.min !== undefined) {
+          if (caps.zoom.min < 1.0 && caps.zoom.max >= 1.0) {
+            qrScanner.applyVideoConstraints({ advanced: [{ zoom: 1.0 }] }).catch(() => {});
+          }
+        }
+      } catch(e) {}
+
+      // Taschenlampe prüfen & Button aktivieren
+      setupTorchButton(qrScanner);
+
+    } catch(err) {
+      console.error('Kamera Start fehlgeschlagen:', err);
+      if (typeof targetCamId === 'string') {
+        try {
+          await qrScanner.start(
+            { facingMode: "environment" },
+            { fps: 10, qrbox: { width: 250, height: 250 } },
+            async (decodedText) => {
+              if(!scanning) return;
+              scanning = false;
+              await handleScan(decodedText.trim());
+              setTimeout(() => { document.getElementById('resultCard').classList.add('hide'); }, 1800);
+              setTimeout(() => { scanning = true; }, 2400);
+            },
+            () => {}
+          );
+        } catch(e2) {
+          alert('Kamera konnte nicht gestartet werden: ' + (e2.message || err.message));
+        }
+      } else {
+        alert('Kamera-Fehler: ' + (err.message || err));
+      }
+    }
+  }
+
+  // --- Scan-Verarbeitung mit allen Signalen ---
+  async function handleScan(ticketId){
+    const card = document.getElementById('resultCard');
+    const icon = document.getElementById('resultIcon');
+    const name = document.getElementById('resultName');
+    const sub = document.getElementById('resultSub');
+    const detail = document.getElementById('resultDetail');
+    card.classList.remove('hide');
+
+    const ticket = allTickets.find(t => t.ticketId === ticketId);
+
+    // 1. UNGÜLTIG
+    if(!ticket){
+      card.className = 'result-card show invalid';
+      icon.textContent = '❌';
+      name.textContent = 'Ungültiges Ticket';
+      sub.textContent = ticketId;
+      detail.textContent = 'Kein Eintrag im System gefunden';
+      playSound('invalid');
+      triggerHaptic('invalid');
+      triggerScreenFlash('invalid');
+      return;
+    }
+
+    // 2. NOCH NICHT BEZAHLT
+    if(!ticket.paid){
+      card.className = 'result-card show invalid';
+      icon.textContent = '💰';
+      name.textContent = ticket.name;
+      sub.textContent = 'Noch nicht bezahlt';
+      detail.textContent = 'Bitte zuerst zur Kasse schicken!';
+      playSound('invalid');
+      triggerHaptic('invalid');
+      triggerScreenFlash('invalid');
+      return;
+    }
+
+    // 3. BEREITS EINGECHECKT
+    if(ticket.checkedIn){
+      card.className = 'result-card show used';
+      icon.textContent = '⚠️';
+      name.textContent = ticket.name;
+      sub.textContent = 'Bereits eingecheckt';
+      detail.textContent = `Ticket: ${ticket.ticketId}`;
+      playSound('used');
+      triggerHaptic('used');
+      triggerScreenFlash('used');
+      return;
+    }
+
+    // 4. GÜLTIG & ERFOLGREICH EINGECHECKT
+    ticket.checkedIn = true;
+    updateStats();
+
+    card.className = 'result-card show valid';
+    icon.textContent = '✅';
+    name.textContent = ticket.name;
+    const catLabel = ticket.category === 'u18' ? 'Unter 18' : '18 oder älter';
+    sub.textContent = navigator.onLine ? 'Einlass gewährt' : 'Gültig (wird bei Netz nachgereicht)';
+    detail.textContent = `${catLabel} · ${ticket.ticketId}`;
+
+    playSound('valid');
+    triggerHaptic('valid');
+    triggerScreenFlash('valid');
+
+    try {
+      await updateDoc(doc(db, 'tickets', ticket.id), { checkedIn: true });
+    } catch(err){
+      console.error('Check-in konnte nicht synchronisiert werden:', err);
+    }
+  }
+
+  // --- Manuelle Suche / Check-in ---
+  const searchModal = document.getElementById('manualSearchModal');
+  const searchInput = document.getElementById('manualSearchInput');
+  const searchResults = document.getElementById('manualSearchResults');
+
+  document.getElementById('openManualSearchBtn').addEventListener('click', () => {
+    searchModal.style.display = 'flex';
+    searchInput.value = '';
+    searchInput.focus();
+    renderSearchResults();
+  });
+
+  document.getElementById('closeManualSearchBtn').addEventListener('click', () => {
+    searchModal.style.display = 'none';
+  });
+
+  searchModal.addEventListener('click', (e) => {
+    if (e.target === searchModal) searchModal.style.display = 'none';
+  });
+
+  searchInput.addEventListener('input', () => {
+    renderSearchResults();
+  });
+
+  function renderSearchResults(){
+    if (searchModal.style.display === 'none') return;
+    const query = (searchInput.value || '').trim().toLowerCase();
+
+    if (!query) {
+      searchResults.innerHTML = `
+        <div style="text-align:center; color:var(--text-dim); padding:24px 10px; font-size:13px;">
+          Gästenamen oder Ticket-ID eingeben...
+        </div>`;
+      return;
+    }
+
+    const matches = allTickets.filter(t => {
+      const name = (t.name || '').toLowerCase();
+      const tid = (t.ticketId || '').toLowerCase();
+      return name.includes(query) || tid.includes(query);
+    }).slice(0, 25);
+
+    if (matches.length === 0) {
+      searchResults.innerHTML = `
+        <div style="text-align:center; color:var(--error); padding:20px; font-size:13px;">
+          Kein Ticket gefunden für „${searchInput.value}“
+        </div>`;
+      return;
+    }
+
+    searchResults.innerHTML = '';
+    matches.forEach(t => {
+      const item = document.createElement('div');
+      item.className = 'ticket-item';
+
+      const catLabel = t.category === 'u18' ? 'U18' : '18+';
+      const classStr = t.schoolClass ? ` · Kl. ${t.schoolClass}` : '';
+
+      let actionHtml = '';
+      if (t.checkedIn) {
+        actionHtml = `<span class="status-badge badge-used">Eingecheckt</span>`;
+      } else if (!t.paid) {
+        actionHtml = `<span class="status-badge badge-unpaid">Unbezahlt</span>`;
+      } else {
+        actionHtml = `<button type="button" class="btn-checkin" data-tid="${t.ticketId}">Einchecken</button>`;
+      }
+
+      item.innerHTML = `
+        <div class="ticket-info">
+          <div class="ticket-name">${t.name}</div>
+          <div class="ticket-meta">${catLabel}${classStr} · <code>${t.ticketId}</code></div>
+        </div>
+        ${actionHtml}
+      `;
+
+      const checkinBtn = item.querySelector('.btn-checkin');
+      if (checkinBtn) {
+        checkinBtn.addEventListener('click', async () => {
+          searchModal.style.display = 'none';
+          await handleScan(t.ticketId);
+        });
+      }
+
+      searchResults.appendChild(item);
+    });
+  }
+</script>
+</body>
+</html>

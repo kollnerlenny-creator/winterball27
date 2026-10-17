@@ -91,11 +91,228 @@
     opacity:0.4;
   }
   .card{
-    position:relative; z-index:1; width:100%; max-width:440px;
+    position:relative; z-index:1; width:100%; max-width:920px;
     background:var(--glass); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
     border:1px solid var(--glass-border); border-radius:var(--radius);
     box-shadow:0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
-    padding:40px 28px 32px;
+    padding:44px 48px 36px;
+    transition:max-width 0.3s ease, padding 0.3s ease;
+  }
+  @media (max-width: 768px){
+    body{
+      padding:0;
+      margin:0;
+      min-height:100vh;
+      min-height:100dvh;
+      display:flex;
+      flex-direction:column;
+      align-items:stretch;
+      justify-content:flex-start;
+    }
+    .card{
+      width:100%;
+      max-width:100%;
+      min-height:100vh;
+      min-height:100dvh;
+      border-radius:0;
+      border:none;
+      box-shadow:none;
+      padding:24px 20px calc(24px + env(safe-area-inset-bottom, 12px));
+      margin:0;
+      display:flex;
+      flex-direction:column;
+      box-sizing:border-box;
+      background:rgba(10, 14, 26, 0.75);
+      backdrop-filter:blur(24px);
+      -webkit-backdrop-filter:blur(24px);
+    }
+    .form-view{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+    }
+    #regForm{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+    }
+    .form-step.active{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+    }
+    .step-nav-row{
+      margin-top:auto;
+      padding-top:24px;
+      padding-bottom:6px;
+    }
+    .date-badge{
+      margin-top:auto;
+      padding-top:16px;
+    }
+    /* Mond, riesigen Winterball-Schriftzug und Untertitel am Handy ausblenden für perfekte Proportionen */
+    .moon, h1, .subtitle{
+      display:none !important;
+    }
+  }
+
+  /* Desktop Layout: Volle Breite mit aufgeräumtem 2-Spalten-Grid */
+  @media (min-width: 769px){
+    .desktop-grid-2{
+      display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start;
+    }
+    .mobile-wizard-header,
+    .mobile-only,
+    .mobile-summary-card,
+    .step-intro-badge,
+    .step-heading,
+    .step-subheading,
+    .step-trust-card{
+      display:none !important;
+    }
+    .desktop-only{
+      display:block;
+    }
+    .form-step{
+      display:block !important; animation:none !important;
+    }
+  }
+
+  /* Handy-Layout: Schritt-für-Schritt Wizard */
+  @media (max-width: 768px){
+    .desktop-only{ display:none !important; }
+    .desktop-grid-2{ display:block; }
+    .mobile-wizard-header{ display:block; margin-bottom:14px; }
+    .mobile-wizard-top{
+      display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; min-height:24px;
+    }
+    .mobile-wizard-brand{
+      font-size:12px; font-weight:600; color:var(--accent-glow); letter-spacing:0.8px;
+      text-transform:uppercase; display:inline-flex; align-items:center; gap:5px;
+    }
+    .mobile-wizard-back{
+      background:none; border:none; color:var(--accent-glow); font-size:13px; font-weight:600;
+      cursor:pointer; padding:4px 0; display:inline-flex; align-items:center; gap:4px;
+    }
+    .mobile-wizard-badge{
+      font-size:11.5px; color:var(--text-dim); font-weight:600; letter-spacing:0.5px;
+    }
+    /* Fortschrittsbalken im echten Winterball Icy-Design */
+    .mobile-wizard-track{
+      width:100%; height:6px; background:rgba(255,255,255,0.08);
+      border:1px solid rgba(143,180,255,0.22); border-radius:99px; overflow:hidden;
+      margin-bottom:12px; box-shadow:inset 0 1px 3px rgba(0,0,0,0.5);
+    }
+    .mobile-wizard-fill{
+      height:100%; width:20%;
+      background:linear-gradient(90deg, #6095ff, #8fb4ff 50%, #d6e4ff);
+      box-shadow:0 0 12px rgba(143,180,255,0.8);
+      border-radius:99px; transition:width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .mobile-wizard-title{
+      font-size:15px; font-weight:600; color:var(--accent-glow); letter-spacing:0.3px;
+    }
+    .form-step{
+      display:none;
+    }
+    .form-step.active{
+      display:block; animation:stepFadeSlide 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .step-intro-badge{
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px;
+      color:var(--accent-glow); background:rgba(143,180,255,0.1); border:1px solid rgba(143,180,255,0.25);
+      border-radius:20px; padding:3px 10px; margin-bottom:8px;
+    }
+    .step-heading{
+      font-size:18px; font-weight:600; color:#ffffff; margin:0 0 4px 0; letter-spacing:0.2px; line-height:1.3;
+    }
+    .step-subheading{
+      font-size:12.5px; color:var(--text-dim); margin:0 0 16px 0; line-height:1.45;
+    }
+    .step-trust-card{
+      background:rgba(255,255,255,0.03); border:1px solid rgba(143,180,255,0.16);
+      border-radius:12px; padding:12px 14px; margin-top:14px;
+      display:flex; align-items:flex-start; gap:10px; font-size:12px; line-height:1.5; color:var(--text-dim);
+    }
+    .step-trust-card .trust-icon{ font-size:16px; flex-shrink:0; margin-top:1px; }
+    .step-trust-card strong{ color:#ffffff; font-weight:600; }
+
+    .salutation-toggle{
+      flex-direction:column; gap:10px; margin-top:8px;
+    }
+    .salutation-toggle-btn{
+      padding:15px 16px; font-size:15px; border-radius:14px;
+    }
+    .mobile-only{ display:flex; }
+    .mobile-step-hint{
+      font-size:12px; color:var(--text-dim); text-align:center; margin-top:12px; line-height:1.4;
+    }
+    .name-hint{
+      font-size:12px; color:var(--text-dim); margin-top:6px; line-height:1.4; transition:color 0.2s;
+    }
+    .name-hint.warn{
+      color:#ffd27f; font-weight:500;
+    }
+    .name-hint.success{
+      color:#7fe0a8; font-weight:500;
+    }
+    .step-nav-row{
+      display:flex; gap:10px; margin-top:20px;
+    }
+    .btn-step-prev{
+      padding:13px 18px; background:rgba(255,255,255,0.06); border:1px solid var(--glass-border);
+      border-radius:var(--radius-sm); color:var(--text); font-size:14px; font-weight:500; cursor:pointer;
+      white-space:nowrap;
+    }
+    .btn-step-next{
+      flex:1; padding:13px 20px; background:linear-gradient(135deg, #8fb4ff, #c2d8ff); border:none;
+      border-radius:var(--radius-sm); color:#0a0e1a; font-size:14.5px; font-weight:600; cursor:pointer;
+      box-shadow:0 4px 16px rgba(143,180,255,0.3); transition:transform 0.15s;
+    }
+    .btn-step-next:active{ transform:scale(0.98); }
+
+    /* Saubere Übersicht in Schritt 5 */
+    .mobile-summary-card{
+      background:rgba(255,255,255,0.04); border:1px solid rgba(143,180,255,0.22);
+      border-radius:14px; padding:16px 16px 14px; margin-bottom:18px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+    .summary-card-header{
+      display:flex; align-items:center; gap:7px;
+      margin-bottom:14px; padding-bottom:10px;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+    }
+    .summary-card-icon{ font-size:15px; }
+    .summary-card-title{
+      font-size:13.5px; font-weight:600; color:var(--accent-glow);
+      letter-spacing:0.3px;
+    }
+    .summary-grid{
+      display:flex; flex-direction:column; gap:12px;
+    }
+    .summary-entry{
+      display:flex; flex-direction:column; gap:3px;
+    }
+    .summary-entry-label{
+      font-size:11px; text-transform:uppercase; letter-spacing:0.8px;
+      color:var(--text-dim); font-weight:600;
+    }
+    .summary-entry-val{
+      font-size:14.5px; color:#ffffff; font-weight:500;
+    }
+    .summary-email-val{
+      font-size:13px; color:var(--accent-glow);
+      word-break:break-all; font-family:ui-monospace, monospace;
+      background:rgba(143,180,255,0.08); padding:5px 9px;
+      border-radius:8px; border:1px solid rgba(143,180,255,0.18);
+      margin-top:2px; display:inline-block;
+    }
+  }
+
+  @keyframes stepFadeSlide{
+    from{ opacity:0; transform:translateX(10px); }
+    to{ opacity:1; transform:translateX(0); }
   }
   .moon{
     width:82px; height:82px; margin:0 auto 8px;
@@ -181,8 +398,8 @@
   .salutation-toggle-btn{
     flex:1; padding:12px 14px; border-radius:var(--radius-sm); border:1px solid var(--glass-border);
     background:rgba(255,255,255,0.04); color:var(--text); font-size:14.5px; font-weight:600; cursor:pointer;
-    transition:background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
-    display:flex; align-items:center; justify-content:center; gap:6px;
+    transition:background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.15s;
+    display:flex; align-items:center; justify-content:center; gap:6px; text-align:left;
   }
   .salutation-toggle-btn:hover{
     background:rgba(255,255,255,0.08); border-color:rgba(143,180,255,0.35);
@@ -190,6 +407,26 @@
   .salutation-toggle-btn.active{
     background:rgba(143,180,255,0.18); border-color:var(--accent-glow); color:var(--accent-glow);
     box-shadow:0 2px 12px rgba(143,180,255,0.2);
+  }
+  .salutation-toggle-btn .btn-inner{
+    display:flex; align-items:center; justify-content:space-between; width:100%;
+  }
+  .salutation-toggle-btn .btn-left{
+    display:flex; flex-direction:column; gap:2px;
+  }
+  .salutation-toggle-btn .btn-title{
+    font-size:15px; font-weight:600; color:#ffffff; display:flex; align-items:center; gap:6px;
+  }
+  .salutation-toggle-btn .btn-sub{
+    font-size:11.5px; color:var(--text-dim); font-weight:400; line-height:1.3;
+  }
+  .salutation-toggle-btn .btn-check{
+    width:20px; height:20px; border-radius:50%; border:1.5px solid rgba(255,255,255,0.25);
+    display:flex; align-items:center; justify-content:center; font-size:11px; color:transparent;
+    flex-shrink:0; margin-left:12px; transition:all 0.2s ease;
+  }
+  .salutation-toggle-btn.active .btn-check{
+    border-color:var(--accent-glow); background:var(--accent-glow); color:#0a0e1a; font-weight:700;
   }
 
   .companion-toggle{display:flex; gap:10px; margin-top:6px;}
@@ -281,10 +518,14 @@
     }
   }
 
-  .consent-field{display:flex; align-items:flex-start; gap:10px; margin-bottom:18px;}
+  .consent-field{display:flex; align-items:flex-start; gap:10px; margin-bottom:16px;}
   .cancel-notice{
-    background:rgba(255,210,127,0.1); border:1px solid rgba(255,210,127,0.25); border-radius:var(--radius-sm);
-    padding:12px 14px; font-size:12px; line-height:1.6; color:var(--text-dim); margin-bottom:18px;
+    background:rgba(143,180,255,0.06); border:1px solid rgba(143,180,255,0.22); border-radius:12px;
+    padding:13px 15px; font-size:12px; line-height:1.6; color:var(--text); margin-bottom:18px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+  .cancel-notice .notice-title{
+    color:var(--accent-glow); font-weight:600; margin-bottom:4px; display:flex; align-items:center; gap:6px; font-size:12.5px;
   }
   .consent-field input[type="checkbox"]{
     /* Die globale input{appearance:none} weiter oben würde das Häkchen unsichtbar machen —
@@ -310,10 +551,13 @@
   button[type="submit"]:disabled{opacity:0.6; cursor:not-allowed; transform:none;}
 
   .status{
-    margin-top:16px; padding:14px 16px; border-radius:var(--radius-sm);
-    font-size:14px; text-align:center; display:none;
+    margin-top:16px; padding:13px 15px; border-radius:12px;
+    font-size:13px; text-align:left; display:none; line-height:1.5;
   }
-  .status.error{display:block; background:rgba(255,128,128,0.12); color:var(--error); border:1px solid rgba(255,128,128,0.3);}
+  .status.error{
+    display:block; background:rgba(255,100,100,0.12); color:#ff9c9c;
+    border:1px solid rgba(255,100,100,0.32); box-shadow:0 4px 16px rgba(255,80,80,0.12);
+  }
   .success-view{display:none; text-align:center;}
   .success-view.active{display:block;}
   .form-view{display:none;}
@@ -473,6 +717,20 @@
   </div>
 
   <div class="form-view" id="formView">
+    <!-- Mobile Wizard Fortschritt & Kopfbereich -->
+    <div class="mobile-wizard-header" id="mobileWizardHeader">
+      <div class="mobile-wizard-top">
+        <button type="button" class="mobile-wizard-back" id="mobileWizardTopBack" aria-label="Vorheriger Schritt" style="visibility:hidden;">
+          ← Zurück
+        </button>
+        <span class="mobile-wizard-brand" id="mobileWizardBrand">❄️ Winter Ball 2027</span>
+        <span class="mobile-wizard-badge" id="mobileWizardBadge">Schritt 1 von 5</span>
+      </div>
+      <div class="mobile-wizard-track">
+        <div class="mobile-wizard-fill" id="mobileWizardFill" style="width:20%;"></div>
+      </div>
+    </div>
+
     <form id="regForm">
       <!-- Honeypot-Feld gegen Spam-Bots: für Menschen unsichtbar, Bots füllen es oft automatisch aus -->
       <div style="position:absolute; left:-9999px; top:-9999px;" aria-hidden="true">
@@ -480,101 +738,215 @@
         <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
       </div>
 
-      <div class="field">
-        <label id="salutationLabel">Bevorzugte Anrede</label>
-        <div class="salutation-toggle" role="radiogroup" aria-labelledby="salutationLabel">
-          <button type="button" class="salutation-toggle-btn active" id="salutationDuBtn" data-salutation="du" role="radio" aria-checked="true">
-            <span>Du</span>
-            <small style="opacity:0.7; font-size:11.5px; margin-left:3px;">(persönlich)</small>
-          </button>
-          <button type="button" class="salutation-toggle-btn" id="salutationSieBtn" data-salutation="sie" role="radio" aria-checked="false">
-            <span>Sie</span>
-            <small style="opacity:0.7; font-size:11.5px; margin-left:3px;">(formell)</small>
-          </button>
+      <!-- SCHRITT 1: ANREDE (Du / Sie) -->
+      <div class="form-step active" data-step="1" id="step1">
+        <h2 class="step-heading mobile-only" id="step1Heading">Wie möchtest du angesprochen werden?</h2>
+        <p class="step-subheading mobile-only">Wähle deine bevorzugte Anrede für deine Tickets und E-Mails:</p>
+
+        <div class="field">
+          <label id="salutationLabel" class="desktop-only">Bevorzugte Anrede</label>
+          <div class="salutation-toggle" role="radiogroup" aria-labelledby="salutationLabel">
+            <button type="button" class="salutation-toggle-btn active" id="salutationDuBtn" data-salutation="du" role="radio" aria-checked="true">
+              <div class="btn-inner">
+                <div class="btn-left">
+                  <div class="btn-title">✨ Du <small style="opacity:0.75; font-size:11.5px; margin-left:3px;">(persönlich)</small></div>
+                  <div class="btn-sub mobile-only">„Hallo Max, hier ist dein Ticket …“</div>
+                </div>
+                <div class="btn-check mobile-only">✓</div>
+              </div>
+            </button>
+            <button type="button" class="salutation-toggle-btn" id="salutationSieBtn" data-salutation="sie" role="radio" aria-checked="false">
+              <div class="btn-inner">
+                <div class="btn-left">
+                  <div class="btn-title">🎩 Sie <small style="opacity:0.75; font-size:11.5px; margin-left:3px;">(formell)</small></div>
+                  <div class="btn-sub mobile-only">„Guten Tag Max, hier ist Ihr Ticket …“</div>
+                </div>
+                <div class="btn-check mobile-only">✓</div>
+              </div>
+            </button>
+          </div>
+          <input type="hidden" id="salutation" name="salutation" value="du">
         </div>
-        <input type="hidden" id="salutation" name="salutation" value="du">
+
+        <div class="step-trust-card mobile-only">
+          <span class="trust-icon">⏱️</span>
+          <div><strong>Dauert nur ca. 1 Minute:</strong> Deine Online-Reservierung ist kostenlos. Bezahlt wird später bar an der Kasse in der Schule.</div>
+        </div>
+
+        <div class="step-nav-row mobile-only">
+          <button type="button" class="btn-step-next" id="nextToName" style="width:100%;">Weiter zum Namen →</button>
+        </div>
       </div>
 
-      <div class="field">
-        <label for="name" id="nameLabel">Dein Vor- und Nachname</label>
-        <input type="text" id="name" placeholder="Max Mustermann" required>
-      </div>
-      <div class="field" id="emailField">
-        <div class="email-header-row">
-          <label for="lernsaxUsername" id="emailLabel">Deine E-Mail-Adresse</label>
-          <div class="email-mode-switch" role="tablist" aria-label="E-Mail-Typ auswählen">
-            <button type="button" class="email-mode-btn active" id="btnModeLernsax" title="Schnelleingabe: Nur Kennung vor @gymwilsdruff.lernsax.de eingeben">
-              <span>🏫 LernSax</span>
-            </button>
-            <button type="button" class="email-mode-btn" id="btnModeOther" title="Private E-Mail (z. B. Gmail, GMX, Web.de)">
-              <span>✉️ Andere E-Mail</span>
-            </button>
+      <!-- DESKTOP GRID 1: Name & E-Mail (am PC nebeneinander, am Handy 2 separate Schritte) -->
+      <div class="desktop-grid-2">
+        <!-- SCHRITT 2: NAME -->
+        <div class="form-step" data-step="2" id="step2">
+          <h2 class="step-heading mobile-only" id="step2Heading">Wie heißt du?</h2>
+          <p class="step-subheading mobile-only" id="step2Subheading">Bitte gib deinen vollständigen Vor- und Nachnamen für das Einlass-Ticket an.</p>
+
+          <div class="field">
+            <label for="name" id="nameLabel">Dein Vor- und Nachname</label>
+            <input type="text" id="name" placeholder="Max Mustermann" required autocomplete="name">
+            <div class="name-hint" id="nameHint">
+              💡 Bitte gib deinen vollständigen Vor- und Nachnamen an (z. B. Max Mustermann)
+            </div>
+          </div>
+
+          <div class="step-trust-card mobile-only">
+            <span class="trust-icon">🎟️</span>
+            <div><strong>Namensgebundenes Ticket:</strong> Jedes Ticket wird am Einlass namentlich abgeglichen. Achte bitte auf die korrekte Schreibweise.</div>
+          </div>
+
+          <div class="step-nav-row mobile-only">
+            <button type="button" class="btn-step-prev">← Zurück</button>
+            <button type="button" class="btn-step-next" id="nextToEmail">Weiter zur E-Mail →</button>
           </div>
         </div>
 
-        <!-- Modus 1: LernSax (Schnelleingabe: nur Kennung vor @gymwilsdruff.lernsax.de) -->
-        <div class="lernsax-input-group" id="lernsaxInputGroup">
-          <input type="text" id="lernsaxUsername" placeholder="vorname.nachname2026" autocomplete="off" autocapitalize="none" spellcheck="false">
-          <span class="lernsax-domain-suffix" id="lernsaxSuffix" title="Klicke hier, um ins Eingabefeld zu springen">@gymwilsdruff.lernsax.de</span>
+        <!-- SCHRITT 3: E-MAIL -->
+        <div class="form-step" data-step="3" id="step3">
+          <h2 class="step-heading mobile-only" id="step3Heading">Wohin senden wir dein Ticket?</h2>
+          <p class="step-subheading mobile-only" id="step3Subheading">Nach der Reservierung schicken wir dir hierhin deine Bestätigung.</p>
+
+          <div class="field" id="emailField">
+            <div class="email-header-row">
+              <label for="lernsaxUsername" id="emailLabel">Deine E-Mail-Adresse</label>
+              <div class="email-mode-switch" role="tablist" aria-label="E-Mail-Typ auswählen">
+                <button type="button" class="email-mode-btn active" id="btnModeLernsax" title="Schnelleingabe: Nur Kennung vor @gymwilsdruff.lernsax.de eingeben">
+                  <span>🏫 LernSax</span>
+                </button>
+                <button type="button" class="email-mode-btn" id="btnModeOther" title="Private E-Mail (z. B. Gmail, GMX, Web.de)">
+                  <span>✉️ Andere E-Mail</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Modus 1: LernSax (Schnelleingabe: nur Kennung vor @gymwilsdruff.lernsax.de) -->
+            <div class="lernsax-input-group" id="lernsaxInputGroup">
+              <input type="text" id="lernsaxUsername" placeholder="vorname.nachname2026" autocomplete="off" autocapitalize="none" spellcheck="false">
+              <span class="lernsax-domain-suffix" id="lernsaxSuffix" title="Klicke hier, um ins Eingabefeld zu springen">@gymwilsdruff.lernsax.de</span>
+            </div>
+
+            <!-- Modus 2: Andere / Private E-Mail-Adresse -->
+            <div id="otherInputGroup" style="display:none;">
+              <input type="email" id="otherEmailInput" placeholder="max@beispiel.de" autocomplete="email">
+            </div>
+
+            <!-- Verstecktes echtes Formularfeld für die vollständige Adresse -->
+            <input type="hidden" id="email" name="email">
+
+            <div class="email-hint" id="emailHint">
+              💡 Gib nur deinen Benutzernamen vor dem @ ein
+            </div>
+          </div>
+
+          <div class="step-trust-card mobile-only">
+            <span class="trust-icon">🔒</span>
+            <div><strong>Kein Spam &amp; sichere Zustellung:</strong> Deine E-Mail wird ausschließlich für die Ticketabwicklung und wichtige Event-Infos genutzt.</div>
+          </div>
+
+          <div class="step-nav-row mobile-only">
+            <button type="button" class="btn-step-prev">← Zurück</button>
+            <button type="button" class="btn-step-next" id="nextToAge">Weiter zu Alter &amp; Begleitung →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCHRITT 4: ALTER & BEGLEITUNG -->
+      <div class="form-step" data-step="4" id="step4">
+        <h2 class="step-heading mobile-only" id="step4Heading">Alter &amp; Begleitpersonen</h2>
+        <p class="step-subheading mobile-only" id="step4Subheading">Wähle deine Altersgruppe und gib an, ob du weitere Gäste mitbringst.</p>
+
+        <div class="desktop-grid-2">
+          <div class="field">
+            <label for="category" id="categoryLabel">Deine Altersgruppe</label>
+            <select id="category">
+              <option value="">Bitte wählen</option>
+              <option value="u18">Unter 18</option>
+              <option value="ue18">18 oder älter</option>
+            </select>
+            <div class="name-hint" id="categoryHint" style="display:none; margin-top:6px;"></div>
+          </div>
+
+          <div class="field" id="schoolClassField" style="display:none;">
+            <label for="schoolClass" id="schoolClassLabel">Deine Klasse <span style="color:var(--accent-glow);">*</span></label>
+            <input type="text" id="schoolClass" placeholder="z.B. 10b oder 11/1" autocomplete="off">
+            <div style="font-size:11.5px; color:var(--text-dim); margin-top:6px;">Pflichtangabe für alle Minderjährigen (U18) zur Zuordnung und für den Jugendschutz.</div>
+          </div>
         </div>
 
-        <!-- Modus 2: Andere / Private E-Mail-Adresse -->
-        <div id="otherInputGroup" style="display:none;">
-          <input type="email" id="otherEmailInput" placeholder="max@beispiel.de" autocomplete="email">
+        <div class="field" style="margin-top:10px;">
+          <label id="companionQuestionLabel">Bringst du eine Begleitung mit?</label>
+          <div class="companion-toggle">
+            <button type="button" class="companion-toggle-btn" id="companionYesBtn">Ja</button>
+            <button type="button" class="companion-toggle-btn active" id="companionNoBtn">Nein</button>
+          </div>
+          <div id="companionsSection" style="display:none; margin-top:14px;">
+            <div id="companionsList"></div>
+            <button type="button" class="add-companion" id="addCompanionBtn">+ Weitere Begleitung hinzufügen</button>
+          </div>
         </div>
 
-        <!-- Verstecktes echtes Formularfeld für die vollständige Adresse -->
-        <input type="hidden" id="email" name="email">
-
-        <div class="email-hint" id="emailHint">
-          💡 Gib nur deinen Benutzernamen vor dem @ ein
+        <div class="step-trust-card mobile-only">
+          <span class="trust-icon">👥</span>
+          <div><strong>Gemeinsam feiern:</strong> Du kannst Begleitungen direkt mit anmelden und später zusammen an der Vorverkaufskasse bezahlen.</div>
         </div>
-      </div>
-      <div class="field">
-        <label for="category" id="categoryLabel">Deine Altersgruppe</label>
-        <select id="category">
-          <option value="">Bitte wählen</option>
-          <option value="u18">Unter 18</option>
-          <option value="ue18">18 oder älter</option>
-        </select>
-      </div>
 
-      <div class="field" id="schoolClassField" style="display:none;">
-        <label for="schoolClass" id="schoolClassLabel">Deine Klasse <span style="color:var(--accent-glow);">*</span></label>
-        <input type="text" id="schoolClass" placeholder="z.B. 10b oder 11/1" autocomplete="off">
-        <div style="font-size:11.5px; color:var(--text-dim); margin-top:6px;">Pflichtangabe für alle Minderjährigen (U18) zur Zuordnung und für den Jugendschutz.</div>
-      </div>
-
-      <div class="field">
-        <label id="companionQuestionLabel">Bringst du eine Begleitung mit?</label>
-        <div class="companion-toggle">
-          <button type="button" class="companion-toggle-btn" id="companionYesBtn">Ja</button>
-          <button type="button" class="companion-toggle-btn active" id="companionNoBtn">Nein</button>
-        </div>
-        <div id="companionsSection" style="display:none; margin-top:14px;">
-          <div id="companionsList"></div>
-          <button type="button" class="add-companion" id="addCompanionBtn">+ Weitere Begleitung hinzufügen</button>
+        <div class="step-nav-row mobile-only">
+          <button type="button" class="btn-step-prev">← Zurück</button>
+          <button type="button" class="btn-step-next" id="nextToSummary">Weiter zum Abschluss →</button>
         </div>
       </div>
 
-      <div class="consent-field">
-        <input type="checkbox" id="privacyConsent" required>
-        <label for="privacyConsent">
-          Ich habe die <a href="datenschutz.html" target="_blank">Datenschutzerklärung</a> gelesen und
-          bin mit der Verarbeitung meiner Daten (und ggf. der meiner Begleitpersonen) zur Abwicklung
-          des Ticketkaufs einverstanden.
-        </label>
-      </div>
+      <!-- SCHRITT 5: ZUSAMMENFASSUNG, ZUSTIMMUNG & ABSCHLUSS -->
+      <div class="form-step" data-step="5" id="step5">
+        <h2 class="step-heading mobile-only" id="step5Heading">Fast geschafft! Deine Übersicht</h2>
+        <p class="step-subheading mobile-only" id="step5Subheading">Überprüfe kurz deine Angaben und schließe die Reservierung ab.</p>
 
-      <div class="cancel-notice">
-        ℹ️ Die Online-Anmeldung selbst ist noch unverbindlich und kostet nichts. Verbindlich wird
-        dein Ticket erst mit der Barzahlung an der Vorverkaufskasse in der Schule — ab dann kann
-        es nicht mehr storniert oder erstattet werden (Ticket-Verkäufe für Veranstaltungen mit
-        festem Termin sind laut § 312g Abs. 2 Nr. 9 BGB vom gesetzlichen Widerrufsrecht ausgenommen).
-      </div>
+        <!-- Live-Zusammenfassung auf dem Handy (klar strukturiert) -->
+        <div class="mobile-summary-card" id="mobileSummaryCard">
+          <div class="summary-card-header">
+            <span class="summary-card-icon">📋</span>
+            <span class="summary-card-title">Deine Angaben im Überblick</span>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-entry">
+              <div class="summary-entry-label">Besteller</div>
+              <div class="summary-entry-val" id="summaryOrdererName">—</div>
+            </div>
+            <div class="summary-entry">
+              <div class="summary-entry-label">E-Mail-Adresse</div>
+              <div class="summary-entry-val summary-email-val" id="summaryOrdererEmail">—</div>
+            </div>
+            <div class="summary-entry">
+              <div class="summary-entry-label">Altersgruppe</div>
+              <div class="summary-entry-val" id="summaryOrdererAge">—</div>
+            </div>
+            <div class="summary-entry">
+              <div class="summary-entry-label">Tickets</div>
+              <div class="summary-entry-val" id="summaryTicketsCount">1 Ticket</div>
+            </div>
+            <div id="summaryCompanionsList" style="display:none; padding-top:6px; border-top:1px solid rgba(255,255,255,0.08);"></div>
+          </div>
+        </div>
 
-      <button type="submit" id="submitBtn">Jetzt anmelden</button>
-      <div class="status" id="status"></div>
+        <div class="consent-field" id="consentFieldWrap">
+          <input type="checkbox" id="privacyConsent" required>
+          <label for="privacyConsent">
+            Ich habe die <a href="datenschutz.html" target="_blank">Datenschutzerklärung</a> gelesen und
+            bin mit der Verarbeitung meiner Daten (und ggf. der meiner Begleitpersonen) zur Abwicklung
+            des Ticketkaufs einverstanden.
+          </label>
+        </div>
+
+        <div class="step-nav-row mobile-only" style="margin-bottom:12px;">
+          <button type="button" class="btn-step-prev">← Zurück</button>
+        </div>
+
+        <button type="submit" id="submitBtn">Jetzt anmelden ❄️</button>
+        <div class="status" id="status"></div>
+      </div>
     </form>
   </div>
 
@@ -1123,10 +1495,373 @@
         ? 'Vielen Dank für Ihr Feedback! ❄️💙'
         : 'Vielen Dank für dein Feedback! ❄️💙';
     }
+    if (typeof updateWizardHeaderTitle === 'function') {
+      updateWizardHeaderTitle();
+    }
+    if (typeof updateNameHint === 'function') {
+      updateNameHint();
+    }
+
+    const s1H = document.getElementById('step1Heading');
+    const s2H = document.getElementById('step2Heading');
+    const s2Sub = document.getElementById('step2Subheading');
+    const s3H = document.getElementById('step3Heading');
+    const s3Sub = document.getElementById('step3Subheading');
+    const s4H = document.getElementById('step4Heading');
+    const s4Sub = document.getElementById('step4Subheading');
+    const s5H = document.getElementById('step5Heading');
+    const s5Sub = document.getElementById('step5Subheading');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (s1H) s1H.textContent = isSie ? 'Wie möchten Sie angesprochen werden?' : 'Wie möchtest du angesprochen werden?';
+    if (s2H) s2H.textContent = isSie ? 'Wie heißen Sie?' : 'Wie heißt du?';
+    if (s2Sub) s2Sub.textContent = isSie ? 'Bitte geben Sie Ihren vollständigen Namen für das Ticket an.' : 'Bitte gib deinen echten Vor- und Nachnamen für das Einlass-Ticket an.';
+    if (s3H) s3H.textContent = isSie ? 'Wohin dürfen wir Ihr Ticket senden?' : 'Wohin senden wir dein Ticket?';
+    if (s3Sub) s3Sub.textContent = isSie ? 'Nach der Reservierung erhalten Sie hierhin Ihre Bestätigung.' : 'Nach der Reservierung schicken wir dir hierhin deine Bestätigung.';
+    if (s4H) s4H.textContent = isSie ? 'Altersgruppe & Begleitpersonen' : 'Alter & Begleitpersonen';
+    if (s4Sub) s4Sub.textContent = isSie ? 'Wählen Sie Ihre Altersgruppe und geben Sie an, ob Sie weitere Gäste mitbringen.' : 'Wähle deine Altersgruppe und gib an, ob du weitere Gäste mitbringst.';
+    if (s5H) s5H.textContent = isSie ? 'Fast geschafft! Ihre Übersicht' : 'Fast geschafft! Deine Übersicht';
+    if (s5Sub) s5Sub.textContent = isSie ? 'Überprüfen Sie kurz Ihre Angaben und schließen Sie die Reservierung ab.' : 'Überprüfe kurz deine Angaben und schließe die Reservierung ab.';
+    if (submitBtn && !submitBtn.disabled) {
+      submitBtn.textContent = isSie ? 'Jetzt anmelden ❄️' : 'Jetzt anmelden ❄️';
+    }
   }
 
-  if (salutationDuBtn) salutationDuBtn.addEventListener('click', () => setSalutation('du'));
-  if (salutationSieBtn) salutationSieBtn.addEventListener('click', () => setSalutation('sie'));
+  // --- Mobile Schritt-für-Schritt (Wizard) Steuerung ---
+  let currentStep = 1;
+  const totalSteps = 5;
+
+  const stepTitles = {
+    du: [
+      '1. Bevorzugte Anrede',
+      '2. Dein Vor- und Nachname',
+      '3. Deine E-Mail-Adresse',
+      '4. Altersgruppe & Begleitung',
+      '5. Bestätigen & Anmelden'
+    ],
+    sie: [
+      '1. Bevorzugte Anrede',
+      '2. Ihr Vor- und Nachname',
+      '3. Ihre E-Mail-Adresse',
+      '4. Altersgruppe & Begleitung',
+      '5. Bestätigen & Anmelden'
+    ]
+  };
+
+  function isMobileWizard() {
+    return window.innerWidth <= 768;
+  }
+
+  function updateWizardHeaderTitle() {
+    const salVal = (document.getElementById('salutation')?.value || 'du').toLowerCase();
+    const isSie = salVal === 'sie';
+    const titles = isSie ? stepTitles.sie : stepTitles.du;
+    const titleEl = document.getElementById('mobileWizardTitle');
+    if (titleEl) {
+      titleEl.textContent = titles[currentStep - 1] || '';
+    }
+  }
+
+  function updateWizardUI() {
+    if (!isMobileWizard()) {
+      document.querySelectorAll('.form-step').forEach(stepEl => {
+        stepEl.classList.add('active');
+      });
+      return;
+    }
+
+    document.querySelectorAll('.form-step').forEach(stepEl => {
+      const s = Number(stepEl.getAttribute('data-step'));
+      stepEl.classList.toggle('active', s === currentStep);
+    });
+
+    const topBackBtn = document.getElementById('mobileWizardTopBack');
+    const badgeEl = document.getElementById('mobileWizardBadge');
+    const fillEl = document.getElementById('mobileWizardFill');
+
+    if (topBackBtn) {
+      topBackBtn.style.visibility = currentStep > 1 ? 'visible' : 'hidden';
+    }
+    if (badgeEl) {
+      badgeEl.textContent = `Schritt ${currentStep} von ${totalSteps}`;
+    }
+    if (fillEl) {
+      fillEl.style.width = `${(currentStep / totalSteps) * 100}%`;
+    }
+
+    updateWizardHeaderTitle();
+
+    if (currentStep > 1) {
+      try {
+        const c = document.querySelector('.card');
+        if (c) c.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch(e) {}
+    }
+  }
+
+  function goToStep(step) {
+    if (step < 1) step = 1;
+    if (step > totalSteps) step = totalSteps;
+    currentStep = step;
+    if (statusEl) {
+      statusEl.className = 'status';
+      statusEl.textContent = '';
+      statusEl.style.display = 'none';
+    }
+    if (currentStep === 5) {
+      updateMobileSummary();
+    }
+    updateWizardUI();
+
+    if (isMobileWizard()) {
+      setTimeout(() => {
+        if (currentStep === 2) {
+          document.getElementById('name')?.focus();
+        } else if (currentStep === 3) {
+          if (emailMode === 'lernsax') lernsaxUsername?.focus();
+          else otherEmailInput?.focus();
+        }
+      }, 150);
+    }
+  }
+
+  function updateMobileSummary() {
+    const nameVal = (document.getElementById('name')?.value || '').trim() || '—';
+    syncEmail();
+    const emailVal = (document.getElementById('email')?.value || '').trim() || '—';
+    const salVal = (document.getElementById('salutation')?.value || 'du').toLowerCase();
+    const anredeLabel = salVal === 'sie' ? 'Sie (formell)' : 'Du (persönlich)';
+    const categoryVal = document.getElementById('category')?.value;
+    const schoolClassVal = (document.getElementById('schoolClass')?.value || '').trim();
+    let alterLabel = '—';
+    if (categoryVal === 'u18') {
+      alterLabel = schoolClassVal ? `Unter 18 (Klasse ${schoolClassVal})` : 'Unter 18';
+    } else if (categoryVal === 'ue18') {
+      alterLabel = '18 oder älter';
+    }
+
+    const companionRows = Array.from(document.querySelectorAll('.companion-row'));
+    const validCompanions = companionRows.map(r => ({
+      name: (r.querySelector('.companion-name')?.value || '').trim(),
+      cat: r.querySelector('.companion-category')?.value,
+      cls: (r.querySelector('.companion-class')?.value || '').trim()
+    })).filter(c => Boolean(c.name));
+    const totalCount = 1 + validCompanions.length;
+
+    const sName = document.getElementById('summaryOrdererName');
+    const sEmail = document.getElementById('summaryOrdererEmail');
+    const sAge = document.getElementById('summaryOrdererAge');
+    const sCount = document.getElementById('summaryTicketsCount');
+    const sCompList = document.getElementById('summaryCompanionsList');
+
+    if (sName) sName.textContent = `${nameVal} (${anredeLabel})`;
+    if (sEmail) sEmail.textContent = emailVal;
+    if (sAge) sAge.textContent = alterLabel;
+    if (sCount) {
+      sCount.textContent = totalCount === 1
+        ? '1 Ticket (für dich)'
+        : `${totalCount} Tickets gesamt (1 Besteller + ${validCompanions.length} Begleitung${validCompanions.length > 1 ? 'en' : ''})`;
+    }
+    if (sCompList) {
+      if (validCompanions.length > 0) {
+        sCompList.style.display = 'block';
+        sCompList.innerHTML = '<div class="summary-entry-label" style="margin-bottom:4px; font-size:11px; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-dim); font-weight:600;">Begleitpersonen</div>' +
+          validCompanions.map(c => {
+            const catLabel = c.cat === 'u18' ? (c.cls ? `U18, Kl. ${c.cls}` : 'U18') : '18+';
+            return `<div style="font-size:13px; color:#ffffff; padding:2px 0;">• ${c.name} <span style="color:var(--text-dim); font-size:11.5px;">(${catLabel})</span></div>`;
+          }).join('');
+      } else {
+        sCompList.style.display = 'none';
+        sCompList.innerHTML = '';
+      }
+    }
+  }
+
+  // Anrede wählen: Am Handy direkt nach Auswahl flüssig zu Schritt 2 springen
+  if (salutationDuBtn) {
+    salutationDuBtn.addEventListener('click', () => {
+      setSalutation('du');
+      if (isMobileWizard()) {
+        setTimeout(() => goToStep(2), 180);
+      }
+    });
+  }
+  if (salutationSieBtn) {
+    salutationSieBtn.addEventListener('click', () => {
+      setSalutation('sie');
+      if (isMobileWizard()) {
+        setTimeout(() => goToStep(2), 180);
+      }
+    });
+  }
+  document.getElementById('nextToName')?.addEventListener('click', () => {
+    goToStep(2);
+  });
+
+  const nameInput = document.getElementById('name');
+  const nameHint = document.getElementById('nameHint');
+
+  function updateNameHint() {
+    if (!nameInput || !nameHint) return;
+    const val = nameInput.value.trim();
+    const salVal = (document.getElementById('salutation')?.value || 'du').toLowerCase();
+    const isSie = salVal === 'sie';
+
+    if (!val) {
+      nameHint.className = 'name-hint';
+      nameHint.textContent = isSie
+        ? '💡 Bitte geben Sie Ihren vollständigen Vor- und Nachnamen an (z. B. Max Mustermann).'
+        : '💡 Bitte gib deinen vollständigen Vor- und Nachnamen an (z. B. Max Mustermann).';
+    } else if (!isFullName(val)) {
+      nameHint.className = 'name-hint warn';
+      nameHint.textContent = isSie
+        ? '⚠️ Bitte auch Ihren Nachnamen eingeben (Vor- und Nachname erforderlich).'
+        : '⚠️ Bitte auch deinen Nachnamen eingeben (Vor- und Nachname erforderlich).';
+    } else {
+      nameHint.className = 'name-hint success';
+      nameHint.textContent = '✓ Vor- und Nachname vollständig';
+    }
+  }
+
+  if (nameInput) {
+    nameInput.addEventListener('input', updateNameHint);
+  }
+
+  // Navigation Schritt 2 -> 3 (Name prüfen)
+  document.getElementById('nextToEmail')?.addEventListener('click', () => {
+    const nameVal = (document.getElementById('name')?.value || '').trim();
+    const salVal = (document.getElementById('salutation')?.value || 'du').toLowerCase();
+    const isSie = salVal === 'sie';
+    if (!nameVal) {
+      highlightError(isSie ? 'Bitte geben Sie Ihren vollständigen Vor- und Nachnamen an.' : 'Bitte gib deinen vollständigen Vor- und Nachnamen an.', document.getElementById('name'));
+      updateNameHint();
+      return;
+    }
+    if (!isFullName(nameVal)) {
+      highlightError(isSie ? 'Bitte geben Sie sowohl Vor- als auch Nachnamen an (z. B. Max Mustermann).' : 'Bitte gib sowohl Vor- als auch Nachnamen an (z. B. Max Mustermann).', document.getElementById('name'));
+      updateNameHint();
+      return;
+    }
+    goToStep(3);
+  });
+
+  // Enter im Namensfeld geht direkt weiter
+  document.getElementById('name')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      document.getElementById('nextToEmail')?.click();
+    }
+  });
+
+  // Navigation Schritt 3 -> 4 (E-Mail prüfen)
+  document.getElementById('nextToAge')?.addEventListener('click', () => {
+    syncEmail();
+    const emailVal = sanitizeEmail((document.getElementById('email')?.value || '').trim());
+    if (emailMode === 'lernsax' && !lernsaxUsername.value.trim()) {
+      highlightError('Bitte gib deinen LernSax-Benutzernamen an.', lernsaxUsername);
+      return;
+    }
+    if (emailMode === 'other' && !otherEmailInput.value.trim()) {
+      highlightError('Bitte gib deine E-Mail-Adresse an.', otherEmailInput);
+      return;
+    }
+    if (!emailVal || !emailVal.includes('@') || !emailVal.includes('.')) {
+      highlightError('Bitte gib eine gültige E-Mail-Adresse an.', emailMode === 'lernsax' ? lernsaxUsername : otherEmailInput);
+      return;
+    }
+    goToStep(4);
+  });
+
+  // Enter in E-Mail Feldern springt direkt weiter
+  [lernsaxUsername, otherEmailInput].forEach(inp => {
+    inp?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('nextToAge')?.click();
+      }
+    });
+  });
+
+  // Navigation Schritt 4 -> 5 (Alter & Begleitung prüfen)
+  document.getElementById('nextToSummary')?.addEventListener('click', () => {
+    const catSelect = document.getElementById('category');
+    const catVal = catSelect?.value;
+    const catHint = document.getElementById('categoryHint');
+    const salVal = (document.getElementById('salutation')?.value || 'du').toLowerCase();
+    const isSie = salVal === 'sie';
+
+    if (!catVal) {
+      if (catHint) {
+        catHint.className = 'name-hint warn';
+        catHint.textContent = isSie ? '⚠️ Bitte wählen Sie Ihre Altersgruppe aus.' : '⚠️ Bitte wähle deine Altersgruppe aus.';
+        catHint.style.display = 'block';
+      }
+      const wrap = catSelect?.closest('.cs-wrap') || catSelect;
+      if (wrap) {
+        wrap.style.outline = '2px solid rgba(255,100,100,0.6)';
+        wrap.style.borderRadius = 'var(--radius-sm)';
+        setTimeout(() => { wrap.style.outline = 'none'; }, 2500);
+        try {
+          wrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } catch(e) {}
+      }
+      return;
+    }
+    if (catVal === 'u18') {
+      const clsInp = document.getElementById('schoolClass');
+      const clsVal = (clsInp?.value || '').trim();
+      if (!clsVal) {
+        highlightError(isSie ? 'Bitte geben Sie Ihre Klasse an.' : 'Bitte gib deine Klasse an.', clsInp);
+        return;
+      }
+    }
+
+    if (companionYesBtn && companionYesBtn.classList.contains('active')) {
+      const rows = Array.from(document.querySelectorAll('.companion-row'));
+      if (rows.length === 0) {
+        highlightError(isSie ? 'Bitte tragen Sie mindestens eine Begleitperson ein oder wählen Sie „Nein“.' : 'Bitte trage mindestens eine Begleitperson ein oder wähle „Nein“.');
+        return;
+      }
+      for (const row of rows) {
+        const cName = (row.querySelector('.companion-name')?.value || '').trim();
+        const cCat = row.querySelector('.companion-category')?.value;
+        const cCls = (row.querySelector('.companion-class')?.value || '').trim();
+        if (!cName) {
+          highlightError('Bitte den Namen der Begleitperson angeben.', row.querySelector('.companion-name'));
+          return;
+        }
+        if (!cCat) {
+          highlightError('Bitte das Alter der Begleitperson angeben.', row.querySelector('.companion-category'));
+          return;
+        }
+        if (cCat === 'u18' && !cCls) {
+          highlightError('Bitte die Klasse der minderjährigen Begleitperson angeben.', row.querySelector('.companion-class'));
+          return;
+        }
+      }
+    }
+
+    goToStep(5);
+  });
+
+  // Zurück-Buttons
+  document.querySelectorAll('.btn-step-prev').forEach(btn => {
+    btn.addEventListener('click', () => goToStep(currentStep - 1));
+  });
+  document.getElementById('mobileWizardTopBack')?.addEventListener('click', () => {
+    goToStep(currentStep - 1);
+  });
+
+  window.addEventListener('resize', () => {
+    if (!isMobileWizard()) {
+      document.querySelectorAll('.form-step').forEach(s => s.classList.add('active'));
+    } else {
+      updateWizardUI();
+    }
+  });
+
+  // Initialer Aufruf
+  updateWizardUI();
 
   // Dynamische Anzeige des Klassenfelds für den Besteller bei U18
   const categorySelect = document.getElementById('category');
@@ -1134,6 +1869,16 @@
   const schoolClassInput = document.getElementById('schoolClass');
 
   function updateMainClassVisibility(){
+    const catHint = document.getElementById('categoryHint');
+    if (catHint) {
+      catHint.style.display = 'none';
+      catHint.textContent = '';
+    }
+    if (statusEl) {
+      statusEl.className = 'status';
+      statusEl.textContent = '';
+      statusEl.style.display = 'none';
+    }
     if (categorySelect.value === 'u18') {
       schoolClassField.style.display = 'block';
       schoolClassInput.required = true;
@@ -1212,17 +1957,48 @@
   }
 
   function highlightError(msg, targetEl){
-    statusEl.className = 'status error';
-    statusEl.textContent = msg;
     if (targetEl) {
+      if (typeof isMobileWizard === 'function' && isMobileWizard()) {
+        const stepEl = targetEl.closest('.form-step');
+        if (stepEl) {
+          const stepNum = Number(stepEl.getAttribute('data-step'));
+          if (stepNum && stepNum !== currentStep) {
+            goToStep(stepNum);
+          }
+        }
+      }
+      if (targetEl.id === 'privacyConsent') {
+        const wrap = document.getElementById('consentFieldWrap');
+        if (wrap) {
+          wrap.style.outline = '2px solid rgba(255,100,100,0.5)';
+          wrap.style.borderRadius = '8px';
+          wrap.style.padding = '4px 6px';
+          setTimeout(() => { wrap.style.outline = 'none'; }, 2500);
+        }
+      }
       try {
         targetEl.focus();
         targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
       } catch(e) {}
-    } else {
-      statusEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    if (!isMobileWizard() || currentStep === 5) {
+      statusEl.className = 'status error';
+      statusEl.textContent = (msg.startsWith('⚠️') ? '' : '⚠️ ') + msg;
+      statusEl.style.display = 'block';
+      if (!targetEl) {
+        statusEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     }
   }
+
+  document.getElementById('privacyConsent')?.addEventListener('change', () => {
+    if (statusEl) {
+      statusEl.className = 'status';
+      statusEl.textContent = '';
+      statusEl.style.display = 'none';
+    }
+  });
 
   // Berechnet die Klassenstufe aus dem Einschulungsjahr am Ende der LernSax-Adresse
   function gradeFromEmail(email){
@@ -1315,7 +2091,8 @@
       return;
     }
     if(!document.getElementById('privacyConsent').checked){
-      highlightError('Bitte bestätige, dass du die Datenschutzerklärung gelesen hast.', document.getElementById('privacyConsent'));
+      const salVal = (document.getElementById('salutation')?.value || 'du').toLowerCase();
+      highlightError(salVal === 'sie' ? 'Bitte bestätigen Sie, dass Sie die Datenschutzerklärung gelesen haben.' : 'Bitte bestätige, dass du die Datenschutzerklärung gelesen hast.', document.getElementById('privacyConsent'));
       return;
     }
 
