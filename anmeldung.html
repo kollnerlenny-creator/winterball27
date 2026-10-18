@@ -445,13 +445,54 @@
     font-size:14.5px; font-weight:600; cursor:pointer;
   }
   .add-companion:hover{background:rgba(143,180,255,0.12);}
-  .companion-row{display:flex; gap:8px; margin-bottom:8px; align-items:center; flex-wrap:wrap;}
-  .companion-row .companion-name{flex:3; min-width:140px;}
-  .companion-row .companion-category{flex:2; min-width:100px; padding:14px 8px; font-size:13px;}
-  .companion-row .companion-class{flex:2; min-width:90px; padding:14px 12px; font-size:13.5px;}
+  .companion-row{
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:var(--radius-sm);
+    padding:12px 14px;
+    margin-bottom:12px;
+    transition:border-color 0.2s, background 0.2s;
+  }
+  .companion-row:focus-within{
+    border-color:rgba(143,180,255,0.38);
+    background:rgba(255,255,255,0.05);
+  }
+  .companion-row-header{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:8px;
+  }
+  .companion-row-number{
+    font-size:12px; font-weight:700; color:var(--accent-glow);
+    text-transform:uppercase; letter-spacing:0.8px;
+    display:inline-flex; align-items:center; gap:6px;
+  }
   .remove-companion{
-    background:rgba(255,128,128,0.1); border:1px solid rgba(255,128,128,0.25);
-    color:var(--error); border-radius:var(--radius-sm); width:40px; height:48px; cursor:pointer; font-size:16px; flex-shrink:0;
+    background:rgba(255,100,100,0.1); border:1px solid rgba(255,100,100,0.25);
+    color:#ff8b8b; border-radius:8px; padding:4px 10px; cursor:pointer; font-size:12px;
+    font-weight:600; display:inline-flex; align-items:center; gap:4px;
+    transition:all 0.15s ease;
+  }
+  .remove-companion:hover{
+    background:rgba(255,100,100,0.22); border-color:rgba(255,100,100,0.45); color:#ffffff;
+  }
+  .companion-fields-wrap{
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .companion-name-wrap{
+    display:flex; flex-direction:column; gap:4px;
+  }
+  .companion-meta-row{
+    display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+  }
+  .companion-meta-row .cs-wrap,
+  .companion-meta-row .companion-category{
+    flex:1; min-width:120px;
+  }
+  .companion-meta-row .companion-class{
+    flex:1; min-width:120px; padding:13px 12px; font-size:13.5px;
+  }
+  .companion-name-hint{
+    font-size:11.5px; line-height:1.35; padding:2px 2px;
   }
 
   /* E-Mail-Eingabe mit LernSax-Schnellauswahl (@gymwilsdruff.lernsax.de) */
@@ -741,7 +782,7 @@
       <!-- SCHRITT 1: ANREDE (Du / Sie) -->
       <div class="form-step active" data-step="1" id="step1">
         <h2 class="step-heading mobile-only" id="step1Heading">Wie möchtest du angesprochen werden?</h2>
-        <p class="step-subheading mobile-only">Wähle deine bevorzugte Anrede für deine Tickets und E-Mails:</p>
+        <p class="step-subheading mobile-only" id="step1Subheading">Wähle deine bevorzugte Anrede für deine Tickets und E-Mails:</p>
 
         <div class="field">
           <label id="salutationLabel" class="desktop-only">Bevorzugte Anrede</label>
@@ -770,7 +811,7 @@
 
         <div class="step-trust-card mobile-only">
           <span class="trust-icon">⏱️</span>
-          <div><strong>Dauert nur ca. 1 Minute:</strong> Deine Online-Reservierung ist kostenlos. Bezahlt wird später bar an der Kasse in der Schule.</div>
+          <div id="step1TrustText"><strong>Dauert nur ca. 1 Minute:</strong> Deine Online-Reservierung ist kostenlos. Bezahlt wird später bar an der Kasse in der Schule.</div>
         </div>
 
         <div class="step-nav-row mobile-only">
@@ -795,7 +836,7 @@
 
           <div class="step-trust-card mobile-only">
             <span class="trust-icon">🎟️</span>
-            <div><strong>Namensgebundenes Ticket:</strong> Jedes Ticket wird am Einlass namentlich abgeglichen. Achte bitte auf die korrekte Schreibweise.</div>
+            <div id="step2TrustText"><strong>Namensgebundenes Ticket:</strong> Jedes Ticket wird am Einlass namentlich abgeglichen. Achte bitte auf die korrekte Schreibweise.</div>
           </div>
 
           <div class="step-nav-row mobile-only">
@@ -843,7 +884,7 @@
 
           <div class="step-trust-card mobile-only">
             <span class="trust-icon">🔒</span>
-            <div><strong>Kein Spam &amp; sichere Zustellung:</strong> Deine E-Mail wird ausschließlich für die Ticketabwicklung und wichtige Event-Infos genutzt.</div>
+            <div id="step3TrustText"><strong>Kein Spam &amp; sichere Zustellung:</strong> Deine E-Mail wird ausschließlich für die Ticketabwicklung und wichtige Event-Infos genutzt.</div>
           </div>
 
           <div class="step-nav-row mobile-only">
@@ -883,6 +924,9 @@
             <button type="button" class="companion-toggle-btn active" id="companionNoBtn">Nein</button>
           </div>
           <div id="companionsSection" style="display:none; margin-top:14px;">
+            <div class="name-hint" id="companionNoticeHint" style="margin-bottom:12px; display:block;">
+              💡 <strong>Wichtig für die Tickets:</strong> Bitte gib für jede Begleitperson den vollständigen <strong>Vor- und Nachnamen</strong> an (z. B. Anna Müller).
+            </div>
             <div id="companionsList"></div>
             <button type="button" class="add-companion" id="addCompanionBtn">+ Weitere Begleitung hinzufügen</button>
           </div>
@@ -890,7 +934,7 @@
 
         <div class="step-trust-card mobile-only">
           <span class="trust-icon">👥</span>
-          <div><strong>Gemeinsam feiern:</strong> Du kannst Begleitungen direkt mit anmelden und später zusammen an der Vorverkaufskasse bezahlen.</div>
+          <div id="step4TrustText"><strong>Gemeinsam feiern:</strong> Du kannst Begleitungen direkt mit anmelden und später zusammen an der Vorverkaufskasse bezahlen.</div>
         </div>
 
         <div class="step-nav-row mobile-only">
@@ -908,7 +952,7 @@
         <div class="mobile-summary-card" id="mobileSummaryCard">
           <div class="summary-card-header">
             <span class="summary-card-icon">📋</span>
-            <span class="summary-card-title">Deine Angaben im Überblick</span>
+            <span class="summary-card-title" id="summaryCardTitle">Deine Angaben im Überblick</span>
           </div>
           <div class="summary-grid">
             <div class="summary-entry">
@@ -1350,14 +1394,20 @@
       }
       const full = raw ? `${raw}@gymwilsdruff.lernsax.de` : '';
       hiddenEmail.value = full;
+      const salVal = (document.getElementById('salutation')?.value || 'du').toLowerCase();
+      const isSie = salVal === 'sie';
       if (raw) {
         emailHint.className = 'email-hint highlight';
         emailHint.innerHTML = hadDomain
-          ? `ℹ️ <strong>"@gymwilsdruff.lernsax.de"</strong> ist bereits vorgegeben und wurde im Feld entfernt. Deine E-Mail: <strong>${full}</strong>`
+          ? (isSie
+              ? `ℹ️ <strong>"@gymwilsdruff.lernsax.de"</strong> ist bereits vorgegeben und wurde im Feld entfernt. Ihre E-Mail: <strong>${full}</strong>`
+              : `ℹ️ <strong>"@gymwilsdruff.lernsax.de"</strong> ist bereits vorgegeben und wurde im Feld entfernt. Deine E-Mail: <strong>${full}</strong>`)
           : `✓ Vollständige Adresse: <strong>${full}</strong>`;
       } else {
         emailHint.className = 'email-hint';
-        emailHint.innerHTML = '💡 Gib nur deinen Benutzernamen vor dem @ ein.';
+        emailHint.innerHTML = isSie
+          ? '💡 Geben Sie nur Ihren Benutzernamen vor dem @ ein.'
+          : '💡 Gib nur deinen Benutzernamen vor dem @ ein.';
       }
     } else {
       let raw = (otherEmailInput.value || '').trim().toLowerCase();
@@ -1503,27 +1553,76 @@
     }
 
     const s1H = document.getElementById('step1Heading');
+    const s1Sub = document.getElementById('step1Subheading');
+    const s1Trust = document.getElementById('step1TrustText');
     const s2H = document.getElementById('step2Heading');
     const s2Sub = document.getElementById('step2Subheading');
+    const s2Trust = document.getElementById('step2TrustText');
     const s3H = document.getElementById('step3Heading');
     const s3Sub = document.getElementById('step3Subheading');
+    const s3Trust = document.getElementById('step3TrustText');
     const s4H = document.getElementById('step4Heading');
     const s4Sub = document.getElementById('step4Subheading');
+    const s4Trust = document.getElementById('step4TrustText');
     const s5H = document.getElementById('step5Heading');
     const s5Sub = document.getElementById('step5Subheading');
+    const summaryCardTitle = document.getElementById('summaryCardTitle');
     const submitBtn = document.getElementById('submitBtn');
 
     if (s1H) s1H.textContent = isSie ? 'Wie möchten Sie angesprochen werden?' : 'Wie möchtest du angesprochen werden?';
+    if (s1Sub) s1Sub.textContent = isSie ? 'Wählen Sie Ihre bevorzugte Anrede für Ihre Tickets und E-Mails:' : 'Wähle deine bevorzugte Anrede für deine Tickets und E-Mails:';
+    if (s1Trust) {
+      s1Trust.innerHTML = isSie
+        ? '<strong>Dauert nur ca. 1 Minute:</strong> Ihre Online-Reservierung ist kostenlos. Bezahlt wird später bar an der Kasse in der Schule.'
+        : '<strong>Dauert nur ca. 1 Minute:</strong> Deine Online-Reservierung ist kostenlos. Bezahlt wird später bar an der Kasse in der Schule.';
+    }
+
     if (s2H) s2H.textContent = isSie ? 'Wie heißen Sie?' : 'Wie heißt du?';
     if (s2Sub) s2Sub.textContent = isSie ? 'Bitte geben Sie Ihren vollständigen Namen für das Ticket an.' : 'Bitte gib deinen echten Vor- und Nachnamen für das Einlass-Ticket an.';
+    if (s2Trust) {
+      s2Trust.innerHTML = isSie
+        ? '<strong>Namensgebundenes Ticket:</strong> Jedes Ticket wird am Einlass namentlich abgeglichen. Achten Sie bitte auf die korrekte Schreibweise.'
+        : '<strong>Namensgebundenes Ticket:</strong> Jedes Ticket wird am Einlass namentlich abgeglichen. Achte bitte auf die korrekte Schreibweise.';
+    }
+
     if (s3H) s3H.textContent = isSie ? 'Wohin dürfen wir Ihr Ticket senden?' : 'Wohin senden wir dein Ticket?';
     if (s3Sub) s3Sub.textContent = isSie ? 'Nach der Reservierung erhalten Sie hierhin Ihre Bestätigung.' : 'Nach der Reservierung schicken wir dir hierhin deine Bestätigung.';
+    if (s3Trust) {
+      s3Trust.innerHTML = isSie
+        ? '<strong>Kein Spam &amp; sichere Zustellung:</strong> Ihre E-Mail wird ausschließlich für die Ticketabwicklung und wichtige Event-Infos genutzt.'
+        : '<strong>Kein Spam &amp; sichere Zustellung:</strong> Deine E-Mail wird ausschließlich für die Ticketabwicklung und wichtige Event-Infos genutzt.';
+    }
+
     if (s4H) s4H.textContent = isSie ? 'Altersgruppe & Begleitpersonen' : 'Alter & Begleitpersonen';
     if (s4Sub) s4Sub.textContent = isSie ? 'Wählen Sie Ihre Altersgruppe und geben Sie an, ob Sie weitere Gäste mitbringen.' : 'Wähle deine Altersgruppe und gib an, ob du weitere Gäste mitbringst.';
+    if (s4Trust) {
+      s4Trust.innerHTML = isSie
+        ? '<strong>Gemeinsam feiern:</strong> Sie können Begleitungen direkt mit anmelden und später zusammen an der Vorverkaufskasse bezahlen.'
+        : '<strong>Gemeinsam feiern:</strong> Du kannst Begleitungen direkt mit anmelden und später zusammen an der Vorverkaufskasse bezahlen.';
+    }
+
+    const compHint = document.getElementById('companionNoticeHint');
+    if (compHint) {
+      compHint.innerHTML = isSie
+        ? '💡 <strong>Wichtig für die Tickets:</strong> Bitte geben Sie für jede Begleitperson den vollständigen <strong>Vor- und Nachnamen</strong> an (z. B. Anna Müller).'
+        : '💡 <strong>Wichtig für die Tickets:</strong> Bitte gib für jede Begleitperson den vollständigen <strong>Vor- und Nachnamen</strong> an (z. B. Anna Müller).';
+    }
+
     if (s5H) s5H.textContent = isSie ? 'Fast geschafft! Ihre Übersicht' : 'Fast geschafft! Deine Übersicht';
     if (s5Sub) s5Sub.textContent = isSie ? 'Überprüfen Sie kurz Ihre Angaben und schließen Sie die Reservierung ab.' : 'Überprüfe kurz deine Angaben und schließe die Reservierung ab.';
+    if (summaryCardTitle) {
+      summaryCardTitle.textContent = isSie ? 'Ihre Angaben im Überblick' : 'Deine Angaben im Überblick';
+    }
+
     if (submitBtn && !submitBtn.disabled) {
       submitBtn.textContent = isSie ? 'Jetzt anmelden ❄️' : 'Jetzt anmelden ❄️';
+    }
+
+    if (typeof syncEmail === 'function') {
+      syncEmail();
+    }
+    if (typeof updateMobileSummary === 'function') {
+      updateMobileSummary();
     }
   }
 
@@ -1658,8 +1757,9 @@
     if (sEmail) sEmail.textContent = emailVal;
     if (sAge) sAge.textContent = alterLabel;
     if (sCount) {
+      const isSie = salVal === 'sie';
       sCount.textContent = totalCount === 1
-        ? '1 Ticket (für dich)'
+        ? (isSie ? '1 Ticket (für Sie)' : '1 Ticket (für dich)')
         : `${totalCount} Tickets gesamt (1 Besteller + ${validCompanions.length} Begleitung${validCompanions.length > 1 ? 'en' : ''})`;
     }
     if (sCompList) {
@@ -1757,16 +1857,18 @@
   document.getElementById('nextToAge')?.addEventListener('click', () => {
     syncEmail();
     const emailVal = sanitizeEmail((document.getElementById('email')?.value || '').trim());
+    const salVal = (document.getElementById('salutation')?.value || 'du').toLowerCase();
+    const isSie = salVal === 'sie';
     if (emailMode === 'lernsax' && !lernsaxUsername.value.trim()) {
-      highlightError('Bitte gib deinen LernSax-Benutzernamen an.', lernsaxUsername);
+      highlightError(isSie ? 'Bitte geben Sie Ihren LernSax-Benutzernamen an.' : 'Bitte gib deinen LernSax-Benutzernamen an.', lernsaxUsername);
       return;
     }
     if (emailMode === 'other' && !otherEmailInput.value.trim()) {
-      highlightError('Bitte gib deine E-Mail-Adresse an.', otherEmailInput);
+      highlightError(isSie ? 'Bitte geben Sie Ihre E-Mail-Adresse an.' : 'Bitte gib deine E-Mail-Adresse an.', otherEmailInput);
       return;
     }
     if (!emailVal || !emailVal.includes('@') || !emailVal.includes('.')) {
-      highlightError('Bitte gib eine gültige E-Mail-Adresse an.', emailMode === 'lernsax' ? lernsaxUsername : otherEmailInput);
+      highlightError(isSie ? 'Bitte geben Sie eine gültige E-Mail-Adresse an.' : 'Bitte gib eine gültige E-Mail-Adresse an.', emailMode === 'lernsax' ? lernsaxUsername : otherEmailInput);
       return;
     }
     goToStep(4);
@@ -1823,19 +1925,24 @@
         return;
       }
       for (const row of rows) {
-        const cName = (row.querySelector('.companion-name')?.value || '').trim();
+        const nameInp = row.querySelector('.companion-name');
+        const cName = (nameInp?.value || '').trim();
         const cCat = row.querySelector('.companion-category')?.value;
         const cCls = (row.querySelector('.companion-class')?.value || '').trim();
         if (!cName) {
-          highlightError('Bitte den Namen der Begleitperson angeben.', row.querySelector('.companion-name'));
+          highlightError(isSie ? 'Bitte geben Sie den vollständigen Vor- und Nachnamen der Begleitperson an.' : 'Bitte gib den vollständigen Vor- und Nachnamen der Begleitperson an.', nameInp);
+          return;
+        }
+        if (!isFullName(cName)) {
+          highlightError(isSie ? 'Bitte geben Sie sowohl Vor- als auch Nachnamen der Begleitperson an (z. B. Anna Müller).' : 'Bitte gib sowohl Vor- als auch Nachnamen der Begleitperson an (z. B. Anna Müller).', nameInp);
           return;
         }
         if (!cCat) {
-          highlightError('Bitte das Alter der Begleitperson angeben.', row.querySelector('.companion-category'));
+          highlightError(isSie ? 'Bitte wählen Sie die Altersgruppe der Begleitperson aus.' : 'Bitte wähle die Altersgruppe der Begleitperson aus.', row.querySelector('.companion-category'));
           return;
         }
         if (cCat === 'u18' && !cCls) {
-          highlightError('Bitte die Klasse der minderjährigen Begleitperson angeben.', row.querySelector('.companion-class'));
+          highlightError(isSie ? 'Bitte geben Sie die Klasse der minderjährigen Begleitperson an.' : 'Bitte gib die Klasse der minderjährigen Begleitperson an.', row.querySelector('.companion-class'));
           return;
         }
       }
@@ -1912,21 +2019,42 @@
     addCompanionRow();
   });
 
+  function updateCompanionNumbers(){
+    const rows = Array.from(companionsList.querySelectorAll('.companion-row'));
+    rows.forEach((r, idx) => {
+      const numEl = r.querySelector('.companion-row-number');
+      if (numEl) numEl.textContent = `Begleitperson ${idx + 1}`;
+    });
+  }
+
   function addCompanionRow(){
     const row = document.createElement('div');
     row.className = 'companion-row';
+    const index = companionsList.children.length + 1;
     row.innerHTML = `
-      <input type="text" class="companion-name" placeholder="Vor- und Nachname der Begleitung">
-      <select class="companion-category">
-        <option value="">Alter?</option>
-        <option value="u18">U18</option>
-        <option value="ue18">Ü18</option>
-      </select>
-      <input type="text" class="companion-class" placeholder="Klasse (z.B. 10b)" style="display:none;" autocomplete="off">
-      <button type="button" class="remove-companion">×</button>
+      <div class="companion-row-header">
+        <span class="companion-row-number">Begleitperson ${index}</span>
+        <button type="button" class="remove-companion" title="Begleitperson entfernen" aria-label="Entfernen">✕ Entfernen</button>
+      </div>
+      <div class="companion-fields-wrap">
+        <div class="companion-name-wrap">
+          <input type="text" class="companion-name" placeholder="Vor- und Nachname (z. B. Anna Müller)" autocomplete="off">
+          <div class="companion-name-hint" style="display:none;"></div>
+        </div>
+        <div class="companion-meta-row">
+          <select class="companion-category">
+            <option value="">Alter?</option>
+            <option value="u18">U18</option>
+            <option value="ue18">Ü18</option>
+          </select>
+          <input type="text" class="companion-class" placeholder="Klasse (z.B. 10b)" style="display:none;" autocomplete="off">
+        </div>
+      </div>
     `;
     const catSelect = row.querySelector('.companion-category');
     const classInput = row.querySelector('.companion-class');
+    const nameInput = row.querySelector('.companion-name');
+    const hintEl = row.querySelector('.companion-name-hint');
 
     catSelect.addEventListener('change', () => {
       if (catSelect.value === 'u18') {
@@ -1935,13 +2063,46 @@
         classInput.style.display = 'none';
         classInput.value = '';
       }
+      if (typeof updateMobileSummary === 'function') {
+        updateMobileSummary();
+      }
+    });
+
+    nameInput.addEventListener('input', () => {
+      const val = nameInput.value.trim();
+      const isSie = (document.getElementById('salutation')?.value || 'du').toLowerCase() === 'sie';
+      if (!val) {
+        hintEl.style.display = 'none';
+        nameInput.style.borderColor = '';
+      } else if (!isFullName(val)) {
+        hintEl.style.display = 'block';
+        hintEl.style.color = '#ffd27f';
+        hintEl.textContent = isSie
+          ? '⚠️ Bitte auch den Nachnamen angeben (Vor- und Nachname erforderlich).'
+          : '⚠️ Bitte auch den Nachnamen angeben (Vor- und Nachname erforderlich).';
+        nameInput.style.borderColor = 'rgba(255,210,127,0.55)';
+      } else {
+        hintEl.style.display = 'block';
+        hintEl.style.color = '#8be9fd';
+        hintEl.textContent = '✓ Vor- und Nachname vollständig';
+        nameInput.style.borderColor = 'rgba(139,233,253,0.5)';
+      }
+      if (typeof updateMobileSummary === 'function') {
+        updateMobileSummary();
+      }
     });
 
     row.querySelector('.remove-companion').addEventListener('click', () => {
       row.remove();
+      updateCompanionNumbers();
+      if (typeof updateMobileSummary === 'function') {
+        updateMobileSummary();
+      }
     });
+
     companionsList.appendChild(row);
     enhanceSelect(catSelect);
+    updateCompanionNumbers();
   }
 
   const form = document.getElementById('regForm');
@@ -2043,41 +2204,45 @@
       schoolClass: (row.querySelector('.companion-class')?.value || '').trim()
     })).filter(c => c.name.length > 0);
 
+    const salVal = (document.getElementById('salutation')?.value || 'du').toLowerCase();
+    const isSie = salVal === 'sie';
+
     if(!name){
-      highlightError('Bitte gib deinen vollständigen Vor- und Nachnamen an.', document.getElementById('name'));
+      highlightError(isSie ? 'Bitte geben Sie Ihren vollständigen Vor- und Nachnamen an.' : 'Bitte gib deinen vollständigen Vor- und Nachnamen an.', document.getElementById('name'));
       return;
     }
     if(!isFullName(name)){
-      highlightError('Bitte gib deinen vollständigen Vor- und Nachnamen an.', document.getElementById('name'));
+      highlightError(isSie ? 'Bitte geben Sie Ihren vollständigen Vor- und Nachnamen an (z. B. Max Mustermann).' : 'Bitte gib deinen vollständigen Vor- und Nachnamen an (z. B. Max Mustermann).', document.getElementById('name'));
       return;
     }
     if(emailMode === 'lernsax' && !lernsaxUsername.value.trim()){
-      highlightError('Bitte gib deinen LernSax-Benutzernamen an (vor @gymwilsdruff.lernsax.de).', lernsaxUsername);
+      highlightError(isSie ? 'Bitte geben Sie Ihren LernSax-Benutzernamen an (vor @gymwilsdruff.lernsax.de).' : 'Bitte gib deinen LernSax-Benutzernamen an (vor @gymwilsdruff.lernsax.de).', lernsaxUsername);
       return;
     }
     if(emailMode === 'other' && !otherEmailInput.value.trim()){
-      highlightError('Bitte gib deine E-Mail-Adresse an.', otherEmailInput);
+      highlightError(isSie ? 'Bitte geben Sie Ihre E-Mail-Adresse an.' : 'Bitte gib deine E-Mail-Adresse an.', otherEmailInput);
       return;
     }
     if(!email || !email.includes('@') || !email.includes('.')){
-      highlightError('Bitte gib eine gültige E-Mail-Adresse an.', emailMode === 'lernsax' ? lernsaxUsername : otherEmailInput);
+      highlightError(isSie ? 'Bitte geben Sie eine gültige E-Mail-Adresse an.' : 'Bitte gib eine gültige E-Mail-Adresse an.', emailMode === 'lernsax' ? lernsaxUsername : otherEmailInput);
       return;
     }
     if(email.split('@').length > 2){
-      highlightError('Die E-Mail-Adresse enthält mehr als ein "@"-Zeichen. Bitte überprüfe deine Eingabe.', emailMode === 'lernsax' ? lernsaxUsername : otherEmailInput);
+      highlightError(isSie ? 'Die E-Mail-Adresse enthält mehr als ein "@"-Zeichen. Bitte überprüfen Sie Ihre Eingabe.' : 'Die E-Mail-Adresse enthält mehr als ein "@"-Zeichen. Bitte überprüfe deine Eingabe.', emailMode === 'lernsax' ? lernsaxUsername : otherEmailInput);
       return;
     }
     if(!category){
-      highlightError('Bitte wähle deine Altersgruppe aus.', document.getElementById('category'));
+      highlightError(isSie ? 'Bitte wählen Sie Ihre Altersgruppe aus.' : 'Bitte wähle deine Altersgruppe aus.', document.getElementById('category'));
       return;
     }
     if(category === 'u18' && !schoolClass){
-      highlightError('Da du unter 18 bist, gib bitte deine Klasse an.', document.getElementById('schoolClass'));
+      highlightError(isSie ? 'Da Sie unter 18 sind, geben Sie bitte Ihre Klasse an.' : 'Da du unter 18 bist, gib bitte deine Klasse an.', document.getElementById('schoolClass'));
       return;
     }
     const invNameRow = companionRows.find(r => !isFullName(r.querySelector('.companion-name').value.trim()));
     if(invNameRow){
-      highlightError('Bitte bei jeder Begleitung Vor- und Nachname angeben.', invNameRow.querySelector('.companion-name'));
+      const cInp = invNameRow.querySelector('.companion-name');
+      highlightError(isSie ? 'Bitte geben Sie bei jeder Begleitperson sowohl Vor- als auch Nachnamen an (z. B. Anna Müller).' : 'Bitte gib bei jeder Begleitperson sowohl Vor- als auch Nachnamen an (z. B. Anna Müller).', cInp);
       return;
     }
     const invCatRow = companionRows.find(r => !r.querySelector('.companion-category').value);
@@ -2091,8 +2256,7 @@
       return;
     }
     if(!document.getElementById('privacyConsent').checked){
-      const salVal = (document.getElementById('salutation')?.value || 'du').toLowerCase();
-      highlightError(salVal === 'sie' ? 'Bitte bestätigen Sie, dass Sie die Datenschutzerklärung gelesen haben.' : 'Bitte bestätige, dass du die Datenschutzerklärung gelesen hast.', document.getElementById('privacyConsent'));
+      highlightError(isSie ? 'Bitte bestätigen Sie, dass Sie die Datenschutzerklärung gelesen haben.' : 'Bitte bestätige, dass du die Datenschutzerklärung gelesen hast.', document.getElementById('privacyConsent'));
       return;
     }
 
@@ -2274,7 +2438,8 @@
 
   document.getElementById('modalRatingSubmitBtn')?.addEventListener('click', async () => {
     if (modalSelectedRating < 1) {
-      alert('Bitte wähle zuerst mindestens eine Schneeflocke ❄️ aus.');
+      const salVal = (document.getElementById('salutation')?.value || 'du').toLowerCase();
+      alert(salVal === 'sie' ? 'Bitte wählen Sie zuerst mindestens eine Schneeflocke ❄️ aus.' : 'Bitte wähle zuerst mindestens eine Schneeflocke ❄️ aus.');
       return;
     }
     const btn = document.getElementById('modalRatingSubmitBtn');
