@@ -65,6 +65,52 @@ app.get('/api/presence', (req, res) => {
   res.json({ count: list.length, visitors: list });
 });
 
+// Cloudflare Worker Proxy (umgeht CORS-Ursprungsbeschränkungen in Entwicklungs- & Vorschauumgebungen)
+const WORKER_BASE = 'https://winterball-worker.kollnerlenny.workers.dev';
+
+async function proxyToWorker(endpoint, req, res) {
+  const targetUrl = `${WORKER_BASE}/${endpoint}`;
+  try {
+    const upstreamHeaders = {
+      'Content-Type': req.headers['content-type'] || 'application/json',
+      'Origin': 'https://winterball27.de',
+      'User-Agent': 'Winterball-Server-Proxy/1.0'
+    };
+    if (req.headers.authorization) {
+      upstreamHeaders['Authorization'] = req.headers.authorization;
+    }
+
+    const fetchOptions = {
+      method: req.method,
+      headers: upstreamHeaders
+    };
+
+    if (req.method !== 'GET' && req.method !== 'HEAD' && req.body && Object.keys(req.body).length > 0) {
+      fetchOptions.body = JSON.stringify(req.body);
+    }
+
+    const upstreamRes = await fetch(targetUrl, fetchOptions);
+    const contentType = upstreamRes.headers.get('content-type') || 'application/json';
+    res.status(upstreamRes.status);
+    res.setHeader('Content-Type', contentType);
+
+    const arrayBuf = await upstreamRes.arrayBuffer();
+    res.send(Buffer.from(arrayBuf));
+  } catch (err) {
+    console.error(`Worker proxy error for ${targetUrl}:`, err);
+    res.status(502).json({ error: 'Worker upstream error', details: err?.message || String(err) });
+  }
+}
+
+app.all('/api/worker/:endpoint', (req, res) => {
+  proxyToWorker(req.params.endpoint, req, res);
+});
+
+app.all(['/api/send-confirmation', '/api/send-tickets', '/api/generate-pdf', '/api/generate-invoice'], (req, res) => {
+  const endpoint = req.path.replace(/^\/api\//, '');
+  proxyToWorker(endpoint, req, res);
+});
+
 // Serve static files with html extension fallback
 app.use(express.static(__dirname, { extensions: ['html'] }));
 

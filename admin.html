@@ -1743,6 +1743,18 @@
 
   const WORKER_URL = "https://winterball-worker.kollnerlenny.workers.dev";
 
+  async function workerFetch(endpoint, options = {}) {
+    if (window.location.hostname !== 'winterball27.de' && window.location.hostname !== 'www.winterball27.de') {
+      try {
+        const proxyRes = await fetch('/api' + endpoint, options);
+        if (proxyRes.ok) return proxyRes;
+      } catch (err) {
+        console.warn('Proxy-Aufruf fehlgeschlagen, versuche direkten Worker:', err);
+      }
+    }
+    return fetch(WORKER_URL + endpoint, options);
+  }
+
   // --- Custom-Dropdown: ersetzt <select> visuell durch das Winterball-Design,
   // das native <select> bleibt (unsichtbar) bestehen, damit der Rest des Codes
   // ganz normal .value lesen/schreiben und auf 'change' hören kann. ---
@@ -4003,7 +4015,7 @@
     btnEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px; height:12px; animation:spin 0.8s linear infinite;"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"/></svg><span>...</span>';
     try {
       const idToken = await auth.currentUser.getIdToken();
-      const res = await fetch(WORKER_URL + '/generate-pdf', {
+      const res = await workerFetch('/generate-pdf', {
         method: 'POST',
         headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
         body: JSON.stringify({
@@ -4048,7 +4060,7 @@
         : { u18: 0, ue18: 0 };
 
       const idToken = await auth.currentUser.getIdToken();
-      const res = await fetch(WORKER_URL + '/generate-invoice', {
+      const res = await workerFetch('/generate-invoice', {
         method: 'POST',
         headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
         body: JSON.stringify({
@@ -4443,7 +4455,7 @@
           ? { u18: Number(priceSnap.data().u18 || 0), ue18: Number(priceSnap.data().ue18 || 0) }
           : { u18: 0, ue18: 0 };
         const idToken = await auth.currentUser.getIdToken();
-        const res = await fetch(WORKER_URL + '/send-tickets', {
+        const res = await workerFetch('/send-tickets', {
           method: 'POST',
           headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
           body: JSON.stringify({
@@ -4467,7 +4479,7 @@
         }
       } else {
         saveBtn.textContent = 'Bestätigung wird gesendet...';
-        const res = await fetch(WORKER_URL + '/send-confirmation', {
+        const res = await workerFetch('/send-confirmation', {
           method: 'POST',
           headers: {'Content-Type':'application/json'},
           body: JSON.stringify({
@@ -4522,7 +4534,7 @@
       const idToken = await auth.currentUser.getIdToken();
       const salutation = reg.salutation || (reg.anrede === 'Sie' ? 'sie' : 'du');
       const anrede = salutation === 'sie' ? 'Sie' : 'Du';
-      const res = await fetch(WORKER_URL + '/send-tickets', {
+      const res = await workerFetch('/send-tickets', {
         method: 'POST',
         headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
         body: JSON.stringify({
@@ -4643,7 +4655,7 @@
         const attendeeNames = [reg.name, ...(reg.companions || []).map(c => c.name), name];
         const salutation = reg.salutation || (reg.anrede === 'Sie' ? 'sie' : 'du');
         const anrede = salutation === 'sie' ? 'Sie' : 'Du';
-        await fetch(WORKER_URL + '/send-confirmation', {
+        await workerFetch('/send-confirmation', {
           method: 'POST',
           headers: {'Content-Type':'application/json'},
           body: JSON.stringify({

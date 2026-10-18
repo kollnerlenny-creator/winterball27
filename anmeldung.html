@@ -2451,23 +2451,37 @@
         const grade = gradeFromEmail(email);
         const useLernSax = !!(threshold && grade !== null && grade < threshold);
 
-        await fetch(WORKER_URL + '/send-confirmation', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({
-            name,
-            email,
-            attendeeNames: allAttendees.map(a => a.name),
-            useLernSax,
-            salutation,
-            anrede,
-            isFormal: salutation === 'sie',
-            formell: salutation === 'sie',
-            greeting: salutation === 'sie' ? `Guten Tag ${name}` : `Hallo ${name}`
-          })
-        });
+        const mailPayload = {
+          name,
+          email,
+          attendeeNames: allAttendees.map(a => a.name),
+          useLernSax,
+          salutation,
+          anrede,
+          isFormal: salutation === 'sie',
+          formell: salutation === 'sie',
+          greeting: salutation === 'sie' ? `Guten Tag ${name}` : `Hallo ${name}`
+        };
+
+        let sent = false;
+        try {
+          const proxyRes = await fetch('/api/send-confirmation', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify(mailPayload)
+          });
+          if (proxyRes.ok) sent = true;
+        } catch(e) {}
+
+        if (!sent) {
+          await fetch(WORKER_URL + '/send-confirmation', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify(mailPayload)
+          });
+        }
       } catch (mailErr) {
-        console.error('Bestätigungsmail fehlgeschlagen:', mailErr ? (mailErr.message || String(mailErr)) : 'Fehler');
+        console.warn('Bestätigungsmail konnte nicht versendet werden:', mailErr ? (mailErr.message || String(mailErr)) : 'Fehler');
       }
 
       document.getElementById('formView').classList.remove('show');
