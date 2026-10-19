@@ -1221,10 +1221,6 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       <span>🎟️ Gästeliste &amp; Einlass</span> <span class="tab-badge" id="tabGuestsCount">0</span>
     </button>
-    <button class="tab-btn" data-tab="cashier">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 6v12"/></svg>
-      <span>💵 Kasse &amp; Pause</span> <span class="tab-badge" id="tabCashTodayBadge" style="background:rgba(255,210,127,0.2); color:#ffd27f; font-weight:700;">0 €</span>
-    </button>
     <button class="tab-btn" data-tab="insights">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       <span>Insights</span> <span class="tab-badge" id="tabLiveBadge" style="background:rgba(127,224,168,0.22); color:#7fe0a8; font-weight:700;">0 live</span>
@@ -1431,64 +1427,6 @@
 
     <!-- Mobile Cards View for Individual Guests -->
     <div class="mobile-cards-wrap" id="guestMobileCardsWrap"></div>
-  </div>
-
-  <!-- Tab: 💵 Kassen- & Pausen-Modus (Schnellkassierung in der Schule) -->
-  <div class="tab-content" data-tab-content="cashier">
-    <!-- Pausen-Modus Highlight Banner -->
-    <div class="cashier-banner">
-      <div class="cashier-banner-left">
-        <div class="cashier-banner-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 6v12"/></svg>
-        </div>
-        <div>
-          <div class="cashier-banner-title">Pausen- &amp; Schnellkassen-Modus (15–20 Min. Pause)</div>
-          <div class="cashier-banner-sub" id="cashierTodaySummaryText">Heute eingenommen: 0,00 € Bar · 0 Tickets bezahlt</div>
-        </div>
-      </div>
-      <div style="display:flex; gap:10px; align-items:center;">
-        <button type="button" id="openKassensturzBtn" class="fast-pay-btn" style="min-width:auto; padding:10px 18px;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:16px; height:16px;"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 6v12"/></svg>
-          <span>💵 Kassensturz ansehen (Heute)</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Große Schnellsuche -->
-    <div class="cashier-search-hero">
-      <svg class="cashier-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-      <input type="text" id="cashierSearchInput" class="cashier-search-input" placeholder="⚡ Schnelleingabe: Schülername oder Ticket-ID tippen..." autocomplete="off">
-    </div>
-
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
-      <div style="display:flex; align-items:center; gap:8px;">
-        <label style="display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color:var(--text); cursor:pointer;">
-          <input type="checkbox" id="cashierOnlyUnpaidToggle" checked style="accent-color:var(--accent); width:16px; height:16px; cursor:pointer;">
-          <span>Nur noch unbezahlte Bestellungen anzeigen</span>
-        </label>
-      </div>
-      <div style="font-size:12px; color:var(--text-dim);" id="cashierResultsCount">0 Schüler gelistet</div>
-    </div>
-
-    <!-- Schnellkassen-Karten -->
-    <div class="cashier-cards-grid" id="cashierCardsGrid"></div>
-
-    <!-- Heutiges Kassen-Live-Protokoll -->
-    <div style="margin-top:28px; background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius); padding:20px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
-        <div style="font-size:14.5px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px;">
-          <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--success); box-shadow:0 0 8px var(--success);"></span>
-          <span>Live-Kassenprotokoll (Heute bar kassiert)</span>
-        </div>
-        <button type="button" id="printTodayCashProtocolBtn" style="padding:6px 12px; border-radius:var(--radius-sm); border:1px solid var(--glass-border); background:rgba(255,255,255,0.06); color:var(--text); font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px; height:13px;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-          <span>Kassenabschluss drucken</span>
-        </button>
-      </div>
-      <div id="cashierTodayLogTableWrap">
-        <div style="color:var(--text-dim); font-size:12.5px; text-align:center; padding:18px;">Heute wurden noch keine Barzahlungen verbucht.</div>
-      </div>
-    </div>
   </div>
 
   <!-- Tab: Insights (Kompaktes Widget-Dashboard auf einen Blick) -->
@@ -4099,11 +4037,6 @@
     }
     if (tabName === 'guestlist') {
       renderGuestList();
-    }
-    if (tabName === 'cashier') {
-      renderCashierMode();
-      setTimeout(() => document.getElementById('cashierSearchInput')?.focus(), 80);
-    }
     if (tabName === 'insights') {
       updateCharts();
       renderLivePresence();
