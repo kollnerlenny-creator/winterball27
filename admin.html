@@ -27,7 +27,7 @@
   })();
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Winter Ball · Admin</title>
+<title>Winterball · Admin</title>
 <style>
   :root{
     --bg-1:#070b16; --bg-2:#0f172a;
@@ -863,6 +863,243 @@
   .admin-toast.show{opacity:1; transform:translateY(0);}
   .admin-toast.success{border-color:rgba(127,224,168,0.5); color:var(--success);}
   .admin-toast svg{width:16px; height:16px; stroke-width:2.5; flex-shrink:0;}
+
+  /* Header action button variants */
+  .header-action-btn.gold-btn{
+    background:rgba(255,210,127,0.14); border-color:rgba(255,210,127,0.4); color:#ffd27f;
+  }
+  .header-action-btn.gold-btn:hover{
+    background:rgba(255,210,127,0.24); border-color:rgba(255,210,127,0.65); color:#fff;
+  }
+  .header-action-btn.blue-btn{
+    background:rgba(143,180,255,0.14); border-color:rgba(143,180,255,0.4); color:var(--accent-glow);
+  }
+  .header-action-btn.blue-btn:hover{
+    background:rgba(143,180,255,0.24); border-color:rgba(143,180,255,0.65); color:#fff;
+  }
+
+  /* Guest List Styles */
+  .guest-summary-bar{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:12px; margin-bottom:16px;
+  }
+  .guest-stat-box{
+    background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius-sm);
+    padding:12px 14px; display:flex; flex-direction:column; gap:4px;
+  }
+  .guest-stat-lbl{font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.5px; font-weight:600;}
+  .guest-stat-val{font-size:22px; font-weight:800; color:#fff;}
+  .guest-stat-val.success{color:var(--success);}
+  .guest-stat-val.warn{color:var(--warn);}
+  .guest-stat-sub{font-size:11px; color:var(--text-dim);}
+  
+  .guest-checkin-btn{
+    padding:7px 15px; border-radius:100px; font-size:12px; font-weight:700; cursor:pointer;
+    border:1px solid rgba(143,180,255,0.35); background:rgba(143,180,255,0.09); color:var(--accent-glow);
+    display:inline-flex; align-items:center; gap:6px; transition:all 0.18s ease; white-space:nowrap;
+  }
+  .guest-checkin-btn:hover{
+    background:rgba(143,180,255,0.24); border-color:var(--accent); color:#fff; transform:translateY(-1px);
+  }
+  .guest-checkin-btn.checked{
+    border-color:rgba(127,224,168,0.5); background:rgba(127,224,168,0.16); color:var(--success);
+    box-shadow:0 0 14px rgba(127,224,168,0.22);
+  }
+  .guest-checkin-btn.checked:hover{
+    background:rgba(127,224,168,0.28); border-color:rgba(127,224,168,0.7);
+  }
+  .guest-checkin-btn small{font-size:10.5px; opacity:0.85; margin-left:3px;}
+  .guest-role-pill{
+    display:inline-flex; align-items:center; gap:4px; font-size:11px; padding:2px 8px; border-radius:6px;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:var(--text-dim);
+  }
+  .guest-role-pill.orderer{
+    background:rgba(143,180,255,0.12); border-color:rgba(143,180,255,0.3); color:var(--accent-glow); font-weight:600;
+  }
+  .guest-pay-now-btn{
+    padding:3px 9px; font-size:11px; font-weight:700; border:none; border-radius:6px;
+    background:linear-gradient(135deg, #ffd27f, #f59e0b); color:#0e1626; cursor:pointer;
+    margin-left:6px; transition:all 0.18s ease;
+  }
+  .guest-pay-now-btn:hover{filter:brightness(1.08); transform:scale(1.03);}
+
+  /* Cashier & Break Mode Styles */
+  .cashier-banner{
+    background:linear-gradient(135deg, rgba(255,210,127,0.12) 0%, rgba(245,158,11,0.06) 100%);
+    border:1px solid rgba(255,210,127,0.3); border-radius:var(--radius); padding:18px 22px;
+    margin-bottom:18px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;
+  }
+  .cashier-banner-left{display:flex; align-items:center; gap:14px;}
+  .cashier-banner-icon{
+    width:46px; height:46px; border-radius:12px; background:rgba(255,210,127,0.18);
+    display:flex; align-items:center; justify-content:center; color:#ffd27f; flex-shrink:0;
+  }
+  .cashier-banner-icon svg{width:26px; height:26px;}
+  .cashier-banner-title{font-size:16.5px; font-weight:700; color:#fff;}
+  .cashier-banner-sub{font-size:13px; color:#ffd27f; margin-top:3px; font-weight:500;}
+  .cashier-search-hero{
+    margin-bottom:20px; position:relative;
+  }
+  .cashier-search-input{
+    width:100%; padding:18px 22px 18px 54px; font-size:16.5px; font-weight:600;
+    background:linear-gradient(180deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.04) 100%);
+    border:2px solid rgba(143,180,255,0.35); border-radius:var(--radius); color:#fff;
+    outline:none; transition:all 0.22s ease;
+    box-shadow:0 8px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+  .cashier-search-input:focus{
+    border-color:var(--accent); box-shadow:0 0 25px rgba(143,180,255,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  .cashier-search-icon{
+    position:absolute; left:20px; top:50%; transform:translateY(-50%); width:22px; height:22px;
+    color:var(--accent-glow); pointer-events:none;
+  }
+  .cashier-cards-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:14px; margin-bottom:24px;
+  }
+  .cashier-card{
+    background:linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%);
+    border:1px solid var(--glass-border); border-radius:var(--radius); padding:18px;
+    display:flex; flex-direction:column; justify-content:space-between; gap:14px;
+    transition:all 0.2s ease;
+  }
+  .cashier-card:hover{
+    border-color:rgba(255,210,127,0.4); transform:translateY(-2px);
+    box-shadow:0 12px 28px rgba(0,0,0,0.35);
+  }
+  .cashier-card.paid-card{
+    border-color:rgba(127,224,168,0.3); background:rgba(127,224,168,0.05);
+  }
+  .cashier-card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
+  .cashier-card-name{font-size:16.5px; font-weight:700; color:#fff;}
+  .cashier-card-due{
+    font-size:22px; font-weight:800; color:#ffd27f; white-space:nowrap;
+    text-shadow:0 0 12px rgba(255,210,127,0.3);
+  }
+  .cashier-card-tickets{font-size:12px; color:var(--text-dim); line-height:1.5;}
+  .cashier-card-actions{display:flex; gap:8px; flex-wrap:wrap;}
+  .fast-pay-btn{
+    flex:1; min-width:140px; padding:12px 16px; border:none; border-radius:var(--radius-sm);
+    background:linear-gradient(135deg, #ffd27f 0%, #f59e0b 100%); color:#0e1626;
+    font-weight:800; font-size:13.5px; cursor:pointer; display:inline-flex; align-items:center;
+    justify-content:center; gap:6px; box-shadow:0 4px 14px rgba(245,158,11,0.35);
+    transition:all 0.18s ease;
+  }
+  .fast-pay-btn:hover{filter:brightness(1.08); transform:scale(1.02);}
+  .fast-pay-btn:active{transform:scale(0.98);}
+  .fast-change-btn{
+    padding:12px 14px; border:1px solid rgba(255,255,255,0.15); border-radius:var(--radius-sm);
+    background:rgba(255,255,255,0.06); color:var(--text); font-size:13px; font-weight:600;
+    cursor:pointer; transition:all 0.18s ease;
+  }
+  .fast-change-btn:hover{background:rgba(255,255,255,0.12); color:#fff;}
+
+  /* Kassensturz Modal Styles */
+  .kassensturz-modal{
+    max-width:760px; width:100%; max-height:90vh; overflow-y:auto;
+    background:linear-gradient(180deg, #101828 0%, #0a0f1d 100%);
+    border:1px solid rgba(255,210,127,0.35); border-radius:var(--radius); padding:26px;
+    box-shadow:0 24px 60px rgba(0,0,0,0.8), 0 0 35px rgba(255,210,127,0.15);
+  }
+  .kassensturz-hero-stat{
+    background:linear-gradient(135deg, rgba(255,210,127,0.15) 0%, rgba(245,158,11,0.08) 100%);
+    border:1px solid rgba(255,210,127,0.35); border-radius:var(--radius-sm); padding:20px 22px;
+    text-align:center; margin-bottom:18px;
+  }
+  .kassensturz-hero-amount{
+    font-size:42px; font-weight:800; color:#ffd27f; letter-spacing:-0.5px;
+    text-shadow:0 0 20px rgba(255,210,127,0.4); margin:6px 0;
+  }
+  .kassensturz-hero-breakdown{
+    font-size:14px; color:#eef2fb; font-weight:600;
+  }
+  .kassensturz-time-pills{
+    display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;
+  }
+  .kassensturz-pill{
+    padding:8px 15px; border-radius:100px; font-size:12px; font-weight:600; cursor:pointer;
+    border:1px solid var(--glass-border); background:rgba(255,255,255,0.05); color:var(--text-dim);
+    transition:all 0.18s ease;
+  }
+  .kassensturz-pill:hover{background:rgba(255,255,255,0.1); color:#fff;}
+  .kassensturz-pill.active{
+    border-color:rgba(255,210,127,0.65); background:rgba(255,210,127,0.2); color:#ffd27f; font-weight:700;
+  }
+  .kassensturz-table{
+    width:100%; border-collapse:collapse; font-size:12.5px; margin-top:12px;
+  }
+  .kassensturz-table th{
+    text-align:left; padding:8px 10px; border-bottom:1px solid rgba(255,255,255,0.12);
+    color:var(--text-dim); font-size:11px; text-transform:uppercase; font-weight:600;
+  }
+  .kassensturz-table td{
+    padding:10px 10px; border-bottom:1px solid rgba(255,255,255,0.05); color:var(--text);
+  }
+
+  /* Emergency Print Modal & Print Styles */
+  .emergency-print-modal{
+    max-width:960px; width:100%; max-height:92vh; overflow-y:auto;
+    background:linear-gradient(180deg, #101828 0%, #0a0f1d 100%);
+    border:1px solid rgba(143,180,255,0.35); border-radius:var(--radius); padding:26px;
+    box-shadow:0 24px 60px rgba(0,0,0,0.8);
+  }
+  .print-sheet-preview{
+    background:#ffffff; color:#111111; padding:28px 24px; border-radius:8px;
+    font-family:'Segoe UI', Arial, sans-serif; box-shadow:0 4px 20px rgba(0,0,0,0.4);
+    margin:18px 0; max-height:55vh; overflow-y:auto; border:1px solid #ddd;
+  }
+  .print-sheet-table{
+    width:100%; border-collapse:collapse; font-size:11.5px; color:#111;
+  }
+  .print-sheet-table th{
+    background:#f1f3f8; border:1px solid #ccc; padding:6px 8px; text-align:left; font-size:11px;
+    font-weight:700; text-transform:uppercase; letter-spacing:0.3px;
+  }
+  .print-sheet-table td{
+    border:1px solid #ccc; padding:6px 8px; vertical-align:middle;
+  }
+  .print-sheet-letter-row{
+    background:#e5e9f2; font-weight:800; font-size:13px; padding:6px 8px; text-align:center;
+    letter-spacing:2px; border:1px solid #bbb;
+  }
+  .print-checkbox-box{
+    display:inline-block; width:14px; height:14px; border:1.5px solid #222; border-radius:2px;
+  }
+
+  /* --- OFFIZIELLER DIN-A4 DRUCK VIA BROWSER / PDF --- */
+  @media print {
+    @page {
+      size: A4 portrait;
+      margin: 10mm 10mm 12mm 10mm;
+    }
+    body {
+      background:#ffffff !important; color:#000000 !important;
+      padding:0 !important; margin:0 !important;
+    }
+    /* Hide everything on the page except #printContainer */
+    body > * {
+      display:none !important;
+    }
+    #printContainer {
+      display:block !important; position:static !important;
+      width:100% !important; background:#ffffff !important; color:#000000 !important;
+      padding:0 !important; margin:0 !important;
+    }
+    #printContainer table {
+      width:100% !important; border-collapse:collapse !important; page-break-inside:auto;
+    }
+    #printContainer tr {
+      page-break-inside:avoid !important; page-break-after:auto;
+    }
+    #printContainer thead {
+      display:table-header-group !important;
+    }
+    #printContainer tfoot {
+      display:table-footer-group !important;
+    }
+    .no-print {
+      display:none !important;
+    }
+  }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
@@ -880,7 +1117,7 @@
   <div class="admin-header">
     <div>
       <div class="admin-title-row">
-        <h1>Winter Ball · Admin &amp; Einlass</h1>
+        <h1>Winterball · Admin &amp; Einlass</h1>
         <span class="live-pill" id="liveSyncStatus"><span class="pulse-dot"></span> Live Firestore</span>
         <span class="live-pill" id="headerLiveVisitors" style="cursor:pointer; background:rgba(127,224,168,0.12); border-color:rgba(127,224,168,0.35); color:#7fe0a8;" title="Gerade online – Klicken für Insights">
           <span class="pulse-dot" style="background:#7fe0a8; box-shadow:0 0 8px #7fe0a8;"></span>
@@ -890,6 +1127,14 @@
       <div class="sub">30. Januar 2027 · 17:30 Uhr · Gymnasium Wilsdruff</div>
     </div>
     <div class="admin-header-actions">
+      <button type="button" id="headerKassensturzBtn" class="header-action-btn gold-btn" title="Kassensturz für die heutigen Pausen öffnen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 6v12"/></svg>
+        <span>Kassensturz</span>
+      </button>
+      <button type="button" id="headerEmergencyPrintBtn" class="header-action-btn blue-btn" title="Druckfähige Notfall-Gästeliste (PDF)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        <span>Notfall-Liste</span>
+      </button>
       <button type="button" id="headerRefreshBtn" class="header-action-btn" title="Ansicht neu synchronisieren">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
         <span>Aktualisieren</span>
@@ -972,6 +1217,14 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
       <span>Bestellungen</span> <span class="tab-badge" id="tabOrdersCount">0</span>
     </button>
+    <button class="tab-btn" data-tab="guestlist">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span>🎟️ Gästeliste &amp; Einlass</span> <span class="tab-badge" id="tabGuestsCount">0</span>
+    </button>
+    <button class="tab-btn" data-tab="cashier">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 6v12"/></svg>
+      <span>💵 Kasse &amp; Pause</span> <span class="tab-badge" id="tabCashTodayBadge" style="background:rgba(255,210,127,0.2); color:#ffd27f; font-weight:700;">0 €</span>
+    </button>
     <button class="tab-btn" data-tab="insights">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       <span>Insights</span> <span class="tab-badge" id="tabLiveBadge" style="background:rgba(127,224,168,0.22); color:#7fe0a8; font-weight:700;">0 live</span>
@@ -1002,6 +1255,14 @@
           </button>
         </div>
         <div class="toolbar-actions">
+          <button type="button" id="kassensturzToolbarBtn" style="border:1px solid rgba(255,210,127,0.4); background:rgba(255,210,127,0.12); color:#ffd27f; font-weight:700;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 6v12"/></svg>
+            <span>Kassensturz</span>
+          </button>
+          <button type="button" id="emergencyPrintToolbarBtn" style="border:1px solid rgba(143,180,255,0.4); background:rgba(143,180,255,0.12); color:var(--accent-glow); font-weight:600;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            <span>Notfall-Liste (PDF)</span>
+          </button>
           <button type="button" id="addBtn" class="primary">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             <span>Bestellung anlegen</span>
@@ -1077,6 +1338,157 @@
 
     <!-- Mobile Cards View -->
     <div class="mobile-cards-wrap" id="mobileCardsWrap"></div>
+  </div>
+
+  <!-- Tab: 🎟️ Reine Gästeliste & Manueller 1-Klick-Check-in -->
+  <div class="tab-content" data-tab-content="guestlist">
+    <!-- Live Guestlist Stats Bar -->
+    <div class="guest-summary-bar">
+      <div class="guest-stat-box">
+        <span class="guest-stat-lbl">Gäste Gesamt</span>
+        <div class="guest-stat-val" id="gStatTotal">0</div>
+        <span class="guest-stat-sub">Alle Besteller + Begleitungen</span>
+      </div>
+      <div class="guest-stat-box">
+        <span class="guest-stat-lbl">Eingecheckt / Anwesend</span>
+        <div class="guest-stat-val success" id="gStatChecked">0</div>
+        <span class="guest-stat-sub" id="gStatCheckedPercent">0% der Gäste da</span>
+      </div>
+      <div class="guest-stat-box">
+        <span class="guest-stat-lbl">Noch erwartet</span>
+        <div class="guest-stat-val" id="gStatOpen">0</div>
+        <span class="guest-stat-sub">Ausstehender Einlass</span>
+      </div>
+      <div class="guest-stat-box">
+        <span class="guest-stat-lbl">Altersgruppen anwesend</span>
+        <div class="guest-stat-val" id="gStatAgeRatio">0 / 0</div>
+        <span class="guest-stat-sub">U18 da / Ü18 da</span>
+      </div>
+      <div class="guest-stat-box">
+        <span class="guest-stat-lbl">Zahlungsstatus</span>
+        <div class="guest-stat-val warn" id="gStatUnpaidCount">0</div>
+        <span class="guest-stat-sub">Tickets noch unbezahlt</span>
+      </div>
+    </div>
+
+    <!-- Toolbar for Guest List -->
+    <div class="toolbar-container">
+      <div class="toolbar-top">
+        <div class="search-box-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="guestSearch" placeholder="Gast namentlich suchen (Name, Begleitung, Ticket-ID)..." autocomplete="off">
+          <button type="button" id="guestSearchClearBtn" class="search-clear-btn" style="display:none;" title="Suche leeren">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px; height:12px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="toolbar-actions">
+          <button type="button" id="guestlistPrintBtn" class="blue-btn" style="border:1px solid rgba(143,180,255,0.4); background:rgba(143,180,255,0.12); color:var(--accent-glow); font-weight:700;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            <span>📄 Notfall-Gästeliste (Druck/PDF)</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="filter-chips">
+        <button type="button" class="chip active" data-guest-filter="all">
+          <span>Alle Gäste</span> <span class="chip-count" id="chipGuestAll">0</span>
+        </button>
+        <button type="button" class="chip" data-guest-filter="open">
+          <span>Noch offen</span> <span class="chip-count" id="chipGuestOpen">0</span>
+        </button>
+        <button type="button" class="chip" data-guest-filter="checkedin">
+          <span>Eingecheckt</span> <span class="chip-count" id="chipGuestCheckedIn">0</span>
+        </button>
+        <button type="button" class="chip" data-guest-filter="u18">
+          <span>U18</span> <span class="chip-count" id="chipGuestU18">0</span>
+        </button>
+        <button type="button" class="chip" data-guest-filter="ue18">
+          <span>Ü18</span> <span class="chip-count" id="chipGuestUe18">0</span>
+        </button>
+        <button type="button" class="chip" data-guest-filter="unpaid">
+          <span>⚠️ Unbezahlt</span> <span class="chip-count" id="chipGuestUnpaid">0</span>
+        </button>
+        <span class="results-badge" id="guestResultsBadge"></span>
+      </div>
+    </div>
+
+    <!-- Desktop Table View for Individual Guests -->
+    <div class="table-wrap desktop-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Gast (Vor- &amp; Nachname)</th>
+            <th>Rolle / Bezug</th>
+            <th>Kategorie</th>
+            <th>Bezahlstatus</th>
+            <th>Ticket-Code</th>
+            <th>Einlass / 1-Klick-Check-in</th>
+          </tr>
+        </thead>
+        <tbody id="guestTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Mobile Cards View for Individual Guests -->
+    <div class="mobile-cards-wrap" id="guestMobileCardsWrap"></div>
+  </div>
+
+  <!-- Tab: 💵 Kassen- & Pausen-Modus (Schnellkassierung in der Schule) -->
+  <div class="tab-content" data-tab-content="cashier">
+    <!-- Pausen-Modus Highlight Banner -->
+    <div class="cashier-banner">
+      <div class="cashier-banner-left">
+        <div class="cashier-banner-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 6v12"/></svg>
+        </div>
+        <div>
+          <div class="cashier-banner-title">Pausen- &amp; Schnellkassen-Modus (15–20 Min. Pause)</div>
+          <div class="cashier-banner-sub" id="cashierTodaySummaryText">Heute eingenommen: 0,00 € Bar · 0 Tickets bezahlt</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button type="button" id="openKassensturzBtn" class="fast-pay-btn" style="min-width:auto; padding:10px 18px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:16px; height:16px;"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 6v12"/></svg>
+          <span>💵 Kassensturz ansehen (Heute)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Große Schnellsuche -->
+    <div class="cashier-search-hero">
+      <svg class="cashier-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="cashierSearchInput" class="cashier-search-input" placeholder="⚡ Schnelleingabe: Schülername oder Ticket-ID tippen..." autocomplete="off">
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <label style="display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color:var(--text); cursor:pointer;">
+          <input type="checkbox" id="cashierOnlyUnpaidToggle" checked style="accent-color:var(--accent); width:16px; height:16px; cursor:pointer;">
+          <span>Nur noch unbezahlte Bestellungen anzeigen</span>
+        </label>
+      </div>
+      <div style="font-size:12px; color:var(--text-dim);" id="cashierResultsCount">0 Schüler gelistet</div>
+    </div>
+
+    <!-- Schnellkassen-Karten -->
+    <div class="cashier-cards-grid" id="cashierCardsGrid"></div>
+
+    <!-- Heutiges Kassen-Live-Protokoll -->
+    <div style="margin-top:28px; background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius); padding:20px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+        <div style="font-size:14.5px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px;">
+          <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--success); box-shadow:0 0 8px var(--success);"></span>
+          <span>Live-Kassenprotokoll (Heute bar kassiert)</span>
+        </div>
+        <button type="button" id="printTodayCashProtocolBtn" style="padding:6px 12px; border-radius:var(--radius-sm); border:1px solid var(--glass-border); background:rgba(255,255,255,0.06); color:var(--text); font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px; height:13px;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          <span>Kassenabschluss drucken</span>
+        </button>
+      </div>
+      <div id="cashierTodayLogTableWrap">
+        <div style="color:var(--text-dim); font-size:12.5px; text-align:center; padding:18px;">Heute wurden noch keine Barzahlungen verbucht.</div>
+      </div>
+    </div>
   </div>
 
   <!-- Tab: Insights (Kompaktes Widget-Dashboard auf einen Blick) -->
@@ -1721,6 +2133,144 @@
   </div>
 </div>
 
+<!-- Kassensturz-Modal (Pausen-Filter, Stückelung U18/Ü18, Einnahmen ohne Klassenfilter) -->
+<div class="modal-overlay" id="kassensturzModalOverlay">
+  <div class="kassensturz-modal">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div style="width:36px; height:36px; border-radius:10px; background:rgba(255,210,127,0.18); display:flex; align-items:center; justify-content:center; color:#ffd27f;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:20px; height:20px;"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 6v12"/></svg>
+        </div>
+        <div>
+          <div style="font-size:18px; font-weight:800; color:#fff;">💵 Kassensturz &amp; Pausenabrechnung</div>
+          <div style="font-size:12px; color:var(--text-dim);">Einnahmen-Überblick · Schnelles Geldzählen nach den Pausen</div>
+        </div>
+      </div>
+      <button type="button" class="modal-close" id="kassensturzCloseX" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:20px; padding:4px;">✕</button>
+    </div>
+
+    <!-- Zeitraum-Filter-Pills -->
+    <div class="kassensturz-time-pills">
+      <button type="button" class="kassensturz-pill active" data-period="today">📅 Heute (Gesamter Tag)</button>
+      <button type="button" class="kassensturz-pill" data-period="last30">⏱️ Letzte Pause (30 Min.)</button>
+      <button type="button" class="kassensturz-pill" data-period="yesterday">⏮️ Gestern</button>
+      <button type="button" class="kassensturz-pill" data-period="all">📊 Gesamter Vorverkauf</button>
+    </div>
+
+    <!-- Großes Kassensturz-Highlight-Ergebnis -->
+    <div class="kassensturz-hero-stat">
+      <div style="font-size:12px; color:#ffd27f; font-weight:700; text-transform:uppercase; letter-spacing:0.8px;" id="kassensturzPeriodLabel">Einnahmen Heute</div>
+      <div class="kassensturz-hero-amount" id="kassensturzTotalAmount">0,00 €</div>
+      <div class="kassensturz-hero-breakdown" id="kassensturzBreakdownText">0 Tickets bezahlt (0× U18 · 0× Ü18)</div>
+      <div style="font-size:11.5px; color:var(--text-dim); margin-top:6px;" id="kassensturzSubDetails">Keine Barzahlungen im gewählten Zeitraum</div>
+    </div>
+
+    <!-- Statistik-Karten -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; margin-bottom:16px;">
+      <div style="background:rgba(255,255,255,0.04); border:1px solid var(--glass-border); border-radius:10px; padding:10px 12px;">
+        <div style="font-size:11px; color:var(--text-dim);">U18 TICKETS</div>
+        <div style="font-size:17px; font-weight:700; color:var(--accent-glow);" id="kStatU18">0× (0,00 €)</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.04); border:1px solid var(--glass-border); border-radius:10px; padding:10px 12px;">
+        <div style="font-size:11px; color:var(--text-dim);">Ü18 TICKETS</div>
+        <div style="font-size:17px; font-weight:700; color:#ffd27f;" id="kStatUe18">0× (0,00 €)</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.04); border:1px solid var(--glass-border); border-radius:10px; padding:10px 12px;">
+        <div style="font-size:11px; color:var(--text-dim);">BESTELLER / SCHÜLER</div>
+        <div style="font-size:17px; font-weight:700; color:#fff;" id="kStatOrders">0 Vorgänge</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.04); border:1px solid var(--glass-border); border-radius:10px; padding:10px 12px;">
+        <div style="font-size:11px; color:var(--text-dim);">TICKETS GESAMT</div>
+        <div style="font-size:17px; font-weight:700; color:var(--success);" id="kStatTickets">0 Tickets</div>
+      </div>
+    </div>
+
+    <!-- Tabelle der Einzelzahlungen -->
+    <div style="font-size:13px; font-weight:700; color:#fff; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+      <span>Erfasste Zahlungen im Zeitraum</span>
+      <span style="font-size:11px; color:var(--text-dim);" id="kassensturzListCount">0 Zahlungen</span>
+    </div>
+    <div style="max-height:220px; overflow-y:auto; border:1px solid var(--glass-border); border-radius:10px; background:rgba(0,0,0,0.2);">
+      <table class="kassensturz-table">
+        <thead>
+          <tr>
+            <th>Uhrzeit</th>
+            <th>Schüler / Besteller</th>
+            <th>Tickets</th>
+            <th>Betrag</th>
+          </tr>
+        </thead>
+        <tbody id="kassensturzTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Modal Actions -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; flex-wrap:wrap; gap:10px;">
+      <button type="button" id="printKassensturzBtn" style="padding:10px 18px; border-radius:var(--radius-sm); border:1px solid rgba(255,210,127,0.4); background:rgba(255,210,127,0.15); color:#ffd27f; font-weight:700; font-size:13px; cursor:pointer; display:inline-flex; align-items:center; gap:8px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px; height:15px;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        <span>🖨️ Kassenabschluss drucken</span>
+      </button>
+      <button type="button" class="secondary" id="kassensturzCloseBtn" style="padding:10px 20px; border-radius:var(--radius-sm); border:1px solid var(--glass-border); background:rgba(255,255,255,0.06); color:var(--text); cursor:pointer;">Schließen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Druckfähige Notfall-Gästeliste Modal (Vorschau & Drucksteuerung) -->
+<div class="modal-overlay" id="emergencyPrintModalOverlay">
+  <div class="emergency-print-modal">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div style="width:38px; height:38px; border-radius:10px; background:rgba(143,180,255,0.18); display:flex; align-items:center; justify-content:center; color:var(--accent-glow);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:20px; height:20px;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        </div>
+        <div>
+          <div style="font-size:18px; font-weight:800; color:#fff;">📄 Druckfähige Notfall-Gästeliste (PDF / A4)</div>
+          <div style="font-size:12px; color:var(--text-dim);">DIN A4 optimiert für Einlasskontrolle bei Internetausfall</div>
+        </div>
+      </div>
+      <button type="button" class="modal-close" id="emergencyPrintCloseX" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:20px; padding:4px;">✕</button>
+    </div>
+
+    <!-- Steuerung & Optionen -->
+    <div style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; background:rgba(255,255,255,0.04); border:1px solid var(--glass-border); border-radius:10px; padding:12px 14px;">
+      <div style="display:flex; gap:14px; align-items:center; flex-wrap:wrap;">
+        <label style="font-size:12.5px; color:var(--text); display:flex; align-items:center; gap:6px;">
+          <span>Sortierung:</span>
+          <select id="emergencySortSelect" style="padding:6px 10px; font-size:12px; border-radius:6px; background:rgba(255,255,255,0.08); border:1px solid var(--glass-border); color:#fff;">
+            <option value="lastname">Alphabetisch nach Nachname (A–Z)</option>
+            <option value="firstname">Alphabetisch nach Vorname (A–Z)</option>
+          </select>
+        </label>
+        <label style="font-size:12.5px; color:var(--text); display:flex; align-items:center; gap:6px;">
+          <span>Filter:</span>
+          <select id="emergencyFilterSelect" style="padding:6px 10px; font-size:12px; border-radius:6px; background:rgba(255,255,255,0.08); border:1px solid var(--glass-border); color:#fff;">
+            <option value="all">Alle Gäste (Notfall-Komplettliste)</option>
+            <option value="paid">Nur bezahlte Gäste</option>
+            <option value="unpaid">Nur unbezahlte Gäste</option>
+          </select>
+        </label>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button type="button" id="executePrintBtn" class="primary" style="padding:9px 18px; font-size:13px; font-weight:700; display:inline-flex; align-items:center; gap:7px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:15px; height:15px;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          <span>Jetzt drucken / Als PDF speichern</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Vorschau-Fenster des Druckblatts -->
+    <div class="print-sheet-preview" id="emergencyPrintPreview"></div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--text-dim); margin-top:10px;">
+      <span>💡 Im Browser-Druckdialog als Ziel „Als PDF speichern“ wählen für eine PDF-Datei.</span>
+      <button type="button" class="secondary" id="emergencyPrintCloseBtn" style="padding:8px 16px;">Schließen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Unsichtbarer Druck-Container (wird bei @media print aktiv und formatiert) -->
+<div id="printContainer" style="display:none;"></div>
+
 <div id="adminToast" class="admin-toast"></div>
 
 <script type="module">
@@ -1845,6 +2395,8 @@
   function scheduleRender(){
     if (addFormOpen) { pendingRender = true; return; }
     render();
+    if (typeof renderGuestList === 'function') renderGuestList();
+    if (typeof renderCashierMode === 'function') renderCashierMode();
   }
   function scheduleCharts(){
     if (addFormOpen) { pendingRender = true; return; }
@@ -1855,6 +2407,8 @@
     if (!open && pendingRender) {
       pendingRender = false;
       render();
+      if (typeof renderGuestList === 'function') renderGuestList();
+      if (typeof renderCashierMode === 'function') renderCashierMode();
       updateCharts();
     }
   }
@@ -3543,6 +4097,13 @@
     if (globalStats) {
       globalStats.style.display = (tabName === 'insights') ? 'none' : 'grid';
     }
+    if (tabName === 'guestlist') {
+      renderGuestList();
+    }
+    if (tabName === 'cashier') {
+      renderCashierMode();
+      setTimeout(() => document.getElementById('cashierSearchInput')?.focus(), 80);
+    }
     if (tabName === 'insights') {
       updateCharts();
       renderLivePresence();
@@ -3991,7 +4552,10 @@
   }
 
   async function toggleCheckIn(ticketId, currentlyCheckedIn, attendeeName){
-    await updateDoc(doc(db, 'tickets', ticketId), { checkedIn: !currentlyCheckedIn });
+    await updateDoc(doc(db, 'tickets', ticketId), {
+      checkedIn: !currentlyCheckedIn,
+      checkedInAt: !currentlyCheckedIn ? serverTimestamp() : null
+    });
     if (!currentlyCheckedIn) {
       playCheckinChime();
       showAdminToast(`${attendeeName || 'Gast'} erfolgreich eingecheckt!`);
@@ -5112,6 +5676,965 @@
   document.getElementById('exportBtn').addEventListener('click', () => {
     exportCsv('winterball-bestellungen.csv');
   });
+
+  // =========================================================================
+  // 1. REINE GÄSTELISTE & MANUELLER 1-KLICK-CHECK-IN
+  // =========================================================================
+  let activeGuestFilter = 'all'; // 'all', 'open', 'checkedin', 'u18', 'ue18', 'unpaid'
+
+  function buildAllGuestsList(){
+    const list = [];
+    allTickets.forEach(t => {
+      const reg = allRegs.find(r => r.id === t.registrationId);
+      const isOrderer = reg && reg.name && (t.name.trim().toLowerCase() === reg.name.trim().toLowerCase());
+      const role = isOrderer ? 'Besteller' : (reg && reg.name ? `Begleitung von ${reg.name}` : 'Begleitung');
+      const isPaid = t.paid === true || (reg && reg.paid === true);
+      const schoolClass = t.schoolClass || (isOrderer && reg ? reg.schoolClass : null);
+      list.push({
+        ticket: t,
+        reg,
+        name: t.name || 'Unbekannt',
+        role,
+        isOrderer,
+        category: t.category || (reg ? reg.category : 'u18'),
+        schoolClass,
+        paid: isPaid,
+        checkedIn: !!t.checkedIn,
+        checkedInAt: t.checkedInAt,
+        ticketId: t.ticketId || t.id
+      });
+    });
+    return list;
+  }
+
+  function formatCheckinTime(ts){
+    if (!ts) return '';
+    const d = ts.toDate ? ts.toDate() : (ts.seconds ? new Date(ts.seconds * 1000) : new Date(ts));
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' Uhr';
+  }
+
+  function getRegistrationPaymentDate(r){
+    if (!r || !r.paid) return null;
+    if (r.paidAt) {
+      if (r.paidAt.toDate) return r.paidAt.toDate();
+      if (r.paidAt.seconds) return new Date(r.paidAt.seconds * 1000);
+      const d = new Date(r.paidAt);
+      if (!isNaN(d.getTime())) return d;
+    }
+    if (r.createdAt) {
+      if (r.createdAt.toDate) return r.createdAt.toDate();
+      if (r.createdAt.seconds) return new Date(r.createdAt.seconds * 1000);
+      const d = new Date(r.createdAt);
+      if (!isNaN(d.getTime())) return d;
+    }
+    return null;
+  }
+
+  function isSameCalendarDay(d1, d2){
+    if (!d1 || !d2) return false;
+    return d1.getFullYear() === d2.getFullYear() &&
+           d1.getMonth() === d2.getMonth() &&
+           d1.getDate() === d2.getDate();
+  }
+
+  function renderGuestList(){
+    const guests = buildAllGuestsList();
+    const searchInput = document.getElementById('guestSearch');
+    const term = (searchInput ? searchInput.value : '').trim().toLowerCase();
+    const clearBtn = document.getElementById('guestSearchClearBtn');
+    if (clearBtn) clearBtn.style.display = term ? 'flex' : 'none';
+
+    // Summary stats
+    const totalCount = guests.length;
+    const checkedCount = guests.filter(g => g.checkedIn).length;
+    const openCount = totalCount - checkedCount;
+    const checkedPercent = totalCount > 0 ? Math.round((checkedCount / totalCount) * 100) : 0;
+    const u18Checked = guests.filter(g => g.checkedIn && g.category === 'u18').length;
+    const ue18Checked = guests.filter(g => g.checkedIn && g.category === 'ue18').length;
+    const unpaidCount = guests.filter(g => !g.paid).length;
+
+    const elTotal = document.getElementById('gStatTotal');
+    if (elTotal) elTotal.textContent = totalCount;
+    const elChecked = document.getElementById('gStatChecked');
+    if (elChecked) elChecked.textContent = checkedCount;
+    const elCheckedPct = document.getElementById('gStatCheckedPercent');
+    if (elCheckedPct) elCheckedPct.textContent = `${checkedPercent}% der Gäste anwesend`;
+    const elOpen = document.getElementById('gStatOpen');
+    if (elOpen) elOpen.textContent = openCount;
+    const elAge = document.getElementById('gStatAgeRatio');
+    if (elAge) elAge.textContent = `${u18Checked} / ${ue18Checked}`;
+    const elUnpaid = document.getElementById('gStatUnpaidCount');
+    if (elUnpaid) elUnpaid.textContent = unpaidCount;
+
+    // Tab badge
+    const tabBadge = document.getElementById('tabGuestsCount');
+    if (tabBadge) tabBadge.textContent = totalCount;
+
+    // Filter chip counts
+    if (document.getElementById('chipGuestAll')) document.getElementById('chipGuestAll').textContent = totalCount;
+    if (document.getElementById('chipGuestOpen')) document.getElementById('chipGuestOpen').textContent = openCount;
+    if (document.getElementById('chipGuestCheckedIn')) document.getElementById('chipGuestCheckedIn').textContent = checkedCount;
+    if (document.getElementById('chipGuestU18')) document.getElementById('chipGuestU18').textContent = guests.filter(g => g.category === 'u18').length;
+    if (document.getElementById('chipGuestUe18')) document.getElementById('chipGuestUe18').textContent = guests.filter(g => g.category === 'ue18').length;
+    if (document.getElementById('chipGuestUnpaid')) document.getElementById('chipGuestUnpaid').textContent = unpaidCount;
+
+    // Filter list
+    const filtered = guests.filter(g => {
+      const matchSearch = !term ||
+        g.name.toLowerCase().includes(term) ||
+        g.role.toLowerCase().includes(term) ||
+        g.ticketId.toLowerCase().includes(term) ||
+        (g.schoolClass || '').toLowerCase().includes(term) ||
+        (g.reg && (g.reg.name || '').toLowerCase().includes(term)) ||
+        (g.reg && (g.reg.email || '').toLowerCase().includes(term));
+
+      if (!matchSearch) return false;
+      if (activeGuestFilter === 'open') return !g.checkedIn;
+      if (activeGuestFilter === 'checkedin') return g.checkedIn;
+      if (activeGuestFilter === 'u18') return g.category === 'u18';
+      if (activeGuestFilter === 'ue18') return g.category === 'ue18';
+      if (activeGuestFilter === 'unpaid') return !g.paid;
+      return true;
+    });
+
+    const resBadge = document.getElementById('guestResultsBadge');
+    if (resBadge) {
+      resBadge.textContent = (term || activeGuestFilter !== 'all') ? `${filtered.length} von ${totalCount} Gästen` : `${totalCount} Gäste gesamt`;
+    }
+
+    // Sort by name default (Alphabetical)
+    filtered.sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
+
+    // Desktop Table
+    const tbody = document.getElementById('guestTableBody');
+    if (tbody) {
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:32px 16px; color:var(--text-dim);">Keine passenden Gäste für diesen Filter gefunden.</td></tr>`;
+      } else {
+        tbody.innerHTML = filtered.map(g => {
+          const roleBadge = g.isOrderer
+            ? `<span class="guest-role-pill orderer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px; height:11px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Besteller</span>`
+            : `<span class="guest-role-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px; height:11px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>${escapeHtml(g.role)}</span>`;
+
+          const catBadge = `<span class="badge out">${categoryLabel(g.category)}</span>` +
+            (g.category === 'u18' && g.schoolClass ? ` <span class="badge out" style="color:var(--accent-glow); border-color:rgba(143,180,255,0.35); background:rgba(143,180,255,0.12);">Kl. ${escapeHtml(g.schoolClass)}</span>` : '');
+
+          const dueCents = g.reg ? ticketsDueCents(g.reg.id) : 0;
+          const payBadge = g.paid
+            ? `<span class="badge in">✓ Bezahlt</span>`
+            : `<span class="badge out" style="color:#ff8080; background:rgba(255,128,128,0.14); border-color:rgba(255,128,128,0.4); font-weight:700;">⚠️ Unbezahlt</span>
+               ${g.reg ? `<button type="button" class="guest-pay-now-btn" data-reg-id="${g.reg.id}" title="An der Abendkasse bar kassieren">Kassieren (${formatCents(dueCents)})</button>` : ''}`;
+
+          const timeStr = g.checkedInAt ? formatCheckinTime(g.checkedInAt) : '';
+
+          return `
+            <tr>
+              <td>
+                <div style="font-weight:700; color:#fff; font-size:14px;">${escapeHtml(g.name)}</div>
+                ${g.reg && g.reg.email ? `<div style="font-size:11px; color:var(--text-dim); margin-top:2px;">${escapeHtml(g.reg.email)}</div>` : ''}
+              </td>
+              <td>${roleBadge}</td>
+              <td>${catBadge}</td>
+              <td><div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px;">${payBadge}</div></td>
+              <td><span style="font-family:monospace; font-size:12px; color:var(--accent-glow);">${escapeHtml(g.ticketId)}</span></td>
+              <td>
+                <button type="button" class="guest-checkin-btn ${g.checkedIn ? 'checked' : ''}" data-ticket-id="${g.ticket.id}" data-name="${escapeHtml(g.name)}" data-state="${g.checkedIn ? '1' : '0'}">
+                  ${g.checkedIn
+                    ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><polyline points="20 6 9 17 4 12"/></svg><span>Eingecheckt</span> ${timeStr ? `<small>(${timeStr})</small>` : ''}`
+                    : `<span>Einchecken</span>`}
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+
+    // Mobile Cards View
+    const mobileWrap = document.getElementById('guestMobileCardsWrap');
+    if (mobileWrap) {
+      if (filtered.length === 0) {
+        mobileWrap.innerHTML = `<div style="text-align:center; padding:32px 16px; color:var(--text-dim); background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius);">Keine Gäste gefunden.</div>`;
+      } else {
+        mobileWrap.innerHTML = filtered.map(g => {
+          const timeStr = g.checkedInAt ? formatCheckinTime(g.checkedInAt) : '';
+          const dueCents = g.reg ? ticketsDueCents(g.reg.id) : 0;
+          return `
+            <div style="background:linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%); border:1px solid var(--glass-border); border-radius:var(--radius); padding:16px; margin-bottom:12px; display:flex; flex-direction:column; gap:10px;">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+                <div>
+                  <div style="font-size:16px; font-weight:700; color:#fff;">${escapeHtml(g.name)}</div>
+                  <div style="font-size:11.5px; color:var(--text-dim); margin-top:2px;">${escapeHtml(g.role)}</div>
+                </div>
+                <div>
+                  <span class="badge out">${categoryLabel(g.category)}</span>
+                  ${g.category === 'u18' && g.schoolClass ? `<span class="badge out" style="color:var(--accent-glow);">Kl. ${escapeHtml(g.schoolClass)}</span>` : ''}
+                </div>
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-top:1px solid rgba(255,255,255,0.06); border-bottom:1px solid rgba(255,255,255,0.06);">
+                <div style="font-size:12px;">
+                  ${g.paid
+                    ? `<span class="badge in">✓ Bezahlt</span>`
+                    : `<span class="badge out" style="color:#ff8080; background:rgba(255,128,128,0.14);">⚠️ Unbezahlt</span>
+                       ${g.reg ? `<button type="button" class="guest-pay-now-btn" data-reg-id="${g.reg.id}">Kassieren (${formatCents(dueCents)})</button>` : ''}`}
+                </div>
+                <div style="font-family:monospace; font-size:12px; color:var(--accent-glow);">${escapeHtml(g.ticketId)}</div>
+              </div>
+
+              <button type="button" class="guest-checkin-btn ${g.checkedIn ? 'checked' : ''}" data-ticket-id="${g.ticket.id}" data-name="${escapeHtml(g.name)}" data-state="${g.checkedIn ? '1' : '0'}" style="width:100%; justify-content:center; padding:11px;">
+                ${g.checkedIn
+                  ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px; height:14px;"><polyline points="20 6 9 17 4 12"/></svg><span>Eingecheckt</span> ${timeStr ? `<small>(${timeStr})</small>` : ''}`
+                  : `<span>Einchecken</span>`}
+              </button>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    // Attach listeners
+    document.querySelectorAll('.guest-checkin-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        toggleCheckIn(btn.dataset.ticketId, btn.dataset.state === '1', btn.dataset.name);
+      });
+    });
+    document.querySelectorAll('.guest-pay-now-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        openCashModal(btn.dataset.regId);
+      });
+    });
+  }
+
+  // Filter chips in guest list
+  document.querySelectorAll('[data-guest-filter]').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('[data-guest-filter]').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeGuestFilter = chip.dataset.guestFilter;
+      renderGuestList();
+    });
+  });
+
+  document.getElementById('guestSearch')?.addEventListener('input', renderGuestList);
+  document.getElementById('guestSearchClearBtn')?.addEventListener('click', () => {
+    const inp = document.getElementById('guestSearch');
+    if (inp) { inp.value = ''; inp.focus(); }
+    renderGuestList();
+  });
+
+
+  // =========================================================================
+  // 2. KASSEN- & PAUSEN-MODUS (SCHNELLKASSIERUNG IN DER SCHULE)
+  // =========================================================================
+  async function fastCashConfirm(regId){
+    const reg = allRegs.find(r => r.id === regId);
+    if (!reg) return;
+    const dueCents = ticketsDueCents(regId);
+    const tickets = ticketsFor(regId);
+    if (!tickets.length) return;
+
+    try {
+      const batch = writeBatch(db);
+      batch.update(doc(db, 'registrations', regId), { paid: true, paidAt: serverTimestamp() });
+      tickets.forEach(t => batch.update(doc(db, 'tickets', t.id), { paid: true }));
+      await batch.commit();
+
+      playCheckinChime();
+      showAdminToast(`✓ ${formatCents(dueCents)} bar kassiert von ${reg.name}!`);
+
+      // Clear search input and focus it for the next student in line
+      const sInput = document.getElementById('cashierSearchInput');
+      if (sInput) {
+        sInput.value = '';
+        sInput.focus();
+      }
+
+      // Send tickets email asynchronously in background
+      (async () => {
+        try {
+          const priceSnap = await getDoc(doc(db, 'settings', 'pricing'));
+          const freshPrices = priceSnap.exists()
+            ? { u18: Number(priceSnap.data().u18 || 0), ue18: Number(priceSnap.data().ue18 || 0) }
+            : { u18: 0, ue18: 0 };
+          const idToken = await auth.currentUser.getIdToken();
+          const salutation = reg.salutation || (reg.anrede === 'Sie' ? 'sie' : 'du');
+          const anrede = salutation === 'sie' ? 'Sie' : 'Du';
+          await workerFetch('/send-tickets', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
+            body: JSON.stringify({
+              email: reg.email,
+              ordererName: reg.name,
+              salutation, anrede,
+              isFormal: salutation === 'sie',
+              formell: salutation === 'sie',
+              greeting: salutation === 'sie' ? `Guten Tag ${reg.name}` : `Hallo ${reg.name}`,
+              attendees: tickets.map(t => ({
+                name: t.name, ticketId: t.ticketId, category: t.category,
+                price: freshPrices[t.category] || 0
+              })),
+              useLernSax: shouldUseLernSax(reg.email)
+            })
+          });
+        } catch(e) {
+          console.warn('Background ticket email dispatch:', e);
+        }
+      })();
+
+    } catch(err){
+      console.error(err);
+      alert('Fehler beim Kassieren: ' + (err.message || String(err)));
+    }
+  }
+
+  function renderCashierMode(){
+    const now = new Date();
+
+    // 1. Calculate Today's intake
+    const todayRegs = allRegs.filter(r => {
+      const pDate = getRegistrationPaymentDate(r);
+      return pDate && isSameCalendarDay(pDate, now);
+    });
+
+    let todayPaidCents = 0;
+    let todayU18Tickets = 0;
+    let todayUe18Tickets = 0;
+
+    todayRegs.forEach(r => {
+      const tickets = ticketsFor(r.id);
+      tickets.forEach(t => {
+        if (t.paid || r.paid) {
+          const pr = ticketPrices[t.category] || 0;
+          todayPaidCents += Math.round(pr * 100);
+          if (t.category === 'u18') todayU18Tickets++;
+          else if (t.category === 'ue18') todayUe18Tickets++;
+        }
+      });
+    });
+
+    const totalTodayTickets = todayU18Tickets + todayUe18Tickets;
+    const summaryStr = `Heute eingenommen: ${formatCents(todayPaidCents)} Bar · ${totalTodayTickets} Tickets bezahlt (${todayU18Tickets}× U18 · ${todayUe18Tickets}× Ü18)`;
+
+    const elSummary = document.getElementById('cashierTodaySummaryText');
+    if (elSummary) elSummary.textContent = summaryStr;
+
+    const elBadge = document.getElementById('tabCashTodayBadge');
+    if (elBadge) {
+      elBadge.textContent = formatCents(todayPaidCents);
+      elBadge.title = summaryStr;
+    }
+
+    // 2. Search & filter in break mode
+    const searchInput = document.getElementById('cashierSearchInput');
+    const term = (searchInput ? searchInput.value : '').trim().toLowerCase();
+    const onlyUnpaid = document.getElementById('cashierOnlyUnpaidToggle')?.checked ?? true;
+
+    const matchedRegs = allRegs.filter(r => {
+      const tickets = ticketsFor(r.id);
+      const isUnpaid = !r.paid || tickets.some(t => !t.paid);
+      if (onlyUnpaid && !isUnpaid) return false;
+
+      if (!term) return true;
+      return (r.name || '').toLowerCase().includes(term) ||
+             (r.email || '').toLowerCase().includes(term) ||
+             (r.schoolClass || '').toLowerCase().includes(term) ||
+             (r.companions || []).some(c => (c.name || '').toLowerCase().includes(term) || (c.schoolClass || '').toLowerCase().includes(term)) ||
+             tickets.some(t => (t.name || '').toLowerCase().includes(term) || (t.ticketId || '').toLowerCase().includes(term));
+    });
+
+    const countEl = document.getElementById('cashierResultsCount');
+    if (countEl) countEl.textContent = `${matchedRegs.length} Schüler gefunden`;
+
+    // 3. Render Cashier Cards Grid
+    const grid = document.getElementById('cashierCardsGrid');
+    if (grid) {
+      if (matchedRegs.length === 0) {
+        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:36px 16px; color:var(--text-dim); background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius);">
+          ${term ? `Keine Schüler für "${escapeHtml(term)}" gefunden.` : (onlyUnpaid ? 'Keine unbezahlten Bestellungen offen! Alle erfassten Schüler haben bezahlt.' : 'Keine Bestellungen vorhanden.')}
+        </div>`;
+      } else {
+        grid.innerHTML = matchedRegs.map(r => {
+          const tickets = ticketsFor(r.id);
+          const dueCents = ticketsDueCents(r.id);
+          const hasExplicitlyPaid = tickets.some(t => t.paid === true);
+          const isPartial = hasExplicitlyPaid && tickets.some(t => !t.paid);
+
+          const ticketListHtml = tickets.map(t => {
+            const cat = categoryLabel(t.category);
+            const cl = t.schoolClass || (t.name === r.name ? r.schoolClass : null);
+            return `<div style="display:flex; justify-content:space-between; align-items:center; padding:2px 0;">
+              <span>• <strong>${escapeHtml(t.name)}</strong> (${cat}${cl ? `, Kl. ${escapeHtml(cl)}` : ''})</span>
+              <span style="color:${t.paid ? '#7fe0a8' : '#ffd27f'}; font-weight:600;">${t.paid ? '✓ Bezahlt' : formatCents(Math.round((ticketPrices[t.category]||0)*100))}</span>
+            </div>`;
+          }).join('');
+
+          const isFullyPaid = r.paid && !isPartial;
+
+          return `
+            <div class="cashier-card ${isFullyPaid ? 'paid-card' : ''}">
+              <div class="cashier-card-top">
+                <div>
+                  <div class="cashier-card-name">${escapeHtml(r.name)}</div>
+                  <div style="font-size:12px; color:var(--accent-glow); margin-top:2px;">
+                    ${r.schoolClass ? `Klasse ${escapeHtml(r.schoolClass)} · ` : ''}${tickets.length} Ticket${tickets.length > 1 ? 's' : ''}
+                  </div>
+                </div>
+                <div class="cashier-card-due">${isFullyPaid ? '<span style="color:#7fe0a8; font-size:16px;">✓ Bezahlt</span>' : formatCents(dueCents)}</div>
+              </div>
+
+              <div class="cashier-card-tickets">
+                ${ticketListHtml}
+              </div>
+
+              <div class="cashier-card-actions">
+                ${!isFullyPaid ? `
+                  <button type="button" class="fast-pay-btn fast-cash-confirm-btn" data-reg-id="${r.id}" title="1-Klick Schnell-Kassieren">
+                    <span>⚡ Passend (${formatCents(dueCents)})</span>
+                  </button>
+                  <button type="button" class="fast-change-btn fast-cash-change-btn" data-reg-id="${r.id}" title="Numpad öffnen &amp; Rückgeld berechnen">
+                    <span>💵 Wechselgeld</span>
+                  </button>
+                ` : `
+                  <div style="color:var(--success); font-weight:700; font-size:13px; display:flex; align-items:center; gap:6px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:15px; height:15px;"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span>Vollständig bezahlt</span>
+                  </div>
+                `}
+                ${(r.paid || isPartial) ? `
+                  <button type="button" class="fast-change-btn cashier-invoice-btn" data-reg-id="${r.id}" title="Quittung herunterladen" style="margin-left:auto;">
+                    <span>Quittung</span>
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    // 4. Render Today's Cash Log Table
+    const logWrap = document.getElementById('cashierTodayLogTableWrap');
+    if (logWrap) {
+      if (todayRegs.length === 0) {
+        logWrap.innerHTML = `<div style="color:var(--text-dim); font-size:12.5px; text-align:center; padding:18px;">Heute wurden noch keine Barzahlungen verbucht.</div>`;
+      } else {
+        todayRegs.sort((a, b) => {
+          const da = getRegistrationPaymentDate(a) || 0;
+          const db = getRegistrationPaymentDate(b) || 0;
+          return db - da;
+        });
+
+        logWrap.innerHTML = `
+          <table class="kassensturz-table">
+            <thead>
+              <tr>
+                <th>Uhrzeit</th>
+                <th>Schüler / Besteller</th>
+                <th>Tickets &amp; Aufteilung</th>
+                <th>Betrag</th>
+                <th>Aktion</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${todayRegs.map(r => {
+                const pDate = getRegistrationPaymentDate(r);
+                const timeStr = pDate ? pDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' Uhr' : '–';
+                const tickets = ticketsFor(r.id);
+                const u18Count = tickets.filter(t => t.category === 'u18').length;
+                const ue18Count = tickets.filter(t => t.category === 'ue18').length;
+                const paidCents = tickets.reduce((sum, t) => sum + Math.round((ticketPrices[t.category] || 0) * 100), 0);
+                const detailStr = `${tickets.length}× (${u18Count > 0 ? u18Count + '× U18' : ''}${u18Count > 0 && ue18Count > 0 ? ' · ' : ''}${ue18Count > 0 ? ue18Count + '× Ü18' : ''})`;
+
+                return `
+                  <tr>
+                    <td style="color:#ffd27f; font-weight:700;">${timeStr}</td>
+                    <td><strong>${escapeHtml(r.name)}</strong>${r.schoolClass ? ` <span style="color:var(--text-dim); font-size:11px;">(Kl. ${escapeHtml(r.schoolClass)})</span>` : ''}</td>
+                    <td>${detailStr}</td>
+                    <td style="color:var(--success); font-weight:700;">${formatCents(paidCents)}</td>
+                    <td>
+                      <button type="button" class="cashier-invoice-btn" data-reg-id="${r.id}" style="padding:3px 8px; border-radius:4px; font-size:11px; border:1px solid var(--glass-border); background:rgba(255,255,255,0.06); color:var(--text); cursor:pointer;">Quittung</button>
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        `;
+      }
+    }
+
+    // Attach listeners
+    document.querySelectorAll('.fast-cash-confirm-btn').forEach(btn => {
+      btn.addEventListener('click', () => fastCashConfirm(btn.dataset.regId));
+    });
+    document.querySelectorAll('.fast-cash-change-btn').forEach(btn => {
+      btn.addEventListener('click', () => openCashModal(btn.dataset.regId));
+    });
+    document.querySelectorAll('.cashier-invoice-btn').forEach(btn => {
+      btn.addEventListener('click', () => downloadInvoicePdf(btn.dataset.regId, btn));
+    });
+  }
+
+  document.getElementById('cashierSearchInput')?.addEventListener('input', renderCashierMode);
+  document.getElementById('cashierOnlyUnpaidToggle')?.addEventListener('change', renderCashierMode);
+  document.getElementById('openKassensturzBtn')?.addEventListener('click', () => openKassensturz('today'));
+  document.getElementById('printTodayCashProtocolBtn')?.addEventListener('click', printKassensturzProtocol);
+
+
+  // =========================================================================
+  // 3. KASSENSTURZ-FILTER & PROTOKOLL (OHNE KLASSENFILTER)
+  // =========================================================================
+  let kassensturzPeriod = 'today'; // 'today', 'last30', 'yesterday', 'all'
+
+  function getPaymentsForPeriod(period){
+    const now = new Date();
+    const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+    const thirtyMinAgo = new Date(now.getTime() - 30 * 60 * 1000);
+
+    return allRegs.filter(r => {
+      if (!r.paid) return false;
+      const pDate = getRegistrationPaymentDate(r);
+      if (!pDate) return false;
+
+      if (period === 'today') return isSameCalendarDay(pDate, now);
+      if (period === 'last30') return pDate >= thirtyMinAgo;
+      if (period === 'yesterday') return isSameCalendarDay(pDate, yesterday);
+      if (period === 'all') return true;
+      return true;
+    });
+  }
+
+  function openKassensturz(period = 'today'){
+    kassensturzPeriod = period;
+
+    // Update active pill
+    document.querySelectorAll('.kassensturz-pill').forEach(p => {
+      p.classList.toggle('active', p.dataset.period === period);
+    });
+
+    const regs = getPaymentsForPeriod(period);
+
+    let totalCents = 0;
+    let u18Count = 0;
+    let ue18Count = 0;
+    let u18Cents = 0;
+    let ue18Cents = 0;
+
+    regs.forEach(r => {
+      const tickets = ticketsFor(r.id);
+      tickets.forEach(t => {
+        if (t.paid || r.paid) {
+          const pr = Math.round((ticketPrices[t.category] || 0) * 100);
+          totalCents += pr;
+          if (t.category === 'u18') {
+            u18Count++;
+            u18Cents += pr;
+          } else if (t.category === 'ue18') {
+            ue18Count++;
+            ue18Cents += pr;
+          }
+        }
+      });
+    });
+
+    const totalTickets = u18Count + ue18Count;
+    const periodTitles = {
+      today: 'Einnahmen Heute (Alle Pausen)',
+      last30: 'Einnahmen Letzte Pause (30 Min.)',
+      yesterday: 'Einnahmen Gestern',
+      all: 'Gesamter Vorverkauf (Alle Tage)'
+    };
+
+    const pLabel = document.getElementById('kassensturzPeriodLabel');
+    if (pLabel) pLabel.textContent = periodTitles[period] || 'Kassensturz';
+    const pAmt = document.getElementById('kassensturzTotalAmount');
+    if (pAmt) pAmt.textContent = formatCents(totalCents);
+    const pBreakdown = document.getElementById('kassensturzBreakdownText');
+    if (pBreakdown) {
+      pBreakdown.textContent = `${totalTickets} Tickets bezahlt (${u18Count}× U18 à ${formatCents(Math.round((ticketPrices.u18||0)*100))} · ${ue18Count}× Ü18 à ${formatCents(Math.round((ticketPrices.ue18||0)*100))})`;
+    }
+
+    const subDetailsEl = document.getElementById('kassensturzSubDetails');
+    if (subDetailsEl) {
+      if (regs.length > 0) {
+        subDetailsEl.textContent = `${regs.length} Schüler / Bestellungen kassiert · Ohne Klassenfilter`;
+      } else {
+        subDetailsEl.textContent = 'Keine Barzahlungen in diesem Zeitraum erfasst';
+      }
+    }
+
+    const elU18 = document.getElementById('kStatU18');
+    if (elU18) elU18.textContent = `${u18Count}× (${formatCents(u18Cents)})`;
+    const elUe18 = document.getElementById('kStatUe18');
+    if (elUe18) elUe18.textContent = `${ue18Count}× (${formatCents(ue18Cents)})`;
+    const elOrders = document.getElementById('kStatOrders');
+    if (elOrders) elOrders.textContent = `${regs.length} Vorgänge`;
+    const elTickets = document.getElementById('kStatTickets');
+    if (elTickets) elTickets.textContent = `${totalTickets} Tickets`;
+    const elListCount = document.getElementById('kassensturzListCount');
+    if (elListCount) elListCount.textContent = `${regs.length} Buchungen`;
+
+    // Table rows
+    const tbody = document.getElementById('kassensturzTableBody');
+    if (tbody) {
+      if (regs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:18px; color:var(--text-dim);">Keine Zahlungen im gewählten Zeitraum.</td></tr>`;
+      } else {
+        regs.sort((a, b) => (getRegistrationPaymentDate(b) || 0) - (getRegistrationPaymentDate(a) || 0));
+        tbody.innerHTML = regs.map(r => {
+          const pDate = getRegistrationPaymentDate(r);
+          const timeStr = pDate ? pDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' Uhr' : '–';
+          const tickets = ticketsFor(r.id);
+          const u18 = tickets.filter(t => t.category === 'u18').length;
+          const ue18 = tickets.filter(t => t.category === 'ue18').length;
+          const paidCents = tickets.reduce((sum, t) => sum + Math.round((ticketPrices[t.category] || 0) * 100), 0);
+
+          return `
+            <tr>
+              <td style="color:#ffd27f; font-weight:700;">${timeStr}</td>
+              <td><strong>${escapeHtml(r.name)}</strong>${r.schoolClass ? ` <span style="color:var(--text-dim); font-size:11px;">(Kl. ${escapeHtml(r.schoolClass)})</span>` : ''}</td>
+              <td>${tickets.length}× (${u18 > 0 ? u18 + '× U18' : ''}${u18 > 0 && ue18 > 0 ? ' · ' : ''}${ue18 > 0 ? ue18 + '× Ü18' : ''})</td>
+              <td style="color:var(--success); font-weight:700;">${formatCents(paidCents)}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+
+    document.getElementById('kassensturzModalOverlay')?.classList.add('show');
+  }
+
+  function closeKassensturz(){
+    document.getElementById('kassensturzModalOverlay')?.classList.remove('show');
+  }
+
+  function printKassensturzProtocol(){
+    const regs = getPaymentsForPeriod(kassensturzPeriod);
+    const now = new Date();
+    let totalCents = 0;
+    let u18Count = 0;
+    let ue18Count = 0;
+
+    regs.forEach(r => {
+      const tickets = ticketsFor(r.id);
+      tickets.forEach(t => {
+        if (t.paid || r.paid) {
+          totalCents += Math.round((ticketPrices[t.category] || 0) * 100);
+          if (t.category === 'u18') u18Count++;
+          else if (t.category === 'ue18') ue18Count++;
+        }
+      });
+    });
+
+    const periodNames = {
+      today: 'Heute (Pausenverkauf)',
+      last30: 'Letzte Pause (30 Minuten)',
+      yesterday: 'Gestern',
+      all: 'Gesamter Vorverkauf'
+    };
+
+    const container = document.getElementById('printContainer');
+    if (!container) return;
+    container.innerHTML = `
+      <div style="font-family:'Segoe UI',Arial,sans-serif; color:#000; padding:15mm; line-height:1.5;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #000; padding-bottom:12px; margin-bottom:16px;">
+          <div>
+            <h1 style="font-size:22px; margin:0 0 4px 0; font-weight:800;">WINTERBALL 2027 · GYMNASIUM WILSDRUFF</h1>
+            <h2 style="font-size:15px; margin:0; font-weight:600; color:#333;">Kassenabschluss &amp; Pausenprotokoll (${periodNames[kassensturzPeriod] || 'Kassensturz'})</h2>
+          </div>
+          <div style="text-align:right; font-size:12px;">
+            <div>Datum / Uhrzeit: <strong>${now.toLocaleDateString('de-DE')} · ${now.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'})} Uhr</strong></div>
+            <div>Veranstaltung: <strong>30. Januar 2027</strong></div>
+          </div>
+        </div>
+
+        <div style="background:#f4f5f8; border:1px solid #ccc; padding:14px 18px; border-radius:6px; margin-bottom:20px;">
+          <div style="font-size:13px; text-transform:uppercase; font-weight:700; color:#555;">Kassierte Gesamteinnahme (Bar)</div>
+          <div style="font-size:32px; font-weight:900; color:#000; margin:4px 0;">${formatCents(totalCents)}</div>
+          <div style="font-size:14px; font-weight:600;">
+            Stückelung: <strong>${u18Count + ue18Count} Tickets gesamt</strong>
+            (<strong>${u18Count}× U18</strong> à ${formatCents(Math.round((ticketPrices.u18||0)*100))} = ${formatCents(u18Count * Math.round((ticketPrices.u18||0)*100))} ·
+             <strong>${ue18Count}× Ü18</strong> à ${formatCents(Math.round((ticketPrices.ue18||0)*100))} = ${formatCents(ue18Count * Math.round((ticketPrices.ue18||0)*100))})
+          </div>
+          <div style="font-size:12px; color:#666; margin-top:4px;">Erfasst über ${regs.length} Schüler-Bestellungen · Abrechnung ohne Klassenfilter</div>
+        </div>
+
+        <h3 style="font-size:14px; margin:0 0 8px 0; text-transform:uppercase;">Einzelaufstellung der Zahlungen:</h3>
+        <table style="width:100%; border-collapse:collapse; font-size:11.5px; margin-bottom:30px;">
+          <thead>
+            <tr style="background:#e5e7eb;">
+              <th style="border:1px solid #999; padding:6px 8px; text-align:left;">Nr.</th>
+              <th style="border:1px solid #999; padding:6px 8px; text-align:left;">Uhrzeit</th>
+              <th style="border:1px solid #999; padding:6px 8px; text-align:left;">Schüler / Besteller</th>
+              <th style="border:1px solid #999; padding:6px 8px; text-align:left;">Klasse</th>
+              <th style="border:1px solid #999; padding:6px 8px; text-align:left;">Tickets &amp; Aufteilung</th>
+              <th style="border:1px solid #999; padding:6px 8px; text-align:right;">Betrag</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${regs.map((r, i) => {
+              const pDate = getRegistrationPaymentDate(r);
+              const timeStr = pDate ? pDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' Uhr' : '–';
+              const tickets = ticketsFor(r.id);
+              const u18 = tickets.filter(t => t.category === 'u18').length;
+              const ue18 = tickets.filter(t => t.category === 'ue18').length;
+              const paidCents = tickets.reduce((sum, t) => sum + Math.round((ticketPrices[t.category] || 0) * 100), 0);
+              return `
+                <tr>
+                  <td style="border:1px solid #ccc; padding:5px 8px;">${i + 1}</td>
+                  <td style="border:1px solid #ccc; padding:5px 8px;">${timeStr}</td>
+                  <td style="border:1px solid #ccc; padding:5px 8px;"><strong>${escapeHtml(r.name)}</strong></td>
+                  <td style="border:1px solid #ccc; padding:5px 8px;">${escapeHtml(r.schoolClass || '—')}</td>
+                  <td style="border:1px solid #ccc; padding:5px 8px;">${tickets.length}× (${u18 > 0 ? u18 + '× U18' : ''}${u18 > 0 && ue18 > 0 ? ', ' : ''}${ue18 > 0 ? ue18 + '× Ü18' : ''})</td>
+                  <td style="border:1px solid #ccc; padding:5px 8px; text-align:right; font-weight:700;">${formatCents(paidCents)}</td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+          <tfoot>
+            <tr style="background:#e5e7eb; font-weight:800;">
+              <td colspan="5" style="border:1px solid #999; padding:6px 8px; text-align:right;">GESAMTSUMME BAR:</td>
+              <td style="border:1px solid #999; padding:6px 8px; text-align:right;">${formatCents(totalCents)}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-top:40px; page-break-inside:avoid;">
+          <div style="border-top:1px solid #000; padding-top:6px; font-size:12px;">
+            <div>Bargeld gezählt &amp; übergeben von (Kassenwart / Schüler):</div>
+            <div style="margin-top:28px;">Name in Druckschrift: ____________________________________</div>
+            <div style="margin-top:10px;">Unterschrift: _____________________________________________</div>
+          </div>
+          <div style="border-top:1px solid #000; padding-top:6px; font-size:12px;">
+            <div>Geprüft &amp; empfangen durch (Lehrkraft / Organisation):</div>
+            <div style="margin-top:28px;">Name in Druckschrift: ____________________________________</div>
+            <div style="margin-top:10px;">Unterschrift: _____________________________________________</div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    window.print();
+  }
+
+  // Kassensturz Events
+  document.getElementById('headerKassensturzBtn')?.addEventListener('click', () => openKassensturz('today'));
+  document.getElementById('kassensturzToolbarBtn')?.addEventListener('click', () => openKassensturz('today'));
+  document.getElementById('kassensturzCloseX')?.addEventListener('click', closeKassensturz);
+  document.getElementById('kassensturzCloseBtn')?.addEventListener('click', closeKassensturz);
+  document.getElementById('kassensturzModalOverlay')?.addEventListener('click', (e) => {
+    if (e.target.id === 'kassensturzModalOverlay') closeKassensturz();
+  });
+  document.querySelectorAll('.kassensturz-pill').forEach(pill => {
+    pill.addEventListener('click', () => openKassensturz(pill.dataset.period));
+  });
+  document.getElementById('printKassensturzBtn')?.addEventListener('click', printKassensturzProtocol);
+
+
+  // =========================================================================
+  // 4. DRUCKFÄHIGE NOTFALL-GÄSTELISTE (PDF ZUM AUSDRUCKEN)
+  // =========================================================================
+  function buildEmergencyPrintHtml(sortMode = 'lastname', filterMode = 'all'){
+    const now = new Date();
+    let guests = buildAllGuestsList();
+
+    if (filterMode === 'paid') guests = guests.filter(g => g.paid);
+    else if (filterMode === 'unpaid') guests = guests.filter(g => !g.paid);
+
+    // Sort
+    if (sortMode === 'lastname') {
+      guests.sort((a, b) => {
+        const partsA = a.name.trim().split(/\s+/);
+        const partsB = b.name.trim().split(/\s+/);
+        const lastA = partsA.length > 1 ? partsA[partsA.length - 1] : partsA[0];
+        const lastB = partsB.length > 1 ? partsB[partsB.length - 1] : partsB[0];
+        const comp = lastA.localeCompare(lastB, 'de', { sensitivity: 'base' });
+        return comp !== 0 ? comp : a.name.localeCompare(b.name, 'de', { sensitivity: 'base' });
+      });
+    } else {
+      guests.sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
+    }
+
+    const totalGuests = guests.length;
+    const u18Count = guests.filter(g => g.category === 'u18').length;
+    const ue18Count = guests.filter(g => g.category === 'ue18').length;
+    const paidCount = guests.filter(g => g.paid).length;
+    const unpaidCount = guests.filter(g => !g.paid).length;
+
+    // Group by initial letter
+    const groups = {};
+    guests.forEach(g => {
+      let key = '';
+      if (sortMode === 'lastname') {
+        const parts = g.name.trim().split(/\s+/);
+        const lastName = parts.length > 1 ? parts[parts.length - 1] : parts[0];
+        key = (lastName[0] || '?').toUpperCase();
+      } else {
+        key = (g.name.trim()[0] || '?').toUpperCase();
+      }
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(g);
+    });
+
+    const letterKeys = Object.keys(groups).sort((a, b) => a.localeCompare(b, 'de'));
+
+    let rowsHtml = '';
+    letterKeys.forEach(letter => {
+      rowsHtml += `
+        <tr class="print-sheet-letter-row">
+          <td colspan="7" style="background:#e9ecf2; font-weight:800; text-align:center; padding:5px 8px; font-size:13px; letter-spacing:2px; border:1px solid #bbb;">
+            — ${letter} —
+          </td>
+        </tr>
+      `;
+
+      groups[letter].forEach(g => {
+        const parts = g.name.trim().split(/\s+/);
+        let formattedName = escapeHtml(g.name);
+        if (sortMode === 'lastname' && parts.length > 1) {
+          const lastName = parts.pop();
+          const firstNames = parts.join(' ');
+          formattedName = `<strong>${escapeHtml(lastName)}</strong>, ${escapeHtml(firstNames)}`;
+        } else {
+          formattedName = `<strong>${escapeHtml(g.name)}</strong>`;
+        }
+
+        const roleText = g.isOrderer ? 'Besteller' : escapeHtml(g.role);
+        const catText = `${categoryLabel(g.category)}${g.schoolClass ? ' (Kl. ' + escapeHtml(g.schoolClass) + ')' : ''}`;
+        const payText = g.paid
+          ? `<span style="color:#0f5132; font-weight:700;">✓ Bezahlt</span>`
+          : `<span style="color:#842029; font-weight:800;">⚠️ OFFEN (${formatCents(Math.round((ticketPrices[g.category]||0)*100))})</span>`;
+
+        rowsHtml += `
+          <tr style="page-break-inside:avoid;">
+            <td style="text-align:center; width:28px; border:1px solid #ccc; padding:6px 4px;">
+              <span class="print-checkbox-box"></span>
+            </td>
+            <td style="border:1px solid #ccc; padding:6px 8px; font-size:12px;">
+              ${formattedName}
+            </td>
+            <td style="border:1px solid #ccc; padding:6px 8px; font-size:11px; color:#444;">
+              ${roleText}
+            </td>
+            <td style="border:1px solid #ccc; padding:6px 8px; font-size:11px; white-space:nowrap;">
+              ${catText}
+            </td>
+            <td style="border:1px solid #ccc; padding:6px 8px; font-size:11.5px; white-space:nowrap;">
+              ${payText}
+            </td>
+            <td style="border:1px solid #ccc; padding:6px 8px; font-family:monospace; font-size:11px; color:#333; white-space:nowrap;">
+              ${escapeHtml(g.ticketId)}
+            </td>
+            <td style="border:1px solid #ccc; padding:6px 8px; font-size:10.5px; color:#666; width:90px;">
+              &nbsp;
+            </td>
+          </tr>
+        `;
+      });
+    });
+
+    return `
+      <div style="font-family:'Segoe UI',Arial,sans-serif; color:#000; padding:10mm; line-height:1.45;">
+        <div style="border-bottom:2px solid #000; padding-bottom:10px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:flex-start;">
+          <div>
+            <div style="font-size:10px; text-transform:uppercase; letter-spacing:1px; color:#555;">Gymnasium Wilsdruff · Jahrgangsstufe 12</div>
+            <h1 style="font-size:20px; margin:2px 0 4px 0; font-weight:900; letter-spacing:-0.3px;">WINTERBALL 2027 · NOTFALL-GÄSTELISTE</h1>
+            <div style="font-size:12px; font-weight:600; color:#222;">Offizielle Einlass- &amp; Anwesenheitskontrolle · Gültig für den 30. Januar 2027 (Einlass ab 17:30 Uhr)</div>
+          </div>
+          <div style="text-align:right; font-size:11.5px;">
+            <div>Druckstand: <strong>${now.toLocaleDateString('de-DE')} · ${now.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'})} Uhr</strong></div>
+            <div style="margin-top:2px;">Sortierung: <strong>${sortMode === 'lastname' ? 'Nachname (A–Z)' : 'Vorname (A–Z)'}</strong></div>
+          </div>
+        </div>
+
+        <div style="background:#f4f5f8; border:1px solid #ccc; border-radius:6px; padding:8px 12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; font-size:12px; line-height:1.5;">
+          <div>
+            <strong>${totalGuests} Gäste gelistet:</strong>
+            <span style="margin-left:8px;">${u18Count}× U18 · ${ue18Count}× Ü18</span>
+            <span style="margin-left:12px; color:#0f5132;"><strong>${paidCount} Bezahlt</strong></span> ·
+            <span style="margin-left:4px; color:#842029;"><strong>${unpaidCount} Unbezahlt (Abendkasse)</strong></span>
+          </div>
+          <div style="font-size:11px; color:#444;">
+            ⚠️ U18: Ausweispflicht &amp; Muttizettel abgleichen
+          </div>
+        </div>
+
+        <table class="print-sheet-table" style="width:100%; border-collapse:collapse; font-size:11.5px;">
+          <thead>
+            <tr style="background:#e5e7eb;">
+              <th style="width:28px; text-align:center;">✓</th>
+              <th>Name des Gastes</th>
+              <th>Rolle / Bezug</th>
+              <th>Kategorie</th>
+              <th>Zahlstatus</th>
+              <th>Ticket-ID</th>
+              <th>Einlass-Notiz</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml}
+          </tbody>
+        </table>
+
+        <div style="margin-top:24px; border-top:1px solid #999; padding-top:8px; font-size:11px; display:flex; justify-content:space-between; color:#444; page-break-inside:avoid;">
+          <div>Winterball 2027 · Gymnasium Wilsdruff · Manuelle Einlasskontrolle bei Netzausfall</div>
+          <div>Einlass-Verantwortliche(r): ____________________________________   Unterschrift: _______________________</div>
+        </div>
+      </div>
+    `;
+  }
+
+  function openEmergencyPrintModal(){
+    const sortVal = document.getElementById('emergencySortSelect')?.value || 'lastname';
+    const filterVal = document.getElementById('emergencyFilterSelect')?.value || 'all';
+    const html = buildEmergencyPrintHtml(sortVal, filterVal);
+
+    const prevEl = document.getElementById('emergencyPrintPreview');
+    if (prevEl) prevEl.innerHTML = html;
+    const printCont = document.getElementById('printContainer');
+    if (printCont) printCont.innerHTML = html;
+    document.getElementById('emergencyPrintModalOverlay')?.classList.add('show');
+  }
+
+  function closeEmergencyPrintModal(){
+    document.getElementById('emergencyPrintModalOverlay')?.classList.remove('show');
+  }
+
+  function executeEmergencyPrint(){
+    const sortVal = document.getElementById('emergencySortSelect')?.value || 'lastname';
+    const filterVal = document.getElementById('emergencyFilterSelect')?.value || 'all';
+    const html = buildEmergencyPrintHtml(sortVal, filterVal);
+    const printCont = document.getElementById('printContainer');
+    if (printCont) printCont.innerHTML = html;
+    window.print();
+  }
+
+  // Emergency Print Events
+  document.getElementById('headerEmergencyPrintBtn')?.addEventListener('click', openEmergencyPrintModal);
+  document.getElementById('emergencyPrintToolbarBtn')?.addEventListener('click', openEmergencyPrintModal);
+  document.getElementById('guestlistPrintBtn')?.addEventListener('click', openEmergencyPrintModal);
+  document.getElementById('emergencyPrintCloseX')?.addEventListener('click', closeEmergencyPrintModal);
+  document.getElementById('emergencyPrintCloseBtn')?.addEventListener('click', closeEmergencyPrintModal);
+  document.getElementById('emergencyPrintModalOverlay')?.addEventListener('click', (e) => {
+    if (e.target.id === 'emergencyPrintModalOverlay') closeEmergencyPrintModal();
+  });
+  document.getElementById('emergencySortSelect')?.addEventListener('change', () => {
+    const sortVal = document.getElementById('emergencySortSelect')?.value || 'lastname';
+    const filterVal = document.getElementById('emergencyFilterSelect')?.value || 'all';
+    const html = buildEmergencyPrintHtml(sortVal, filterVal);
+    const prevEl = document.getElementById('emergencyPrintPreview');
+    if (prevEl) prevEl.innerHTML = html;
+  });
+  document.getElementById('emergencyFilterSelect')?.addEventListener('change', () => {
+    const sortVal = document.getElementById('emergencySortSelect')?.value || 'lastname';
+    const filterVal = document.getElementById('emergencyFilterSelect')?.value || 'all';
+    const html = buildEmergencyPrintHtml(sortVal, filterVal);
+    const prevEl = document.getElementById('emergencyPrintPreview');
+    if (prevEl) prevEl.innerHTML = html;
+  });
+  document.getElementById('executePrintBtn')?.addEventListener('click', executeEmergencyPrint);
 </script>
 </body>
 </html>
