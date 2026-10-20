@@ -849,44 +849,7 @@
   .cash-modal-actions button.secondary:hover{background:rgba(255,255,255,0.12);}
 
   /* Cashier POS View */
-  .cashier-container{max-width:980px; margin:0 auto; padding:8px 0 32px;}
-  .cashier-hero-header{
-    display:flex; align-items:center; gap:16px; padding:20px 24px;
-    background:linear-gradient(145deg, rgba(255,255,255,0.065), rgba(255,255,255,0.02));
-    border:1px solid var(--glass-border); border-radius:var(--radius); margin-bottom:24px;
-    backdrop-filter:blur(20px); flex-wrap:wrap;
-  }
-  .cashier-icon-badge{
-    width:48px; height:48px; border-radius:12px;
-    background:linear-gradient(135deg, rgba(255,210,127,0.24), rgba(255,210,127,0.08));
-    border:1px solid rgba(255,210,127,0.4); display:flex; align-items:center; justify-content:center;
-    color:#ffd27f; flex-shrink:0;
-  }
-  .cashier-icon-badge svg{width:24px; height:24px;}
-  .cashier-hero-text{flex:1; min-width:200px;}
-  .cashier-hero-text h2{font-size:20px; font-weight:700; color:#fff; margin:0 0 4px; letter-spacing:-0.2px;}
-  .cashier-hero-text p{font-size:13px; color:var(--text-dim); margin:0;}
-  .cashier-header-actions{display:flex; gap:10px; flex-wrap:wrap;}
-  .cashier-search-wrapper{margin-bottom:24px;}
-  .cashier-search-box{
-    position:relative; display:flex; align-items:center; background:rgba(255,255,255,0.05);
-    border:1px solid rgba(143,180,255,0.35); border-radius:var(--radius); padding:6px 16px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.35); transition:all 0.2s ease;
-  }
-  .cashier-search-box:focus-within{
-    border-color:var(--accent); background:rgba(255,255,255,0.08);
-    box-shadow:0 0 0 3px rgba(143,180,255,0.2), 0 12px 35px rgba(0,0,0,0.4);
-  }
-  .cashier-search-icon{width:22px; height:22px; color:var(--accent-glow); margin-right:12px; flex-shrink:0;}
-  .cashier-search-box input{
-    width:100%; background:transparent; border:none; outline:none; color:#fff;
-    font-size:16.5px; padding:10px 0;
-  }
-  .cashier-search-box input::placeholder{color:rgba(255,255,255,0.4);}
-  .cashier-search-hints{
-    display:flex; justify-content:space-between; font-size:12px; color:var(--text-dim);
-    margin-top:8px; padding:0 4px;
-  }
+  .cashier-container{max-width:100%; margin:0 auto; padding:4px 0 24px;}
   .cashier-empty-state{
     text-align:center; padding:56px 20px;
     background:linear-gradient(145deg, rgba(255,255,255,0.035), rgba(255,255,255,0.01));
@@ -1339,87 +1302,72 @@
     </button>
   </div>
 
-  <!-- Tab: 💳 Kasse & Barverkauf (Intuitive POS-Oberfläche) -->
+  <!-- Tab: 💳 Kasse (Intuitive POS-Oberfläche) -->
   <div class="tab-content active" data-tab-content="cashier">
-    <div class="cashier-container">
-      <div class="cashier-hero-header">
-        <div class="cashier-icon-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><circle cx="7" cy="15" r="1"/></svg>
-        </div>
-        <div class="cashier-hero-text">
-          <h2>Kasse &amp; Barverkauf</h2>
-          <p>Gast suchen, Zahlungsbetrag ermitteln oder direkt vor Ort eine neue Bestellung erfassen</p>
-        </div>
-        <div class="cashier-header-actions">
-          <button type="button" id="cashierAddBtn" class="primary cashier-add-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            <span>+ Neue Bestellung anlegen</span>
-          </button>
-          <button type="button" id="cashierKassensturzBtn" class="header-action-btn gold-btn" style="border:1px solid rgba(255,210,127,0.4); background:rgba(255,210,127,0.12); color:#ffd27f; font-weight:700;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 6v12"/></svg>
-            <span>Kassensturz</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Anlegeformular an der Kasse (eingeklappt standardmäßig) -->
-      <div class="add-form" id="addForm">
-        <div style="font-size:14px; font-weight:700; color:#fff; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
-          <span>📝 Neue Bestellung an der Kasse erfassen</span>
-        </div>
-        <div class="add-row">
-          <input type="text" id="addName" placeholder="Name des Bestellers (Vorname Nachname)">
-          <input type="number" id="addKlasse" placeholder="Klasse" min="5" max="12" style="max-width:90px;">
-          <button type="button" id="suggestEmailBtn" style="background:rgba(143,180,255,0.12); border:1px solid rgba(143,180,255,0.35); color:var(--accent-glow); border-radius:var(--radius-sm); padding:10px 14px; font-size:12px; cursor:pointer; white-space:nowrap;">LernSax-Adresse vorschlagen</button>
-        </div>
-        <div class="add-row">
-          <input type="email" id="addEmail" placeholder="E-Mail des Bestellers">
-          <select id="addCategory">
-            <option value="">Alter?</option>
-            <option value="u18">U18</option>
-            <option value="ue18">Ü18</option>
-          </select>
-          <select id="addSalutation" style="max-width:130px;">
-            <option value="du">Anrede: Du</option>
-            <option value="sie">Anrede: Sie</option>
-          </select>
-        </div>
-        <div class="companions-block" id="companionsBlock"></div>
-        <button type="button" id="addCompanionFieldBtn">+ Begleitung hinzufügen</button>
-        <div class="add-form-actions">
-          <button id="addSaveBtn">Anlegen</button>
-          <button id="addPayNowBtn" style="background:var(--success); color:#0a0e1a; font-weight:700;">Anlegen &amp; gleich bar kassieren</button>
-          <button id="addCancelBtn" class="secondary">Abbrechen</button>
-        </div>
-      </div>
-
-      <!-- Großes zentrales Suchfeld -->
-      <div class="cashier-search-wrapper">
-        <div class="cashier-search-box">
-          <svg class="cashier-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <div class="toolbar-container" style="margin-bottom:18px;">
+      <div class="toolbar-top">
+        <div class="search-box-wrap" style="flex:1;">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           <input type="text" id="cashierSearch" placeholder="Gast, Begleitung, E-Mail, Klasse oder Ticket-Code suchen... (/ zum Fokussieren)" autocomplete="off">
           <button type="button" id="cashierSearchClearBtn" class="search-clear-btn" style="display:none;" title="Suche leeren">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px; height:14px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px; height:12px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
-        <div class="cashier-search-hints">
-          <span>Tipp: Suche nach Nachname, Vorname, Ticket-Code oder Klasse (z.B. „10b“)</span>
-          <span id="cashierSearchCount"></span>
+        <div class="toolbar-actions">
+          <button type="button" class="primary" id="cashierAddBtn" style="white-space:nowrap;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px; height:14px; flex-shrink:0;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>+ Neue Bestellung anlegen</span>
+          </button>
         </div>
       </div>
-
-      <!-- Ausgangszustand: Keine Liste zu sehen! -->
-      <div class="cashier-empty-state" id="cashierEmptyState">
-        <div class="cashier-empty-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
-        </div>
-        <h3>Kasse bereit</h3>
-        <p>Tippe oben den Namen oder die Ticket-ID des Gastes ein, um die Kassenkarte zu öffnen,<br>oder klicke auf <strong>„+ Neue Bestellung anlegen“</strong>, um einen Vor-Ort-Kauf zu erfassen.</p>
+      <div style="font-size:11.5px; color:var(--text-dim); margin-top:8px; display:flex; justify-content:space-between; padding:0 4px;">
+        <span>Tipp: Suche nach Nachname, Vorname, Ticket-Code oder Klasse (z.B. „10b“)</span>
+        <span id="cashierSearchCount" style="color:var(--accent-glow); font-weight:600;"></span>
       </div>
-
-      <!-- Suchergebnisse: Dynamisch als POS-Karten -->
-      <div class="cashier-results-wrap" id="cashierResultsWrap" style="display:none;"></div>
     </div>
+
+    <!-- Anlegeformular an der Kasse (eingeklappt standardmäßig) -->
+    <div class="add-form" id="addForm">
+      <div style="font-size:14px; font-weight:700; color:#fff; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+        <span>📝 Neue Bestellung an der Kasse erfassen</span>
+      </div>
+      <div class="add-row">
+        <input type="text" id="addName" placeholder="Name des Bestellers (Vorname Nachname)">
+        <input type="number" id="addKlasse" placeholder="Klasse" min="5" max="12" style="max-width:90px;">
+        <button type="button" id="suggestEmailBtn" style="background:rgba(143,180,255,0.12); border:1px solid rgba(143,180,255,0.35); color:var(--accent-glow); border-radius:var(--radius-sm); padding:10px 14px; font-size:12px; cursor:pointer; white-space:nowrap;">LernSax-Adresse vorschlagen</button>
+      </div>
+      <div class="add-row">
+        <input type="email" id="addEmail" placeholder="E-Mail des Bestellers">
+        <select id="addCategory">
+          <option value="">Alter?</option>
+          <option value="u18">U18</option>
+          <option value="ue18">Ü18</option>
+        </select>
+        <select id="addSalutation" style="max-width:130px;">
+          <option value="du">Anrede: Du</option>
+          <option value="sie">Anrede: Sie</option>
+        </select>
+      </div>
+      <div class="companions-block" id="companionsBlock"></div>
+      <button type="button" id="addCompanionFieldBtn">+ Begleitung hinzufügen</button>
+      <div class="add-form-actions">
+        <button id="addSaveBtn">Anlegen</button>
+        <button id="addPayNowBtn" style="background:var(--success); color:#0a0e1a; font-weight:700;">Anlegen &amp; gleich bar kassieren</button>
+        <button id="addCancelBtn" class="secondary">Abbrechen</button>
+      </div>
+    </div>
+
+    <!-- Ausgangszustand: Keine Liste zu sehen! -->
+    <div class="cashier-empty-state" id="cashierEmptyState">
+      <div class="cashier-empty-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+      </div>
+      <h3>Kasse bereit</h3>
+      <p>Tippe oben den Namen oder die Ticket-ID des Gastes ein, um die Kassenkarte zu öffnen,<br>oder klicke auf <strong>„+ Neue Bestellung anlegen“</strong>, um einen Vor-Ort-Kauf zu erfassen.</p>
+    </div>
+
+    <!-- Suchergebnisse: Dynamisch als POS-Karten -->
+    <div class="cashier-results-wrap" id="cashierResultsWrap" style="display:none;"></div>
   </div>
 
   <!-- Tab: Bestellungen (Reine Übersicht & Audit, ohne Neuanlage und ohne Schnellbezahlung) -->
@@ -2474,6 +2422,8 @@
   let lernsaxThreshold = null;
   let scheduleLoaded = false;
   let statsSyncTimer = null;
+  var activeGuestFilter = 'all';
+  var scheduleList = null;
 
   // Während das "Manuell hinzufügen"-Formular offen ist, soll sich Tabelle/Statistik
   // nicht live neu aufbauen (stört beim Ausfüllen) — die Daten selbst bleiben im
@@ -5475,7 +5425,9 @@
 
   const cashierKassensturzBtn = document.getElementById('cashierKassensturzBtn');
   if (cashierKassensturzBtn) {
-    cashierKassensturzBtn.addEventListener('click', openKassensturzModal);
+    cashierKassensturzBtn.addEventListener('click', () => {
+      if (typeof openKassensturz === 'function') openKassensturz('today');
+    });
   }
 
   document.getElementById('suggestEmailBtn').addEventListener('click', () => {
@@ -5624,9 +5576,11 @@
   });
 
   // --- Ablaufplan ---
-  const scheduleList = document.getElementById('scheduleList');
+  scheduleList = document.getElementById('scheduleList');
 
   function addScheduleRow(item = { time: '', label: '', note: '' }){
+    const listEl = scheduleList || document.getElementById('scheduleList');
+    if (!listEl) return;
     const row = document.createElement('div');
     row.className = 'schedule-row';
     row.draggable = true;
@@ -5644,30 +5598,37 @@
     row.addEventListener('dragstart', () => row.classList.add('dragging'));
     row.addEventListener('dragend', () => row.classList.remove('dragging'));
 
-    scheduleList.appendChild(row);
+    listEl.appendChild(row);
   }
 
-  scheduleList.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    const dragging = scheduleList.querySelector('.dragging');
-    if (!dragging) return;
-    const afterEl = [...scheduleList.querySelectorAll('.schedule-row:not(.dragging)')].find(row => {
-      const box = row.getBoundingClientRect();
-      return e.clientY < box.top + box.height / 2;
+  const scheduleListContainer = document.getElementById('scheduleList');
+  if (scheduleListContainer) {
+    scheduleListContainer.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      const dragging = scheduleListContainer.querySelector('.dragging');
+      if (!dragging) return;
+      const afterEl = [...scheduleListContainer.querySelectorAll('.schedule-row:not(.dragging)')].find(row => {
+        const box = row.getBoundingClientRect();
+        return e.clientY < box.top + box.height / 2;
+      });
+      if (afterEl) scheduleListContainer.insertBefore(dragging, afterEl);
+      else scheduleListContainer.appendChild(dragging);
     });
-    if (afterEl) scheduleList.insertBefore(dragging, afterEl);
-    else scheduleList.appendChild(dragging);
-  });
+  }
 
   function renderScheduleRows(items){
-    scheduleList.innerHTML = '';
-    items.forEach(item => addScheduleRow(item));
+    const listEl = scheduleList || document.getElementById('scheduleList');
+    if (!listEl) return;
+    listEl.innerHTML = '';
+    (items || []).forEach(item => addScheduleRow(item));
   }
 
-  document.getElementById('scheduleAddBtn').addEventListener('click', () => addScheduleRow());
+  document.getElementById('scheduleAddBtn')?.addEventListener('click', () => addScheduleRow());
 
-  document.getElementById('scheduleSaveBtn').addEventListener('click', async () => {
-    const items = Array.from(scheduleList.querySelectorAll('.schedule-row')).map(row => ({
+  document.getElementById('scheduleSaveBtn')?.addEventListener('click', async () => {
+    const listEl = scheduleList || document.getElementById('scheduleList');
+    if (!listEl) return;
+    const items = Array.from(listEl.querySelectorAll('.schedule-row')).map(row => ({
       time: row.querySelector('.schedule-time').value.trim(),
       label: row.querySelector('.schedule-label').value.trim(),
       note: row.querySelector('.schedule-note').value.trim(),
@@ -6078,7 +6039,7 @@
   // =========================================================================
   // 1. REINE GÄSTELISTE & MANUELLER 1-KLICK-CHECK-IN
   // =========================================================================
-  let activeGuestFilter = 'all'; // 'all', 'open', 'checkedin', 'u18', 'ue18', 'unpaid'
+  activeGuestFilter = 'all'; // 'all', 'open', 'checkedin', 'u18', 'ue18', 'unpaid'
 
   function buildAllGuestsList(){
     const list = [];
