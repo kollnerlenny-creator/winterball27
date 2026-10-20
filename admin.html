@@ -848,6 +848,92 @@
   }
   .cash-modal-actions button.secondary:hover{background:rgba(255,255,255,0.12);}
 
+  /* Cashier POS View */
+  .cashier-container{max-width:980px; margin:0 auto; padding:8px 0 32px;}
+  .cashier-hero-header{
+    display:flex; align-items:center; gap:16px; padding:20px 24px;
+    background:linear-gradient(145deg, rgba(255,255,255,0.065), rgba(255,255,255,0.02));
+    border:1px solid var(--glass-border); border-radius:var(--radius); margin-bottom:24px;
+    backdrop-filter:blur(20px); flex-wrap:wrap;
+  }
+  .cashier-icon-badge{
+    width:48px; height:48px; border-radius:12px;
+    background:linear-gradient(135deg, rgba(255,210,127,0.24), rgba(255,210,127,0.08));
+    border:1px solid rgba(255,210,127,0.4); display:flex; align-items:center; justify-content:center;
+    color:#ffd27f; flex-shrink:0;
+  }
+  .cashier-icon-badge svg{width:24px; height:24px;}
+  .cashier-hero-text{flex:1; min-width:200px;}
+  .cashier-hero-text h2{font-size:20px; font-weight:700; color:#fff; margin:0 0 4px; letter-spacing:-0.2px;}
+  .cashier-hero-text p{font-size:13px; color:var(--text-dim); margin:0;}
+  .cashier-header-actions{display:flex; gap:10px; flex-wrap:wrap;}
+  .cashier-search-wrapper{margin-bottom:24px;}
+  .cashier-search-box{
+    position:relative; display:flex; align-items:center; background:rgba(255,255,255,0.05);
+    border:1px solid rgba(143,180,255,0.35); border-radius:var(--radius); padding:6px 16px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.35); transition:all 0.2s ease;
+  }
+  .cashier-search-box:focus-within{
+    border-color:var(--accent); background:rgba(255,255,255,0.08);
+    box-shadow:0 0 0 3px rgba(143,180,255,0.2), 0 12px 35px rgba(0,0,0,0.4);
+  }
+  .cashier-search-icon{width:22px; height:22px; color:var(--accent-glow); margin-right:12px; flex-shrink:0;}
+  .cashier-search-box input{
+    width:100%; background:transparent; border:none; outline:none; color:#fff;
+    font-size:16.5px; padding:10px 0;
+  }
+  .cashier-search-box input::placeholder{color:rgba(255,255,255,0.4);}
+  .cashier-search-hints{
+    display:flex; justify-content:space-between; font-size:12px; color:var(--text-dim);
+    margin-top:8px; padding:0 4px;
+  }
+  .cashier-empty-state{
+    text-align:center; padding:56px 20px;
+    background:linear-gradient(145deg, rgba(255,255,255,0.035), rgba(255,255,255,0.01));
+    border:1px dashed rgba(255,255,255,0.14); border-radius:var(--radius); margin-top:10px;
+  }
+  .cashier-empty-icon{
+    width:64px; height:64px; margin:0 auto 16px; border-radius:50%;
+    background:rgba(143,180,255,0.08); border:1px solid rgba(143,180,255,0.22);
+    display:flex; align-items:center; justify-content:center; color:var(--accent-glow);
+  }
+  .cashier-empty-icon svg{width:32px; height:32px;}
+  .cashier-empty-state h3{font-size:18px; font-weight:700; color:#fff; margin:0 0 8px;}
+  .cashier-empty-state p{font-size:13.5px; color:var(--text-dim); max-width:520px; margin:0 auto; line-height:1.55;}
+  .cashier-results-wrap{display:flex; flex-direction:column; gap:16px;}
+  .cashier-card{
+    background:linear-gradient(145deg, rgba(255,255,255,0.075), rgba(255,255,255,0.025));
+    border:1px solid var(--glass-border); border-radius:var(--radius); padding:22px;
+    box-shadow:0 12px 35px rgba(0,0,0,0.35); transition:all 0.2s ease;
+  }
+  .cashier-card.is-unpaid{
+    border-color:rgba(255,210,127,0.35);
+    box-shadow:0 12px 35px rgba(0,0,0,0.35), 0 0 24px rgba(255,210,127,0.07);
+  }
+  .cashier-card.is-paid{border-color:rgba(127,224,168,0.32);}
+  .cashier-card-header{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:14px;
+    flex-wrap:wrap; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .cashier-card-name{font-size:18px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .cashier-card-meta{font-size:12.5px; color:var(--text-dim); margin-top:4px;}
+  .cashier-card-amount-box{text-align:right;}
+  .cashier-amount-due{font-size:24px; font-weight:800; color:#ffd27f; letter-spacing:-0.3px;}
+  .cashier-amount-paid{font-size:24px; font-weight:800; color:#7fe0a8; letter-spacing:-0.3px;}
+  .cashier-amount-label{font-size:11px; text-transform:uppercase; letter-spacing:0.6px; color:var(--text-dim);}
+  .cashier-tickets-section{margin-bottom:16px;}
+  .cashier-card-actions{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    padding-top:14px; border-top:1px solid rgba(255,255,255,0.06);
+  }
+  .cashier-pay-action-btn{
+    padding:11px 20px; background:linear-gradient(135deg, #ffd27f, #f59e0b);
+    color:#0b1120; font-weight:800; font-size:14.5px; border:none; border-radius:var(--radius-sm);
+    cursor:pointer; box-shadow:0 4px 18px rgba(245,158,11,0.35); display:inline-flex;
+    align-items:center; gap:8px; transition:all 0.2s ease;
+  }
+  .cashier-pay-action-btn:hover{transform:translateY(-1px); filter:brightness(1.08); box-shadow:0 6px 22px rgba(245,158,11,0.45);}
+
   /* Toast Notification */
   .admin-toast{
     position:fixed; bottom:24px; right:24px; z-index:999;
@@ -1192,13 +1278,23 @@
     </div>
     <div class="stat">
       <div class="stat-header">
-        <span class="stat-lbl">Umsatz</span>
+        <span class="stat-lbl">Umsatz (bezahlt)</span>
         <div class="stat-icon-wrap warn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 6v12"/></svg>
         </div>
       </div>
       <div class="num warn" id="statRevenue">0,00 €</div>
-      <div class="stat-sub">Bezahlte Tickets</div>
+      <div class="stat-sub">Bereits eingenommen</div>
+    </div>
+    <div class="stat">
+      <div class="stat-header">
+        <span class="stat-lbl">Vorauss. Umsatz</span>
+        <div class="stat-icon-wrap" style="background:rgba(127,224,168,0.18); color:#7fe0a8;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+      </div>
+      <div class="num" id="statProjectedRevenue" style="color:#7fe0a8;">0,00 €</div>
+      <div class="stat-sub">Alle Reservierungen</div>
     </div>
     <div class="stat">
       <div class="stat-header">
@@ -1213,7 +1309,11 @@
   </div>
 
   <div class="tabs">
-    <button class="tab-btn active" data-tab="orders">
+    <button class="tab-btn active" data-tab="cashier">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><circle cx="7" cy="15" r="1"/></svg>
+      <span>💳 Kasse</span>
+    </button>
+    <button class="tab-btn" data-tab="orders">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
       <span>Bestellungen</span> <span class="tab-badge" id="tabOrdersCount">0</span>
     </button>
@@ -1239,8 +1339,91 @@
     </button>
   </div>
 
-  <!-- Tab: Bestellungen -->
-  <div class="tab-content active" data-tab-content="orders">
+  <!-- Tab: 💳 Kasse & Barverkauf (Intuitive POS-Oberfläche) -->
+  <div class="tab-content active" data-tab-content="cashier">
+    <div class="cashier-container">
+      <div class="cashier-hero-header">
+        <div class="cashier-icon-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><circle cx="7" cy="15" r="1"/></svg>
+        </div>
+        <div class="cashier-hero-text">
+          <h2>Kasse &amp; Barverkauf</h2>
+          <p>Gast suchen, Zahlungsbetrag ermitteln oder direkt vor Ort eine neue Bestellung erfassen</p>
+        </div>
+        <div class="cashier-header-actions">
+          <button type="button" id="cashierAddBtn" class="primary cashier-add-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>+ Neue Bestellung anlegen</span>
+          </button>
+          <button type="button" id="cashierKassensturzBtn" class="header-action-btn gold-btn" style="border:1px solid rgba(255,210,127,0.4); background:rgba(255,210,127,0.12); color:#ffd27f; font-weight:700;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 6v12"/></svg>
+            <span>Kassensturz</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Anlegeformular an der Kasse (eingeklappt standardmäßig) -->
+      <div class="add-form" id="addForm">
+        <div style="font-size:14px; font-weight:700; color:#fff; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <span>📝 Neue Bestellung an der Kasse erfassen</span>
+        </div>
+        <div class="add-row">
+          <input type="text" id="addName" placeholder="Name des Bestellers (Vorname Nachname)">
+          <input type="number" id="addKlasse" placeholder="Klasse" min="5" max="12" style="max-width:90px;">
+          <button type="button" id="suggestEmailBtn" style="background:rgba(143,180,255,0.12); border:1px solid rgba(143,180,255,0.35); color:var(--accent-glow); border-radius:var(--radius-sm); padding:10px 14px; font-size:12px; cursor:pointer; white-space:nowrap;">LernSax-Adresse vorschlagen</button>
+        </div>
+        <div class="add-row">
+          <input type="email" id="addEmail" placeholder="E-Mail des Bestellers">
+          <select id="addCategory">
+            <option value="">Alter?</option>
+            <option value="u18">U18</option>
+            <option value="ue18">Ü18</option>
+          </select>
+          <select id="addSalutation" style="max-width:130px;">
+            <option value="du">Anrede: Du</option>
+            <option value="sie">Anrede: Sie</option>
+          </select>
+        </div>
+        <div class="companions-block" id="companionsBlock"></div>
+        <button type="button" id="addCompanionFieldBtn">+ Begleitung hinzufügen</button>
+        <div class="add-form-actions">
+          <button id="addSaveBtn">Anlegen</button>
+          <button id="addPayNowBtn" style="background:var(--success); color:#0a0e1a; font-weight:700;">Anlegen &amp; gleich bar kassieren</button>
+          <button id="addCancelBtn" class="secondary">Abbrechen</button>
+        </div>
+      </div>
+
+      <!-- Großes zentrales Suchfeld -->
+      <div class="cashier-search-wrapper">
+        <div class="cashier-search-box">
+          <svg class="cashier-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="cashierSearch" placeholder="Gast, Begleitung, E-Mail, Klasse oder Ticket-Code suchen... (/ zum Fokussieren)" autocomplete="off">
+          <button type="button" id="cashierSearchClearBtn" class="search-clear-btn" style="display:none;" title="Suche leeren">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px; height:14px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="cashier-search-hints">
+          <span>Tipp: Suche nach Nachname, Vorname, Ticket-Code oder Klasse (z.B. „10b“)</span>
+          <span id="cashierSearchCount"></span>
+        </div>
+      </div>
+
+      <!-- Ausgangszustand: Keine Liste zu sehen! -->
+      <div class="cashier-empty-state" id="cashierEmptyState">
+        <div class="cashier-empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+        </div>
+        <h3>Kasse bereit</h3>
+        <p>Tippe oben den Namen oder die Ticket-ID des Gastes ein, um die Kassenkarte zu öffnen,<br>oder klicke auf <strong>„+ Neue Bestellung anlegen“</strong>, um einen Vor-Ort-Kauf zu erfassen.</p>
+      </div>
+
+      <!-- Suchergebnisse: Dynamisch als POS-Karten -->
+      <div class="cashier-results-wrap" id="cashierResultsWrap" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Bestellungen (Reine Übersicht & Audit, ohne Neuanlage und ohne Schnellbezahlung) -->
+  <div class="tab-content" data-tab-content="orders">
     <div class="toolbar-container">
       <div class="toolbar-top">
         <div class="search-box-wrap">
@@ -1258,10 +1441,6 @@
           <button type="button" id="emergencyPrintToolbarBtn" style="border:1px solid rgba(143,180,255,0.4); background:rgba(143,180,255,0.12); color:var(--accent-glow); font-weight:600;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
             <span>Notfall-Liste (PDF)</span>
-          </button>
-          <button type="button" id="addBtn" class="primary">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            <span>Bestellung anlegen</span>
           </button>
           <button type="button" id="exportBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -1292,33 +1471,6 @@
           <span>Noch offen</span> <span class="chip-count" id="chipCountNotCheckedIn">0</span>
         </button>
         <span class="results-badge" id="resultsBadge"></span>
-      </div>
-    </div>
-
-    <div class="add-form" id="addForm">
-      <div class="add-row">
-        <input type="text" id="addName" placeholder="Name des Bestellers (Vorname Nachname)">
-        <input type="number" id="addKlasse" placeholder="Klasse" min="5" max="12" style="max-width:90px;">
-        <button type="button" id="suggestEmailBtn" style="background:rgba(143,180,255,0.12); border:1px solid rgba(143,180,255,0.35); color:var(--accent-glow); border-radius:var(--radius-sm); padding:10px 14px; font-size:12px; cursor:pointer; white-space:nowrap;">LernSax-Adresse vorschlagen</button>
-      </div>
-      <div class="add-row">
-        <input type="email" id="addEmail" placeholder="E-Mail des Bestellers">
-        <select id="addCategory">
-          <option value="">Alter?</option>
-          <option value="u18">U18</option>
-          <option value="ue18">Ü18</option>
-        </select>
-        <select id="addSalutation" style="max-width:130px;">
-          <option value="du">Anrede: Du</option>
-          <option value="sie">Anrede: Sie</option>
-        </select>
-      </div>
-      <div class="companions-block" id="companionsBlock"></div>
-      <button type="button" id="addCompanionFieldBtn">+ Begleitung hinzufügen</button>
-      <div class="add-form-actions">
-        <button id="addSaveBtn">Anlegen</button>
-        <button id="addPayNowBtn" style="background:var(--success); color:#0a0e1a;">Anlegen &amp; gleich bezahlen</button>
-        <button id="addCancelBtn" class="secondary">Abbrechen</button>
       </div>
     </div>
 
@@ -4019,12 +4171,75 @@
     if(user) startListening();
   });
 
-  document.getElementById('loginBtn').addEventListener('click', async () => {
-    const email = document.getElementById('loginEmail').value;
-    const pass = document.getElementById('loginPass').value;
-    try { await signInWithEmailAndPassword(auth, email, pass); }
-    catch(e){ document.getElementById('loginError').style.display = 'block'; }
-  });
+  async function performLogin() {
+    const emailEl = document.getElementById('loginEmail');
+    const passEl = document.getElementById('loginPass');
+    const errorEl = document.getElementById('loginError');
+    const btn = document.getElementById('loginBtn');
+    const email = (emailEl?.value || '').trim();
+    const pass = passEl?.value || '';
+
+    if (!email || !pass) {
+      if (errorEl) {
+        errorEl.textContent = 'Bitte gib E-Mail und Passwort ein.';
+        errorEl.style.display = 'block';
+      }
+      return;
+    }
+
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Anmeldung läuft...';
+    }
+    if (errorEl) errorEl.style.display = 'none';
+
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+    } catch(e) {
+      console.error('Login error:', e);
+      let msg = 'Login fehlgeschlagen.';
+      if (e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found') {
+        msg = 'E-Mail oder Passwort ist nicht korrekt.';
+      } else if (e.code === 'auth/invalid-email') {
+        msg = 'Ungültiges E-Mail-Format.';
+      } else if (e.code === 'auth/network-request-failed') {
+        msg = 'Netzwerkfehler: Verbindung zum Server fehlgeschlagen.';
+      } else if (e.message) {
+        msg = 'Fehler: ' + e.message;
+      }
+      if (errorEl) {
+        errorEl.textContent = msg;
+        errorEl.style.display = 'block';
+      }
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Anmelden';
+      }
+    }
+  }
+
+  const loginBtn = document.getElementById('loginBtn');
+  if (loginBtn) loginBtn.addEventListener('click', performLogin);
+
+  const loginEmailInp = document.getElementById('loginEmail');
+  if (loginEmailInp) {
+    loginEmailInp.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('loginPass')?.focus();
+      }
+    });
+  }
+  const loginPassInp = document.getElementById('loginPass');
+  if (loginPassInp) {
+    loginPassInp.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        performLogin();
+      }
+    });
+  }
 
   document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
@@ -4034,6 +4249,13 @@
     const globalStats = document.getElementById('globalStatsBar');
     if (globalStats) {
       globalStats.style.display = (tabName === 'insights') ? 'none' : 'grid';
+    }
+    if (tabName === 'cashier') {
+      renderCashier();
+      setTimeout(() => {
+        const inp = document.getElementById('cashierSearch');
+        if (inp) inp.focus();
+      }, 50);
     }
     if (tabName === 'guestlist') {
       renderGuestList();
@@ -4314,11 +4536,10 @@
             <td>
               <div class="paid-cell">
                 ${r.paid
-                  ? `<span class="badge in">Bezahlt</span>`
+                  ? `<span class="badge in">✓ Bezahlt</span>`
                   : (isPartial
-                      ? `<span class="badge out" style="background:rgba(255,210,127,0.15); color:#ffd27f; border:1px solid rgba(255,210,127,0.35); font-size:11px;" title="${paidCount} von ${tickets.length} Tickets bezahlt">${paidCount}/${tickets.length} bezahlt</span>
-                         <button class="pay-btn" data-id="${r.id}" style="background:linear-gradient(135deg, #ffd27f, #f59e0b); color:#0e1626; font-weight:700; border:none;" title="Nachzahlung für unbezahlte Begleitung">Nachzahlen (${formatCents(dueCents)})</button>`
-                      : `<button class="pay-btn" data-id="${r.id}">Bezahlen</button>`
+                      ? `<span class="badge out" style="background:rgba(255,210,127,0.15); color:#ffd27f; border:1px solid rgba(255,210,127,0.35); font-size:11px;" title="${paidCount} von ${tickets.length} Tickets bezahlt">${paidCount}/${tickets.length} bezahlt</span>`
+                      : `<span class="badge out" style="background:rgba(255,100,100,0.12); color:#ff9494; border:1px solid rgba(255,100,100,0.3);">Offen (${formatCents(dueCents)})</span>`
                     )
                 }
                 ${(r.paid || isPartial) ? `<button class="pdf-btn" data-id="${r.id}" title="Tickets als PDF herunterladen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px; height:12px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>PDF</span></button>` : ''}
@@ -4393,12 +4614,11 @@
                     <span class="badge out">${categoryLabel(r.category)}</span>
                     ${r.category === 'u18' && r.schoolClass ? `<span class="badge out" style="color:var(--accent-glow); border-color:rgba(143,180,255,0.35); background:rgba(143,180,255,0.12);">Kl. ${escapeHtml(r.schoolClass)}</span>` : ''}
                     <span class="badge ${r.paid ? 'in' : 'out'}" style="${!r.paid ? 'background:rgba(255,210,127,0.15); color:var(--warn); border:1px solid rgba(255,210,127,0.3);' : ''}">
-                      ${r.paid ? 'Bezahlt' : (isPartial ? `${paidCount}/${tickets.length} bezahlt` : 'Unbezahlt')}
+                      ${r.paid ? '✓ Bezahlt' : (isPartial ? `${paidCount}/${tickets.length} bezahlt` : `Unbezahlt (${formatCents(dueCents)})`)}
                     </span>
                   </div>
                   <div class="order-card-email">${escapeHtml(r.email || '')}</div>
                 </div>
-                ${!r.paid ? `<button class="pay-btn" data-id="${r.id}" style="padding:6px 14px; font-size:12px; ${isPartial ? 'background:linear-gradient(135deg, #ffd27f, #f59e0b); color:#0e1626; font-weight:700; border:none;' : ''}">${isPartial ? `Nachzahlen (${formatCents(dueCents)})` : 'Bezahlen'}</button>` : ''}
               </div>
 
               <div class="order-card-attendees">
@@ -4454,9 +4674,20 @@
       .filter(t => t.paid)
       .reduce((sum, t) => sum + (t.category === 'u18' ? ticketPrices.u18 : ticketPrices.ue18), 0);
     document.getElementById('statRevenue').textContent = revenue.toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
+
+    const projectedRevenue = allTickets
+      .reduce((sum, t) => sum + (t.category === 'u18' ? ticketPrices.u18 : ticketPrices.ue18), 0);
+    const elProjected = document.getElementById('statProjectedRevenue');
+    if (elProjected) {
+      elProjected.textContent = projectedRevenue.toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
+    }
+
     const u18Count = allTickets.filter(t => t.category === 'u18').length;
     const ue18Count = allTickets.filter(t => t.category === 'ue18').length;
     document.getElementById('statU18Ratio').textContent = `${u18Count} / ${ue18Count}`;
+
+    // Always update cashier search results view
+    renderCashier();
 
     // Attach listeners across desktop table and mobile cards
     const containers = [tbody, mobileCards].filter(Boolean);
@@ -5022,6 +5253,13 @@
       tickets.forEach(t => batch.update(doc(db, 'tickets', t.id), { paid: true }));
       await batch.commit();
 
+      // Sofort lokalen Zustand aktualisieren, damit UI & Kasse ohne Listener-Verzögerung umschalten
+      reg.paid = true;
+      reg.paidAt = new Date();
+      tickets.forEach(t => { t.paid = true; });
+      render();
+      renderCashier();
+
       // Preise IMMER frisch aus Firestore holen (nicht den evtl. veralteten
       // lokalen Cache nutzen) — verhindert 0€-Quittungen durch Timing-Probleme.
       const priceSnap = await getDoc(doc(db, 'settings', 'pricing'));
@@ -5210,11 +5448,35 @@
     enhanceSelect(catSelect);
   }
 
-  document.getElementById('addBtn').addEventListener('click', () => {
-    const form = document.getElementById('addForm');
-    form.classList.toggle('show');
-    setAddFormOpen(form.classList.contains('show'));
-  });
+  const addBtn = document.getElementById('addBtn');
+  if (addBtn) {
+    addBtn.addEventListener('click', () => {
+      const form = document.getElementById('addForm');
+      if (form) {
+        form.classList.toggle('show');
+        setAddFormOpen(form.classList.contains('show'));
+      }
+    });
+  }
+
+  const cashierAddBtn = document.getElementById('cashierAddBtn');
+  if (cashierAddBtn) {
+    cashierAddBtn.addEventListener('click', () => {
+      const form = document.getElementById('addForm');
+      if (form) {
+        form.classList.toggle('show');
+        setAddFormOpen(form.classList.contains('show'));
+        if (form.classList.contains('show')) {
+          setTimeout(() => document.getElementById('addName')?.focus(), 50);
+        }
+      }
+    });
+  }
+
+  const cashierKassensturzBtn = document.getElementById('cashierKassensturzBtn');
+  if (cashierKassensturzBtn) {
+    cashierKassensturzBtn.addEventListener('click', openKassensturzModal);
+  }
 
   document.getElementById('suggestEmailBtn').addEventListener('click', () => {
     const name = document.getElementById('addName').value.trim();
@@ -5302,6 +5564,7 @@
       }
     });
     render();
+    renderCashier();
     updateCharts();
 
     document.getElementById('addName').value = '';
@@ -5322,19 +5585,31 @@
   document.getElementById('addSaveBtn').addEventListener('click', async (e) => {
     const btn = e.currentTarget;
     btn.disabled = true;
+    const nameVal = (document.getElementById('addName')?.value || '').trim();
     const regId = await createManualRegistration().finally(() => { btn.disabled = false; });
     if (!regId) return;
     document.getElementById('addForm').classList.remove('show');
     setAddFormOpen(false);
+    const cInp = document.getElementById('cashierSearch');
+    if (cInp && nameVal) {
+      cInp.value = nameVal;
+    }
+    renderCashier();
   });
 
   document.getElementById('addPayNowBtn').addEventListener('click', async (e) => {
     const btn = e.currentTarget;
     btn.disabled = true;
+    const nameVal = (document.getElementById('addName')?.value || '').trim();
     const regId = await createManualRegistration().finally(() => { btn.disabled = false; });
     if (!regId) return;
     document.getElementById('addForm').classList.remove('show');
     setAddFormOpen(false);
+    const cInp = document.getElementById('cashierSearch');
+    if (cInp && nameVal) {
+      cInp.value = nameVal;
+    }
+    renderCashier();
     openCashModal(regId);
   });
 
@@ -5536,11 +5811,200 @@
     });
   }
 
+  // --- Kassen- & POS-Logik (Intuitive Such- und Bezahlmaske) ---
+  function renderCashier(){
+    const cashierInput = document.getElementById('cashierSearch');
+    const emptyState = document.getElementById('cashierEmptyState');
+    const resultsWrap = document.getElementById('cashierResultsWrap');
+    const countBadge = document.getElementById('cashierSearchCount');
+    const clearBtn = document.getElementById('cashierSearchClearBtn');
+
+    if (!cashierInput || !emptyState || !resultsWrap) return;
+
+    const query = (cashierInput.value || '').trim().toLowerCase();
+    if (clearBtn) clearBtn.style.display = query ? 'block' : 'none';
+
+    if (!query) {
+      emptyState.style.display = 'block';
+      resultsWrap.style.display = 'none';
+      resultsWrap.innerHTML = '';
+      if (countBadge) countBadge.textContent = '';
+      return;
+    }
+
+    const matches = allRegs.filter(r => {
+      if (r.name && r.name.toLowerCase().includes(query)) return true;
+      if (r.email && r.email.toLowerCase().includes(query)) return true;
+      if (r.schoolClass && r.schoolClass.toLowerCase().includes(query)) return true;
+      if (r.companions && r.companions.some(c => (c.name && c.name.toLowerCase().includes(query)) || (c.schoolClass && c.schoolClass.toLowerCase().includes(query)))) return true;
+      const tix = ticketsFor(r.id);
+      if (tix.some(t => t.ticketId && t.ticketId.toLowerCase().includes(query))) return true;
+      return false;
+    });
+
+    if (countBadge) {
+      countBadge.textContent = `${matches.length} Treffer`;
+    }
+
+    emptyState.style.display = 'none';
+    resultsWrap.style.display = 'flex';
+
+    if (matches.length === 0) {
+      resultsWrap.innerHTML = `
+        <div class="cashier-card" style="text-align:center; padding:36px 20px;">
+          <div style="font-size:28px; margin-bottom:8px;">🔍</div>
+          <div style="font-size:16px; font-weight:700; color:#fff; margin-bottom:6px;">Keine Bestellung gefunden</div>
+          <div style="font-size:13px; color:var(--text-dim); max-width:440px; margin:0 auto 16px;">Für die Suche nach „${escapeHtml(query)}“ wurde keine passende Reservierung gefunden.</div>
+          <button type="button" id="cashierNotFoundAddBtn" class="primary" style="margin:0 auto; padding:10px 18px; font-size:13px; border-radius:var(--radius-sm); font-weight:700; display:inline-flex; align-items:center; gap:6px;">
+            <span>+ Neue Bestellung für „${escapeHtml(query)}“ anlegen</span>
+          </button>
+        </div>
+      `;
+      const notFoundBtn = document.getElementById('cashierNotFoundAddBtn');
+      if (notFoundBtn) {
+        notFoundBtn.addEventListener('click', () => {
+          const form = document.getElementById('addForm');
+          if (form) {
+            form.classList.add('show');
+            setAddFormOpen(true);
+            const nameInput = document.getElementById('addName');
+            if (nameInput) {
+              nameInput.value = query;
+              nameInput.focus();
+            }
+          }
+        });
+      }
+      return;
+    }
+
+    resultsWrap.innerHTML = matches.map(r => {
+      const tickets = ticketsFor(r.id);
+      const hasExplicitlyPaid = tickets.some(t => t.paid === true);
+      const hasUnpaid = tickets.some(t => !t.paid);
+      const isPartial = hasExplicitlyPaid && hasUnpaid;
+      const dueCents = ticketsDueCents(r.id);
+      const paidCount = tickets.filter(t => t.paid).length;
+      const totalTickets = tickets.length;
+      const totalCents = tickets.reduce((sum, t) => sum + Math.round((ticketPrices[t.category] || 0) * 100), 0);
+
+      const salutationBadge = (r.salutation === 'sie' || r.anrede === 'Sie')
+        ? '<span class="badge out" style="color:#c4b5fd; border-color:rgba(196,181,253,0.35); background:rgba(196,181,253,0.12); font-weight:700;">Sie</span>'
+        : '<span class="badge out" style="color:var(--text-dim); border-color:rgba(255,255,255,0.12); background:rgba(255,255,255,0.03);">Du</span>';
+
+      const ordererClassBadge = (r.category === 'u18' && r.schoolClass)
+        ? `<span class="badge out" style="color:var(--accent-glow); border-color:rgba(143,180,255,0.35); background:rgba(143,180,255,0.12);">Kl. ${escapeHtml(r.schoolClass)}</span>`
+        : '';
+
+      const attendeesBadges = tickets.map(t => {
+        const tClass = t.schoolClass || (t.name === r.name ? r.schoolClass : null);
+        return `
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 10px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:6px; margin-bottom:5px;">
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <span style="font-weight:600; color:#fff; font-size:13.5px;">${escapeHtml(t.name)}</span>
+              <span class="badge out" style="font-size:10px;">${categoryLabel(t.category)}</span>
+              ${t.category === 'u18' && tClass ? `<span class="badge out" style="font-size:10px; color:var(--accent-glow); border-color:rgba(143,180,255,0.3); background:rgba(143,180,255,0.1);">Kl. ${escapeHtml(tClass)}</span>` : ''}
+              ${t.ticketId ? `<span style="font-family:monospace; font-size:10.5px; color:var(--text-dim);">${escapeHtml(t.ticketId)}</span>` : ''}
+            </div>
+            <div>
+              ${t.paid
+                ? `<span class="badge in" style="font-size:11px;">✓ Bezahlt</span>`
+                : `<span class="badge out" style="font-size:11px; background:rgba(255,210,127,0.14); color:#ffd27f; border-color:rgba(255,210,127,0.3);">Offen: ${formatCents(Math.round((ticketPrices[t.category]||0)*100))}</span>`}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="cashier-card ${r.paid ? 'is-paid' : 'is-unpaid'}">
+          <div class="cashier-card-header">
+            <div>
+              <div class="cashier-card-name">
+                <span>${escapeHtml(r.name || '')}</span>
+                ${salutationBadge}
+                <span class="badge out">${categoryLabel(r.category)}</span>
+                ${ordererClassBadge}
+              </div>
+              <div class="cashier-card-meta">
+                <span>E-Mail: <strong style="color:var(--text);">${escapeHtml(r.email || '–')}</strong></span>
+                <span style="margin:0 6px;">·</span>
+                <span>Registriert: ${formatTimestamp(r.createdAt)}</span>
+              </div>
+            </div>
+            <div class="cashier-card-amount-box">
+              ${r.paid
+                ? `<div class="cashier-amount-paid">✓ Bezahlt</div><div class="cashier-amount-label">${formatCents(totalCents)} erhalten</div>`
+                : `<div class="cashier-amount-due">${formatCents(dueCents)}</div><div class="cashier-amount-label">${isPartial ? `${paidCount}/${totalTickets} bezahlt · Rest offen` : 'Zu zahlen (Bar)'}</div>`
+              }
+            </div>
+          </div>
+
+          <div class="cashier-tickets-section">
+            <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--text-dim); margin-bottom:8px;">
+              Tickets (${totalTickets}):
+            </div>
+            ${attendeesBadges}
+          </div>
+
+          <div class="cashier-card-actions">
+            ${!r.paid
+              ? `<button type="button" class="cashier-pay-action-btn cashier-pay-btn" data-id="${r.id}">
+                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px; height:18px;"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><circle cx="7" cy="15" r="1"/></svg>
+                   <span>${isPartial ? `Rest nachzahlen (${formatCents(dueCents)})` : `Jetzt Bezahlen (${formatCents(dueCents)})`}</span>
+                 </button>`
+              : `<span class="badge in" style="padding:8px 14px; font-size:13px; font-weight:700;">✓ Vollständig bezahlt</span>`
+            }
+            <button type="button" class="add-companion-btn" data-id="${r.id}" style="padding:10px 14px; font-size:12.5px; border-radius:var(--radius-sm); border:1px solid var(--glass-border); background:rgba(255,255,255,0.06); color:var(--text); cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>+ Begleitung hinzufügen</span>
+            </button>
+            ${(r.paid || isPartial) ? `<button type="button" class="pdf-btn" data-id="${r.id}" style="padding:10px 14px; font-size:12.5px;" title="Tickets als PDF herunterladen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px; height:14px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>Tickets (PDF)</span></button>` : ''}
+            ${(r.paid || isPartial) ? `<button type="button" class="invoice-btn" data-id="${r.id}" style="padding:10px 14px; font-size:12.5px;" title="Quittung als PDF herunterladen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px; height:14px;"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="14" y2="13"/></svg><span>Quittung</span></button>` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    resultsWrap.querySelectorAll('.cashier-pay-btn').forEach(btn => {
+      btn.addEventListener('click', () => openCashModal(btn.dataset.id, btn));
+    });
+    resultsWrap.querySelectorAll('.add-companion-btn').forEach(btn => {
+      btn.addEventListener('click', () => openAddCompanionModal(btn.dataset.id));
+    });
+    resultsWrap.querySelectorAll('.pdf-btn').forEach(btn => {
+      btn.addEventListener('click', () => downloadTicketsPdf(btn.dataset.id, btn));
+    });
+    resultsWrap.querySelectorAll('.invoice-btn').forEach(btn => {
+      btn.addEventListener('click', () => downloadInvoicePdf(btn.dataset.id, btn));
+    });
+  }
+
+  const cashierSearchInput = document.getElementById('cashierSearch');
+  const cashierSearchClearBtn = document.getElementById('cashierSearchClearBtn');
+
+  if (cashierSearchInput) {
+    cashierSearchInput.addEventListener('input', renderCashier);
+  }
+  if (cashierSearchClearBtn) {
+    cashierSearchClearBtn.addEventListener('click', () => {
+      if (cashierSearchInput) {
+        cashierSearchInput.value = '';
+        cashierSearchInput.focus();
+      }
+      renderCashier();
+    });
+  }
+
   // Keyboard shortcut '/' to focus search quickly
   window.addEventListener('keydown', (e) => {
-    if (e.key === '/' && document.activeElement !== searchInput && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) {
+    if (e.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) {
       e.preventDefault();
-      searchInput?.focus();
+      const activeTab = document.querySelector('.tab-btn.active')?.dataset?.tab;
+      if (activeTab === 'cashier') {
+        cashierSearchInput?.focus();
+      } else {
+        searchInput?.focus();
+      }
     }
   });
 
