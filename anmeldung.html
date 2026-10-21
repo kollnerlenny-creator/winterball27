@@ -3063,26 +3063,175 @@
 
  // Event Listener für Story Card
  document.getElementById('downloadStoryImageBtn')?.addEventListener('click', generateAndDownloadStoryImage);
- document.getElementById('shareStoryBtn')?.addEventListener('click', async () => {
- const shareData = {
- title: 'Winter Ball 2027 · Gymnasium Wilsdruff',
- text: 'Ich bin beim Winterball 2027 am Gymnasium Wilsdruff dabei! Bist du auch am Start? Jetzt anmelden unter:',
- url: 'https://winterball27.de'
- };
- if (navigator.share) {
- try {
- await navigator.share(shareData);
- return;
- } catch(e) {}
- }
- // Fallback: Clipboard
- try {
- await navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`);
- showStoryToast('Einladungstext & Link kopiert!');
- } catch(err) {
- showStoryToast('Link: https://winterball27.de');
- }
- });
+ document.getElementById('document.getElementById('shareStoryBtn')?.addEventListener('click', async () => {
+    const data = window._lastRegisteredGuest || {
+      name: document.getElementById('name')?.value.trim() || 'Gast',
+      companionsCount: 0
+    };
+
+    const shareText = 'Ich bin beim Winterball 2027 am Gymnasium Wilsdruff dabei! Sei auch du dabei: https://winterball27.de';
+
+    try {
+      const c = document.createElement('canvas');
+      c.width = 1080;
+      c.height = 1920;
+      const ctx = c.getContext('2d');
+
+      const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1920);
+      bgGrad.addColorStop(0, '#050814');
+      bgGrad.addColorStop(0.3, '#0b162c');
+      bgGrad.addColorStop(0.65, '#122244');
+      bgGrad.addColorStop(1, '#070b16');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, 1080, 1920);
+
+      const glowGrad = ctx.createRadialGradient(540, 520, 50, 540, 520, 680);
+      glowGrad.addColorStop(0, 'rgba(143, 180, 255, 0.28)');
+      glowGrad.addColorStop(0.5, 'rgba(127, 224, 168, 0.12)');
+      glowGrad.addColorStop(1, 'rgba(5, 8, 20, 0)');
+      ctx.fillStyle = glowGrad;
+      ctx.fillRect(0, 0, 1080, 1920);
+
+      ctx.save();
+      for (let i = 0; i < 48; i++) {
+        const sx = (i * 197 + 83) % 1080;
+        const sy = (i * 311 + 47) % 1920;
+        const sr = (i % 3) + 1.2;
+        ctx.fillStyle = i % 2 === 0 ? 'rgba(255, 255, 255, 0.45)' : 'rgba(143, 180, 255, 0.55)';
+        ctx.beginPath();
+        ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+
+      const cardX = 90, cardY = 320, cardW = 900, cardH = 1260, cardR = 48;
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(cardX, cardY, cardW, cardH, cardR);
+      ctx.fillStyle = 'rgba(14, 23, 44, 0.82)';
+      ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = 'rgba(143, 180, 255, 0.38)';
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.save();
+      ctx.textAlign = 'center';
+      const pillY = cardY + 90;
+      ctx.beginPath();
+      ctx.roundRect(540 - 260, pillY - 26, 520, 52, 26);
+      ctx.fillStyle = 'rgba(143, 180, 255, 0.15)';
+      ctx.fill();
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = 'rgba(143, 180, 255, 0.4)';
+      ctx.stroke();
+
+      ctx.font = '700 21px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#8fb4ff';
+      ctx.fillText('GYMNASIUM WILSDRUFF · STUFE 12', 540, pillY + 7);
+
+      ctx.font = '900 78px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = 'rgba(143, 180, 255, 0.5)';
+      ctx.shadowBlur = 30;
+      ctx.fillText('ICH BIN DABEI!', 540, cardY + 230);
+      ctx.shadowBlur = 0;
+
+      ctx.font = '800 36px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#7fe0a8';
+      ctx.fillText('WINTER BALL 2027', 540, cardY + 295);
+
+      const gBoxY = cardY + 360, gBoxH = 260;
+      ctx.beginPath();
+      ctx.roundRect(cardX + 60, gBoxY, cardW - 120, gBoxH, 28);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.fill();
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+      ctx.stroke();
+
+      ctx.font = '500 20px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#9aa7c2';
+      ctx.fillText('OFFIZIELL REGISTRIERTER GAST', 540, gBoxY + 58);
+
+      ctx.font = '800 52px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(data.name, 540, gBoxY + 135);
+
+      ctx.font = '600 22px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#7fe0a8';
+      const subText = data.companionsCount > 0
+        ? `inklusive ${data.companionsCount} Begleitperson${data.companionsCount > 1 ? 'en' : ''}`
+        : 'Gästelisten-Platz gesichert';
+      ctx.fillText(subText, 540, gBoxY + 195);
+
+      const metaY = cardY + 700;
+      ctx.font = '700 32px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText('Samstag, 30. Januar 2027', 540, metaY);
+
+      ctx.font = '500 26px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#9aa7c2';
+      ctx.fillText('Einlass ab 17:30 Uhr · Beginn 18:00 Uhr', 540, metaY + 45);
+
+      ctx.font = '600 24px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#8fb4ff';
+      ctx.fillText('Aula des Gymnasium Wilsdruff', 540, metaY + 95);
+
+      const ctaY = cardY + 960;
+      ctx.beginPath();
+      ctx.roundRect(540 - 320, ctaY - 35, 640, 70, 35);
+      ctx.fillStyle = 'rgba(127, 224, 168, 0.18)';
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'rgba(127, 224, 168, 0.5)';
+      ctx.stroke();
+
+      ctx.font = '800 24px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#7fe0a8';
+      ctx.fillText('BIST DU AUCH AM START?', 540, ctaY + 9);
+
+      ctx.font = '700 28px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText('winterball27.de', 540, cardY + 1120);
+
+      ctx.font = '500 18px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#9aa7c2';
+      ctx.fillText('Jetzt Ticket sichern & mitfeiern', 540, cardY + 1160);
+      ctx.restore();
+
+      c.toBlob(async (blob) => {
+        if (!blob) return;
+        const file = new File([blob], 'Winterball-2027-Story.png', { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              title: 'Winter Ball 2027',
+              text: shareText,
+              files: [file]
+            });
+            return;
+          } catch(e) {}
+        }
+        if (navigator.share) {
+          try {
+            await navigator.share({ title: 'Winter Ball 2027', text: shareText, url: 'https://winterball27.de' });
+            return;
+          } catch(e) {}
+        }
+        generateAndDownloadStoryImage();
+        try {
+          await navigator.clipboard.writeText(shareText);
+          showStoryToast('Bild heruntergeladen & Einladung kopiert!');
+        } catch(e) {
+          showStoryToast('Story-Bild heruntergeladen!');
+        }
+      }, 'image/png');
+
+    } catch(err) {
+      generateAndDownloadStoryImage();
+    }
+  });
 </script>
 
 <!-- Animierter Schneefall im Hintergrund -->
