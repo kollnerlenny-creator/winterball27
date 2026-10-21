@@ -1719,7 +1719,7 @@
  </div>
 
  <!-- 7. Widget: Conversion-Funnel & Absprung-Analyse -->
- <div class="widget-card" data-widget="funnel" title="Klicken für detaillierte Funnel-Analyse">
+ <div class="widget-card" data-widget="funnel" title="Klicken für detaillierte Funnel- & Absprung-Analyse">
  <div class="widget-card-header">
  <div class="widget-card-title">
  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
@@ -1736,42 +1736,59 @@
  <span style="font-size:11px; color:#9aa7c2;"> Conversion-Rate</span>
  </div>
  <div style="font-size:11px; color:#8fb4ff; font-weight:600;" id="widgetFunnelDropoff">
- 0% Absprung
+ 0% Gesamt-Absprung
  </div>
  </div>
- <div style="display:flex; flex-direction:column; gap:5px; margin-top:6px;" id="widgetFunnelMiniBars">
- <div style="display:flex; align-items:center; gap:8px; font-size:10.5px; color:#9aa7c2;">
- <span style="width:72px; flex-shrink:0;">Startseite</span>
+ <div style="display:flex; flex-direction:column; gap:4.5px; margin-top:6px;" id="widgetFunnelMiniBars">
+ <div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
+ <span style="width:74px; flex-shrink:0;">1. Startseite</span>
  <div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
  <div style="width:100%; height:100%; background:#8fb4ff; border-radius:3px;"></div>
  </div>
- <span style="width:36px; text-align:right; color:#fff; font-weight:700;" id="wfn1">0</span>
+ <span style="width:34px; text-align:right; color:#fff; font-weight:700;" id="wfn1">0</span>
  </div>
- <div style="display:flex; align-items:center; gap:8px; font-size:10.5px; color:#9aa7c2;">
- <span style="width:72px; flex-shrink:0;">Anmeldung</span>
+ <div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
+ <span style="width:74px; flex-shrink:0;">2. Anmeldeseite</span>
  <div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
- <div id="wfnBar2" style="width:0%; height:100%; background:#7fe0a8; border-radius:3px;"></div>
+ <div id="wfnBar2" style="width:0%; height:100%; background:#a78bfa; border-radius:3px;"></div>
  </div>
- <span style="width:36px; text-align:right; color:#fff; font-weight:700;" id="wfn2">0</span>
+ <span style="width:34px; text-align:right; color:#fff; font-weight:700;" id="wfn2">0</span>
  </div>
- <div style="display:flex; align-items:center; gap:8px; font-size:10.5px; color:#9aa7c2;">
- <span style="width:72px; flex-shrink:0;">Formular</span>
+ <div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
+ <span style="width:74px; flex-shrink:0;">3. Name &amp; Du/Sie</span>
  <div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
- <div id="wfnBar3" style="width:0%; height:100%; background:#ffd27f; border-radius:3px;"></div>
+ <div id="wfnBarName" style="width:0%; height:100%; background:#8fb4ff; border-radius:3px;"></div>
  </div>
- <span style="width:36px; text-align:right; color:#fff; font-weight:700;" id="wfn3">0</span>
+ <span style="width:34px; text-align:right; color:#fff; font-weight:700;" id="wfnName">0</span>
  </div>
- <div style="display:flex; align-items:center; gap:8px; font-size:10.5px; color:#9aa7c2;">
- <span style="width:72px; flex-shrink:0;">Bestellt</span>
+ <div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
+ <span style="width:74px; flex-shrink:0;">4. E-Mail</span>
+ <div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+ <div id="wfnBarEmail" style="width:0%; height:100%; background:#ffd27f; border-radius:3px;"></div>
+ </div>
+ <span style="width:34px; text-align:right; color:#fff; font-weight:700;" id="wfnEmail">0</span>
+ </div>
+ <div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
+ <span style="width:74px; flex-shrink:0;">5. Begleitung</span>
+ <div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+ <div id="wfnBarComp" style="width:0%; height:100%; background:#ffaa7f; border-radius:3px;"></div>
+ </div>
+ <span style="width:34px; text-align:right; color:#fff; font-weight:700;" id="wfnComp">0</span>
+ </div>
+ <div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
+ <span style="width:74px; flex-shrink:0;">6. Bestellt</span>
  <div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
  <div id="wfnBar4" style="width:0%; height:100%; background:#7fe0a8; border-radius:3px;"></div>
  </div>
- <span style="width:36px; text-align:right; color:#fff; font-weight:700;" id="wfn4">0</span>
+ <span style="width:34px; text-align:right; color:#fff; font-weight:700;" id="wfn4">0</span>
  </div>
+ </div>
+ <div id="widgetFunnelBottleneck" style="margin-top:6px; font-size:10px; color:#ff8080; font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">
+ Größter Absprung: Berechne...
  </div>
  </div>
  <div class="widget-card-footer">
- <span>Vom Aufruf zum Ticket</span>
+ <span>Detail-Absprünge pro Schritt</span>
  <span class="zoom-text">Vergrößern </span>
  </div>
  </div>
@@ -1789,9 +1806,10 @@
  </div>
  <div>
  <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
- <div>
+ <div style="display:flex; align-items:baseline; gap:5px; flex-wrap:wrap;">
  <span style="font-size:22px; font-weight:800; color:#8fb4ff;" id="widgetForecastTickets">0</span>
  <span style="font-size:12px; color:#9aa7c2;" id="widgetForecastCap">/ 250 Plätze</span>
+ <button type="button" id="btnQuickEditCap" style="background:rgba(143,180,255,0.15); border:1px solid rgba(143,180,255,0.3); border-radius:5px; color:#8fb4ff; font-size:10px; padding:2px 7px; cursor:pointer;" title="Saal-Kapazität ändern">Ändern</button>
  </div>
  <div style="font-size:12px; font-weight:700; color:#7fe0a8;" id="widgetForecastPct">
  0%
@@ -1806,7 +1824,7 @@
  </div>
  </div>
  <div class="widget-card-footer">
- <span>Hochrechnung bis 30.01.2027</span>
+ <span>Hochrechnung &amp; Kapazität einstellen</span>
  <span class="zoom-text">Vergrößern </span>
  </div>
  </div>
@@ -1825,7 +1843,7 @@
  <div>
  <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
  <div>
- <span style="font-size:17px; font-weight:800; color:#ffd27f;" id="widgetPeakHour">–</span>
+ <span style="font-size:16px; font-weight:800; color:#ffd27f;" id="widgetPeakHour">–</span>
  <div style="font-size:10.5px; color:#9aa7c2;">Stärkste Zeit</div>
  </div>
  <div style="text-align:right;">
@@ -1833,12 +1851,38 @@
  <div style="font-size:10.5px; color:#9aa7c2;">Stärkster Tag</div>
  </div>
  </div>
- <div style="height:76px; width:100%; position:relative; margin-top:4px;">
- <canvas id="chartPeakMini"></canvas>
+
+ <!-- Vorschau-Leiste für Wochentage (Mo-So) -->
+ <div style="margin-top:6px; background:rgba(0,0,0,0.22); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:6px 8px;">
+ <div style="display:flex; justify-content:space-between; align-items:flex-end; height:36px; gap:4px;" id="widgetPeakDayBars">
+ <div style="flex:1; display:flex; flex-direction:column; align-items:center; height:100%; justify-content:flex-end;"><div style="width:100%; height:30%; background:rgba(143,180,255,0.3); border-radius:2px;"></div></div>
+ <div style="flex:1; display:flex; flex-direction:column; align-items:center; height:100%; justify-content:flex-end;"><div style="width:100%; height:45%; background:rgba(143,180,255,0.3); border-radius:2px;"></div></div>
+ <div style="flex:1; display:flex; flex-direction:column; align-items:center; height:100%; justify-content:flex-end;"><div style="width:100%; height:25%; background:rgba(143,180,255,0.3); border-radius:2px;"></div></div>
+ <div style="flex:1; display:flex; flex-direction:column; align-items:center; height:100%; justify-content:flex-end;"><div style="width:100%; height:40%; background:rgba(143,180,255,0.3); border-radius:2px;"></div></div>
+ <div style="flex:1; display:flex; flex-direction:column; align-items:center; height:100%; justify-content:flex-end;"><div style="width:100%; height:60%; background:rgba(143,180,255,0.4); border-radius:2px;"></div></div>
+ <div style="flex:1; display:flex; flex-direction:column; align-items:center; height:100%; justify-content:flex-end;"><div style="width:100%; height:75%; background:rgba(143,180,255,0.5); border-radius:2px;"></div></div>
+ <div style="flex:1; display:flex; flex-direction:column; align-items:center; height:100%; justify-content:flex-end;"><div style="width:100%; height:95%; background:#ffd27f; border-radius:2px;"></div></div>
+ </div>
+ <div style="display:flex; justify-content:space-between; margin-top:3px; font-size:9px; color:#9aa7c2; font-weight:600;">
+ <span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span>
+ </div>
+ </div>
+
+ <!-- Vorschau Tageszeiten-Balken (Vormittag, Nachmittag, Abend, Nacht) -->
+ <div style="margin-top:6px;">
+ <div style="display:flex; gap:3px; height:6px; border-radius:3px; overflow:hidden;" id="widgetPeakSlotsStrip">
+ <div style="width:20%; background:rgba(143,180,255,0.4);" title="Vormittag (6-12h)"></div>
+ <div style="width:30%; background:rgba(143,180,255,0.6);" title="Nachmittag (12-18h)"></div>
+ <div style="width:40%; background:#ffd27f;" title="Abend (18-24h)"></div>
+ <div style="width:10%; background:rgba(143,180,255,0.2);" title="Nacht (0-6h)"></div>
+ </div>
+ <div style="display:flex; justify-content:space-between; font-size:9px; color:#9aa7c2; margin-top:2px;">
+ <span>Vormittag</span><span>Nachmittag</span><span style="color:#ffd27f; font-weight:700;">Abend (Peak)</span><span>Nacht</span>
+ </div>
  </div>
  </div>
  <div class="widget-card-footer">
- <span>Beste Zeiten für Instagram &amp; Promo</span>
+ <span>Heatmap &amp; Posting-Zeiten</span>
  <span class="zoom-text">Vergrößern </span>
  </div>
  </div>
@@ -2810,39 +2854,76 @@
  }
 
  // --- 7) Funnel & Absprung-Analyse Widget ---
- const homeViews = allPageviews.filter(p => !p.path || p.path === '/' || p.path.includes('index')).length || totalViews;
- const anmeldeViews = allPageviews.filter(p => p.path && p.path.includes('anmeldung')).length;
- const formStartedEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'form_started').length;
- const formStartedCount = Math.max(allRegs.length, formStartedEvents);
+ const homeViews = allPageviews.filter(p => !p.path || p.path === '/' || p.path.includes('index')).length || Math.max(1, totalViews);
+ const anmeldeViewsRaw = allPageviews.filter(p => p.path && p.path.includes('anmeldung')).length;
+ const anmeldeEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'page_anmeldung').length;
+ const anmeldeViews = Math.max(anmeldeViewsRaw, anmeldeEvents);
+
+ const stepNameEvents = allPolls.filter(d => d.type === 'funnel_step' && (d.step === 'step_name' || d.step === 'form_started')).length;
+ const stepEmailEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'step_email').length;
+ const stepCompEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'step_companion').length;
+ const stepSummaryEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'step_summary').length;
  const submittedCount = allRegs.length;
 
- const funnelBase = Math.max(1, homeViews);
- const conversionRate = Math.min(100, Math.round((submittedCount / funnelBase) * 100 * 10) / 10);
- const totalDropoff = Math.max(0, Math.round(100 - (submittedCount / funnelBase) * 100));
+ // Monotone Bereinigung
+ const finalSubmitted = submittedCount;
+ const finalSummary = Math.max(stepSummaryEvents, finalSubmitted);
+ const finalComp = Math.max(stepCompEvents, finalSummary);
+ const finalEmail = Math.max(stepEmailEvents, finalComp);
+ const finalName = Math.max(stepNameEvents, finalEmail);
+ const finalAnmeldung = Math.max(anmeldeViews, finalName);
+ const finalHome = Math.max(homeViews, finalAnmeldung, 1);
+
+ const conversionRate = Math.min(100, Math.round((finalSubmitted / finalHome) * 100 * 10) / 10);
+ const totalDropoff = Math.max(0, Math.round(100 - (finalSubmitted / finalHome) * 100));
 
  const elWFunnelRate = document.getElementById('widgetFunnelRate');
  if (elWFunnelRate) elWFunnelRate.textContent = `${conversionRate}%`;
  const elWFunnelDrop = document.getElementById('widgetFunnelDropoff');
  if (elWFunnelDrop) elWFunnelDrop.textContent = `${totalDropoff}% Absprung`;
 
- const elWfn1 = document.getElementById('wfn1');
- if (elWfn1) elWfn1.textContent = homeViews;
- const elWfn2 = document.getElementById('wfn2');
- if (elWfn2) elWfn2.textContent = anmeldeViews;
- const elWfn3 = document.getElementById('wfn3');
- if (elWfn3) elWfn3.textContent = formStartedCount;
- const elWfn4 = document.getElementById('wfn4');
- if (elWfn4) elWfn4.textContent = submittedCount;
+ const elWfn1 = document.getElementById('wfn1'); if (elWfn1) elWfn1.textContent = finalHome;
+ const elWfn2 = document.getElementById('wfn2'); if (elWfn2) elWfn2.textContent = finalAnmeldung;
+ const elWfnName = document.getElementById('wfnName'); if (elWfnName) elWfnName.textContent = finalName;
+ const elWfnEmail = document.getElementById('wfnEmail'); if (elWfnEmail) elWfnEmail.textContent = finalEmail;
+ const elWfnComp = document.getElementById('wfnComp'); if (elWfnComp) elWfnComp.textContent = finalComp;
+ const elWfn4 = document.getElementById('wfn4'); if (elWfn4) elWfn4.textContent = finalSubmitted;
 
  const elWfnBar2 = document.getElementById('wfnBar2');
- if (elWfnBar2) elWfnBar2.style.width = `${Math.min(100, Math.round((anmeldeViews / funnelBase) * 100))}%`;
- const elWfnBar3 = document.getElementById('wfnBar3');
- if (elWfnBar3) elWfnBar3.style.width = `${Math.min(100, Math.round((formStartedCount / funnelBase) * 100))}%`;
+ if (elWfnBar2) elWfnBar2.style.width = `${Math.min(100, Math.round((finalAnmeldung / finalHome) * 100))}%`;
+ const elWfnBarName = document.getElementById('wfnBarName');
+ if (elWfnBarName) elWfnBarName.style.width = `${Math.min(100, Math.round((finalName / finalHome) * 100))}%`;
+ const elWfnBarEmail = document.getElementById('wfnBarEmail');
+ if (elWfnBarEmail) elWfnBarEmail.style.width = `${Math.min(100, Math.round((finalEmail / finalHome) * 100))}%`;
+ const elWfnBarComp = document.getElementById('wfnBarComp');
+ if (elWfnBarComp) elWfnBarComp.style.width = `${Math.min(100, Math.round((finalComp / finalHome) * 100))}%`;
  const elWfnBar4 = document.getElementById('wfnBar4');
- if (elWfnBar4) elWfnBar4.style.width = `${Math.min(100, Math.round((submittedCount / funnelBase) * 100))}%`;
+ if (elWfnBar4) elWfnBar4.style.width = `${Math.min(100, Math.round((finalSubmitted / finalHome) * 100))}%`;
+
+ // Größte Hürde ermitteln
+ const drop1 = finalHome > 0 ? (finalHome - finalAnmeldung) / finalHome : 0;
+ const drop2 = finalAnmeldung > 0 ? (finalAnmeldung - finalName) / finalAnmeldung : 0;
+ const drop3 = finalName > 0 ? (finalName - finalEmail) / finalName : 0;
+ const drop4 = finalEmail > 0 ? (finalEmail - finalComp) / finalEmail : 0;
+ const drop5 = finalComp > 0 ? (finalComp - finalSubmitted) / finalComp : 0;
+
+ let biggestHurdle = 'Keine Abbrüche erkannt';
+ const drops = [
+   { name: 'Startseite → Anmeldung', rate: drop1 },
+   { name: 'Anmeldung → Name', rate: drop2 },
+   { name: 'Name → E-Mail', rate: drop3 },
+   { name: 'E-Mail → Begleitung', rate: drop4 },
+   { name: 'Begleitung → Abschluss', rate: drop5 }
+ ].sort((a,b) => b.rate - a.rate);
+
+ if (drops[0] && drops[0].rate > 0.05) {
+   biggestHurdle = `Größter Absprung: ${drops[0].name} (-${Math.round(drops[0].rate * 100)}%)`;
+ }
+ const elBottle = document.getElementById('widgetFunnelBottleneck');
+ if (elBottle) elBottle.textContent = biggestHurdle;
 
  // --- 8) Kapazitäts- & Umsatz-Prognose Widget ---
- const hallCapacity = 250;
+ const hallCapacity = currentHallCapacity || 250;
  const currentTickets = allTickets.length;
  const capPercent = Math.min(100, Math.round((currentTickets / hallCapacity) * 100));
  const remainingSeats = Math.max(0, hallCapacity - currentTickets);
@@ -2855,8 +2936,8 @@
  if (elWForePct) elWForePct.textContent = `${capPercent}%`;
  const elWForeBar = document.getElementById('widgetForecastBar');
  if (elWForeBar) {
- elWForeBar.style.width = `${capPercent}%`;
- elWForeBar.style.background = capPercent > 85 ? 'linear-gradient(90deg, #ffd27f 0%, #ff8080 100%)' : 'linear-gradient(90deg, #8fb4ff 0%, #7fe0a8 100%)';
+   elWForeBar.style.width = `${capPercent}%`;
+   elWForeBar.style.background = capPercent > 85 ? 'linear-gradient(90deg, #ffd27f 0%, #ff8080 100%)' : 'linear-gradient(90deg, #8fb4ff 0%, #7fe0a8 100%)';
  }
  const elWForeRem = document.getElementById('widgetForecastRemaining');
  if (elWForeRem) elWForeRem.textContent = `${remainingSeats} Plätze`;
@@ -2866,15 +2947,22 @@
  const daysToFull = avgTicketsPerDay > 0 ? Math.ceil(remainingSeats / avgTicketsPerDay) : null;
  const elWForePace = document.getElementById('widgetForecastPace');
  if (elWForePace) {
- if (remainingSeats <= 0) {
- elWForePace.textContent = 'Voll belegt';
- elWForePace.style.color = '#7fe0a8';
- } else if (daysToFull && isFinite(daysToFull)) {
- elWForePace.textContent = `Voll in ~${daysToFull} Tagen`;
- } else {
- elWForePace.textContent = `${avgTicketsPerDay} Tk/Tag`;
+   if (remainingSeats <= 0) {
+     elWForePace.textContent = 'Voll belegt';
+     elWForePace.style.color = '#7fe0a8';
+   } else if (daysToFull && isFinite(daysToFull)) {
+     elWForePace.textContent = `Voll in ~${daysToFull} Tagen`;
+   } else {
+     elWForePace.textContent = `${avgTicketsPerDay} Tk/Tag`;
+   }
  }
- }
+
+ // Quick edit button in widget
+ document.getElementById('btnQuickEditCap')?.addEventListener('click', (e) => {
+   e.stopPropagation();
+   const entered = prompt('Neue maximale Saal-Kapazität festlegen (Plätze):', String(currentHallCapacity));
+   if (entered !== null) setHallCapacity(entered);
+ });
 
  // --- 9) Peak Times & Aktivitäts-Zeiten Widget ---
  const hourCounts = new Array(24).fill(0);
@@ -2882,22 +2970,22 @@
  const weekdayNames = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
  allRegs.forEach(r => {
- const d = tsToDate(r.createdAt);
- if (!d) return;
- hourCounts[d.getHours()]++;
- const dayIdx = (d.getDay() + 6) % 7;
- weekdayCounts[dayIdx]++;
+   const d = tsToDate(r.createdAt);
+   if (!d) return;
+   hourCounts[d.getHours()]++;
+   const dayIdx = (d.getDay() + 6) % 7;
+   weekdayCounts[dayIdx]++;
  });
 
  let maxHourIdx = 19;
  let maxHourVal = 0;
  hourCounts.forEach((val, h) => {
- if (val > maxHourVal) { maxHourVal = val; maxHourIdx = h; }
+   if (val > maxHourVal) { maxHourVal = val; maxHourIdx = h; }
  });
  let maxDayIdx = 6;
  let maxDayVal = 0;
  weekdayCounts.forEach((val, d) => {
- if (val > maxDayVal) { maxDayVal = val; maxDayIdx = d; }
+   if (val > maxDayVal) { maxDayVal = val; maxDayIdx = d; }
  });
 
  const peakHourStr = maxHourVal > 0 ? `${maxHourIdx}:00 – ${maxHourIdx + 1}:00 Uhr` : '19:00 – 21:00 Uhr';
@@ -2908,33 +2996,38 @@
  const elPeakDay = document.getElementById('widgetPeakDay');
  if (elPeakDay) elPeakDay.textContent = peakDayStr;
 
- const peakMiniCanvas = document.getElementById('chartPeakMini');
- if (peakMiniCanvas) {
- if (chartPeakMini) chartPeakMini.destroy();
- const hoursSlice = [8, 10, 12, 14, 16, 18, 20, 22];
- const hoursLabels = hoursSlice.map(h => `${h}h`);
- const hoursData = hoursSlice.map(h => hourCounts[h] + (hourCounts[h+1] || 0));
+ // Update visual weekday mini bars in widget preview
+ const elPeakDayBars = document.getElementById('widgetPeakDayBars');
+ if (elPeakDayBars) {
+   const maxDayCount = Math.max(1, ...weekdayCounts);
+   elPeakDayBars.innerHTML = weekdayCounts.map((cnt, idx) => {
+     const hPct = Math.max(18, Math.round((cnt / maxDayCount) * 100));
+     const isPeak = idx === maxDayIdx;
+     const bg = isPeak ? '#ffd27f' : 'rgba(143,180,255,0.4)';
+     return `<div style="flex:1; display:flex; flex-direction:column; align-items:center; height:100%; justify-content:flex-end;" title="${weekdayNames[idx]}: ${cnt} Buchungen">` +
+            `<div style="width:100%; height:${hPct}%; background:${bg}; border-radius:2px; transition:height 0.3s ease;"></div>` +
+            `</div>`;
+   }).join('');
+ }
 
- chartPeakMini = new Chart(peakMiniCanvas, {
- type: 'bar',
- data: {
- labels: hoursLabels,
- datasets: [{
- data: hoursData,
- backgroundColor: hoursSlice.map(h => (h === maxHourIdx || h + 1 === maxHourIdx) ? '#ffd27f' : 'rgba(143,180,255,0.45)'),
- borderRadius: 3
- }]
- },
- options: {
- responsive: true,
- maintainAspectRatio: false,
- plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => ` ${ctx.parsed.y} Buchungen` } } },
- scales: {
- y: { display: false, beginAtZero: true },
- x: { ticks: { color: '#9aa7c2', font: { size: 9 } }, grid: { display: false } }
- }
- }
- });
+ // Update timeslots strip in widget preview
+ const slotMorning = hourCounts.slice(6, 12).reduce((a,b)=>a+b, 0);
+ const slotAfternoon = hourCounts.slice(12, 18).reduce((a,b)=>a+b, 0);
+ const slotEvening = hourCounts.slice(18, 24).reduce((a,b)=>a+b, 0);
+ const slotNight = hourCounts.slice(0, 6).reduce((a,b)=>a+b, 0);
+ const totalSlots = Math.max(1, slotMorning + slotAfternoon + slotEvening + slotNight);
+
+ const elPeakSlotsStrip = document.getElementById('widgetPeakSlotsStrip');
+ if (elPeakSlotsStrip) {
+   const p1 = Math.max(5, Math.round((slotMorning / totalSlots) * 100));
+   const p2 = Math.max(5, Math.round((slotAfternoon / totalSlots) * 100));
+   const p3 = Math.max(5, Math.round((slotEvening / totalSlots) * 100));
+   const p4 = Math.max(5, 100 - (p1 + p2 + p3));
+   elPeakSlotsStrip.innerHTML =
+     `<div style="width:${p1}%; background:rgba(143,180,255,0.4);" title="Vormittag (6-12h): ${slotMorning}"></div>` +
+     `<div style="width:${p2}%; background:rgba(143,180,255,0.65);" title="Nachmittag (12-18h): ${slotAfternoon}"></div>` +
+     `<div style="width:${p3}%; background:#ffd27f;" title="Abend (18-24h): ${slotEvening}"></div>` +
+     `<div style="width:${p4}%; background:rgba(143,180,255,0.25);" title="Nacht (0-6h): ${slotNight}"></div>`;
  }
 
  // Falls gerade ein vergrößertes Modal aktiv ist (außer 'live'), direkt aktualisieren
@@ -2946,7 +3039,32 @@
  // ==========================================
  // WIDGET DETAIL MODAL (Vergrößerte Ansicht)
  // ==========================================
- let currentModalWidget = null;
+ 
+// Saal-Kapazität flexibel anpassen & in Firestore speichern
+async function setHallCapacity(newCap) {
+  const val = Number(newCap);
+  if (isNaN(val) || val < 10) {
+    alert('Bitte eine gültige Zahl für die Saal-Kapazität (mind. 10 Plätze) eingeben.');
+    return false;
+  }
+  currentHallCapacity = val;
+  localStorage.setItem('wb27_hall_capacity', String(val));
+  try {
+    await setDoc(doc(db, 'settings', 'capacity'), { maxTickets: val }, { merge: true });
+    if (document.getElementById('maxTicketsInput')) {
+      document.getElementById('maxTicketsInput').value = val;
+    }
+  } catch(err) {
+    console.warn('Kapazität lokal gespeichert:', err);
+  }
+  updateCharts();
+  if (currentModalWidget === 'forecast') {
+    renderModalContent('forecast');
+  }
+  return true;
+}
+
+let currentModalWidget = null;
  let modalChart = null;
  let modalChartDemographicsA = null;
  let modalChartDemographicsB = null;
@@ -3606,50 +3724,69 @@
  return;
  }
 
- // 7. CONVERSION-FUNNEL MODAL
+ // 7. CONVERSION-FUNNEL MODAL (Detail & Absprung-Analyse nach Schritten)
  if (widgetType === 'funnel') {
  iconEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>';
  iconEl.style.background = 'rgba(127,224,168,0.18)';
  iconEl.style.color = '#7fe0a8';
  titleEl.textContent = 'Conversion-Funnel & Absprung-Analyse';
- subEl.textContent = 'Trichter-Auswertung von Webseiten-Aufrufen bis zum abgeschlossenen Ticketkauf';
+ subEl.textContent = 'Schritt-für-Schritt Trichter: Vom ersten Webseitenaufruf bis zum Ticketabschluss mit Hürden-Erkennung';
 
- const homeViews = allPageviews.filter(p => !p.path || p.path === '/' || p.path.includes('index')).length || allPageviews.length;
- const anmeldeViews = allPageviews.filter(p => p.path && p.path.includes('anmeldung')).length;
- const formStartedEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'form_started').length;
- const formStartedCount = Math.max(allRegs.length, formStartedEvents);
+ const homeViews = allPageviews.filter(p => !p.path || p.path === '/' || p.path.includes('index')).length || Math.max(1, totalViews);
+ const anmeldeViewsRaw = allPageviews.filter(p => p.path && p.path.includes('anmeldung')).length;
+ const anmeldeEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'page_anmeldung').length;
+ const anmeldeViews = Math.max(anmeldeViewsRaw, anmeldeEvents);
+
+ const stepNameEvents = allPolls.filter(d => d.type === 'funnel_step' && (d.step === 'step_name' || d.step === 'form_started')).length;
+ const stepEmailEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'step_email').length;
+ const stepCompEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'step_companion').length;
+ const stepSummaryEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'step_summary').length;
  const submittedCount = allRegs.length;
- const base = Math.max(1, homeViews);
 
+ const finalSubmitted = submittedCount;
+ const finalSummary = Math.max(stepSummaryEvents, finalSubmitted);
+ const finalComp = Math.max(stepCompEvents, finalSummary);
+ const finalEmail = Math.max(stepEmailEvents, finalComp);
+ const finalName = Math.max(stepNameEvents, finalEmail);
+ const finalAnmeldung = Math.max(anmeldeViews, finalName);
+ const finalHome = Math.max(homeViews, finalAnmeldung, 1);
+
+ const base = finalHome;
  const step1Pct = 100;
- const step2Pct = Math.min(100, Math.round((anmeldeViews / base) * 100));
- const step3Pct = Math.min(100, Math.round((formStartedCount / base) * 100));
- const step4Pct = Math.min(100, Math.round((submittedCount / base) * 100 * 10) / 10);
+ const step2Pct = Math.min(100, Math.round((finalAnmeldung / base) * 100));
+ const step3Pct = Math.min(100, Math.round((finalName / base) * 100));
+ const step4Pct = Math.min(100, Math.round((finalEmail / base) * 100));
+ const step5Pct = Math.min(100, Math.round((finalComp / base) * 100));
+ const step6Pct = Math.min(100, Math.round((finalSummary / base) * 100));
+ const step7Pct = Math.min(100, Math.round((finalSubmitted / base) * 100 * 10) / 10);
 
  const drop1to2 = Math.max(0, 100 - step2Pct);
- const drop2to3 = anmeldeViews > 0 ? Math.max(0, Math.round((1 - (formStartedCount / Math.max(1, anmeldeViews))) * 100)) : 0;
- const drop3to4 = formStartedCount > 0 ? Math.max(0, Math.round((1 - (submittedCount / Math.max(1, formStartedCount))) * 100)) : 0;
+ const drop2to3 = finalAnmeldung > 0 ? Math.max(0, Math.round((1 - (finalName / finalAnmeldung)) * 100)) : 0;
+ const drop3to4 = finalName > 0 ? Math.max(0, Math.round((1 - (finalEmail / finalName)) * 100)) : 0;
+ const drop4to5 = finalEmail > 0 ? Math.max(0, Math.round((1 - (finalComp / finalEmail)) * 100)) : 0;
+ const drop5to6 = finalComp > 0 ? Math.max(0, Math.round((1 - (finalSummary / finalComp)) * 100)) : 0;
+ const drop6to7 = finalSummary > 0 ? Math.max(0, Math.round((1 - (finalSubmitted / finalSummary)) * 100)) : 0;
 
  kpiEl.innerHTML = `
  <div class="widget-modal-kpi-card">
- <div class="widget-modal-kpi-lbl">1. Startseite</div>
- <div class="widget-modal-kpi-val" style="color:#8fb4ff;">${homeViews}</div>
- <div class="widget-modal-kpi-sub">Besucher auf winterball27.de</div>
+ <div class="widget-modal-kpi-lbl">1. Besucher</div>
+ <div class="widget-modal-kpi-val" style="color:#8fb4ff;">${finalHome}</div>
+ <div class="widget-modal-kpi-sub">Besucher auf Startseite</div>
  </div>
  <div class="widget-modal-kpi-card">
  <div class="widget-modal-kpi-lbl">2. Anmeldeseite</div>
- <div class="widget-modal-kpi-val" style="color:#a78bfa;">${anmeldeViews}</div>
+ <div class="widget-modal-kpi-val" style="color:#a78bfa;">${finalAnmeldung}</div>
  <div class="widget-modal-kpi-sub">${step2Pct}% Klickrate auf Anmelden</div>
  </div>
  <div class="widget-modal-kpi-card">
- <div class="widget-modal-kpi-lbl">3. Formular begonnen</div>
- <div class="widget-modal-kpi-val" style="color:#ffd27f;">${formStartedCount}</div>
- <div class="widget-modal-kpi-sub">${drop2to3}% Abbruch vor Eingabe</div>
+ <div class="widget-modal-kpi-lbl">3. E-Mail &amp; Begleitung</div>
+ <div class="widget-modal-kpi-val" style="color:#ffd27f;">${finalComp}</div>
+ <div class="widget-modal-kpi-sub">${drop4to5}% Hürde bei Begleitung</div>
  </div>
  <div class="widget-modal-kpi-card">
  <div class="widget-modal-kpi-lbl">4. Abgeschlossen</div>
- <div class="widget-modal-kpi-val" style="color:#7fe0a8;">${submittedCount}</div>
- <div class="widget-modal-kpi-sub">${step4Pct}% Gesamte Conversion</div>
+ <div class="widget-modal-kpi-val" style="color:#7fe0a8;">${finalSubmitted}</div>
+ <div class="widget-modal-kpi-sub">${step7Pct}% Gesamt-Conversion</div>
  </div>
  `;
 
@@ -3657,11 +3794,19 @@
  modalChart = new Chart(canvas, {
  type: 'bar',
  data: {
- labels: ['1. Startseite', '2. Anmeldeseite', '3. Formular begonnen', '4. Bestellt'],
+ labels: [
+   '1. Startseite',
+   '2. Anmeldeseite',
+   '3. Name & Anrede',
+   '4. E-Mail-Adresse',
+   '5. Begleitung & Alter',
+   '6. Zusammenfassung',
+   '7. Bestellt'
+ ],
  datasets: [{
  label: 'Personen im Trichter',
- data: [homeViews, anmeldeViews, formStartedCount, submittedCount],
- backgroundColor: ['#8fb4ff', '#a78bfa', '#ffd27f', '#7fe0a8'],
+ data: [finalHome, finalAnmeldung, finalName, finalEmail, finalComp, finalSummary, finalSubmitted],
+ backgroundColor: ['#8fb4ff', '#a78bfa', '#8fb4ff', '#ffd27f', '#ffaa7f', '#93c5fd', '#7fe0a8'],
  borderRadius: 6
  }]
  },
@@ -3675,7 +3820,7 @@
  },
  scales: {
  x: { beginAtZero: true, ticks: { color: '#9aa7c2' }, grid: { color: 'rgba(255,255,255,0.06)' } },
- y: { ticks: { color: '#c7d7f7', font: { weight: '600', size: 12 } }, grid: { display: false } }
+ y: { ticks: { color: '#c7d7f7', font: { weight: '600', size: 11 } }, grid: { display: false } }
  }
  }
  });
@@ -3686,40 +3831,61 @@
  <thead>
  <tr>
  <th>Trichterstufe</th>
- <th>Anzahl</th>
- <th>Quote (von Startseite)</th>
+ <th>Personen</th>
+ <th>Quote</th>
  <th>Absprungrate</th>
- <th>Optimierungs-Empfehlung</th>
+ <th>Konkrete Hürden &amp; Optimierungs-Empfehlung</th>
  </tr>
  </thead>
  <tbody>
  <tr>
- <td style="font-weight:700; color:#8fb4ff;">1. Startseite besucht</td>
- <td style="font-weight:700; color:#fff;">${homeViews}</td>
+ <td style="font-weight:700; color:#8fb4ff;">1. Startseite aufgerufen</td>
+ <td style="font-weight:700; color:#fff;">${finalHome}</td>
  <td>100%</td>
  <td style="color:#ffd27f;">–</td>
- <td style="color:#9aa7c2;">Hauptportal · Erste Anlaufstelle für Schüler &amp; Gäste</td>
+ <td style="color:#9aa7c2;">Hauptportal · Erste Anlaufstelle. Große Call-to-Actions &amp; Countdown aktiv halten.</td>
  </tr>
  <tr>
  <td style="font-weight:700; color:#a78bfa;">2. Anmeldeseite geöffnet</td>
- <td style="font-weight:700; color:#fff;">${anmeldeViews}</td>
+ <td style="font-weight:700; color:#fff;">${finalAnmeldung}</td>
  <td style="font-weight:600; color:#8fb4ff;">${step2Pct}%</td>
  <td style="color:#ff8080; font-weight:700;">-${drop1to2}%</td>
- <td style="color:#9aa7c2;">Call-to-Action Buttons auf der Startseite gut sichtbar halten</td>
+ <td style="color:#9aa7c2;">Absprung vor der Eingabe: Hero-Bereich auf der Startseite verlockender gestalten.</td>
  </tr>
  <tr>
- <td style="font-weight:700; color:#ffd27f;">3. Formular begonnen</td>
- <td style="font-weight:700; color:#fff;">${formStartedCount}</td>
- <td style="font-weight:600; color:#ffd27f;">${step3Pct}%</td>
+ <td style="font-weight:700; color:#8fb4ff;">3. Schritt 2: Name &amp; Anrede</td>
+ <td style="font-weight:700; color:#fff;">${finalName}</td>
+ <td style="font-weight:600; color:#8fb4ff;">${step3Pct}%</td>
  <td style="color:#ff8080; font-weight:700;">-${drop2to3}%</td>
- <td style="color:#9aa7c2;">Einfache Eingabe; Vertrauen durch klare Datenschutzhinweise</td>
+ <td style="color:#9aa7c2;">Sehr niederschwelliger Einstieg. Schneller Wechsel zwischen Du und Sie.</td>
  </tr>
  <tr>
- <td style="font-weight:700; color:#7fe0a8;">4. Bestellung abgeschlossen</td>
- <td style="font-weight:700; color:#fff;">${submittedCount}</td>
- <td style="font-weight:700; color:#7fe0a8;">${step4Pct}%</td>
- <td style="color:#7fe0a8; font-weight:700;">-${drop3to4}%</td>
- <td style="color:#7fe0a8; font-weight:600;">Sehr hohe Abschlussrate sobald das Formular ausgefüllt wurde!</td>
+ <td style="font-weight:700; color:#ffd27f;">4. Schritt 3: E-Mail-Adresse</td>
+ <td style="font-weight:700; color:#fff;">${finalEmail}</td>
+ <td style="font-weight:600; color:#ffd27f;">${step4Pct}%</td>
+ <td style="color:${drop3to4 > 15 ? '#ff8080' : '#7fe0a8'}; font-weight:700;">-${drop3to4}%</td>
+ <td style="color:#9aa7c2;">LernSax-Schnellauswahl (@gymwilsdruff.lernsax.de) erspart Tippaufwand &amp; schafft Vertrauen.</td>
+ </tr>
+ <tr>
+ <td style="font-weight:700; color:#ffaa7f;">5. Schritt 4: Begleitperson &amp; Alter</td>
+ <td style="font-weight:700; color:#fff;">${finalComp}</td>
+ <td style="font-weight:600; color:#ffaa7f;">${step5Pct}%</td>
+ <td style="color:${drop4to5 > 15 ? '#ff8080' : '#7fe0a8'}; font-weight:700;">-${drop4to5}%</td>
+ <td style="color:#9aa7c2;">Häufige Hürde: Unsicherheit bei Begleitpersonen. Hinweis: Begleitungen können auch später nachgemeldet werden!</td>
+ </tr>
+ <tr>
+ <td style="font-weight:700; color:#93c5fd;">6. Schritt 5: Zusammenfassung</td>
+ <td style="font-weight:700; color:#fff;">${finalSummary}</td>
+ <td style="font-weight:600; color:#93c5fd;">${step6Pct}%</td>
+ <td style="color:${drop5to6 > 10 ? '#ff8080' : '#7fe0a8'}; font-weight:700;">-${drop5to6}%</td>
+ <td style="color:#9aa7c2;">Fast geschafft: Übersichtliche mobile Karte. Datenschutz-Checkbox klar &amp; transparent.</td>
+ </tr>
+ <tr>
+ <td style="font-weight:700; color:#7fe0a8;">7. Bestellung abgeschlossen</td>
+ <td style="font-weight:700; color:#fff;">${finalSubmitted}</td>
+ <td style="font-weight:700; color:#7fe0a8;">${step7Pct}%</td>
+ <td style="color:#7fe0a8; font-weight:700;">-${drop6to7}%</td>
+ <td style="color:#7fe0a8; font-weight:600;">Erfolgreiche Ticket-Reservierung! Belohnungskarte zum Instagram-Teilen sorgt für Viralität.</td>
  </tr>
  </tbody>
  </table>
@@ -3727,15 +3893,15 @@
  return;
  }
 
- // 8. CAPACITY & REVENUE FORECAST MODAL
+ // 8. CAPACITY & REVENUE FORECAST MODAL (Mit individueller Kapazitäts-Einstellung)
  if (widgetType === 'forecast') {
  iconEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>';
  iconEl.style.background = 'rgba(143,180,255,0.18)';
  iconEl.style.color = '#8fb4ff';
  titleEl.textContent = 'Saal-Kapazität & Ticket-Prognose';
- subEl.textContent = 'Auslastung, Burn-up Hochrechnung und Catering-Kalkulation';
+ subEl.textContent = 'Auslastung, Burn-up Hochrechnung, individuelle Kapazität und Catering-Kalkulation';
 
- const hallCapacity = 250;
+ const hallCapacity = currentHallCapacity || 250;
  const currentTickets = allTickets.length;
  const capPercent = Math.min(100, Math.round((currentTickets / hallCapacity) * 100));
  const remainingSeats = Math.max(0, hallCapacity - currentTickets);
@@ -3808,7 +3974,7 @@
  pointBackgroundColor: '#7fe0a8'
  },
  {
- label: 'Saal-Maximum (250 Plätze)',
+ label: `Saal-Maximum (${hallCapacity} Plätze)`, 
  data: (dayLabels.length ? dayLabels : ['Start']).map(() => hallCapacity),
  borderColor: 'rgba(255, 128, 128, 0.65)',
  borderDash: [6, 4],
@@ -4083,7 +4249,8 @@
  }
  }
 
- let allRatings = [];
+ let currentHallCapacity = Number(localStorage.getItem("wb27_hall_capacity")) || 250;
+let allRatings = [];
 
  function renderRatings(){
  const ratingsCanvas = document.getElementById('chartRatings');
@@ -4841,7 +5008,12 @@
 
  onSnapshot(doc(db, 'settings', 'capacity'), (snap) => {
  const max = snap.exists() ? snap.data().maxTickets : null;
- document.getElementById('maxTicketsInput').value = max || '';
+ if (document.getElementById('maxTicketsInput')) document.getElementById('maxTicketsInput').value = max || '';
+ if (max && Number(max) > 0) {
+   currentHallCapacity = Number(max);
+   localStorage.setItem('wb27_hall_capacity', String(max));
+   scheduleCharts();
+ }
  }, onErr('capacity'));
 
  onSnapshot(doc(db, 'settings', 'schedule'), (snap) => {
