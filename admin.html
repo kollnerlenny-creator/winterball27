@@ -1717,6 +1717,131 @@
  <span class="zoom-text">Vergrößern </span>
  </div>
  </div>
+
+ <!-- 7. Widget: Conversion-Funnel & Absprung-Analyse -->
+ <div class="widget-card" data-widget="funnel" title="Klicken für detaillierte Funnel-Analyse">
+ <div class="widget-card-header">
+ <div class="widget-card-title">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+ <span>Conversion-Funnel</span>
+ </div>
+ <span class="widget-expand-hint" title="Vergrößern">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+ </span>
+ </div>
+ <div>
+ <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;">
+ <div>
+ <span style="font-size:22px; font-weight:800; color:#7fe0a8;" id="widgetFunnelRate">0%</span>
+ <span style="font-size:11px; color:#9aa7c2;"> Conversion-Rate</span>
+ </div>
+ <div style="font-size:11px; color:#8fb4ff; font-weight:600;" id="widgetFunnelDropoff">
+ 0% Absprung
+ </div>
+ </div>
+ <div style="display:flex; flex-direction:column; gap:5px; margin-top:6px;" id="widgetFunnelMiniBars">
+ <div style="display:flex; align-items:center; gap:8px; font-size:10.5px; color:#9aa7c2;">
+ <span style="width:72px; flex-shrink:0;">Startseite</span>
+ <div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+ <div style="width:100%; height:100%; background:#8fb4ff; border-radius:3px;"></div>
+ </div>
+ <span style="width:36px; text-align:right; color:#fff; font-weight:700;" id="wfn1">0</span>
+ </div>
+ <div style="display:flex; align-items:center; gap:8px; font-size:10.5px; color:#9aa7c2;">
+ <span style="width:72px; flex-shrink:0;">Anmeldung</span>
+ <div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+ <div id="wfnBar2" style="width:0%; height:100%; background:#7fe0a8; border-radius:3px;"></div>
+ </div>
+ <span style="width:36px; text-align:right; color:#fff; font-weight:700;" id="wfn2">0</span>
+ </div>
+ <div style="display:flex; align-items:center; gap:8px; font-size:10.5px; color:#9aa7c2;">
+ <span style="width:72px; flex-shrink:0;">Formular</span>
+ <div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+ <div id="wfnBar3" style="width:0%; height:100%; background:#ffd27f; border-radius:3px;"></div>
+ </div>
+ <span style="width:36px; text-align:right; color:#fff; font-weight:700;" id="wfn3">0</span>
+ </div>
+ <div style="display:flex; align-items:center; gap:8px; font-size:10.5px; color:#9aa7c2;">
+ <span style="width:72px; flex-shrink:0;">Bestellt</span>
+ <div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+ <div id="wfnBar4" style="width:0%; height:100%; background:#7fe0a8; border-radius:3px;"></div>
+ </div>
+ <span style="width:36px; text-align:right; color:#fff; font-weight:700;" id="wfn4">0</span>
+ </div>
+ </div>
+ </div>
+ <div class="widget-card-footer">
+ <span>Vom Aufruf zum Ticket</span>
+ <span class="zoom-text">Vergrößern </span>
+ </div>
+ </div>
+
+ <!-- 8. Widget: Umsatz- & Ticket-Prognose (Kapazitätsauslastung) -->
+ <div class="widget-card" data-widget="forecast" title="Klicken für Kapazitäts- &amp; Umsatz-Hochrechnung">
+ <div class="widget-card-header">
+ <div class="widget-card-title">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+ <span>Kapazität &amp; Prognose</span>
+ </div>
+ <span class="widget-expand-hint" title="Vergrößern">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+ </span>
+ </div>
+ <div>
+ <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
+ <div>
+ <span style="font-size:22px; font-weight:800; color:#8fb4ff;" id="widgetForecastTickets">0</span>
+ <span style="font-size:12px; color:#9aa7c2;" id="widgetForecastCap">/ 250 Plätze</span>
+ </div>
+ <div style="font-size:12px; font-weight:700; color:#7fe0a8;" id="widgetForecastPct">
+ 0%
+ </div>
+ </div>
+ <div style="height:10px; background:rgba(255,255,255,0.06); border-radius:5px; overflow:hidden; margin:8px 0;">
+ <div id="widgetForecastBar" style="height:100%; width:0%; background:linear-gradient(90deg, #8fb4ff 0%, #7fe0a8 100%); border-radius:5px; transition:width 0.4s ease;"></div>
+ </div>
+ <div style="display:flex; justify-content:space-between; font-size:11px; color:#9aa7c2; margin-top:6px;">
+ <span>Frei: <strong style="color:#fff;" id="widgetForecastRemaining">250</strong></span>
+ <span>Tempo: <strong style="color:#ffd27f;" id="widgetForecastPace">Berechne...</strong></span>
+ </div>
+ </div>
+ <div class="widget-card-footer">
+ <span>Hochrechnung bis 30.01.2027</span>
+ <span class="zoom-text">Vergrößern </span>
+ </div>
+ </div>
+
+ <!-- 9. Widget: Tages- & Stunden-Aktivität (Peak Times) -->
+ <div class="widget-card" data-widget="peaktimes" title="Klicken für Aktivitäts-Heatmap &amp; beste Posting-Zeiten">
+ <div class="widget-card-header">
+ <div class="widget-card-title">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+ <span>Peak Times &amp; Aktivität</span>
+ </div>
+ <span class="widget-expand-hint" title="Vergrößern">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+ </span>
+ </div>
+ <div>
+ <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
+ <div>
+ <span style="font-size:17px; font-weight:800; color:#ffd27f;" id="widgetPeakHour">–</span>
+ <div style="font-size:10.5px; color:#9aa7c2;">Stärkste Zeit</div>
+ </div>
+ <div style="text-align:right;">
+ <span style="font-size:15px; font-weight:700; color:#8fb4ff;" id="widgetPeakDay">–</span>
+ <div style="font-size:10.5px; color:#9aa7c2;">Stärkster Tag</div>
+ </div>
+ </div>
+ <div style="height:76px; width:100%; position:relative; margin-top:4px;">
+ <canvas id="chartPeakMini"></canvas>
+ </div>
+ </div>
+ <div class="widget-card-footer">
+ <span>Beste Zeiten für Instagram &amp; Promo</span>
+ <span class="zoom-text">Vergrößern </span>
+ </div>
+ </div>
  </div>
  </div>
 
@@ -2372,7 +2497,7 @@
  }
 
  let chartViewsDaily = null, chartDevice = null, chartOS = null;
- let chartCategory = null, chartPaid = null, chartDaily = null, chartRatings = null;
+ let chartCategory = null, chartPaid = null, chartDaily = null, chartRatings = null, chartPeakMini = null;
 
  function tsToDate(ts){
  if (!ts) return null;
@@ -2682,6 +2807,134 @@
  }
  });
  }
+ }
+
+ // --- 7) Funnel & Absprung-Analyse Widget ---
+ const homeViews = allPageviews.filter(p => !p.path || p.path === '/' || p.path.includes('index')).length || totalViews;
+ const anmeldeViews = allPageviews.filter(p => p.path && p.path.includes('anmeldung')).length;
+ const formStartedEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'form_started').length;
+ const formStartedCount = Math.max(allRegs.length, formStartedEvents);
+ const submittedCount = allRegs.length;
+
+ const funnelBase = Math.max(1, homeViews);
+ const conversionRate = Math.min(100, Math.round((submittedCount / funnelBase) * 100 * 10) / 10);
+ const totalDropoff = Math.max(0, Math.round(100 - (submittedCount / funnelBase) * 100));
+
+ const elWFunnelRate = document.getElementById('widgetFunnelRate');
+ if (elWFunnelRate) elWFunnelRate.textContent = `${conversionRate}%`;
+ const elWFunnelDrop = document.getElementById('widgetFunnelDropoff');
+ if (elWFunnelDrop) elWFunnelDrop.textContent = `${totalDropoff}% Absprung`;
+
+ const elWfn1 = document.getElementById('wfn1');
+ if (elWfn1) elWfn1.textContent = homeViews;
+ const elWfn2 = document.getElementById('wfn2');
+ if (elWfn2) elWfn2.textContent = anmeldeViews;
+ const elWfn3 = document.getElementById('wfn3');
+ if (elWfn3) elWfn3.textContent = formStartedCount;
+ const elWfn4 = document.getElementById('wfn4');
+ if (elWfn4) elWfn4.textContent = submittedCount;
+
+ const elWfnBar2 = document.getElementById('wfnBar2');
+ if (elWfnBar2) elWfnBar2.style.width = `${Math.min(100, Math.round((anmeldeViews / funnelBase) * 100))}%`;
+ const elWfnBar3 = document.getElementById('wfnBar3');
+ if (elWfnBar3) elWfnBar3.style.width = `${Math.min(100, Math.round((formStartedCount / funnelBase) * 100))}%`;
+ const elWfnBar4 = document.getElementById('wfnBar4');
+ if (elWfnBar4) elWfnBar4.style.width = `${Math.min(100, Math.round((submittedCount / funnelBase) * 100))}%`;
+
+ // --- 8) Kapazitäts- & Umsatz-Prognose Widget ---
+ const hallCapacity = 250;
+ const currentTickets = allTickets.length;
+ const capPercent = Math.min(100, Math.round((currentTickets / hallCapacity) * 100));
+ const remainingSeats = Math.max(0, hallCapacity - currentTickets);
+
+ const elWForeTickets = document.getElementById('widgetForecastTickets');
+ if (elWForeTickets) elWForeTickets.textContent = currentTickets;
+ const elWForeCap = document.getElementById('widgetForecastCap');
+ if (elWForeCap) elWForeCap.textContent = `/ ${hallCapacity} Plätze`;
+ const elWForePct = document.getElementById('widgetForecastPct');
+ if (elWForePct) elWForePct.textContent = `${capPercent}%`;
+ const elWForeBar = document.getElementById('widgetForecastBar');
+ if (elWForeBar) {
+ elWForeBar.style.width = `${capPercent}%`;
+ elWForeBar.style.background = capPercent > 85 ? 'linear-gradient(90deg, #ffd27f 0%, #ff8080 100%)' : 'linear-gradient(90deg, #8fb4ff 0%, #7fe0a8 100%)';
+ }
+ const elWForeRem = document.getElementById('widgetForecastRemaining');
+ if (elWForeRem) elWForeRem.textContent = `${remainingSeats} Plätze`;
+
+ const numDays = Math.max(1, sortedDays.length);
+ const avgTicketsPerDay = (currentTickets / numDays).toFixed(1);
+ const daysToFull = avgTicketsPerDay > 0 ? Math.ceil(remainingSeats / avgTicketsPerDay) : null;
+ const elWForePace = document.getElementById('widgetForecastPace');
+ if (elWForePace) {
+ if (remainingSeats <= 0) {
+ elWForePace.textContent = 'Voll belegt';
+ elWForePace.style.color = '#7fe0a8';
+ } else if (daysToFull && isFinite(daysToFull)) {
+ elWForePace.textContent = `Voll in ~${daysToFull} Tagen`;
+ } else {
+ elWForePace.textContent = `${avgTicketsPerDay} Tk/Tag`;
+ }
+ }
+
+ // --- 9) Peak Times & Aktivitäts-Zeiten Widget ---
+ const hourCounts = new Array(24).fill(0);
+ const weekdayCounts = [0, 0, 0, 0, 0, 0, 0];
+ const weekdayNames = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+
+ allRegs.forEach(r => {
+ const d = tsToDate(r.createdAt);
+ if (!d) return;
+ hourCounts[d.getHours()]++;
+ const dayIdx = (d.getDay() + 6) % 7;
+ weekdayCounts[dayIdx]++;
+ });
+
+ let maxHourIdx = 19;
+ let maxHourVal = 0;
+ hourCounts.forEach((val, h) => {
+ if (val > maxHourVal) { maxHourVal = val; maxHourIdx = h; }
+ });
+ let maxDayIdx = 6;
+ let maxDayVal = 0;
+ weekdayCounts.forEach((val, d) => {
+ if (val > maxDayVal) { maxDayVal = val; maxDayIdx = d; }
+ });
+
+ const peakHourStr = maxHourVal > 0 ? `${maxHourIdx}:00 – ${maxHourIdx + 1}:00 Uhr` : '19:00 – 21:00 Uhr';
+ const peakDayStr = maxDayVal > 0 ? (weekdayNames[maxDayIdx] === 'So' ? 'Sonntag' : (weekdayNames[maxDayIdx] === 'Mo' ? 'Montag' : (weekdayNames[maxDayIdx] === 'Sa' ? 'Samstag' : `${weekdayNames[maxDayIdx]}tag`))) : 'Sonntag';
+
+ const elPeakHour = document.getElementById('widgetPeakHour');
+ if (elPeakHour) elPeakHour.textContent = peakHourStr;
+ const elPeakDay = document.getElementById('widgetPeakDay');
+ if (elPeakDay) elPeakDay.textContent = peakDayStr;
+
+ const peakMiniCanvas = document.getElementById('chartPeakMini');
+ if (peakMiniCanvas) {
+ if (chartPeakMini) chartPeakMini.destroy();
+ const hoursSlice = [8, 10, 12, 14, 16, 18, 20, 22];
+ const hoursLabels = hoursSlice.map(h => `${h}h`);
+ const hoursData = hoursSlice.map(h => hourCounts[h] + (hourCounts[h+1] || 0));
+
+ chartPeakMini = new Chart(peakMiniCanvas, {
+ type: 'bar',
+ data: {
+ labels: hoursLabels,
+ datasets: [{
+ data: hoursData,
+ backgroundColor: hoursSlice.map(h => (h === maxHourIdx || h + 1 === maxHourIdx) ? '#ffd27f' : 'rgba(143,180,255,0.45)'),
+ borderRadius: 3
+ }]
+ },
+ options: {
+ responsive: true,
+ maintainAspectRatio: false,
+ plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => ` ${ctx.parsed.y} Buchungen` } } },
+ scales: {
+ y: { display: false, beginAtZero: true },
+ x: { ticks: { color: '#9aa7c2', font: { size: 9 } }, grid: { display: false } }
+ }
+ }
+ });
  }
 
  // Falls gerade ein vergrößertes Modal aktiv ist (außer 'live'), direkt aktualisieren
@@ -3347,6 +3600,394 @@
  <td style="font-weight:700; color:#ffd27f;">${openCount} (${100 - paidPct}%)</td>
  <td style="color:#9aa7c2;">Überweisung oder Barzahlung steht noch aus</td>
  </tr>
+ </tbody>
+ </table>
+ `;
+ return;
+ }
+
+ // 7. CONVERSION-FUNNEL MODAL
+ if (widgetType === 'funnel') {
+ iconEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>';
+ iconEl.style.background = 'rgba(127,224,168,0.18)';
+ iconEl.style.color = '#7fe0a8';
+ titleEl.textContent = 'Conversion-Funnel & Absprung-Analyse';
+ subEl.textContent = 'Trichter-Auswertung von Webseiten-Aufrufen bis zum abgeschlossenen Ticketkauf';
+
+ const homeViews = allPageviews.filter(p => !p.path || p.path === '/' || p.path.includes('index')).length || allPageviews.length;
+ const anmeldeViews = allPageviews.filter(p => p.path && p.path.includes('anmeldung')).length;
+ const formStartedEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'form_started').length;
+ const formStartedCount = Math.max(allRegs.length, formStartedEvents);
+ const submittedCount = allRegs.length;
+ const base = Math.max(1, homeViews);
+
+ const step1Pct = 100;
+ const step2Pct = Math.min(100, Math.round((anmeldeViews / base) * 100));
+ const step3Pct = Math.min(100, Math.round((formStartedCount / base) * 100));
+ const step4Pct = Math.min(100, Math.round((submittedCount / base) * 100 * 10) / 10);
+
+ const drop1to2 = Math.max(0, 100 - step2Pct);
+ const drop2to3 = anmeldeViews > 0 ? Math.max(0, Math.round((1 - (formStartedCount / Math.max(1, anmeldeViews))) * 100)) : 0;
+ const drop3to4 = formStartedCount > 0 ? Math.max(0, Math.round((1 - (submittedCount / Math.max(1, formStartedCount))) * 100)) : 0;
+
+ kpiEl.innerHTML = `
+ <div class="widget-modal-kpi-card">
+ <div class="widget-modal-kpi-lbl">1. Startseite</div>
+ <div class="widget-modal-kpi-val" style="color:#8fb4ff;">${homeViews}</div>
+ <div class="widget-modal-kpi-sub">Besucher auf winterball27.de</div>
+ </div>
+ <div class="widget-modal-kpi-card">
+ <div class="widget-modal-kpi-lbl">2. Anmeldeseite</div>
+ <div class="widget-modal-kpi-val" style="color:#a78bfa;">${anmeldeViews}</div>
+ <div class="widget-modal-kpi-sub">${step2Pct}% Klickrate auf Anmelden</div>
+ </div>
+ <div class="widget-modal-kpi-card">
+ <div class="widget-modal-kpi-lbl">3. Formular begonnen</div>
+ <div class="widget-modal-kpi-val" style="color:#ffd27f;">${formStartedCount}</div>
+ <div class="widget-modal-kpi-sub">${drop2to3}% Abbruch vor Eingabe</div>
+ </div>
+ <div class="widget-modal-kpi-card">
+ <div class="widget-modal-kpi-lbl">4. Abgeschlossen</div>
+ <div class="widget-modal-kpi-val" style="color:#7fe0a8;">${submittedCount}</div>
+ <div class="widget-modal-kpi-sub">${step4Pct}% Gesamte Conversion</div>
+ </div>
+ `;
+
+ chartBox.style.display = 'block';
+ modalChart = new Chart(canvas, {
+ type: 'bar',
+ data: {
+ labels: ['1. Startseite', '2. Anmeldeseite', '3. Formular begonnen', '4. Bestellt'],
+ datasets: [{
+ label: 'Personen im Trichter',
+ data: [homeViews, anmeldeViews, formStartedCount, submittedCount],
+ backgroundColor: ['#8fb4ff', '#a78bfa', '#ffd27f', '#7fe0a8'],
+ borderRadius: 6
+ }]
+ },
+ options: {
+ indexAxis: 'y',
+ responsive: true,
+ maintainAspectRatio: false,
+ plugins: {
+ legend: { display: false },
+ tooltip: { callbacks: { label: (ctx) => ` ${ctx.parsed.x} Personen (${Math.round((ctx.parsed.x/base)*100)}% der Startseite)` } }
+ },
+ scales: {
+ x: { beginAtZero: true, ticks: { color: '#9aa7c2' }, grid: { color: 'rgba(255,255,255,0.06)' } },
+ y: { ticks: { color: '#c7d7f7', font: { weight: '600', size: 12 } }, grid: { display: false } }
+ }
+ }
+ });
+
+ detailBox.style.display = 'block';
+ detailBox.innerHTML = `
+ <table class="widget-modal-table">
+ <thead>
+ <tr>
+ <th>Trichterstufe</th>
+ <th>Anzahl</th>
+ <th>Quote (von Startseite)</th>
+ <th>Absprungrate</th>
+ <th>Optimierungs-Empfehlung</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td style="font-weight:700; color:#8fb4ff;">1. Startseite besucht</td>
+ <td style="font-weight:700; color:#fff;">${homeViews}</td>
+ <td>100%</td>
+ <td style="color:#ffd27f;">–</td>
+ <td style="color:#9aa7c2;">Hauptportal · Erste Anlaufstelle für Schüler &amp; Gäste</td>
+ </tr>
+ <tr>
+ <td style="font-weight:700; color:#a78bfa;">2. Anmeldeseite geöffnet</td>
+ <td style="font-weight:700; color:#fff;">${anmeldeViews}</td>
+ <td style="font-weight:600; color:#8fb4ff;">${step2Pct}%</td>
+ <td style="color:#ff8080; font-weight:700;">-${drop1to2}%</td>
+ <td style="color:#9aa7c2;">Call-to-Action Buttons auf der Startseite gut sichtbar halten</td>
+ </tr>
+ <tr>
+ <td style="font-weight:700; color:#ffd27f;">3. Formular begonnen</td>
+ <td style="font-weight:700; color:#fff;">${formStartedCount}</td>
+ <td style="font-weight:600; color:#ffd27f;">${step3Pct}%</td>
+ <td style="color:#ff8080; font-weight:700;">-${drop2to3}%</td>
+ <td style="color:#9aa7c2;">Einfache Eingabe; Vertrauen durch klare Datenschutzhinweise</td>
+ </tr>
+ <tr>
+ <td style="font-weight:700; color:#7fe0a8;">4. Bestellung abgeschlossen</td>
+ <td style="font-weight:700; color:#fff;">${submittedCount}</td>
+ <td style="font-weight:700; color:#7fe0a8;">${step4Pct}%</td>
+ <td style="color:#7fe0a8; font-weight:700;">-${drop3to4}%</td>
+ <td style="color:#7fe0a8; font-weight:600;">Sehr hohe Abschlussrate sobald das Formular ausgefüllt wurde!</td>
+ </tr>
+ </tbody>
+ </table>
+ `;
+ return;
+ }
+
+ // 8. CAPACITY & REVENUE FORECAST MODAL
+ if (widgetType === 'forecast') {
+ iconEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>';
+ iconEl.style.background = 'rgba(143,180,255,0.18)';
+ iconEl.style.color = '#8fb4ff';
+ titleEl.textContent = 'Saal-Kapazität & Ticket-Prognose';
+ subEl.textContent = 'Auslastung, Burn-up Hochrechnung und Catering-Kalkulation';
+
+ const hallCapacity = 250;
+ const currentTickets = allTickets.length;
+ const capPercent = Math.min(100, Math.round((currentTickets / hallCapacity) * 100));
+ const remainingSeats = Math.max(0, hallCapacity - currentTickets);
+ const u18Count = allTickets.filter(t => t.category === 'u18').length;
+ const ue18Count = allTickets.filter(t => t.category === 'ue18').length;
+
+ // Tages-Tickets kumulativ für Burn-up Chart
+ const ticketsByDay = {};
+ allTickets.forEach(t => {
+ const d = tsToDate(t.createdAt);
+ if (!d) return;
+ const k = d.toISOString().slice(0, 10);
+ ticketsByDay[k] = (ticketsByDay[k] || 0) + 1;
+ });
+
+ const sortedDays = Object.keys(ticketsByDay).sort();
+ let cumTickets = 0;
+ const cumData = sortedDays.map(k => {
+ cumTickets += ticketsByDay[k];
+ return cumTickets;
+ });
+
+ const dayLabels = sortedDays.map(k => {
+ const [y, m, dd] = k.split('-');
+ return `${dd}.${m}.`;
+ });
+
+ const numDays = Math.max(1, sortedDays.length);
+ const avgTicketsPerDay = (currentTickets / numDays).toFixed(1);
+ const daysToFull = avgTicketsPerDay > 0 ? Math.ceil(remainingSeats / avgTicketsPerDay) : null;
+
+ kpiEl.innerHTML = `
+ <div class="widget-modal-kpi-card">
+ <div class="widget-modal-kpi-lbl">Auslastung aktuell</div>
+ <div class="widget-modal-kpi-val" style="color:#8fb4ff;">${currentTickets} / ${hallCapacity}</div>
+ <div class="widget-modal-kpi-sub">${capPercent}% der Plätze vergeben</div>
+ </div>
+ <div class="widget-modal-kpi-card">
+ <div class="widget-modal-kpi-lbl">Verfügbare Restplätze</div>
+ <div class="widget-modal-kpi-val" style="color:${remainingSeats < 30 ? '#ffd27f' : '#7fe0a8'};">${remainingSeats}</div>
+ <div class="widget-modal-kpi-sub">von ${hallCapacity} Maximalkapazität</div>
+ </div>
+ <div class="widget-modal-kpi-card">
+ <div class="widget-modal-kpi-lbl">Vorauss. Umsatz</div>
+ <div class="widget-modal-kpi-val" style="color:#7fe0a8;">${formatCents(totalProjectedCents)}</div>
+ <div class="widget-modal-kpi-sub">Alle erfassten Reservierungen</div>
+ </div>
+ <div class="widget-modal-kpi-card">
+ <div class="widget-modal-kpi-lbl">Buchungstempo</div>
+ <div class="widget-modal-kpi-val" style="color:#ffd27f;">${avgTicketsPerDay} Tk / Tag</div>
+ <div class="widget-modal-kpi-sub">${daysToFull ? `Voll in ~${daysToFull} Tagen` : 'Kapazität ausreichend'}</div>
+ </div>
+ `;
+
+ chartBox.style.display = 'block';
+ modalChart = new Chart(canvas, {
+ type: 'line',
+ data: {
+ labels: dayLabels.length ? dayLabels : ['Start'],
+ datasets: [
+ {
+ label: 'Verkaufte Tickets (kumuliert)',
+ data: cumData.length ? cumData : [currentTickets],
+ borderColor: '#7fe0a8',
+ backgroundColor: 'rgba(127, 224, 168, 0.15)',
+ fill: true,
+ tension: 0.3,
+ borderWidth: 3,
+ pointRadius: 4,
+ pointBackgroundColor: '#7fe0a8'
+ },
+ {
+ label: 'Saal-Maximum (250 Plätze)',
+ data: (dayLabels.length ? dayLabels : ['Start']).map(() => hallCapacity),
+ borderColor: 'rgba(255, 128, 128, 0.65)',
+ borderDash: [6, 4],
+ borderWidth: 2,
+ pointRadius: 0,
+ fill: false
+ }
+ ]
+ },
+ options: {
+ responsive: true,
+ maintainAspectRatio: false,
+ plugins: {
+ legend: { position: 'top', labels: { color: '#c7d7f7', font: { size: 12, weight: '600' } } },
+ tooltip: { callbacks: { label: (ctx) => ` ${ctx.dataset.label}: ${ctx.parsed.y} Tickets` } }
+ },
+ scales: {
+ y: { beginAtZero: true, max: Math.max(hallCapacity + 20, currentTickets + 20), ticks: { color: '#9aa7c2' }, grid: { color: 'rgba(255,255,255,0.06)' } },
+ x: { ticks: { color: '#9aa7c2' }, grid: { display: false } }
+ }
+ }
+ });
+
+ detailBox.style.display = 'block';
+ detailBox.innerHTML = `
+ <table class="widget-modal-table">
+ <thead>
+ <tr>
+ <th>Planungsbereich</th>
+ <th>Status / Kennzahl</th>
+ <th>Planungsempfehlung für das Orga-Team</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td style="font-weight:700; color:#fff;">Bestuhlung &amp; Saallayout</td>
+ <td style="font-weight:700; color:#8fb4ff;">${currentTickets} Gäste (${remainingSeats} Plätze frei)</td>
+ <td style="color:#9aa7c2;">Aktuell ${Math.ceil(currentTickets / 8)} Tische à 8 Plätze benötigt.</td>
+ </tr>
+ <tr>
+ <td style="font-weight:700; color:#fff;">Catering: U18 Gäste</td>
+ <td style="font-weight:700; color:#8fb4ff;">${u18Count} Personen</td>
+ <td style="color:#9aa7c2;">Alkoholfreie Getränke, Mocktails &amp; Snacks kalkulieren</td>
+ </tr>
+ <tr>
+ <td style="font-weight:700; color:#fff;">Catering: Ü18 Gäste</td>
+ <td style="font-weight:700; color:#7fe0a8;">${ue18Count} Personen</td>
+ <td style="color:#9aa7c2;">Sektempfang, Barbestand &amp; Jugendschutz-Farbbänder vorsehen</td>
+ </tr>
+ <tr>
+ <td style="font-weight:700; color:#fff;">Kassen-Potenzial</td>
+ <td style="font-weight:700; color:#ffd27f;">${formatCents(totalProjectedCents)} gesamt</td>
+ <td style="color:#9aa7c2;">${formatCents(todayPaidCents)} bereits eingenommen · ${formatCents(totalProjectedCents - todayPaidCents)} offen</td>
+ </tr>
+ </tbody>
+ </table>
+ `;
+ return;
+ }
+
+ // 9. PEAK TIMES & ACTIVITY MODAL
+ if (widgetType === 'peaktimes') {
+ iconEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+ iconEl.style.background = 'rgba(255,210,127,0.18)';
+ iconEl.style.color = '#ffd27f';
+ titleEl.textContent = 'Tages- & Stunden-Aktivität (Peak Times)';
+ subEl.textContent = 'Verteilung aller Registrierungen nach Wochentagen und Uhrzeiten für optimale Promo-Planung';
+
+ const hourCounts = new Array(24).fill(0);
+ const weekdayCounts = [0, 0, 0, 0, 0, 0, 0];
+ const weekdayNames = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+
+ allRegs.forEach(r => {
+ const d = tsToDate(r.createdAt);
+ if (!d) return;
+ hourCounts[d.getHours()]++;
+ const dayIdx = (d.getDay() + 6) % 7;
+ weekdayCounts[dayIdx]++;
+ });
+
+ let maxHourIdx = 19;
+ let maxHourVal = 0;
+ hourCounts.forEach((val, h) => {
+ if (val > maxHourVal) { maxHourVal = val; maxHourIdx = h; }
+ });
+ let maxDayIdx = 6;
+ let maxDayVal = 0;
+ weekdayCounts.forEach((val, d) => {
+ if (val > maxDayVal) { maxDayVal = val; maxDayIdx = d; }
+ });
+
+ const totalRegs = Math.max(1, allRegs.length);
+ const weekendRegs = weekdayCounts[5] + weekdayCounts[6];
+ const weekendPct = Math.round((weekendRegs / totalRegs) * 100);
+ const schoolBreakRegs = hourCounts[9] + hourCounts[10] + hourCounts[11] + hourCounts[12] + hourCounts[13];
+ const schoolBreakPct = Math.round((schoolBreakRegs / totalRegs) * 100);
+
+ kpiEl.innerHTML = `
+ <div class="widget-modal-kpi-card">
+ <div class="widget-modal-kpi-lbl">Stärkste Uhrzeit</div>
+ <div class="widget-modal-kpi-val" style="color:#ffd27f;">${maxHourIdx}:00 Uhr</div>
+ <div class="widget-modal-kpi-sub">${maxHourVal} Buchungen in dieser Stunde</div>
+ </div>
+ <div class="widget-modal-kpi-card">
+ <div class="widget-modal-kpi-lbl">Bester Wochentag</div>
+ <div class="widget-modal-kpi-val" style="color:#8fb4ff;">${weekdayNames[maxDayIdx]}</div>
+ <div class="widget-modal-kpi-sub">${maxDayVal} Buchungen an diesem Tag</div>
+ </div>
+ <div class="widget-modal-kpi-card">
+ <div class="widget-modal-kpi-lbl">Wochenend-Quote</div>
+ <div class="widget-modal-kpi-val" style="color:#7fe0a8;">${weekendPct}%</div>
+ <div class="widget-modal-kpi-sub">Samstag &amp; Sonntag gebucht</div>
+ </div>
+ <div class="widget-modal-kpi-card">
+ <div class="widget-modal-kpi-lbl">Pausen-Aktivität</div>
+ <div class="widget-modal-kpi-val" style="color:#a78bfa;">${schoolBreakPct}%</div>
+ <div class="widget-modal-kpi-sub">Schulzeit (09:00 – 14:00 Uhr)</div>
+ </div>
+ `;
+
+ chartBox.style.display = 'block';
+ const hourLabels = Array.from({length: 24}, (_, i) => `${i}:00`);
+
+ modalChart = new Chart(canvas, {
+ type: 'bar',
+ data: {
+ labels: hourLabels,
+ datasets: [{
+ label: 'Registrierungen nach Uhrzeit',
+ data: hourCounts,
+ backgroundColor: hourCounts.map((_, h) => h === maxHourIdx ? '#ffd27f' : 'rgba(143,180,255,0.55)'),
+ borderColor: hourCounts.map((_, h) => h === maxHourIdx ? '#ffd27f' : '#8fb4ff'),
+ borderWidth: 1,
+ borderRadius: 4
+ }]
+ },
+ options: {
+ responsive: true,
+ maintainAspectRatio: false,
+ plugins: {
+ legend: { display: false },
+ tooltip: { callbacks: { label: (ctx) => ` ${ctx.parsed.y} Buchungen um ${ctx.label}` } }
+ },
+ scales: {
+ y: { beginAtZero: true, ticks: { precision: 0, color: '#9aa7c2' }, grid: { color: 'rgba(255,255,255,0.06)' } },
+ x: { ticks: { color: '#9aa7c2', maxRotation: 45, minRotation: 45, font: { size: 10 } }, grid: { display: false } }
+ }
+ }
+ });
+
+ detailBox.style.display = 'block';
+ detailBox.innerHTML = `
+ <table class="widget-modal-table">
+ <thead>
+ <tr>
+ <th>Wochentag</th>
+ <th>Buchungen</th>
+ <th>Anteil</th>
+ <th>Empfohlene Social-Media- &amp; Promo-Aktion</th>
+ </tr>
+ </thead>
+ <tbody>
+ ${weekdayNames.map((dayName, idx) => {
+ const cnt = weekdayCounts[idx];
+ const pct = Math.round((cnt / totalRegs) * 100);
+ const isPeak = idx === maxDayIdx;
+ let tip = 'Reguläre Erinnerungen';
+ if (idx === 6) tip = 'Idealer Zeitpunkt für Instagram Story & Countdown-Posts (18:00 – 20:30 Uhr)';
+ else if (idx === 0) tip = 'Wochenstart-Reminder in der großen Pause (11:15 Uhr)';
+ else if (idx === 4) tip = 'Wochenend-Vorfreude teilen & Ticketkauf für das Wochenende ankurbeln';
+ return `
+ <tr>
+ <td style="font-weight:700; color:${isPeak ? '#ffd27f' : '#fff'};">${dayName} ${isPeak ? '★' : ''}</td>
+ <td style="font-weight:700; color:${isPeak ? '#ffd27f' : '#8fb4ff'};">${cnt}</td>
+ <td>${pct}%</td>
+ <td style="color:#9aa7c2;">${tip}</td>
+ </tr>
+ `;
+ }).join('')}
  </tbody>
  </table>
  `;
