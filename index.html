@@ -1071,9 +1071,11 @@
  @media (max-width: 480px){
  .floating-cta-bar{
    width:calc(100% - 24px);
-   bottom:calc(14px + env(safe-area-inset-bottom, 0px));
+   bottom:calc(32px + env(safe-area-inset-bottom, 0px));
    padding:8px 10px 8px 16px;
    border-radius:100px;
+   backdrop-filter:blur(5px) saturate(180%) !important;
+   -webkit-backdrop-filter:blur(5px) saturate(180%) !important;
  }
  .floating-cta-title{font-size:12.5px;}
  .floating-cta-sub{font-size:10.5px;}
