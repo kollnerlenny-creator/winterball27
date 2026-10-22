@@ -620,8 +620,133 @@
  background:rgba(127,224,168,0.15); border:1px solid rgba(127,224,168,0.4);
  display:flex; align-items:center; justify-content:center; font-size:26px;
  }
- .success-view h2{font-weight:400; font-size:22px; margin-bottom:8px;}
+ .success-view h2{font-family:'Cinzel', serif; font-weight:700; font-size:24px; margin-bottom:6px; letter-spacing:0.5px; color:#ffffff;}
  .success-view p{color:var(--text-dim); font-size:14px; line-height:1.6;}
+
+ /* Prominente E-Mail Bestätigungsbox */
+ .email-confirm-box {
+   margin: 20px auto 18px;
+   max-width: 480px;
+   background: linear-gradient(145deg, rgba(20, 30, 56, 0.75) 0%, rgba(12, 18, 34, 0.9) 100%);
+   border: 1px solid rgba(143, 180, 255, 0.35);
+   border-radius: var(--radius);
+   padding: 22px 20px 20px;
+   text-align: left;
+   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+ }
+ .confirm-badge-row {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   margin-bottom: 10px;
+ }
+ .confirm-badge {
+   display: inline-flex;
+   align-items: center;
+   gap: 6px;
+   font-size: 11px;
+   letter-spacing: 1.2px;
+   text-transform: uppercase;
+   font-weight: 700;
+   color: #7fe0a8;
+   background: rgba(127, 224, 168, 0.12);
+   border: 1px solid rgba(127, 224, 168, 0.35);
+   padding: 4px 10px;
+   border-radius: 100px;
+ }
+ .email-confirm-title {
+   font-family: 'Cinzel', serif;
+   font-size: 20px;
+   font-weight: 700;
+   color: #ffffff;
+   margin-bottom: 10px;
+   letter-spacing: 0.3px;
+ }
+ .confirm-email-display {
+   background: rgba(255, 255, 255, 0.05);
+   border: 1px solid rgba(143, 180, 255, 0.22);
+   border-radius: 10px;
+   padding: 10px 14px;
+   margin-bottom: 12px;
+   font-size: 13.5px;
+   color: var(--text);
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   flex-wrap: wrap;
+   word-break: break-all;
+ }
+ .confirm-email-display strong {
+   color: #8fb4ff;
+   font-weight: 700;
+ }
+ .confirm-hint-box {
+   background: rgba(255, 210, 127, 0.09);
+   border-left: 3px solid #ffd27f;
+   border-radius: 0 8px 8px 0;
+   padding: 10px 12px;
+   font-size: 12.5px;
+   line-height: 1.5;
+   color: #eef2fb;
+   margin-bottom: 18px;
+ }
+ .confirm-hint-box strong {
+   color: #ffd27f;
+ }
+
+ /* 3-Schritte Ablauf */
+ .next-steps-title {
+   font-size: 11.5px;
+   text-transform: uppercase;
+   letter-spacing: 1.2px;
+   color: var(--text-dim);
+   font-weight: 700;
+   margin-bottom: 10px;
+   font-family: 'Cinzel', serif;
+ }
+ .next-steps-list {
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+ }
+ .next-step-item {
+   display: flex;
+   align-items: flex-start;
+   gap: 12px;
+   background: rgba(255, 255, 255, 0.03);
+   border: 1px solid rgba(255, 255, 255, 0.07);
+   border-radius: 10px;
+   padding: 10px 12px;
+ }
+ .next-step-num {
+   width: 24px;
+   height: 24px;
+   border-radius: 50%;
+   background: rgba(143, 180, 255, 0.18);
+   border: 1px solid rgba(143, 180, 255, 0.4);
+   color: #8fb4ff;
+   font-size: 12px;
+   font-weight: 700;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   flex-shrink: 0;
+   margin-top: 1px;
+ }
+ .next-step-content {
+   flex: 1;
+ }
+ .next-step-heading {
+   font-size: 13px;
+   font-weight: 700;
+   color: #ffffff;
+   margin-bottom: 2px;
+ }
+ .next-step-desc {
+   font-size: 12px;
+   color: var(--text-dim);
+   line-height: 1.45;
+ }
 
  /* Kalender-Aktion nach erfolgreicher Anmeldung */
  .calendar-card{
@@ -697,85 +822,117 @@
  .countdown-part span{font-size:26px; font-weight:600; font-variant-numeric:tabular-nums;}
  .countdown-part label{font-size:10px; color:var(--text-dim); letter-spacing:1px; text-transform:uppercase;}
 
- /* Story Share Reward Card */
+ /* Story Share Reward Card im echten Winterball-Stil */
  .story-reward-card {
- margin-top: 20px;
- background: linear-gradient(145deg, rgba(20, 29, 52, 0.85) 0%, rgba(10, 15, 28, 0.92) 100%);
- border: 1px solid rgba(143, 180, 255, 0.35);
- border-radius: var(--radius);
- padding: 20px 18px;
- text-align: center;
- box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 24px rgba(143, 180, 255, 0.12);
- position: relative;
- overflow: hidden;
+   margin: 22px auto 16px;
+   max-width: 480px;
+   background: linear-gradient(145deg, rgba(18, 26, 46, 0.9) 0%, rgba(10, 14, 26, 0.95) 100%);
+   border: 1px solid rgba(143, 180, 255, 0.35);
+   border-radius: var(--radius);
+   padding: 22px 18px 20px;
+   text-align: center;
+   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+   position: relative;
+   overflow: hidden;
  }
  .story-preview-frame {
- max-width: 290px;
- margin: 14px auto 16px;
- background: radial-gradient(circle at 50% 15%, rgba(45, 75, 130, 0.75) 0%, rgba(10, 14, 26, 0.95) 75%);
- border: 1.5px solid rgba(143, 180, 255, 0.45);
- border-radius: 18px;
- padding: 24px 18px 20px;
- box-shadow: 0 12px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.18);
- position: relative;
- text-align: center;
+   max-width: 310px;
+   margin: 16px auto 18px;
+   background: radial-gradient(circle at 50% 25%, rgba(28, 48, 86, 0.82) 0%, rgba(9, 14, 25, 0.98) 85%);
+   border: 1.5px solid rgba(143, 180, 255, 0.45);
+   border-radius: 18px;
+   padding: 26px 20px 22px;
+   box-shadow: 0 16px 36px rgba(0,0,0,0.55), inset 0 0 30px rgba(143, 180, 255, 0.08);
+   position: relative;
+   text-align: center;
+ }
+ .story-preview-frame::before {
+   content: '';
+   position: absolute;
+   inset: 7px;
+   border: 1px solid rgba(223, 233, 255, 0.18);
+   border-radius: 12px;
+   pointer-events: none;
  }
  .story-badge {
- display: inline-block;
- font-size: 10px;
- letter-spacing: 1.5px;
- text-transform: uppercase;
- font-weight: 700;
- color: #8fb4ff;
- background: rgba(143, 180, 255, 0.14);
- border: 1px solid rgba(143, 180, 255, 0.3);
- padding: 4px 10px;
- border-radius: 100px;
- margin-bottom: 12px;
+   display: inline-block;
+   font-family: 'Cinzel', serif;
+   font-size: 10px;
+   letter-spacing: 1.8px;
+   text-transform: uppercase;
+   font-weight: 700;
+   color: #8fb4ff;
+   margin-bottom: 6px;
+   position: relative;
+   z-index: 1;
+ }
+ .story-event-script {
+   font-family: 'Great Vibes', cursive;
+   font-size: 52px;
+   font-weight: 400;
+   line-height: 1.15;
+   background: linear-gradient(115deg, #ffffff 0%, #c9d6f0 40%, #ffffff 70%, #dfe9ff 100%);
+   -webkit-background-clip: text;
+   background-clip: text;
+   color: transparent;
+   text-shadow: 0 0 28px rgba(143, 180, 255, 0.5);
+   margin: 0 0 2px 0;
+   position: relative;
+   z-index: 1;
+ }
+ .story-event-year {
+   font-family: 'Cinzel', serif;
+   font-size: 15px;
+   letter-spacing: 5px;
+   color: #dfe9ff;
+   font-weight: 600;
+   margin-bottom: 12px;
+   position: relative;
+   z-index: 1;
  }
  .story-headline {
- font-size: 26px;
- font-weight: 900;
- letter-spacing: -0.5px;
- color: #ffffff;
- line-height: 1.1;
- text-shadow: 0 0 20px rgba(143, 180, 255, 0.5);
- margin-bottom: 6px;
- }
- .story-event-title {
- font-size: 14px;
- letter-spacing: 2px;
- text-transform: uppercase;
- color: #7fe0a8;
- font-weight: 700;
- margin-bottom: 14px;
+   font-family: 'Cinzel', serif;
+   font-size: 17px;
+   font-weight: 800;
+   letter-spacing: 1.5px;
+   color: #7fe0a8;
+   margin-bottom: 12px;
+   position: relative;
+   z-index: 1;
  }
  .story-guest-box {
- background: rgba(255, 255, 255, 0.05);
- border: 1px solid rgba(255, 255, 255, 0.1);
- border-radius: 12px;
- padding: 10px 12px;
- margin-bottom: 14px;
+   background: rgba(255, 255, 255, 0.05);
+   border: 1px solid rgba(255, 255, 255, 0.12);
+   border-radius: 10px;
+   padding: 10px 12px;
+   margin-bottom: 14px;
+   position: relative;
+   z-index: 1;
  }
  .story-guest-name {
- font-size: 16px;
- font-weight: 700;
- color: #fff;
- letter-spacing: 0.2px;
+   font-family: 'Cinzel', 'Cormorant Garamond', serif;
+   font-size: 19px;
+   font-weight: 700;
+   color: #ffffff;
+   letter-spacing: 0.5px;
  }
  .story-guest-sub {
- font-size: 11px;
- color: #9aa7c2;
- margin-top: 2px;
+   font-size: 11px;
+   color: #7fe0a8;
+   margin-top: 3px;
+   font-weight: 600;
  }
  .story-meta-row {
- font-size: 11px;
- color: #dbe4f5;
- font-weight: 500;
- display: flex;
- align-items: center;
- justify-content: center;
- gap: 6px;
+   font-family: 'Cinzel', serif;
+   font-size: 11px;
+   color: #dbe4f5;
+   font-weight: 600;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 6px;
+   position: relative;
+   z-index: 1;
  }
  .story-actions-row {
  display: flex;
@@ -1208,48 +1365,102 @@
  </div>
 
  <div class="success-view" id="successView">
- <div class="success-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#7fe0a8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
- <h2>Anmeldung eingegangen!</h2>
- <p id="successInfoText">Bitte bezahle dein Ticket bar an der Vorverkaufskasse in der Schule.<br>Dein Ticket mit QR-Code bekommst du danach automatisch per E-Mail zugeschickt.</p>
+  <div class="success-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#7fe0a8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+  <h2>Anmeldung eingegangen!</h2>
+  <p id="successInfoText">Dein Platz auf der Gästeliste für den Winterball 2027 ist erfolgreich vorgemerkt.</p>
 
- <!-- Sofortige Belohnung: Teilbare Instagram-Story-Karte -->
- <div class="story-reward-card" id="storyRewardCard">
- <div style="font-size:12px; letter-spacing:1px; text-transform:uppercase; font-weight:700; color:#7fe0a8; margin-bottom:4px;">
- Deine Einladung &amp; Bestätigung
- </div>
- <div style="font-size:16px; font-weight:700; color:#fff; margin-bottom:12px;">
- Teile deine Teilnahme &amp; nimm deine Freunde mit!
- </div>
- 
- <!-- Vorschau der Story-Karte -->
- <div class="story-preview-frame" id="storyPreviewFrame">
- <div class="story-badge">Gymnasium Wilsdruff · Stufe 12</div>
- <div class="story-headline">ICH BIN DABEI!</div>
- <div class="story-event-title">Winter Ball 2027</div>
- <div class="story-guest-box">
- <div class="story-guest-name" id="storyGuestName">Dein Name</div>
- <div class="story-guest-sub" id="storyGuestSub">Offizieller Gästelisten-Platz</div>
- </div>
- <div class="story-meta-row">
- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px; height:13px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
- <span>30. Januar 2027 · ab 17:30 Uhr</span>
- </div>
- <div style="font-size:10px; color:#8fb4ff; margin-top:8px; opacity:0.85;">winterball27.de</div>
- </div>
+  <!-- 1. Prominente E-Mail Bestätigungsbox & 3-Schritte Ablauf -->
+  <div class="email-confirm-box" id="emailConfirmBox">
+    <div class="confirm-badge-row">
+      <span class="confirm-badge">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+        Bestätigungsmail gesendet
+      </span>
+    </div>
 
- <!-- Aktionen: Download Story-Bild & Teilen -->
- <div class="story-actions-row">
- <button type="button" class="btn-story-download" id="downloadStoryImageBtn">
- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px; height:16px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
- <span>Story-Bild herunterladen</span>
- </button>
- <button type="button" class="btn-story-share" id="shareStoryBtn" title="Direkt in Instagram Story oder an Freunde teilen">
- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px;"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
- <span>Freunden schicken</span>
- </button>
- </div>
- </div>
- <div class="story-toast" id="storyToast">Link &amp; Einladungstext kopiert!</div>
+    <div class="email-confirm-title">Prüfe deinen Posteingang</div>
+
+    <div class="confirm-email-display">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#8fb4ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+        <polyline points="22,6 12,13 2,6"></polyline>
+      </svg>
+      <span>Wir haben alle Details gesendet an:</span>
+      <strong id="successConfirmedEmail">deine@adresse.de</strong>
+    </div>
+
+    <div class="confirm-hint-box">
+      <strong>Wichtiger Tipp:</strong> Falls du die Bestätigung nicht in wenigen Minuten siehst, schau bitte kurz in deinem <strong>Spam- oder Unbekannt-Ordner</strong> nach.
+    </div>
+
+    <div class="next-steps-title">So geht es jetzt weiter</div>
+    <div class="next-steps-list">
+      <div class="next-step-item">
+        <div class="next-step-num">1</div>
+        <div class="next-step-content">
+          <div class="next-step-heading">E-Mail öffnen &amp; Daten prüfen</div>
+          <div class="next-step-desc">Deine Anmeldedaten und Reservierungsdetails liegen in deinem Postfach.</div>
+        </div>
+      </div>
+      <div class="next-step-item">
+        <div class="next-step-num">2</div>
+        <div class="next-step-content">
+          <div class="next-step-heading">Barzahlung in der Schule</div>
+          <div class="next-step-desc">Bezahle dein Ticket bar an der Vorverkaufskasse der Klassenstufe 12 am Gymnasium Wilsdruff.</div>
+        </div>
+      </div>
+      <div class="next-step-item">
+        <div class="next-step-num">3</div>
+        <div class="next-step-content">
+          <div class="next-step-heading">Ticket mit QR-Code erhalten</div>
+          <div class="next-step-desc">Sobald die Bezahlung verbucht ist, erhältst du dein offizielles Einlassticket mit QR-Code automatisch per E-Mail.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Teilbare Instagram-Story-Karte im echten Winterball-Look -->
+  <div class="story-reward-card" id="storyRewardCard">
+    <div style="font-family:'Cinzel', serif; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; font-weight:700; color:#7fe0a8; margin-bottom:4px;">
+      Offizielle Einladung &amp; Story
+    </div>
+    <div style="font-size:15px; font-weight:700; color:#fff; margin-bottom:12px;">
+      Teile deine Vorfreude in deiner Story &amp; nimm Freunde mit!
+    </div>
+    
+    <!-- Vorschau der Story-Karte (originale Winterball-Schriftarten) -->
+    <div class="story-preview-frame" id="storyPreviewFrame">
+      <div class="story-badge">Gymnasium Wilsdruff · Stufe 12</div>
+      <div class="story-event-script">Winterball</div>
+      <div class="story-event-year">— 2027 —</div>
+      <div class="story-headline">ICH BIN DABEI!</div>
+      <div class="story-guest-box">
+        <div class="story-guest-name" id="storyGuestName">Dein Name</div>
+        <div class="story-guest-sub" id="storyGuestSub">Offizieller Gästelisten-Platz</div>
+      </div>
+      <div class="story-meta-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px; height:13px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>30. Januar 2027 · ab 17:30 Uhr</span>
+      </div>
+      <div style="font-size:10px; font-family:'Cinzel', serif; letter-spacing:1.2px; color:#8fb4ff; margin-top:8px; opacity:0.85; position:relative; z-index:1;">winterball27.de</div>
+    </div>
+
+    <!-- Aktionen: Direkt in Instagram Story & Download -->
+    <div class="story-actions-row">
+      <button type="button" class="btn-story-share" id="shareStoryBtn" title="Direkt in Instagram Story oder an WhatsApp-Freunde senden">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px;"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        <span>In Instagram Story teilen</span>
+      </button>
+      <button type="button" class="btn-story-download" id="downloadStoryImageBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px; height:16px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>Story-Bild speichern</span>
+      </button>
+    </div>
+  </div>
+  <div class="story-toast" id="storyToast">Link &amp; Einladungstext kopiert!</div>
 
  <!-- Zum Kalender hinzufügen -->
  <div class="calendar-card" id="successCalendarCard">
@@ -2680,6 +2891,10 @@
  document.getElementById('formView').classList.remove('show');
  document.getElementById('successView').classList.add('active');
 
+ // E-Mail in der Bestätigungsbox anzeigen
+ const emailConfEl = document.getElementById('successConfirmedEmail');
+ if (emailConfEl) emailConfEl.textContent = email;
+
  // Story-Belohnungskarte mit Gästedaten füllen
  const sNameEl = document.getElementById('storyGuestName');
  const sSubEl = document.getElementById('storyGuestSub');
@@ -2885,353 +3100,331 @@
  // Schritt 5: Zusammenfassung & Abschluss erreicht
  document.getElementById('nextToSummary')?.addEventListener('click', () => trackFunnelStep('step_summary'));
 
- // --- Story-Bild (1080 x 1920) generieren & herunterladen ---
- async function generateAndDownloadStoryImage() {
- const data = window._lastRegisteredGuest || {
- name: document.getElementById('name')?.value.trim() || 'Gast',
- companionsCount: 0
- };
+ // --- Geometrische Schneeflocken-Vektoren für den Gala-Rahmen ---
+ function drawCanvasSnowflake(ctx, cx, cy, size, color, alpha) {
+   ctx.save();
+   ctx.strokeStyle = color;
+   ctx.globalAlpha = alpha || 1;
+   ctx.lineWidth = Math.max(1.5, size * 0.08);
+   ctx.lineCap = 'round';
+   for (let a = 0; a < 6; a++) {
+     const angle = (a * 60) * Math.PI / 180;
+     const x2 = cx + Math.cos(angle) * size;
+     const y2 = cy + Math.sin(angle) * size;
+     ctx.beginPath();
+     ctx.moveTo(cx, cy);
+     ctx.lineTo(x2, y2);
+     ctx.stroke();
 
- const c = document.createElement('canvas');
- c.width = 1080;
- c.height = 1920;
- const ctx = c.getContext('2d');
-
- // 1. Hintergrund-Gradient (Deep Midnight Navy)
- const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1920);
- bgGrad.addColorStop(0, '#050814');
- bgGrad.addColorStop(0.3, '#0b162c');
- bgGrad.addColorStop(0.65, '#122244');
- bgGrad.addColorStop(1, '#070b16');
- ctx.fillStyle = bgGrad;
- ctx.fillRect(0, 0, 1080, 1920);
-
- // 2. Radialer Glow in der oberen Mitte
- const glowGrad = ctx.createRadialGradient(540, 520, 50, 540, 520, 680);
- glowGrad.addColorStop(0, 'rgba(143, 180, 255, 0.28)');
- glowGrad.addColorStop(0.5, 'rgba(127, 224, 168, 0.12)');
- glowGrad.addColorStop(1, 'rgba(5, 8, 20, 0)');
- ctx.fillStyle = glowGrad;
- ctx.fillRect(0, 0, 1080, 1920);
-
- // 3. Sternenstaub & Lichtakzente
- ctx.save();
- for (let i = 0; i < 48; i++) {
- const sx = (i * 197 + 83) % 1080;
- const sy = (i * 311 + 47) % 1920;
- const sr = (i % 3) + 1.2;
- ctx.fillStyle = i % 2 === 0 ? 'rgba(255, 255, 255, 0.45)' : 'rgba(143, 180, 255, 0.55)';
- ctx.beginPath();
- ctx.arc(sx, sy, sr, 0, Math.PI * 2);
- ctx.fill();
+     const bDist = size * 0.58;
+     const bx = cx + Math.cos(angle) * bDist;
+     const by = cy + Math.sin(angle) * bDist;
+     const bLen = size * 0.38;
+     for (let b = -1; b <= 1; b += 2) {
+       const bAngle = angle + (b * 45) * Math.PI / 180;
+       ctx.beginPath();
+       ctx.moveTo(bx, by);
+       ctx.lineTo(bx + Math.cos(bAngle) * bLen, by + Math.sin(bAngle) * bLen);
+       ctx.stroke();
+     }
+   }
+   ctx.restore();
  }
- ctx.restore();
 
- // 4. Zentrales Frosted Glass Card Panel
- const cardX = 90;
- const cardY = 320;
- const cardW = 900;
- const cardH = 1260;
- const cardR = 48;
+ // --- Zentraler Story-Canvas Generator (1080 x 1920) im originalen Winterball-Look ---
+ async function renderWinterballStoryCanvas(data) {
+   // Sicherstellen, dass Great Vibes und Cinzel Schriftarten geladen sind
+   if (document.fonts && document.fonts.ready) {
+     try { await document.fonts.ready; } catch(e) {}
+   }
 
- ctx.save();
- ctx.beginPath();
- ctx.roundRect(cardX, cardY, cardW, cardH, cardR);
- ctx.fillStyle = 'rgba(14, 23, 44, 0.82)';
- ctx.fill();
- ctx.lineWidth = 3;
- ctx.strokeStyle = 'rgba(143, 180, 255, 0.38)';
- ctx.stroke();
- ctx.restore();
+   const c = document.createElement('canvas');
+   c.width = 1080;
+   c.height = 1920;
+   const ctx = c.getContext('2d');
 
- // 5. Header-Pille
- ctx.save();
- ctx.textAlign = 'center';
- const pillY = cardY + 90;
- ctx.beginPath();
- ctx.roundRect(540 - 260, pillY - 26, 520, 52, 26);
- ctx.fillStyle = 'rgba(143, 180, 255, 0.15)';
- ctx.fill();
- ctx.lineWidth = 1.5;
- ctx.strokeStyle = 'rgba(143, 180, 255, 0.4)';
- ctx.stroke();
+   // 1. Hintergrund-Gradient (Atmosphärisches Midnight Navy)
+   const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1920);
+   bgGrad.addColorStop(0, '#060a15');
+   bgGrad.addColorStop(0.25, '#0b162d');
+   bgGrad.addColorStop(0.55, '#122245');
+   bgGrad.addColorStop(0.85, '#0c172f');
+   bgGrad.addColorStop(1, '#050813');
+   ctx.fillStyle = bgGrad;
+   ctx.fillRect(0, 0, 1080, 1920);
 
- ctx.font = '700 21px system-ui, -apple-system, sans-serif';
- ctx.fillStyle = '#8fb4ff';
- ctx.fillText('GYMNASIUM WILSDRUFF · STUFE 12', 540, pillY + 7);
+   // 2. Weicher Eiskristall-Lichtglow oben und in der Mitte
+   const glowTop = ctx.createRadialGradient(540, 480, 60, 540, 480, 620);
+   glowTop.addColorStop(0, 'rgba(143, 180, 255, 0.22)');
+   glowTop.addColorStop(0.5, 'rgba(127, 224, 168, 0.08)');
+   glowTop.addColorStop(1, 'rgba(6, 10, 21, 0)');
+   ctx.fillStyle = glowTop;
+   ctx.fillRect(0, 0, 1080, 1920);
 
- // 6. Riesige Headline: ICH BIN DABEI!
- ctx.font = '900 78px system-ui, -apple-system, sans-serif';
- ctx.fillStyle = '#ffffff';
- ctx.shadowColor = 'rgba(143, 180, 255, 0.5)';
- ctx.shadowBlur = 30;
- ctx.fillText('ICH BIN DABEI!', 540, cardY + 230);
- ctx.shadowBlur = 0;
+   // 3. Subtile funkelnde Kristall-Sterne im Hintergrund (dezent, nicht überladen)
+   ctx.save();
+   for (let i = 0; i < 42; i++) {
+     const sx = (i * 211 + 67) % 1080;
+     const sy = (i * 359 + 89) % 1920;
+     const sr = (i % 3) * 0.7 + 1.2;
+     ctx.fillStyle = i % 2 === 0 ? 'rgba(255, 255, 255, 0.45)' : 'rgba(143, 180, 255, 0.55)';
+     ctx.beginPath();
+     ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+     ctx.fill();
+   }
+   ctx.restore();
 
- // 7. Event-Titel
- ctx.font = '800 36px system-ui, -apple-system, sans-serif';
- ctx.fillStyle = '#7fe0a8';
- ctx.fillText('WINTER BALL 2027', 540, cardY + 295);
+   // 4. Gala-Rahmen & Kartenstruktur
+   const cardX = 80;
+   const cardY = 240;
+   const cardW = 920;
+   const cardH = 1440;
+   const cardR = 36;
 
- // 8. Gästebox (Frosted Inner Box)
- const gBoxY = cardY + 360;
- const gBoxH = 260;
- ctx.beginPath();
- ctx.roundRect(cardX + 60, gBoxY, cardW - 120, gBoxH, 28);
- ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
- ctx.fill();
- ctx.lineWidth = 1.5;
- ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
- ctx.stroke();
+   // Äußere Frosted Glass Gala-Karte
+   ctx.save();
+   ctx.beginPath();
+   ctx.roundRect(cardX, cardY, cardW, cardH, cardR);
+   ctx.fillStyle = 'rgba(13, 21, 38, 0.88)';
+   ctx.fill();
+   ctx.lineWidth = 2;
+   ctx.strokeStyle = 'rgba(143, 180, 255, 0.38)';
+   ctx.stroke();
 
- ctx.font = '500 20px system-ui, -apple-system, sans-serif';
- ctx.fillStyle = '#9aa7c2';
- ctx.fillText('OFFIZIELL REGISTRIERTER GAST', 540, gBoxY + 58);
+   // Innerer feiner Gold-/Eis-Doppelrahmen
+   const inPad = 22;
+   ctx.beginPath();
+   ctx.roundRect(cardX + inPad, cardY + inPad, cardW - (inPad * 2), cardH - (inPad * 2), cardR - 12);
+   ctx.lineWidth = 1;
+   ctx.strokeStyle = 'rgba(223, 233, 255, 0.18)';
+   ctx.stroke();
+   ctx.restore();
 
- ctx.font = '800 52px system-ui, -apple-system, sans-serif';
- ctx.fillStyle = '#ffffff';
- ctx.fillText(data.name, 540, gBoxY + 135);
+   // Schneeflocken-Ornamente in den vier Ecken der Gala-Karte
+   drawCanvasSnowflake(ctx, cardX + 54, cardY + 54, 22, '#8fb4ff', 0.65);
+   drawCanvasSnowflake(ctx, cardX + cardW - 54, cardY + 54, 22, '#8fb4ff', 0.65);
+   drawCanvasSnowflake(ctx, cardX + 54, cardY + cardH - 54, 22, '#8fb4ff', 0.65);
+   drawCanvasSnowflake(ctx, cardX + cardW - 54, cardY + cardH - 54, 22, '#8fb4ff', 0.65);
 
- ctx.font = '600 22px system-ui, -apple-system, sans-serif';
- ctx.fillStyle = '#7fe0a8';
- const subText = data.companionsCount > 0
- ? `inklusive ${data.companionsCount} Begleitperson${data.companionsCount > 1 ? 'en' : ''}`
- : 'Gästelisten-Platz gesichert';
- ctx.fillText(subText, 540, gBoxY + 195);
+   // 5. Typografie: Eyebrow
+   ctx.save();
+   ctx.textAlign = 'center';
 
- // 9. Event-Details
- const metaY = cardY + 700;
- ctx.font = '700 32px system-ui, -apple-system, sans-serif';
- ctx.fillStyle = '#ffffff';
- ctx.fillText('Samstag, 30. Januar 2027', 540, metaY);
+   const eyebrowY = cardY + 95;
+   ctx.font = '700 21px "Cinzel", serif';
+   ctx.letterSpacing = '3px';
+   ctx.fillStyle = '#8fb4ff';
+   ctx.fillText('GYMNASIUM WILSDRUFF · STUFE 12', 540, eyebrowY);
 
- ctx.font = '500 26px system-ui, -apple-system, sans-serif';
- ctx.fillStyle = '#9aa7c2';
- ctx.fillText('Einlass ab 17:30 Uhr · Beginn 18:00 Uhr', 540, metaY + 45);
+   // 6. Haupttitel: "Winterball" in Great Vibes (exakt wie Startseite)
+   ctx.font = '400 175px "Great Vibes", cursive';
+   const titleY = cardY + 265;
+   const textGrad = ctx.createLinearGradient(320, titleY - 70, 760, titleY + 20);
+   textGrad.addColorStop(0, '#ffffff');
+   textGrad.addColorStop(0.35, '#c9d6f0');
+   textGrad.addColorStop(0.65, '#ffffff');
+   textGrad.addColorStop(1, '#dfe9ff');
+   ctx.fillStyle = textGrad;
+   ctx.shadowColor = 'rgba(143, 180, 255, 0.65)';
+   ctx.shadowBlur = 32;
+   ctx.fillText('Winterball', 540, titleY);
+   ctx.shadowBlur = 0;
 
- ctx.font = '600 24px system-ui, -apple-system, sans-serif';
- ctx.fillStyle = '#8fb4ff';
- ctx.fillText('Aula des Gymnasium Wilsdruff', 540, metaY + 95);
+   // 7. Jahreszahl "— 2027 —" in Cinzel
+   ctx.font = '600 32px "Cinzel", serif';
+   ctx.letterSpacing = '6px';
+   ctx.fillStyle = '#dfe9ff';
+   ctx.fillText('—  2 0 2 7  —', 540, cardY + 340);
 
- // 10. Aufruf & Website
- const ctaY = cardY + 960;
- ctx.beginPath();
- ctx.roundRect(540 - 320, ctaY - 35, 640, 70, 35);
- ctx.fillStyle = 'rgba(127, 224, 168, 0.18)';
- ctx.fill();
- ctx.lineWidth = 2;
- ctx.strokeStyle = 'rgba(127, 224, 168, 0.5)';
- ctx.stroke();
+   // 8. "ICH BIN DABEI!" Badge
+   const badgeY = cardY + 415;
+   ctx.beginPath();
+   ctx.roundRect(540 - 240, badgeY - 26, 480, 52, 26);
+   ctx.fillStyle = 'rgba(127, 224, 168, 0.14)';
+   ctx.fill();
+   ctx.lineWidth = 1.5;
+   ctx.strokeStyle = 'rgba(127, 224, 168, 0.45)';
+   ctx.stroke();
 
- ctx.font = '800 24px system-ui, -apple-system, sans-serif';
- ctx.fillStyle = '#7fe0a8';
- ctx.fillText('BIST DU AUCH AM START?', 540, ctaY + 9);
+   ctx.font = '800 22px "Cinzel", serif';
+   ctx.letterSpacing = '2px';
+   ctx.fillStyle = '#7fe0a8';
+   ctx.fillText('ICH BIN DABEI!', 540, badgeY + 7);
 
- ctx.font = '700 28px system-ui, -apple-system, sans-serif';
- ctx.fillStyle = '#ffffff';
- ctx.fillText('winterball27.de', 540, cardY + 1120);
+   // 9. Personalisierte Gästekarte (Frosted Ticket Panel)
+   const gBoxY = cardY + 490;
+   const gBoxH = 290;
+   ctx.beginPath();
+   ctx.roundRect(cardX + 50, gBoxY, cardW - 100, gBoxH, 22);
+   ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+   ctx.fill();
+   ctx.lineWidth = 1.5;
+   ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
+   ctx.stroke();
 
- ctx.font = '500 18px system-ui, -apple-system, sans-serif';
- ctx.fillStyle = '#9aa7c2';
- ctx.fillText('Jetzt Ticket sichern & mitfeiern', 540, cardY + 1160);
+   ctx.font = '600 18px "Cinzel", serif';
+   ctx.letterSpacing = '2px';
+   ctx.fillStyle = '#9aa7c2';
+   ctx.fillText('OFFIZIELL REGISTRIERTER GAST', 540, gBoxY + 60);
 
- ctx.restore();
+   // Gastname (Groß und prachtvoll)
+   ctx.font = '700 52px "Cinzel", "Cormorant Garamond", serif';
+   ctx.letterSpacing = '1px';
+   ctx.fillStyle = '#ffffff';
+   ctx.fillText(data.name, 540, gBoxY + 145);
 
- // In Blob konvertieren und Download starten
- c.toBlob(blob => {
- if (!blob) return;
- const url = URL.createObjectURL(blob);
- const a = document.createElement('a');
- const safeName = (data.name || 'Gast').replace(/[^a-zA-Z0-9_-]/g, '_');
- a.download = `Winterball-2027-Story-${safeName}.png`;
- a.href = url;
- document.body.appendChild(a);
- a.click();
- document.body.removeChild(a);
- setTimeout(() => URL.revokeObjectURL(url), 2000);
- showStoryToast('Story-Bild erfolgreich gespeichert!');
- }, 'image/png');
+   // Gästeliste Status
+   ctx.font = '600 22px "Cinzel", serif';
+   ctx.letterSpacing = '1px';
+   ctx.fillStyle = '#7fe0a8';
+   const subText = (data.companionsCount && data.companionsCount > 0)
+     ? `inklusive ${data.companionsCount} Begleitperson${data.companionsCount > 1 ? 'en' : ''}`
+     : 'Gästelisten-Platz gesichert';
+   ctx.fillText(subText, 540, gBoxY + 215);
+
+   // Feine Trennlinie mit Kristall-Symbol
+   const divY = cardY + 840;
+   ctx.beginPath();
+   ctx.moveTo(cardX + 140, divY);
+   ctx.lineTo(cardX + cardW - 140, divY);
+   ctx.lineWidth = 1;
+   ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+   ctx.stroke();
+   drawCanvasSnowflake(ctx, 540, divY, 14, '#8fb4ff', 0.8);
+
+   // 10. Event-Details (Datum, Uhrzeit, Ort)
+   const metaY = cardY + 920;
+   ctx.font = '700 36px "Cinzel", serif';
+   ctx.letterSpacing = '1px';
+   ctx.fillStyle = '#ffffff';
+   ctx.fillText('Samstag, 30. Januar 2027', 540, metaY);
+
+   ctx.font = '500 28px "Cormorant Garamond", serif';
+   ctx.letterSpacing = '0.5px';
+   ctx.fillStyle = '#c5d5f2';
+   ctx.fillText('Einlass ab 17:30 Uhr · Beginn 18:00 Uhr', 540, metaY + 54);
+
+   ctx.font = '600 26px "Cinzel", serif';
+   ctx.letterSpacing = '1px';
+   ctx.fillStyle = '#8fb4ff';
+   ctx.fillText('Aula des Gymnasium Wilsdruff', 540, metaY + 110);
+
+   // 11. Footer-Aufruf & Website
+   const ctaBoxY = cardY + 1200;
+   ctx.beginPath();
+   ctx.roundRect(540 - 280, ctaBoxY - 32, 560, 64, 32);
+   ctx.fillStyle = 'rgba(143, 180, 255, 0.14)';
+   ctx.fill();
+   ctx.lineWidth = 1.5;
+   ctx.strokeStyle = 'rgba(143, 180, 255, 0.4)';
+   ctx.stroke();
+
+   ctx.font = '700 22px "Cinzel", serif';
+   ctx.letterSpacing = '2px';
+   ctx.fillStyle = '#dfe9ff';
+   ctx.fillText('SEI AUCH DU DABEI!', 540, ctaBoxY + 7);
+
+   ctx.font = '700 30px "Cinzel", serif';
+   ctx.letterSpacing = '1.5px';
+   ctx.fillStyle = '#ffffff';
+   ctx.fillText('winterball27.de', 540, cardY + 1320);
+
+   ctx.font = '500 22px "Cormorant Garamond", serif';
+   ctx.fillStyle = '#9aa7c2';
+   ctx.fillText('Jetzt Ticket online sichern', 540, cardY + 1362);
+
+   ctx.restore();
+   return c;
+ }
+
+ async function generateAndDownloadStoryImage() {
+   const data = window._lastRegisteredGuest || {
+     name: document.getElementById('name')?.value.trim() || 'Gast',
+     companionsCount: 0
+   };
+
+   try {
+     const c = await renderWinterballStoryCanvas(data);
+     c.toBlob(blob => {
+       if (!blob) return;
+       const url = URL.createObjectURL(blob);
+       const a = document.createElement('a');
+       const safeName = (data.name || 'Gast').replace(/[^a-zA-Z0-9_-]/g, '_');
+       a.download = `Winterball-2027-Story-${safeName}.png`;
+       a.href = url;
+       document.body.appendChild(a);
+       a.click();
+       document.body.removeChild(a);
+       setTimeout(() => URL.revokeObjectURL(url), 2000);
+       showStoryToast('Story-Bild erfolgreich gespeichert!');
+     }, 'image/png');
+   } catch(e) {
+     console.error('Story-Generierung fehlgeschlagen:', e);
+   }
  }
 
  function showStoryToast(msg) {
- const t = document.getElementById('storyToast');
- if (!t) return;
- t.textContent = msg;
- t.classList.add('show');
- setTimeout(() => t.classList.remove('show'), 2800);
+   const t = document.getElementById('storyToast');
+   if (!t) return;
+   t.textContent = msg;
+   t.classList.add('show');
+   setTimeout(() => t.classList.remove('show'), 2800);
  }
 
  // Event Listener für Story Card
  document.getElementById('downloadStoryImageBtn')?.addEventListener('click', generateAndDownloadStoryImage);
  document.getElementById('shareStoryBtn')?.addEventListener('click', async () => {
-    const data = window._lastRegisteredGuest || {
-      name: document.getElementById('name')?.value.trim() || 'Gast',
-      companionsCount: 0
-    };
+   const data = window._lastRegisteredGuest || {
+     name: document.getElementById('name')?.value.trim() || 'Gast',
+     companionsCount: 0
+   };
 
-    const shareText = 'Ich bin beim Winterball 2027 am Gymnasium Wilsdruff dabei! Sei auch du dabei: https://winterball27.de';
+   const shareText = 'Ich bin beim Winterball 2027 am Gymnasium Wilsdruff dabei! Sicher dir auch dein Ticket: https://winterball27.de';
 
-    try {
-      const c = document.createElement('canvas');
-      c.width = 1080;
-      c.height = 1920;
-      const ctx = c.getContext('2d');
+   try {
+     const c = await renderWinterballStoryCanvas(data);
+     c.toBlob(async (blob) => {
+       if (!blob) return;
+       const file = new File([blob], 'Winterball-2027-Story.png', { type: 'image/png' });
 
-      const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1920);
-      bgGrad.addColorStop(0, '#050814');
-      bgGrad.addColorStop(0.3, '#0b162c');
-      bgGrad.addColorStop(0.65, '#122244');
-      bgGrad.addColorStop(1, '#070b16');
-      ctx.fillStyle = bgGrad;
-      ctx.fillRect(0, 0, 1080, 1920);
+       // Direktes Teilen der Bilddatei (z.B. Instagram Stories, WhatsApp, AirDrop)
+       if (navigator.canShare && navigator.canShare({ files: [file] })) {
+         try {
+           await navigator.share({
+             title: 'Winterball 2027',
+             text: shareText,
+             files: [file]
+           });
+           return;
+         } catch(e) {
+           if (e.name === 'AbortError') return;
+         }
+       }
 
-      const glowGrad = ctx.createRadialGradient(540, 520, 50, 540, 520, 680);
-      glowGrad.addColorStop(0, 'rgba(143, 180, 255, 0.28)');
-      glowGrad.addColorStop(0.5, 'rgba(127, 224, 168, 0.12)');
-      glowGrad.addColorStop(1, 'rgba(5, 8, 20, 0)');
-      ctx.fillStyle = glowGrad;
-      ctx.fillRect(0, 0, 1080, 1920);
+       // Fallback 1: Teilen mit URL & Text falls Bilddateien nicht unterstützt
+       if (navigator.share) {
+         try {
+           await navigator.share({ title: 'Winterball 2027', text: shareText, url: 'https://winterball27.de' });
+           return;
+         } catch(e) {
+           if (e.name === 'AbortError') return;
+         }
+       }
 
-      ctx.save();
-      for (let i = 0; i < 48; i++) {
-        const sx = (i * 197 + 83) % 1080;
-        const sy = (i * 311 + 47) % 1920;
-        const sr = (i % 3) + 1.2;
-        ctx.fillStyle = i % 2 === 0 ? 'rgba(255, 255, 255, 0.45)' : 'rgba(143, 180, 255, 0.55)';
-        ctx.beginPath();
-        ctx.arc(sx, sy, sr, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.restore();
+       // Fallback 2: Bild herunterladen und Text kopieren
+       generateAndDownloadStoryImage();
+       try {
+         await navigator.clipboard.writeText(shareText);
+         showStoryToast('Story-Bild heruntergeladen & Einladung kopiert!');
+       } catch(e) {
+         showStoryToast('Story-Bild heruntergeladen!');
+       }
+     }, 'image/png');
 
-      const cardX = 90, cardY = 320, cardW = 900, cardH = 1260, cardR = 48;
-      ctx.save();
-      ctx.beginPath();
-      ctx.roundRect(cardX, cardY, cardW, cardH, cardR);
-      ctx.fillStyle = 'rgba(14, 23, 44, 0.82)';
-      ctx.fill();
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = 'rgba(143, 180, 255, 0.38)';
-      ctx.stroke();
-      ctx.restore();
-
-      ctx.save();
-      ctx.textAlign = 'center';
-      const pillY = cardY + 90;
-      ctx.beginPath();
-      ctx.roundRect(540 - 260, pillY - 26, 520, 52, 26);
-      ctx.fillStyle = 'rgba(143, 180, 255, 0.15)';
-      ctx.fill();
-      ctx.lineWidth = 1.5;
-      ctx.strokeStyle = 'rgba(143, 180, 255, 0.4)';
-      ctx.stroke();
-
-      ctx.font = '700 21px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#8fb4ff';
-      ctx.fillText('GYMNASIUM WILSDRUFF · STUFE 12', 540, pillY + 7);
-
-      ctx.font = '900 78px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#ffffff';
-      ctx.shadowColor = 'rgba(143, 180, 255, 0.5)';
-      ctx.shadowBlur = 30;
-      ctx.fillText('ICH BIN DABEI!', 540, cardY + 230);
-      ctx.shadowBlur = 0;
-
-      ctx.font = '800 36px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#7fe0a8';
-      ctx.fillText('WINTER BALL 2027', 540, cardY + 295);
-
-      const gBoxY = cardY + 360, gBoxH = 260;
-      ctx.beginPath();
-      ctx.roundRect(cardX + 60, gBoxY, cardW - 120, gBoxH, 28);
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-      ctx.fill();
-      ctx.lineWidth = 1.5;
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
-      ctx.stroke();
-
-      ctx.font = '500 20px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#9aa7c2';
-      ctx.fillText('OFFIZIELL REGISTRIERTER GAST', 540, gBoxY + 58);
-
-      ctx.font = '800 52px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#ffffff';
-      ctx.fillText(data.name, 540, gBoxY + 135);
-
-      ctx.font = '600 22px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#7fe0a8';
-      const subText = data.companionsCount > 0
-        ? `inklusive ${data.companionsCount} Begleitperson${data.companionsCount > 1 ? 'en' : ''}`
-        : 'Gästelisten-Platz gesichert';
-      ctx.fillText(subText, 540, gBoxY + 195);
-
-      const metaY = cardY + 700;
-      ctx.font = '700 32px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#ffffff';
-      ctx.fillText('Samstag, 30. Januar 2027', 540, metaY);
-
-      ctx.font = '500 26px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#9aa7c2';
-      ctx.fillText('Einlass ab 17:30 Uhr · Beginn 18:00 Uhr', 540, metaY + 45);
-
-      ctx.font = '600 24px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#8fb4ff';
-      ctx.fillText('Aula des Gymnasium Wilsdruff', 540, metaY + 95);
-
-      const ctaY = cardY + 960;
-      ctx.beginPath();
-      ctx.roundRect(540 - 320, ctaY - 35, 640, 70, 35);
-      ctx.fillStyle = 'rgba(127, 224, 168, 0.18)';
-      ctx.fill();
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = 'rgba(127, 224, 168, 0.5)';
-      ctx.stroke();
-
-      ctx.font = '800 24px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#7fe0a8';
-      ctx.fillText('BIST DU AUCH AM START?', 540, ctaY + 9);
-
-      ctx.font = '700 28px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#ffffff';
-      ctx.fillText('winterball27.de', 540, cardY + 1120);
-
-      ctx.font = '500 18px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#9aa7c2';
-      ctx.fillText('Jetzt Ticket sichern & mitfeiern', 540, cardY + 1160);
-      ctx.restore();
-
-      c.toBlob(async (blob) => {
-        if (!blob) return;
-        const file = new File([blob], 'Winterball-2027-Story.png', { type: 'image/png' });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          try {
-            await navigator.share({
-              title: 'Winter Ball 2027',
-              text: shareText,
-              files: [file]
-            });
-            return;
-          } catch(e) {}
-        }
-        if (navigator.share) {
-          try {
-            await navigator.share({ title: 'Winter Ball 2027', text: shareText, url: 'https://winterball27.de' });
-            return;
-          } catch(e) {}
-        }
-        generateAndDownloadStoryImage();
-        try {
-          await navigator.clipboard.writeText(shareText);
-          showStoryToast('Bild heruntergeladen & Einladung kopiert!');
-        } catch(e) {
-          showStoryToast('Story-Bild heruntergeladen!');
-        }
-      }, 'image/png');
-
-    } catch(err) {
-      generateAndDownloadStoryImage();
-    }
-  });
+   } catch(err) {
+     generateAndDownloadStoryImage();
+   }
+ });
 </script>
 
 <!-- Animierter Schneefall im Hintergrund -->
