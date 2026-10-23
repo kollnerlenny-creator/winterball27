@@ -793,25 +793,34 @@
  opacity:0; transition:opacity 0.25s ease;
  }
  .modal-overlay.show{display:flex; opacity:1;}
- /* Breitbild-Kassen-Terminal (POS) & Großes Touch-Numpad über volle Bildschirmbreite */
+ 	/* Breitbild-Kassen-Terminal (POS) & Großes Touch-Numpad über volle Bildschirmbreite */
 	.cash-modal{
 		width: min(96vw, 1180px);
 		max-width: 1180px;
-		max-height: calc(100vh - 36px);
+		max-height: calc(100vh - 32px);
 		overflow-y: auto;
-		background: linear-gradient(145deg, rgba(18, 27, 54, 0.98), rgba(9, 15, 30, 0.99));
+		background: linear-gradient(155deg, rgba(16, 24, 48, 0.98), rgba(8, 13, 26, 0.99));
 		border: 1px solid rgba(143,180,255,0.4);
-		border-radius: 22px;
-		padding: 28px 32px;
-		box-shadow: 0 30px 90px rgba(0,0,0,0.85), 0 0 50px rgba(143,180,255,0.18);
+		border-radius: 24px;
+		padding: 26px 30px;
+		box-shadow: 0 32px 100px rgba(0,0,0,0.88), 0 0 60px rgba(143,180,255,0.18);
 		transform: scale(0.95) translateY(10px);
 		transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 		position: relative;
 	}
+	#cashModalOverlay .cash-modal{
+		width: min(96vw, 1180px);
+		max-width: 1180px;
+	}
+	#addCompanionModalOverlay .cash-modal,
+	#editRegModalOverlay .cash-modal{
+		width: min(92vw, 460px);
+		max-width: 460px;
+	}
 	.modal-overlay.show .cash-modal{ transform: scale(1) translateY(0); }
 
 	.cash-modal-close-btn{
-		position: absolute; top: 20px; right: 22px;
+		position: absolute; top: 18px; right: 20px;
 		width: 38px; height: 38px; border-radius: 50%;
 		border: 1px solid var(--glass-border);
 		background: rgba(255,255,255,0.06); color: var(--text-dim);
@@ -826,8 +835,8 @@
 
 	.cash-modal-grid{
 		display: grid;
-		grid-template-columns: 1fr 1.32fr;
-		gap: 32px;
+		grid-template-columns: 1fr 1.35fr;
+		gap: 28px;
 		align-items: stretch;
 	}
 
@@ -836,9 +845,13 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
-		gap: 16px;
+		gap: 14px;
+		background: rgba(255,255,255,0.02);
+		border: 1px solid rgba(255,255,255,0.06);
+		border-radius: 18px;
+		padding: 20px;
 	}
-	.cash-summary-header{ margin-bottom: 4px; padding-right: 30px; }
+	.cash-summary-header{ margin-bottom: 2px; padding-right: 20px; }
 	.cash-pos-tag{
 		display: inline-flex; align-items: center; gap: 6px;
 		font-size: 11px; font-weight: 800; letter-spacing: 0.8px;
@@ -848,7 +861,7 @@
 	}
 	.cash-pos-tag svg{ width: 13px; height: 13px; }
 	.cash-modal-name{
-		font-size: 25px; font-weight: 800; color: #fff;
+		font-size: 24px; font-weight: 800; color: #fff;
 		letter-spacing: -0.4px; line-height: 1.25; margin-bottom: 6px;
 		word-break: break-word;
 	}
@@ -858,20 +871,20 @@
 
 	/* Digitaler Bon / Anzeige */
 	.cash-display-card{
-		background: rgba(255,255,255,0.035);
-		border: 1px solid rgba(255,255,255,0.09);
-		border-radius: 16px; padding: 16px 20px;
-		display: flex; flex-direction: column; gap: 10px;
-		box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+		background: rgba(4, 9, 22, 0.6);
+		border: 1px solid rgba(143,180,255,0.16);
+		border-radius: 16px; padding: 16px 18px;
+		display: flex; flex-direction: column; gap: 8px;
+		box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
 	}
 	.cash-row{
 		display: flex; justify-content: space-between; align-items: baseline;
 		font-size: 14px; color: var(--text-dim);
-		padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+		padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
 	}
 	.cash-row:last-child{ border-bottom: none; }
 	.cash-row-label{
-		display: inline-flex; align-items: center; font-weight: 500; font-size: 14px;
+		display: inline-flex; align-items: center; font-weight: 600; font-size: 13.5px;
 	}
 	.cash-row strong, .cash-row-val{
 		font-size: 20px; color: #fff; font-weight: 700;
@@ -883,7 +896,7 @@
 		border: 1px solid rgba(143,180,255,0.24);
 		border-radius: 10px; padding: 10px 14px; margin: 2px 0;
 	}
-	.cash-row-given .cash-row-label{ color: var(--accent-glow); font-weight: 700; font-size: 14.5px; }
+	.cash-row-given .cash-row-label{ color: var(--accent-glow); font-weight: 700; font-size: 14px; }
 	.cash-row-given .cash-row-val.highlight{
 		font-size: 26px; color: #fff; font-weight: 800;
 		text-shadow: 0 0 16px rgba(143,180,255,0.35);
@@ -900,7 +913,7 @@
 		padding: 10px 14px; border-radius: 10px;
 		background: rgba(127,224,168,0.08); border: 1px solid rgba(127,224,168,0.25);
 	}
-	.cash-row.cash-change .cash-row-label{ color: var(--success); font-weight: 700; font-size: 15px; }
+	.cash-row.cash-change .cash-row-label{ color: var(--success); font-weight: 700; font-size: 14.5px; }
 	.cash-row.cash-change .change-val{ color: var(--success); font-size: 28px; font-weight: 800; }
 	.cash-row.cash-change.negative{
 		background: rgba(255,210,127,0.08); border-color: rgba(255,210,127,0.3);
@@ -910,11 +923,11 @@
 
 	/* Schnellbutton Spende */
 	.donate-change-btn{
-		width: 100%; min-height: 48px; padding: 12px 18px; border-radius: 12px;
+		width: 100%; min-height: 46px; padding: 11px 16px; border-radius: 12px;
 		border: 1.5px solid rgba(255,210,127,0.55);
 		background: linear-gradient(135deg, rgba(255,210,127,0.24), rgba(255,210,127,0.09));
-		color: #ffd27f; font-size: 14px; font-weight: 700; cursor: pointer;
-		display: flex; align-items: center; justify-content: center; gap: 9px;
+		color: #ffd27f; font-size: 13.5px; font-weight: 700; cursor: pointer;
+		display: flex; align-items: center; justify-content: center; gap: 8px;
 		transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 		box-shadow: 0 4px 16px rgba(255,210,127,0.18);
 	}
@@ -930,7 +943,7 @@
 
 	.cash-modal-actions{ display: flex; gap: 12px; margin-top: auto; padding-top: 8px; }
 	.cash-modal-actions button{
-		flex: 1; min-height: 54px; padding: 14px 18px; border-radius: 14px;
+		flex: 1; min-height: 52px; padding: 12px 18px; border-radius: 14px;
 		font-size: 15px; font-weight: 700; cursor: pointer;
 		transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 	}
@@ -955,80 +968,114 @@
 		background: rgba(255,255,255,0.12); color: #fff;
 	}
 
-	/* Rechte Spalte: Großes Touch-Numpad & Schnell-Aktionen */
+	/* Rechte Spalte: Großes übersichtliches POS-Touch-Numpad & Rechner */
 	.cash-col-keypad{
 		display: flex; flex-direction: column; justify-content: space-between;
 		gap: 12px;
 	}
-	.cash-keypad-top{ margin-bottom: 2px; }
-	.cash-quick-bar{
-		display: flex; gap: 10px; margin-bottom: 10px;
+
+	/* 1. LCD Eingabe-Monitor (Groß & Kristallklar) */
+	.pos-screen-card{
+		background: linear-gradient(180deg, rgba(6, 11, 24, 0.95), rgba(10, 18, 38, 0.95));
+		border: 1.5px solid rgba(143,180,255,0.3);
+		border-radius: 16px;
+		padding: 12px 18px;
+		box-shadow: inset 0 2px 8px rgba(0,0,0,0.6), 0 4px 18px rgba(0,0,0,0.25);
 	}
-	.exact-btn{
-		flex: 1; min-height: 48px; padding: 12px 16px; border-radius: 12px;
-		border: 1px solid rgba(143,180,255,0.35); background: rgba(143,180,255,0.12);
-		color: var(--accent-glow); font-size: 14.5px; font-weight: 700; cursor: pointer;
-		display: flex; align-items: center; justify-content: center; gap: 8px;
-		transition: all 0.18s ease;
+	.pos-screen-header{
+		display: flex; justify-content: space-between; align-items: center;
+		margin-bottom: 4px;
 	}
-	.exact-btn:hover{
-		background: rgba(143,180,255,0.24); border-color: var(--accent);
-		transform: translateY(-1px);
+	.pos-screen-badge{
+		display: inline-flex; align-items: center; gap: 6px;
+		font-size: 11px; font-weight: 800; letter-spacing: 0.6px;
+		color: #7fe0a8; text-transform: uppercase;
 	}
-	.exact-btn.donation-preset-btn{
-		border-color: rgba(255,210,127,0.45); color: #ffd27f;
-		background: rgba(255,210,127,0.12);
+	.pos-screen-status{
+		font-size: 12px; font-weight: 600; color: var(--text-dim);
 	}
-	.exact-btn.donation-preset-btn:hover{
-		background: rgba(255,210,127,0.22); border-color: #ffd27f;
+	.pos-screen-status.status-ok{ color: #7fe0a8; font-weight: 700; }
+	.pos-screen-status.status-warn{ color: #ffd27f; font-weight: 700; }
+	.pos-screen-digits-wrap{
+		display: flex; align-items: baseline; justify-content: flex-end; gap: 8px;
+	}
+	.pos-screen-currency{
+		font-size: 26px; font-weight: 700; color: rgba(143,180,255,0.6);
+	}
+	.pos-screen-amount{
+		font-size: 44px; font-weight: 900; color: #fff;
+		font-family: 'Segoe UI', system-ui, monospace;
+		letter-spacing: -0.5px; line-height: 1.05;
+		text-shadow: 0 0 24px rgba(143,180,255,0.4);
 	}
 
-	.cash-donation-chips-bar{
-		display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+	/* 2. Schnellauswahl Scheine & Passend */
+	.pos-presets-row{
+		display: flex; gap: 8px;
 	}
-	.chips-hint-label{
-		font-size: 12.5px; font-weight: 700; color: #ffd27f; margin-right: 2px;
+	.preset-btn{
+		flex: 1; min-height: 44px; padding: 8px 10px; border-radius: 12px;
+		font-size: 14px; font-weight: 700; cursor: pointer;
+		display: flex; align-items: center; justify-content: center; gap: 6px;
+		transition: all 0.16s ease; user-select: none;
 	}
-	.donation-chip{
-		flex: 1; min-width: 58px; min-height: 38px; padding: 8px 12px;
-		font-size: 13.5px; font-weight: 700; border-radius: 9px;
-		border: 1px solid rgba(255,210,127,0.35); background: rgba(255,210,127,0.08);
-		color: #ffd27f; cursor: pointer; transition: all 0.15s ease;
-		display: inline-flex; align-items: center; justify-content: center;
+	.preset-btn.exact-btn{
+		flex: 1.6;
+		border: 1px solid rgba(127,224,168,0.45);
+		background: linear-gradient(135deg, rgba(127,224,168,0.22), rgba(127,224,168,0.08));
+		color: #7fe0a8;
 	}
-	.donation-chip:hover{
-		background: rgba(255,210,127,0.24) !important; border-color: #ffd27f !important;
-		transform: translateY(-1px);
+	.preset-btn.exact-btn:hover{
+		background: linear-gradient(135deg, rgba(127,224,168,0.36), rgba(127,224,168,0.18));
+		border-color: #7fe0a8; transform: translateY(-1px);
 	}
-	.donation-chip:active{ transform: scale(0.96); }
+	.preset-btn.bill-btn{
+		border: 1px solid rgba(143,180,255,0.25);
+		background: rgba(143,180,255,0.08);
+		color: #e2edff;
+	}
+	.preset-btn.bill-btn:hover{
+		background: rgba(143,180,255,0.22); border-color: var(--accent);
+		color: #fff; transform: translateY(-1px);
+	}
+	.preset-btn:active, .preset-btn.key-pressed{
+		transform: scale(0.96) translateY(1px);
+	}
 
-	/* Das Riesige Touch-Numpad */
+	/* 3. Das Taschenrechner-Numpad: 7-8-9 / 4-5-6 / 1-2-3 / C-0-⌫ */
 	.numpad{
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
-		gap: 12px;
-		margin: 6px 0 10px;
+		gap: 10px;
 		flex: 1;
+		margin: 2px 0;
 	}
 	.num-btn{
-		min-height: 74px; padding: 16px 0; border-radius: 16px;
-		border: 1px solid rgba(255,255,255,0.12);
-		background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
-		color: #fff; font-size: 28px; font-weight: 800; cursor: pointer;
-		display: flex; align-items: center; justify-content: center;
-		transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-		box-shadow: 0 4px 14px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+		min-height: 70px; padding: 12px 6px; border-radius: 14px;
+		border: 1.5px solid rgba(255,255,255,0.12);
+		background: linear-gradient(160deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025));
+		color: #fff; font-size: 30px; font-weight: 800; cursor: pointer;
+		display: flex; flex-direction: column; align-items: center; justify-content: center;
+		transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+		box-shadow: 0 4px 14px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.12);
 		user-select: none; -webkit-user-select: none;
 	}
 	.num-btn:hover{
-		background: linear-gradient(145deg, rgba(143,180,255,0.24), rgba(143,180,255,0.1));
-		border-color: rgba(143,180,255,0.45); color: #fff;
+		background: linear-gradient(160deg, rgba(143,180,255,0.28), rgba(143,180,255,0.12));
+		border-color: rgba(143,180,255,0.6); color: #fff;
 		transform: scale(1.02) translateY(-1px);
-		box-shadow: 0 6px 18px rgba(143,180,255,0.2);
+		box-shadow: 0 6px 18px rgba(143,180,255,0.24);
 	}
-	.num-btn:active{
-		transform: scale(0.97) translateY(1px);
-		background: rgba(143,180,255,0.3);
+	.num-btn:active, .num-btn.key-pressed{
+		transform: scale(0.96) translateY(1px);
+		background: rgba(143,180,255,0.45) !important;
+		border-color: #fff !important;
+		box-shadow: 0 0 20px rgba(143,180,255,0.6) !important;
+	}
+	.num-btn .btn-main{ line-height: 1; }
+	.num-btn .btn-sub{
+		font-size: 11px; font-weight: 600; opacity: 0.75; margin-top: 3px;
+		letter-spacing: 0.4px; text-transform: uppercase;
 	}
 	.num-btn.num-clear{
 		color: #ffd27f; border-color: rgba(255,210,127,0.35);
@@ -1036,36 +1083,89 @@
 		font-size: 24px;
 	}
 	.num-btn.num-clear:hover{
-		background: rgba(255,210,127,0.22); border-color: #ffd27f; color: #fff;
+		background: rgba(255,210,127,0.24); border-color: #ffd27f; color: #fff;
 	}
 	.num-btn.num-back{
 		color: var(--text-dim); border-color: rgba(255,255,255,0.1);
 	}
 	.num-btn.num-back:hover{
-		color: #fff; border-color: rgba(255,255,255,0.3);
-		background: rgba(255,255,255,0.12);
+		color: #fff; border-color: rgba(255,255,255,0.35);
+		background: rgba(255,255,255,0.14);
 	}
 
-	.cash-keypad-hint{
-		font-size: 12px; color: var(--text-dim);
-		display: flex; align-items: center; justify-content: center; gap: 7px;
-		padding-top: 4px; text-align: center;
+	/* 4. Klare Spenden-Sektion für Jahrgang 12 */
+	.pos-donation-card{
+		background: rgba(255, 210, 127, 0.05);
+		border: 1px solid rgba(255, 210, 127, 0.28);
+		border-radius: 14px;
+		padding: 10px 14px;
+		display: flex; flex-direction: column; gap: 8px;
 	}
-	.cash-keypad-hint svg{ flex-shrink: 0; color: var(--accent); }
+	.pos-donation-header{
+		display: flex; align-items: center; gap: 6px;
+		font-size: 11px; font-weight: 800; letter-spacing: 0.6px;
+		color: #ffd27f; text-transform: uppercase;
+	}
+	.pos-donation-header svg{ width: 13px; height: 13px; }
+	.pos-donation-content{
+		display: flex; flex-direction: column; gap: 6px;
+	}
+	.donation-round-btn{
+		width: 100%; min-height: 38px; padding: 7px 12px; border-radius: 9px;
+		border: 1px solid rgba(255,210,127,0.5);
+		background: linear-gradient(135deg, rgba(255,210,127,0.25), rgba(255,210,127,0.1));
+		color: #ffd27f; font-size: 13px; font-weight: 700; cursor: pointer;
+		transition: all 0.16s ease; text-align: center;
+	}
+	.donation-round-btn:hover{
+		background: rgba(255,210,127,0.35); border-color: #ffd27f;
+		transform: translateY(-1px);
+	}
+	.donation-chips-grid{
+		display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+	}
+	.donation-chip{
+		min-height: 34px; padding: 6px 8px; font-size: 13px; font-weight: 700;
+		border-radius: 8px; border: 1px solid rgba(255,210,127,0.32);
+		background: rgba(255,210,127,0.08); color: #ffd27f; cursor: pointer;
+		transition: all 0.14s ease; display: flex; align-items: center; justify-content: center;
+	}
+	.donation-chip:hover{
+		background: rgba(255,210,127,0.26) !important; border-color: #ffd27f !important;
+		transform: translateY(-1px);
+	}
+	.donation-chip:active{ transform: scale(0.96); }
+
+	/* 5. Tastatur-Statusleiste */
+	.cash-keypad-hint{
+		font-size: 11.5px; color: var(--text-dim);
+		display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;
+		padding-top: 2px;
+	}
+	.hint-badge{
+		display: inline-flex; align-items: center; gap: 4px;
+	}
+	.cash-keypad-hint kbd{
+		display: inline-block; padding: 2px 5px; font-size: 10.5px; font-weight: 700;
+		color: #fff; background: rgba(255,255,255,0.12);
+		border: 1px solid rgba(255,255,255,0.22); border-radius: 4px;
+		font-family: inherit;
+	}
 
 	/* Responsive für Tablets & Smartphones */
 	@media (max-width: 860px){
-		.cash-modal{
-			width: 95vw; max-width: 500px; padding: 22px 18px;
-			border-radius: 18px; max-height: calc(100vh - 24px);
+		#cashModalOverlay .cash-modal{
+			width: 96vw; max-width: 520px; padding: 20px 16px;
+			border-radius: 18px; max-height: calc(100vh - 20px);
 		}
 		.cash-modal-grid{
 			grid-template-columns: 1fr;
-			gap: 20px;
+			gap: 16px;
 		}
 		.cash-modal-name{ font-size: 20px; }
-		.num-btn{ min-height: 56px; font-size: 22px; border-radius: 12px; }
-		.cash-modal-actions button{ min-height: 48px; }
+		.num-btn{ min-height: 54px; font-size: 24px; border-radius: 12px; }
+		.pos-screen-amount{ font-size: 34px; }
+		.cash-modal-actions button{ min-height: 46px; }
 	}
 
 	/* Cashier POS View */
@@ -2342,46 +2442,48 @@
 			<div class="cash-modal-grid">
 				<!-- Linke Spalte: Übersicht, Bon & Beträge -->
 				<div class="cash-col-summary">
-					<div class="cash-summary-header">
-						<div class="cash-pos-tag">
-							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><circle cx="7" cy="15" r="1"/></svg>
-							<span>VORVERKAUFSKASSE · BARZAHLUNG</span>
+					<div>
+						<div class="cash-summary-header">
+							<div class="cash-pos-tag">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><circle cx="7" cy="15" r="1"/></svg>
+								<span>VORVERKAUFSKASSE · BARZAHLUNG</span>
+							</div>
+							<div class="cash-modal-name" id="cashModalName"></div>
+							<div id="cashModalSubtitle"></div>
 						</div>
-						<div class="cash-modal-name" id="cashModalName"></div>
-						<div id="cashModalSubtitle"></div>
-					</div>
 
-					<div class="cash-display-card">
-						<div class="cash-row">
-							<span class="cash-row-label">Fälliger Betrag</span>
-							<strong class="cash-row-val" id="cashDue">0,00 €</strong>
+						<div class="cash-display-card" style="margin-top:12px;">
+							<div class="cash-row">
+								<span class="cash-row-label">Fälliger Betrag</span>
+								<strong class="cash-row-val" id="cashDue">0,00 €</strong>
+							</div>
+							<div class="cash-row cash-row-given">
+								<span class="cash-row-label">
+									<span class="pulse-dot" style="background:var(--accent); width:8px; height:8px; display:inline-block; margin-right:6px; border-radius:50%;"></span>
+									Gegeben (Bar)
+								</span>
+								<strong class="cash-row-val highlight" id="cashGiven">0,00 €</strong>
+							</div>
+							<div class="cash-row cash-donation" id="cashDonationRow" style="display:none;">
+								<span class="cash-row-label donation-lbl">
+									<svg viewBox="0 0 24 24" fill="currentColor" style="width:15px; height:15px; color:#ffd27f; display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+									<span>Freiwillige Spende</span>
+								</span>
+								<strong class="cash-row-val donation-val" id="cashDonation">0,00 €</strong>
+							</div>
+							<div class="cash-row cash-change" id="cashChangeRow">
+								<span class="cash-row-label">Rückgeld</span>
+								<strong class="cash-row-val change-val" id="cashChange">0,00 €</strong>
+							</div>
 						</div>
-						<div class="cash-row cash-row-given">
-							<span class="cash-row-label">
-								<span class="pulse-dot" style="background:var(--accent); width:8px; height:8px; display:inline-block; margin-right:6px;"></span>
-								Gegeben (Bar)
-							</span>
-							<strong class="cash-row-val highlight" id="cashGiven">0,00 €</strong>
-						</div>
-						<div class="cash-row cash-donation" id="cashDonationRow" style="display:none;">
-							<span class="cash-row-label donation-lbl">
-								<svg viewBox="0 0 24 24" fill="currentColor" style="width:15px; height:15px; color:#ffd27f; display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-								<span>Freiwillige Spende</span>
-							</span>
-							<strong class="cash-row-val donation-val" id="cashDonation">0,00 €</strong>
-						</div>
-						<div class="cash-row cash-change" id="cashChangeRow">
-							<span class="cash-row-label">Rückgeld</span>
-							<strong class="cash-row-val change-val" id="cashChange">0,00 €</strong>
-						</div>
-					</div>
 
-					<!-- Schnellbutton: Restgeld als Spende behalten -->
-					<div id="cashDonateQuickWrap" style="display:none; margin:14px 0 12px;">
-						<button type="button" class="donate-change-btn" id="cashDonateChangeBtn" title="Restgeld direkt als Spende für Jahrgang 12 übernehmen">
-							<svg viewBox="0 0 24 24" fill="currentColor" style="width:16px; height:16px; flex-shrink:0;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-							<span id="cashDonateChangeBtnText">Restgeld als Spende behalten (+3,00 €)</span>
-						</button>
+						<!-- Schnellbutton: Restgeld als Spende behalten -->
+						<div id="cashDonateQuickWrap" style="display:none; margin-top:12px;">
+							<button type="button" class="donate-change-btn" id="cashDonateChangeBtn" title="Restgeld direkt als Spende für Jahrgang 12 übernehmen (Taste S)">
+								<svg viewBox="0 0 24 24" fill="currentColor" style="width:16px; height:16px; flex-shrink:0;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+								<span id="cashDonateChangeBtnText">Restgeld als Spende behalten (+3,00 €)</span>
+							</button>
+						</div>
 					</div>
 
 					<div class="cash-modal-actions">
@@ -2390,48 +2492,86 @@
 					</div>
 				</div>
 
-				<!-- Rechte Spalte: Großes Breites Touch-Numpad & Schnell-Aktionen -->
+				<!-- Rechte Spalte: Großes Übersichtlich Strukturiertes POS-Touch-Numpad -->
 				<div class="cash-col-keypad">
-					<div class="cash-keypad-top">
-						<div class="cash-quick-bar">
-							<button type="button" class="exact-btn" id="cashExactBtn" title="Exakten fälligen Betrag als gegeben setzen">
-								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px; height:16px;"><polyline points="20 6 9 17 4 12"/></svg>
-								<span>Passend bezahlt</span>
-							</button>
-							<button type="button" class="exact-btn donation-preset-btn" id="cashRoundUpBtn" style="display:none;" title="Auf vollen Betrag aufrunden und Rest als Spende eintragen">
-								<span>Auf 10 € aufrunden</span>
-							</button>
+					<!-- 1. Kristallklares LCD Eingabe-Display -->
+					<div class="pos-screen-card">
+						<div class="pos-screen-header">
+							<span class="pos-screen-badge">
+								<span class="pulse-dot" style="background:#7fe0a8; width:7px; height:7px; display:inline-block; border-radius:50%;"></span>
+								EINGABE BARGELD
+							</span>
+							<span class="pos-screen-status" id="posInputStatus">Warte auf Eingabe...</span>
 						</div>
-
-						<div id="cashQuickDonationChips" class="cash-donation-chips-bar">
-							<span class="chips-hint-label">💛 Spende:</span>
-							<button type="button" class="donation-chip" data-donate="100" title="1 Euro Spende hinzufügen">+ 1 €</button>
-							<button type="button" class="donation-chip" data-donate="200" title="2 Euro Spende hinzufügen">+ 2 €</button>
-							<button type="button" class="donation-chip" data-donate="500" title="5 Euro Spende hinzufügen">+ 5 €</button>
-							<button type="button" class="donation-chip" data-donate="1000" title="10 Euro Spende hinzufügen">+ 10 €</button>
+						<div class="pos-screen-digits-wrap">
+							<span class="pos-screen-currency">€</span>
+							<span class="pos-screen-amount" id="cashInputDisplay">0,00</span>
 						</div>
 					</div>
 
+					<!-- 2. Schnellauswahl: Passend & Banknoten-Scheine -->
+					<div class="pos-presets-row">
+						<button type="button" class="preset-btn exact-btn" id="cashExactBtn" title="Fälligen Betrag passend setzen (Taste P)">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:15px; height:15px;"><polyline points="20 6 9 17 4 12"/></svg>
+							<span>Passend (P)</span>
+						</button>
+						<button type="button" class="preset-btn bill-btn" data-bill="500" title="5 Euro Schein">5 €</button>
+						<button type="button" class="preset-btn bill-btn" data-bill="1000" title="10 Euro Schein">10 €</button>
+						<button type="button" class="preset-btn bill-btn" data-bill="2000" title="20 Euro Schein">20 €</button>
+						<button type="button" class="preset-btn bill-btn" data-bill="5000" title="50 Euro Schein">50 €</button>
+					</div>
+
+					<!-- 3. Standard-Taschenrechner-Keypad: 7-8-9 / 4-5-6 / 1-2-3 / C-0-⌫ -->
 					<div class="numpad">
-						<button type="button" class="num-btn" data-num="1">1</button>
-						<button type="button" class="num-btn" data-num="2">2</button>
-						<button type="button" class="num-btn" data-num="3">3</button>
-						<button type="button" class="num-btn" data-num="4">4</button>
-						<button type="button" class="num-btn" data-num="5">5</button>
-						<button type="button" class="num-btn" data-num="6">6</button>
-						<button type="button" class="num-btn" data-num="7">7</button>
-						<button type="button" class="num-btn" data-num="8">8</button>
-						<button type="button" class="num-btn" data-num="9">9</button>
-						<button type="button" class="num-btn num-clear" id="cashClearBtn" title="Eingabe leeren (C)">C</button>
-						<button type="button" class="num-btn" data-num="0">0</button>
-						<button type="button" class="num-btn num-back" id="cashBackBtn" title="Letzte Ziffer löschen (⌫)">
+						<button type="button" class="num-btn" data-num="7"><span class="btn-main">7</span></button>
+						<button type="button" class="num-btn" data-num="8"><span class="btn-main">8</span></button>
+						<button type="button" class="num-btn" data-num="9"><span class="btn-main">9</span></button>
+
+						<button type="button" class="num-btn" data-num="4"><span class="btn-main">4</span></button>
+						<button type="button" class="num-btn" data-num="5"><span class="btn-main">5</span></button>
+						<button type="button" class="num-btn" data-num="6"><span class="btn-main">6</span></button>
+
+						<button type="button" class="num-btn" data-num="1"><span class="btn-main">1</span></button>
+						<button type="button" class="num-btn" data-num="2"><span class="btn-main">2</span></button>
+						<button type="button" class="num-btn" data-num="3"><span class="btn-main">3</span></button>
+
+						<button type="button" class="num-btn num-clear" id="cashClearBtn" title="Eingabe leeren (Taste C)">
+							<span class="btn-main">C</span>
+							<span class="btn-sub">Leeren</span>
+						</button>
+						<button type="button" class="num-btn" data-num="0"><span class="btn-main">0</span></button>
+						<button type="button" class="num-btn num-back" id="cashBackBtn" title="Letzte Ziffer löschen (Backspace)">
 							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:22px; height:22px;"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>
+							<span class="btn-sub">Zurück</span>
 						</button>
 					</div>
 
+					<!-- 4. Freiwillige Spende: Eigene, übersichtliche Karte -->
+					<div class="pos-donation-card">
+						<div class="pos-donation-header">
+							<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+							<span>Spende für den Abiturjahrgang 12</span>
+						</div>
+						<div class="pos-donation-content">
+							<button type="button" class="donation-round-btn" id="cashRoundUpBtn" style="display:none;" title="Auf vollen Betrag aufrunden und Differenz spenden">
+								<span>Auf 10 € aufrunden (+3,00 € Spende)</span>
+							</button>
+							<div class="donation-chips-grid">
+								<button type="button" class="donation-chip" data-donate="100" title="1 Euro Spende">+ 1 €</button>
+								<button type="button" class="donation-chip" data-donate="200" title="2 Euro Spende">+ 2 €</button>
+								<button type="button" class="donation-chip" data-donate="500" title="5 Euro Spende">+ 5 €</button>
+								<button type="button" class="donation-chip" data-donate="1000" title="10 Euro Spende">+ 10 €</button>
+							</div>
+						</div>
+					</div>
+
+					<!-- 5. Tastatur-Statusleiste -->
 					<div class="cash-keypad-hint">
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px; height:14px;"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="6" y1="8" x2="6.01" y2="8"/><line x1="10" y1="8" x2="10.01" y2="8"/><line x1="14" y1="8" x2="14.01" y2="8"/><line x1="18" y1="8" x2="18.01" y2="8"/><line x1="6" y1="12" x2="6.01" y2="12"/><line x1="18" y1="12" x2="18.01" y2="12"/><line x1="10" y1="16" x2="14" y2="16"/></svg>
-						<span>Tastatur aktiv: Ziffern 0–9 · [Enter] Bezahlen · [P] Passend · [C] Löschen · [Esc] Schließen</span>
+						<span class="hint-badge"><kbd>0–9</kbd> Ziffern</span>
+						<span class="hint-badge"><kbd>Enter</kbd> Bezahlt</span>
+						<span class="hint-badge"><kbd>P</kbd> Passend</span>
+						<span class="hint-badge"><kbd>C</kbd> Leeren</span>
+						<span class="hint-badge"><kbd>Esc</kbd> Abbrechen</span>
 					</div>
 				</div>
 			</div>
@@ -5714,54 +5854,162 @@ let allRatings = [];
  }
 
  async function downloadInvoicePdf(regId, btnEl){
- const reg = allRegs.find(r => r.id === regId);
- const tickets = ticketsFor(regId);
- if(!reg || tickets.length === 0) return;
+		const reg = allRegs.find(r => r.id === regId);
+		const tickets = ticketsFor(regId);
+		if(!reg || tickets.length === 0) return;
 
- const paidTickets = tickets.filter(t => t.paid);
- const ticketsToInvoice = (paidTickets.length > 0) ? paidTickets : tickets;
+		const paidTickets = tickets.filter(t => t.paid);
+		const ticketsToInvoice = (paidTickets.length > 0) ? paidTickets : tickets;
 
- btnEl.disabled = true;
- btnEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px; height:12px; animation:spin 0.8s linear infinite;"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"/></svg><span>...</span>';
- try {
- // Immer die aktuell gültigen Preise nutzen (nicht auf lokalen Cache verlassen)
- const priceSnap = await getDoc(doc(db, 'settings', 'pricing'));
- const freshPrices = priceSnap.exists()
- ? { u18: Number(priceSnap.data().u18 || 0), ue18: Number(priceSnap.data().ue18 || 0) }
- : { u18: 0, ue18: 0 };
+		btnEl.disabled = true;
+		btnEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px; height:12px; animation:spin 0.8s linear infinite;"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"/></svg><span>...</span>';
+		try {
+			const priceSnap = await getDoc(doc(db, 'settings', 'pricing'));
+			const freshPrices = priceSnap.exists()
+				? { u18: Number(priceSnap.data().u18 || 0), ue18: Number(priceSnap.data().ue18 || 0) }
+				: { u18: 0, ue18: 0 };
 
- const idToken = await auth.currentUser.getIdToken();
- const res = await workerFetch('/generate-invoice', {
- method: 'POST',
- headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
- body: JSON.stringify({
- ordererName: reg.name,
- attendees: ticketsToInvoice.map(t => ({
- name: t.name, category: t.category, price: freshPrices[t.category] || 0
- }))
- })
- });
- if(!res.ok) {
- const errBody = await res.json().catch(() => ({}));
- throw new Error(errBody.error || `Quittung konnte nicht erstellt werden (Status ${res.status})`);
- }
- const blob = await res.blob();
- const url = URL.createObjectURL(blob);
- const a = document.createElement('a');
- a.href = url;
- a.download = `Winterball-Quittung-${reg.name.replace(/\s+/g,'-')}.pdf`;
- a.click();
- URL.revokeObjectURL(url);
- } catch(err){
- console.error(err.message || String(err));
- alert('Quittung konnte nicht erstellt werden:\n' + err.message);
- } finally {
- btnEl.disabled = false;
- btnEl.innerHTML = INVOICE_BTN_CONTENT;
- }
- }
+			const donationAmount = Number(reg.donation || 0);
+			const invoiceItems = ticketsToInvoice.map(t => ({
+				name: t.name,
+				category: t.category,
+				price: freshPrices[t.category] || 0
+			}));
 
- async function deleteRegistration(regId){
+			// Spende als eigene Position auf der Quittung vermerken
+			if (donationAmount > 0) {
+				invoiceItems.push({
+					name: 'Freiwillige Spende (Abikasse Jahrgang 12)',
+					category: 'Spende',
+					price: donationAmount
+				});
+			}
+
+			const idToken = await auth.currentUser.getIdToken();
+			const res = await workerFetch('/generate-invoice', {
+				method: 'POST',
+				headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
+				body: JSON.stringify({
+					ordererName: reg.name,
+					donation: donationAmount,
+					attendees: invoiceItems
+				})
+			});
+			if(!res.ok) {
+				console.warn('Worker PDF antwortete nicht erfolgreich, öffne Quittung direkt:', res.status);
+				printDirectReceipt(reg, ticketsToInvoice, freshPrices, donationAmount);
+				return;
+			}
+			const blob = await res.blob();
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement('a');
+			a.href = url;
+			a.download = `Winterball-Quittung-${reg.name.replace(/\s+/g,'-')}.pdf`;
+			a.click();
+			URL.revokeObjectURL(url);
+		} catch(err){
+			console.error('PDF Fehler:', err.message || String(err));
+			const priceSnap = await getDoc(doc(db, 'settings', 'pricing')).catch(() => null);
+			const freshPrices = (priceSnap && priceSnap.exists())
+				? { u18: Number(priceSnap.data().u18 || 0), ue18: Number(priceSnap.data().ue18 || 0) }
+				: { u18: 0, ue18: 0 };
+			const donationAmount = Number(reg.donation || 0);
+			printDirectReceipt(reg, ticketsToInvoice, freshPrices, donationAmount);
+		} finally {
+			btnEl.disabled = false;
+			btnEl.innerHTML = INVOICE_BTN_CONTENT;
+		}
+	}
+
+	// Offizieller Quittungs-Ausdruck mit ausgewiesener Spende
+	function printDirectReceipt(reg, ticketsToInvoice, prices, donationAmount = 0){
+		const now = new Date();
+		const pDate = getRegistrationPaymentDate(reg) || now;
+		const dateStr = pDate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+		const timeStr = pDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' Uhr';
+		
+		const ticketSum = ticketsToInvoice.reduce((sum, t) => sum + (prices[t.category] || 0), 0);
+		const totalSum = ticketSum + donationAmount;
+		const receiptNo = 'WB27-Q-' + (reg.id || '0000').substring(0, 8).toUpperCase();
+
+		const container = document.getElementById('printContainer');
+		if (!container) return;
+
+		container.innerHTML = `
+		<div style="font-family:'Segoe UI',Arial,sans-serif; color:#000; padding:15mm; line-height:1.5; max-width:210mm; margin:0 auto;">
+			<div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #000; padding-bottom:12px; margin-bottom:20px;">
+				<div>
+					<h1 style="font-size:20px; margin:0 0 4px 0; font-weight:800; letter-spacing:0.5px;">WINTERBALL 2027</h1>
+					<div style="font-size:13px; font-weight:600; color:#333;">Gymnasium Wilsdruff · Jahrgangsstufe 12</div>
+					<div style="font-size:12px; color:#666; margin-top:2px;">Veranstaltungstag: Samstag, 30. Januar 2027</div>
+				</div>
+				<div style="text-align:right; font-size:12px; line-height:1.4;">
+					<div style="font-weight:700; font-size:13px;">OFFIZIELLE QUITTUNG / BELEG</div>
+					<div>Beleg-Nr.: <strong>${receiptNo}</strong></div>
+					<div>Datum: <strong>${dateStr} · ${timeStr}</strong></div>
+				</div>
+			</div>
+
+			<div style="background:#f4f5f8; border:1px solid #ccc; padding:12px 16px; border-radius:6px; margin-bottom:20px;">
+				<div style="font-size:11px; text-transform:uppercase; font-weight:700; color:#555;">Käufer / Besteller:</div>
+				<div style="font-size:16px; font-weight:800; color:#000;">${escapeHtml(reg.name)}${reg.schoolClass ? ` <span style="font-size:13px; font-weight:600; color:#444;">(Klasse ${escapeHtml(reg.schoolClass)})</span>` : ''}</div>
+				${reg.email ? `<div style="font-size:12px; color:#555; margin-top:2px;">E-Mail: ${escapeHtml(reg.email)}</div>` : ''}
+			</div>
+
+			<table style="width:100%; border-collapse:collapse; font-size:12px; margin-bottom:20px;">
+				<thead>
+					<tr style="background:#e5e7eb; border-top:1px solid #999; border-bottom:1px solid #999;">
+						<th style="padding:8px 10px; text-align:left;">Pos.</th>
+						<th style="padding:8px 10px; text-align:left;">Bezeichnung / Gast</th>
+						<th style="padding:8px 10px; text-align:center;">Kategorie</th>
+						<th style="padding:8px 10px; text-align:right;">Betrag</th>
+					</tr>
+				</thead>
+				<tbody>
+					${ticketsToInvoice.map((t, idx) => `
+						<tr style="border-bottom:1px solid #eee;">
+							<td style="padding:8px 10px;">${idx + 1}</td>
+							<td style="padding:8px 10px;"><strong>Eintrittskarte: ${escapeHtml(t.name)}</strong></td>
+							<td style="padding:8px 10px; text-align:center;">${categoryLabel(t.category)}</td>
+							<td style="padding:8px 10px; text-align:right;">${(prices[t.category] || 0).toFixed(2).replace('.', ',')} €</td>
+						</tr>
+					`).join('')}
+					${donationAmount > 0 ? `
+						<tr style="border-bottom:1px solid #ccc; background:#fffbeb; font-weight:700;">
+							<td style="padding:10px 10px; color:#b45309;">💛</td>
+							<td style="padding:10px 10px; color:#b45309;" colspan="2">
+								<strong>Freiwillige Spende an den Abiturjahrgang 12</strong>
+								<div style="font-size:11px; font-weight:normal; color:#78350f;">Herzlichen Dank für die Unterstützung des Winterballs!</div>
+							</td>
+							<td style="padding:10px 10px; text-align:right; color:#b45309; font-size:13px;">${donationAmount.toFixed(2).replace('.', ',')} €</td>
+						</tr>
+					` : ''}
+				</tbody>
+				<tfoot>
+					<tr style="background:#e5e7eb; font-weight:800; font-size:14px; border-top:2px solid #000; border-bottom:2px solid #000;">
+						<td colspan="3" style="padding:10px 10px; text-align:right;">GESAMTBETRAG${donationAmount > 0 ? ' (INKL. SPENDE)' : ''}:</td>
+						<td style="padding:10px 10px; text-align:right; font-size:16px;">${totalSum.toFixed(2).replace('.', ',')} €</td>
+					</tr>
+				</tfoot>
+			</table>
+
+			<div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:30px; font-size:12px;">
+				<div style="line-height:1.5; color:#444;">
+					<div><strong>Zahlungsart:</strong> Barzahlung im Schul-Vorverkauf</div>
+					<div><strong>Status:</strong> Betrag vollständig und dankend erhalten.</div>
+					<div style="font-size:11px; color:#777; margin-top:4px;">Dieser Beleg dient als offizieller Zahlungsnachweis zum Winterball 2027.</div>
+				</div>
+				<div style="text-align:center; min-width:180px;">
+					<div style="border-bottom:1px solid #000; height:35px; margin-bottom:4px;"></div>
+					<div style="font-size:11px; color:#444;">Unterschrift Kassenwart / Einlass</div>
+				</div>
+			</div>
+		</div>
+		`;
+		window.print();
+	}
+	
+	async function deleteRegistration(regId){
  const reg = allRegs.find(r => r.id === regId);
  if(!reg) return;
  const confirmed = confirm(`Bestellung von "${reg.name}" (inkl. aller zugehörigen Tickets) wirklich unwiderruflich löschen?`);
@@ -5822,9 +6070,16 @@ let allRatings = [];
 		const donateChangeBtn = document.getElementById('cashDonateChangeBtn');
 		const donateBtnText = document.getElementById('cashDonateChangeBtnText');
 		const roundUpBtn = document.getElementById('cashRoundUpBtn');
+		const inputDisplay = document.getElementById('cashInputDisplay');
+		const inputStatus = document.getElementById('posInputStatus');
 
 		if (dueEl) dueEl.textContent = formatCents(cashModalState.dueCents);
 		if (givenEl) givenEl.textContent = formatCents(cashModalState.givenCents);
+
+		// LCD Eingabe-Display synchronisieren
+		if (inputDisplay) {
+			inputDisplay.textContent = (cashModalState.givenCents / 100).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+		}
 
 		const excessCents = Math.max(0, cashModalState.givenCents - cashModalState.dueCents);
 
@@ -5837,7 +6092,25 @@ let allRatings = [];
 
 		const effectiveChange = (cashModalState.givenCents - cashModalState.dueCents) - cashModalState.donationCents;
 
-		// Spenden-Zeile
+		// LCD Status-Anzeige
+		if (inputStatus) {
+			if (cashModalState.givenCents === 0) {
+				inputStatus.textContent = 'Warte auf Eingabe...';
+				inputStatus.className = 'pos-screen-status';
+			} else if (cashModalState.givenCents < cashModalState.dueCents) {
+				const missing = cashModalState.dueCents - cashModalState.givenCents;
+				inputStatus.textContent = 'Noch ' + formatCents(missing) + ' offen';
+				inputStatus.className = 'pos-screen-status status-warn';
+			} else if (effectiveChange === 0) {
+				inputStatus.textContent = cashModalState.donationCents > 0 ? 'Passend inkl. Spende ✓' : 'Passend bezahlt ✓';
+				inputStatus.className = 'pos-screen-status status-ok';
+			} else {
+				inputStatus.textContent = formatCents(effectiveChange) + ' Rückgeld';
+				inputStatus.className = 'pos-screen-status status-ok';
+			}
+		}
+
+		// Spenden-Zeile im Bon
 		if (donationRow && donationEl) {
 			if (cashModalState.donationCents > 0) {
 				donationRow.style.display = 'flex';
@@ -5847,7 +6120,7 @@ let allRatings = [];
 			}
 		}
 
-		// Wechselgeld-Zeile
+		// Wechselgeld-Zeile im Bon
 		if (changeRow && changeEl) {
 			if (cashModalState.givenCents < cashModalState.dueCents) {
 				const missing = cashModalState.dueCents - cashModalState.givenCents;
@@ -5880,13 +6153,13 @@ let allRatings = [];
 			}
 		}
 
-		// Kluger Schnell-Aufrunden-Button (z.B. 7 € -> 10 €, 14 € -> 15 € oder 20 €)
+		// Kluger Schnell-Aufrunden-Button
 		if (roundUpBtn) {
 			const due = cashModalState.dueCents;
 			let targetCents = 0;
 			if (due > 0) {
 				if (due < 1000 && due % 1000 !== 0) {
-					targetCents = 1000; // z.B. 7 € -> 10 €
+					targetCents = 1000;
 				} else if (due % 500 !== 0) {
 					targetCents = Math.ceil(due / 500) * 500;
 				} else {
@@ -5917,88 +6190,135 @@ let allRatings = [];
 		}
 	}
 
- function openCashModal(regId, customBtnEl){
- const reg = allRegs.find(r => r.id === regId);
- const btnEl = customBtnEl || document.querySelector(`.pay-btn[data-id="${regId}"]`);
- if (!reg) return;
+	function openCashModal(regId, customBtnEl){
+		const reg = allRegs.find(r => r.id === regId);
+		const btnEl = customBtnEl || document.querySelector(`.pay-btn[data-id="${regId}"]`);
+		if (!reg) return;
 
- const tickets = ticketsFor(regId);
- const hasExplicitlyPaid = tickets.some(t => t.paid === true);
- const unpaidTickets = hasExplicitlyPaid ? tickets.filter(t => !t.paid) : tickets;
- const paidTickets = hasExplicitlyPaid ? tickets.filter(t => t.paid) : [];
- const isPartial = paidTickets.length > 0 && unpaidTickets.length > 0;
- const dueCents = ticketsDueCents(regId);
+		const tickets = ticketsFor(regId);
+		const hasExplicitlyPaid = tickets.some(t => t.paid === true);
+		const unpaidTickets = hasExplicitlyPaid ? tickets.filter(t => !t.paid) : tickets;
+		const paidTickets = hasExplicitlyPaid ? tickets.filter(t => t.paid) : [];
+		const isPartial = paidTickets.length > 0 && unpaidTickets.length > 0;
+		const dueCents = ticketsDueCents(regId);
 
- cashModalState = { regId, btnEl, dueCents, givenCents: 0, donationCents: 0, keepChangeActive: false };
- document.getElementById('cashModalName').textContent = reg.name;
+		cashModalState = { regId, btnEl, dueCents, givenCents: 0, donationCents: 0, keepChangeActive: false };
+		document.getElementById('cashModalName').textContent = reg.name;
 
- const subEl = document.getElementById('cashModalSubtitle');
- if (subEl) {
- if (isPartial) {
- const unpaidNames = unpaidTickets.map(t => `<span style="font-weight:700; color:#fff;">${escapeHtml(t.name)}</span> <span style="color:#9aa7c2;">(${categoryLabel(t.category)} · ${formatCents(Math.round((ticketPrices[t.category]||0)*100))})</span>`).join(', ');
- const paidNames = paidTickets.map(t => `<span style="color:#7fe0a8; font-weight:600;">${escapeHtml(t.name)}</span>`).join(', ');
- subEl.innerHTML = `
- <div style="background:rgba(255,210,127,0.08); border:1px solid rgba(255,210,127,0.25); border-radius:8px; padding:8px 11px; text-align:left; font-size:12px; line-height:1.45;">
- <div style="color:#ffd27f; font-weight:700; display:flex; align-items:center; gap:5px; margin-bottom:4px;">
- <span></span>
- <span>Nachzahlung nur für offene Begleitung(en):</span>
- </div>
- <div style="margin-bottom:4px;">${unpaidNames}</div>
- <div style="font-size:11.5px; border-top:1px dashed rgba(255,255,255,0.08); padding-top:4px; color:#9aa7c2;">
- Bereits bezahlt: ${paidNames}
- </div>
- </div>
- `;
- } else if (tickets.length > 1) {
- subEl.innerHTML = `
- <div style="color:var(--text-dim); font-size:12px; text-align:center;">
- ${tickets.length} Tickets · Alle noch unbezahlt
- </div>
- `;
- } else {
- subEl.innerHTML = `
- <div style="color:var(--text-dim); font-size:12px; text-align:center;">
- 1 Ticket (${categoryLabel(reg.category)})
- </div>
- `;
- }
- }
+		const subEl = document.getElementById('cashModalSubtitle');
+		if (subEl) {
+			if (isPartial) {
+				const unpaidNames = unpaidTickets.map(t => `<span style="font-weight:700; color:#fff;">${escapeHtml(t.name)}</span> <span style="color:#9aa7c2;">(${categoryLabel(t.category)} · ${formatCents(Math.round((ticketPrices[t.category]||0)*100))})</span>`).join(', ');
+				const paidNames = paidTickets.map(t => `<span style="color:#7fe0a8; font-weight:600;">${escapeHtml(t.name)}</span>`).join(', ');
+				subEl.innerHTML = `
+					<div style="background:rgba(255,210,127,0.08); border:1px solid rgba(255,210,127,0.25); border-radius:8px; padding:8px 11px; text-align:left; font-size:12px; line-height:1.45;">
+						<div style="color:#ffd27f; font-weight:700; display:flex; align-items:center; gap:5px; margin-bottom:4px;">
+							<span>Nachzahlung nur für offene Begleitung(en):</span>
+						</div>
+						<div style="margin-bottom:4px;">${unpaidNames}</div>
+						<div style="font-size:11.5px; border-top:1px dashed rgba(255,255,255,0.08); padding-top:4px; color:#9aa7c2;">
+							Bereits bezahlt: ${paidNames}
+						</div>
+					</div>
+				`;
+			} else if (tickets.length > 1) {
+				subEl.innerHTML = `
+					<div style="color:var(--text-dim); font-size:12px;">
+						${tickets.length} Tickets · Alle noch unbezahlt
+					</div>
+				`;
+			} else {
+				subEl.innerHTML = `
+					<div style="color:var(--text-dim); font-size:12px;">
+						1 Ticket (${categoryLabel(reg.category)})
+					</div>
+				`;
+			}
+		}
 
- updateCashDisplay();
- document.getElementById('cashModalOverlay').classList.add('show');
- }
+		updateCashDisplay();
+		document.getElementById('cashModalOverlay').classList.add('show');
+	}
 
- function closeCashModal(){
- document.getElementById('cashModalOverlay').classList.remove('show');
- cashModalState = { regId: null, btnEl: null, dueCents: 0, givenCents: 0, donationCents: 0, keepChangeActive: false };
- const subEl = document.getElementById('cashModalSubtitle');
- if (subEl) subEl.innerHTML = '';
- }
+	function closeCashModal(){
+		document.getElementById('cashModalOverlay').classList.remove('show');
+		cashModalState = { regId: null, btnEl: null, dueCents: 0, givenCents: 0, donationCents: 0, keepChangeActive: false };
+		const subEl = document.getElementById('cashModalSubtitle');
+		if (subEl) subEl.innerHTML = '';
+	}
 
- document.querySelectorAll('.num-btn[data-num]').forEach(btn => {
- btn.addEventListener('click', () => {
- const next = cashModalState.givenCents * 10 + Number(btn.dataset.num);
- if (next <= 99999999) cashModalState.givenCents = next; // Deckel bei 999.999,99 €
- updateCashDisplay();
- });
- });
- document.getElementById('cashBackBtn').addEventListener('click', () => {
- cashModalState.givenCents = Math.floor(cashModalState.givenCents / 10);
- updateCashDisplay();
- });
- document.getElementById('cashClearBtn').addEventListener('click', () => {
- cashModalState.givenCents = 0;
- updateCashDisplay();
- });
- document.getElementById('cashExactBtn').addEventListener('click', () => {
- cashModalState.givenCents = cashModalState.dueCents;
- updateCashDisplay();
- });
- document.getElementById('cashCancelBtn').addEventListener('click', closeCashModal);
- document.getElementById('cashModalOverlay').addEventListener('click', (e) => {
- if (e.target.id === 'cashModalOverlay') closeCashModal();
- });
- // Schnellbutton: Restgeld als Spende behalten
+	// Tastendruck visuell auf dem Bildschirm aufleuchten lassen (taktiles Feedback)
+	function flashKeyButton(keyId) {
+		let btn = null;
+		if (/^[0-9]$/.test(keyId)) {
+			btn = document.querySelector(`.num-btn[data-num="${keyId}"]`);
+		} else if (keyId === 'back') {
+			btn = document.getElementById('cashBackBtn');
+		} else if (keyId === 'clear') {
+			btn = document.getElementById('cashClearBtn');
+		} else if (keyId === 'exact') {
+			btn = document.getElementById('cashExactBtn');
+		}
+		if (btn) {
+			btn.classList.add('key-pressed');
+			setTimeout(() => btn.classList.remove('key-pressed'), 130);
+		}
+	}
+
+	// Numpad Ziffern-Buttons (0-9)
+	document.querySelectorAll('.num-btn[data-num]').forEach(btn => {
+		btn.addEventListener('click', () => {
+			const next = cashModalState.givenCents * 10 + Number(btn.dataset.num);
+			if (next <= 99999999) cashModalState.givenCents = next;
+			updateCashDisplay();
+		});
+	});
+
+	// Schnellauswahl Banknoten (5€, 10€, 20€, 50€)
+	document.querySelectorAll('.preset-btn.bill-btn[data-bill]').forEach(btn => {
+		btn.addEventListener('click', () => {
+			const val = Number(btn.dataset.bill || 0);
+			if (val > 0) {
+				cashModalState.givenCents = val;
+				cashModalState.donationCents = 0;
+				cashModalState.keepChangeActive = false;
+				updateCashDisplay();
+				btn.classList.add('key-pressed');
+				setTimeout(() => btn.classList.remove('key-pressed'), 130);
+			}
+		});
+	});
+
+	// Backspace-Button
+	document.getElementById('cashBackBtn')?.addEventListener('click', () => {
+		cashModalState.givenCents = Math.floor(cashModalState.givenCents / 10);
+		updateCashDisplay();
+	});
+
+	// Clear-Button (C)
+	document.getElementById('cashClearBtn')?.addEventListener('click', () => {
+		cashModalState.givenCents = 0;
+		cashModalState.donationCents = 0;
+		cashModalState.keepChangeActive = false;
+		updateCashDisplay();
+	});
+
+	// Passend-Button (P)
+	document.getElementById('cashExactBtn')?.addEventListener('click', () => {
+		cashModalState.givenCents = cashModalState.dueCents;
+		cashModalState.donationCents = 0;
+		cashModalState.keepChangeActive = false;
+		updateCashDisplay();
+	});
+
+	// Schließen-Buttons (Abbrechen & X oben rechts)
+	document.getElementById('cashCancelBtn')?.addEventListener('click', closeCashModal);
+	document.getElementById('cashModalCloseX')?.addEventListener('click', closeCashModal);
+	document.getElementById('cashModalOverlay')?.addEventListener('click', (e) => {
+		if (e.target.id === 'cashModalOverlay') closeCashModal();
+	});
+
+	// Schnellbutton: Restgeld als Spende behalten
 	const donateChangeBtn = document.getElementById('cashDonateChangeBtn');
 	if (donateChangeBtn) {
 		donateChangeBtn.addEventListener('click', () => {
@@ -6031,7 +6351,7 @@ let allRatings = [];
 		});
 	}
 
-	// Schnell-Spende Chips (+1 €, +2 €, +5 €)
+	// Schnell-Spende Chips (+1 €, +2 €, +5 €, +10 €)
 	document.querySelectorAll('.donation-chip[data-donate]').forEach(chip => {
 		chip.addEventListener('click', () => {
 			const add = Number(chip.dataset.donate || 0);
@@ -6045,27 +6365,108 @@ let allRatings = [];
 		});
 	});
 
-	document.getElementById('cashExactBtn').addEventListener('click', () => {
-		cashModalState.givenCents = cashModalState.dueCents;
-		cashModalState.donationCents = 0;
-		cashModalState.keepChangeActive = false;
-		updateCashDisplay();
-	});
-
-	document.getElementById('cashClearBtn').addEventListener('click', () => {
-		cashModalState.givenCents = 0;
-		cashModalState.donationCents = 0;
-		cashModalState.keepChangeActive = false;
-		updateCashDisplay();
-	});
-
-	document.getElementById('cashConfirmBtn').addEventListener('click', () => {
+	// Bezahlt bestätigen
+	document.getElementById('cashConfirmBtn')?.addEventListener('click', () => {
 		const { regId, btnEl, donationCents } = cashModalState;
 		closeCashModal();
 		if (regId && btnEl) markAsPaid(regId, btnEl, donationCents);
 	});
 
- // --- Bestellung vollständig bearbeiten (Name, E-Mail, Kategorie, Begleitungen) ---
+	// =========================================================================
+	// PHYSISCHE TASTATURSTEUERUNG FÜR DAS KASSEN-MODAL
+	// =========================================================================
+	window.addEventListener('keydown', (e) => {
+		const overlay = document.getElementById('cashModalOverlay');
+		if (!overlay || !overlay.classList.contains('show')) return;
+
+		// Wenn der Benutzer gerade in ein Formularfeld tippt (z.B. Suchleiste), nicht abfangen
+		const activeEl = document.activeElement;
+		const tag = activeEl ? activeEl.tagName : '';
+		if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
+			if (e.key === 'Escape') {
+				activeEl.blur();
+				closeCashModal();
+				e.preventDefault();
+			}
+			return;
+		}
+
+		// Ziffern 0-9 (Haupttastatur und Ziffernblock)
+		if (/^[0-9]$/.test(e.key)) {
+			e.preventDefault();
+			const num = parseInt(e.key, 10);
+			const next = cashModalState.givenCents * 10 + num;
+			if (next <= 99999999) {
+				cashModalState.givenCents = next;
+				updateCashDisplay();
+			}
+			flashKeyButton(e.key);
+			return;
+		}
+
+		// Backspace (Letzte Ziffer löschen)
+		if (e.key === 'Backspace') {
+			e.preventDefault();
+			cashModalState.givenCents = Math.floor(cashModalState.givenCents / 10);
+			updateCashDisplay();
+			flashKeyButton('back');
+			return;
+		}
+
+		// Escape (Kassenfenster schließen)
+		if (e.key === 'Escape') {
+			e.preventDefault();
+			closeCashModal();
+			return;
+		}
+
+		// 'c', 'C' oder 'Delete' / 'Entf' (Eingabe leeren)
+		if (e.key === 'c' || e.key === 'C' || e.key === 'Delete') {
+			e.preventDefault();
+			cashModalState.givenCents = 0;
+			cashModalState.donationCents = 0;
+			cashModalState.keepChangeActive = false;
+			updateCashDisplay();
+			flashKeyButton('clear');
+			return;
+		}
+
+		// 'p' oder 'P' (Passend bezahlt)
+		if (e.key === 'p' || e.key === 'P') {
+			e.preventDefault();
+			cashModalState.givenCents = cashModalState.dueCents;
+			cashModalState.donationCents = 0;
+			cashModalState.keepChangeActive = false;
+			updateCashDisplay();
+			flashKeyButton('exact');
+			return;
+		}
+
+		// 's' oder 'S' (Spenden-Aktion umschalten)
+		if (e.key === 's' || e.key === 'S') {
+			e.preventDefault();
+			const donateChangeBtn = document.getElementById('cashDonateChangeBtn');
+			const roundUpBtn = document.getElementById('cashRoundUpBtn');
+			if (donateChangeBtn && donateChangeBtn.offsetParent !== null) {
+				donateChangeBtn.click();
+			} else if (roundUpBtn && roundUpBtn.offsetParent !== null) {
+				roundUpBtn.click();
+			}
+			return;
+		}
+
+		// Enter (Bestätigen / Bezahlt)
+		if (e.key === 'Enter') {
+			e.preventDefault();
+			const confirmBtn = document.getElementById('cashConfirmBtn');
+			if (confirmBtn && !confirmBtn.disabled) {
+				confirmBtn.click();
+			}
+			return;
+		}
+	});
+
+	// --- Bestellung vollständig bearbeiten (Name, E-Mail, Kategorie, Begleitungen) ---
  let editRegId = null;
 
  const editRegCatEl = document.getElementById('editRegCategory');
@@ -7599,7 +8000,7 @@ let allRatings = [];
  ${r.schoolClass ? `Klasse ${escapeHtml(r.schoolClass)} · ` : ''}${tickets.length} Ticket${tickets.length > 1 ? 's' : ''}
  </div>
  </div>
- <div class="cashier-card-due">${isFullyPaid ? '<span style="color:#7fe0a8; font-size:16px;"> Bezahlt</span>' : formatCents(dueCents)}</div>
+ <div class="cashier-card-due">${isFullyPaid ? ('<span style="color:#7fe0a8; font-size:16px;">✓ Bezahlt</span>' + (r.donation > 0 ? (' <div style="font-size:11.5px; color:#ffd27f; font-weight:700; text-align:right; margin-top:2px;">+' + formatCents(Math.round(r.donation*100)) + ' Spende</div>') : '')) : formatCents(dueCents)}</div>
  </div>
 
  <div class="cashier-card-tickets">
@@ -7662,8 +8063,13 @@ let allRatings = [];
  const tickets = ticketsFor(r.id);
  const u18Count = tickets.filter(t => t.category === 'u18').length;
  const ue18Count = tickets.filter(t => t.category === 'ue18').length;
- const paidCents = tickets.reduce((sum, t) => sum + Math.round((ticketPrices[t.category] || 0) * 100), 0);
- const detailStr = `${tickets.length}× (${u18Count > 0 ? u18Count + '× U18' : ''}${u18Count > 0 && ue18Count > 0 ? ' · ' : ''}${ue18Count > 0 ? ue18Count + '× Ü18' : ''})`;
+ 					const baseCents = tickets.reduce((sum, t) => sum + Math.round((ticketPrices[t.category] || 0) * 100), 0);
+					const donCents = (r.donation && Number(r.donation) > 0) ? Math.round(Number(r.donation) * 100) : 0;
+					const paidCents = baseCents + donCents;
+					let detailStr = `${tickets.length}× (${u18Count > 0 ? u18Count + '× U18' : ''}${u18Count > 0 && ue18Count > 0 ? ' · ' : ''}${ue18Count > 0 ? ue18Count + '× Ü18' : ''})`;
+					if (donCents > 0) {
+						detailStr += ` · <span style="color:#ffd27f; font-weight:700;">+${formatCents(donCents)} Spende</span>`;
+					}
 
  return `
  <tr>
@@ -7819,13 +8225,16 @@ let allRatings = [];
  const tickets = ticketsFor(r.id);
  const u18 = tickets.filter(t => t.category === 'u18').length;
  const ue18 = tickets.filter(t => t.category === 'ue18').length;
- const paidCents = tickets.reduce((sum, t) => sum + Math.round((ticketPrices[t.category] || 0) * 100), 0);
+ const baseCents = tickets.reduce((sum, t) => sum + Math.round((ticketPrices[t.category] || 0) * 100), 0);
+				const donCents = (r.donation && Number(r.donation) > 0) ? Math.round(Number(r.donation) * 100) : 0;
+				const paidCents = baseCents + donCents;
+				const donBadge = donCents > 0 ? ` <span style="color:#ffd27f; font-size:11px; font-weight:700;">(+${formatCents(donCents)} Spende)</span>` : '';
 
  return `
  <tr>
  <td style="color:#ffd27f; font-weight:700;">${timeStr}</td>
  <td><strong>${escapeHtml(r.name)}</strong>${r.schoolClass ? ` <span style="color:var(--text-dim); font-size:11px;">(Kl. ${escapeHtml(r.schoolClass)})</span>` : ''}</td>
- <td>${tickets.length}× (${u18 > 0 ? u18 + '× U18' : ''}${u18 > 0 && ue18 > 0 ? ' · ' : ''}${ue18 > 0 ? ue18 + '× Ü18' : ''})</td>
+ <td>${tickets.length}× (${u18 > 0 ? u18 + '× U18' : ''}${u18 > 0 && ue18 > 0 ? ' · ' : ''}${ue18 > 0 ? ue18 + '× Ü18' : ''})${donBadge}</td>
  <td style="color:var(--success); font-weight:700;">${formatCents(paidCents)}</td>
  </tr>
  `;
@@ -7896,7 +8305,7 @@ let allRatings = [];
  (<strong>${u18Count}× U18</strong> à ${formatCents(Math.round((ticketPrices.u18||0)*100))} = ${formatCents(u18Count * Math.round((ticketPrices.u18||0)*100))} ·
  <strong>${ue18Count}× Ü18</strong> à ${formatCents(Math.round((ticketPrices.ue18||0)*100))} = ${formatCents(ue18Count * Math.round((ticketPrices.ue18||0)*100))})
  </div>
- <div style="font-size:12px; color:#666; margin-top:4px;">Erfasst über ${regs.length} Schüler-Bestellungen · Abrechnung ohne Klassenfilter</div>
+ <div style="font-size:12px; color:#666; margin-top:4px;">Erfasst über ${regs.length} Schüler-Bestellungen · Abrechnung ohne Klassenfilter${donationCents > 0 ? ` · davon <strong>${formatCents(donationCents)} freiwillige Spenden</strong> (${donationCount} Spender für JG 12)` : ''}</div>
  </div>
 
  <h3 style="font-size:14px; margin:0 0 8px 0; text-transform:uppercase;">Einzelaufstellung der Zahlungen:</h3>
@@ -7918,14 +8327,17 @@ let allRatings = [];
  const tickets = ticketsFor(r.id);
  const u18 = tickets.filter(t => t.category === 'u18').length;
  const ue18 = tickets.filter(t => t.category === 'ue18').length;
- const paidCents = tickets.reduce((sum, t) => sum + Math.round((ticketPrices[t.category] || 0) * 100), 0);
+ const baseCents = tickets.reduce((sum, t) => sum + Math.round((ticketPrices[t.category] || 0) * 100), 0);
+			const donCents = (r.donation && Number(r.donation) > 0) ? Math.round(Number(r.donation) * 100) : 0;
+			const paidCents = baseCents + donCents;
+			const pDonBadge = donCents > 0 ? ` · <strong style="color:#059669;">+${formatCents(donCents)} Spende</strong>` : '';
  return `
  <tr>
  <td style="border:1px solid #ccc; padding:5px 8px;">${i + 1}</td>
  <td style="border:1px solid #ccc; padding:5px 8px;">${timeStr}</td>
  <td style="border:1px solid #ccc; padding:5px 8px;"><strong>${escapeHtml(r.name)}</strong></td>
  <td style="border:1px solid #ccc; padding:5px 8px;">${escapeHtml(r.schoolClass || '—')}</td>
- <td style="border:1px solid #ccc; padding:5px 8px;">${tickets.length}× (${u18 > 0 ? u18 + '× U18' : ''}${u18 > 0 && ue18 > 0 ? ', ' : ''}${ue18 > 0 ? ue18 + '× Ü18' : ''})</td>
+ <td style="border:1px solid #ccc; padding:5px 8px;">${tickets.length}× (${u18 > 0 ? u18 + '× U18' : ''}${u18 > 0 && ue18 > 0 ? ', ' : ''}${ue18 > 0 ? ue18 + '× Ü18' : ''})${pDonBadge}</td>
  <td style="border:1px solid #ccc; padding:5px 8px; text-align:right; font-weight:700;">${formatCents(paidCents)}</td>
  </tr>
  `;
