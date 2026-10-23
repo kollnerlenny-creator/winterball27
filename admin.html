@@ -829,6 +829,32 @@
  font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s ease;
  }
  .exact-btn:hover{background:rgba(143,180,255,0.24); border-color:var(--accent);}
+  .donate-change-btn{
+    width:100%; padding:11px 14px; border-radius:var(--radius-sm);
+    border:1.5px solid rgba(255,210,127,0.5);
+    background:linear-gradient(135deg, rgba(255,210,127,0.22), rgba(255,210,127,0.08));
+    color:#ffd27f; font-size:13px; font-weight:700; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    transition:all 0.18s ease; box-shadow:0 3px 12px rgba(255,210,127,0.18);
+  }
+  .donate-change-btn:hover{
+    background:linear-gradient(135deg, rgba(255,210,127,0.34), rgba(255,210,127,0.16)) !important;
+    border-color:#ffd27f !important; transform:translateY(-1px);
+    box-shadow:0 4px 16px rgba(255,210,127,0.3);
+  }
+  .donate-change-btn:active{ transform:scale(0.98); }
+  .donate-change-btn.active{
+    background:rgba(255,210,127,0.35) !important; border-color:#ffd27f !important; color:#fff !important;
+  }
+  .donation-chip{
+    flex:1; padding:7px 0; font-size:11.5px; border-radius:6px;
+    border:1px solid rgba(255,210,127,0.35); background:rgba(255,210,127,0.08);
+    color:#ffd27f; font-weight:700; cursor:pointer; transition:all 0.15s ease;
+  }
+  .donation-chip:hover{
+    background:rgba(255,210,127,0.22) !important; border-color:#ffd27f !important; transform:translateY(-1px);
+  }
+  .donation-chip:active{ transform:scale(0.96); }
 
  .cash-modal-actions{display:flex; gap:10px;}
  .cash-modal-actions button{
@@ -2126,12 +2152,27 @@
  <span>Gegeben</span>
  <strong id="cashGiven">0,00 €</strong>
  </div>
- <div class="cash-row cash-change" id="cashChangeRow">
- <span>Rückgeld</span>
- <strong id="cashChange">0,00 €</strong>
- </div>
+ <div class="cash-row cash-donation" id="cashDonationRow" style="display:none; color:#ffd27f; border-top:1px dashed rgba(255,210,127,0.3); padding-top:6px; margin-top:4px;">
+			<span style="display:inline-flex; align-items:center; gap:6px;">
+				<svg viewBox="0 0 24 24" fill="currentColor" style="width:14px; height:14px; color:#ffd27f;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+				<span>Freiwillige Spende</span>
+			</span>
+			<strong id="cashDonation" style="color:#ffd27f; font-size:18px;">0,00 €</strong>
+		</div>
+		<div class="cash-row cash-change" id="cashChangeRow">
+			<span>Rückgeld</span>
+			<strong id="cashChange">0,00 €</strong>
+		</div>
 
- <div class="numpad">
+		<!-- Schnellbutton: Restgeld als Spende behalten -->
+		<div id="cashDonateQuickWrap" style="display:none; margin:10px 0 6px;">
+			<button type="button" class="donate-change-btn" id="cashDonateChangeBtn" title="Restgeld direkt als Spende für Jahrgang 12 übernehmen">
+				<svg viewBox="0 0 24 24" fill="currentColor" style="width:15px; height:15px; flex-shrink:0;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+				<span id="cashDonateChangeBtnText">Restgeld als Spende behalten (+3,00 €)</span>
+			</button>
+		</div>
+
+		<div class="numpad">
  <button type="button" class="num-btn" data-num="1">1</button>
  <button type="button" class="num-btn" data-num="2">2</button>
  <button type="button" class="num-btn" data-num="3">3</button>
@@ -2146,7 +2187,17 @@
  <button type="button" class="num-btn num-back" id="cashBackBtn">⌫</button>
  </div>
 
- <button type="button" class="exact-btn" id="cashExactBtn">Passend</button>
+ <div style="display:flex; gap:8px; margin-bottom:10px;">
+			<button type="button" class="exact-btn" id="cashExactBtn" style="margin-bottom:0; flex:1;">Passend</button>
+			<button type="button" class="exact-btn donation-preset-btn" id="cashRoundUpBtn" style="display:none; margin-bottom:0; flex:1.2; border-color:rgba(255,210,127,0.45); color:#ffd27f; background:rgba(255,210,127,0.12);" title="Auf vollen Schein aufrunden">
+				<span>Auf 10 € aufrunden</span>
+			</button>
+		</div>
+		<div id="cashQuickDonationChips" style="display:flex; gap:6px; margin-bottom:14px; justify-content:center;">
+			<button type="button" class="donation-chip" data-donate="100" title="1 Euro Spende hinzufügen">+ 1 € Spende</button>
+			<button type="button" class="donation-chip" data-donate="200" title="2 Euro Spende hinzufügen">+ 2 € Spende</button>
+			<button type="button" class="donation-chip" data-donate="500" title="5 Euro Spende hinzufügen">+ 5 € Spende</button>
+		</div>
 
  <div class="cash-modal-actions">
  <button type="button" class="secondary" id="cashCancelBtn">Abbrechen</button>
@@ -2280,8 +2331,12 @@
  </div>
  <div style="background:rgba(255,255,255,0.04); border:1px solid var(--glass-border); border-radius:10px; padding:10px 12px;">
  <div style="font-size:11px; color:var(--text-dim);">TICKETS GESAMT</div>
- <div style="font-size:17px; font-weight:700; color:var(--success);" id="kStatTickets">0 Tickets</div>
- </div>
+				<div style="font-size:17px; font-weight:700; color:var(--success);" id="kStatTickets">0 Tickets</div>
+			</div>
+			<div style="background:rgba(255,210,127,0.06); border:1px solid rgba(255,210,127,0.25); border-radius:10px; padding:10px 12px;">
+				<div style="font-size:11px; color:#ffd27f; font-weight:700;">💛 SPENDEN</div>
+				<div style="font-size:17px; font-weight:700; color:#ffd27f;" id="kStatDonations">0× (0,00 €)</div>
+			</div>
  </div>
 
  <!-- Tabelle der Einzelzahlungen -->
@@ -5191,7 +5246,7 @@ let allRatings = [];
  <td>
  <div class="paid-cell">
  ${r.paid
- ? `<span class="badge in"> Bezahlt</span>`
+ ? `<span class="badge in"> Bezahlt</span>${r.donation > 0 ? ` <span class="badge in" style="background:rgba(255,210,127,0.18); color:#ffd27f; border-color:rgba(255,210,127,0.4); font-size:11px;" title="Freiwillige Spende"><svg viewBox="0 0 24 24" fill="currentColor" style="width:11px; height:11px; vertical-align:middle; margin-right:2px;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>+${formatCents(Math.round(r.donation * 100))} Spende</span>` : ''}`
  : (isPartial
  ? `<span class="badge out" style="background:rgba(255,210,127,0.15); color:#ffd27f; border:1px solid rgba(255,210,127,0.35); font-size:11px;" title="${paidCount} von ${tickets.length} Tickets bezahlt">${paidCount}/${tickets.length} bezahlt</span>`
  : `<span class="badge out" style="background:rgba(255,100,100,0.12); color:#ff9494; border:1px solid rgba(255,100,100,0.3);">Offen (${formatCents(dueCents)})</span>`
@@ -5326,8 +5381,8 @@ let allRatings = [];
  if (progressTxt) progressTxt.textContent = `${checkinPct}% da (${countCheckedIn}/${allTickets.length})`;
 
  const revenue = allTickets
- .filter(t => t.paid)
- .reduce((sum, t) => sum + (t.category === 'u18' ? ticketPrices.u18 : ticketPrices.ue18), 0);
+			.filter(t => t.paid)
+			.reduce((sum, t) => sum + (t.category === 'u18' ? ticketPrices.u18 : ticketPrices.ue18), 0) + allRegs.filter(r => r.paid && r.donation).reduce((sum, r) => sum + Number(r.donation || 0), 0);
  document.getElementById('statRevenue').textContent = revenue.toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
 
  const projectedRevenue = allTickets
@@ -5499,7 +5554,7 @@ let allRatings = [];
  }
 
  // --- Kassen-Popup: Betrag eingeben, Rückgeld wird automatisch berechnet ---
- let cashModalState = { regId: null, btnEl: null, dueCents: 0, givenCents: 0 };
+ let cashModalState = { regId: null, btnEl: null, dueCents: 0, givenCents: 0, donationCents: 0, keepChangeActive: false };
 
  function ticketsDueCents(regId){
  const tickets = ticketsFor(regId);
@@ -5524,14 +5579,111 @@ let allRatings = [];
  }
 
  function updateCashDisplay(){
- document.getElementById('cashDue').textContent = formatCents(cashModalState.dueCents);
- document.getElementById('cashGiven').textContent = formatCents(cashModalState.givenCents);
- const change = cashModalState.givenCents - cashModalState.dueCents;
- const changeRow = document.getElementById('cashChangeRow');
- document.getElementById('cashChange').textContent = formatCents(Math.abs(change));
- changeRow.classList.toggle('negative', change < 0);
- document.getElementById('cashConfirmBtn').disabled = cashModalState.givenCents < cashModalState.dueCents;
- }
+		const dueEl = document.getElementById('cashDue');
+		const givenEl = document.getElementById('cashGiven');
+		const donationRow = document.getElementById('cashDonationRow');
+		const donationEl = document.getElementById('cashDonation');
+		const changeRow = document.getElementById('cashChangeRow');
+		const changeEl = document.getElementById('cashChange');
+		const confirmBtn = document.getElementById('cashConfirmBtn');
+		const donateQuickWrap = document.getElementById('cashDonateQuickWrap');
+		const donateChangeBtn = document.getElementById('cashDonateChangeBtn');
+		const donateBtnText = document.getElementById('cashDonateChangeBtnText');
+		const roundUpBtn = document.getElementById('cashRoundUpBtn');
+
+		if (dueEl) dueEl.textContent = formatCents(cashModalState.dueCents);
+		if (givenEl) givenEl.textContent = formatCents(cashModalState.givenCents);
+
+		const excessCents = Math.max(0, cashModalState.givenCents - cashModalState.dueCents);
+
+		// Wenn Restgeld als Spende aktiv ist, Spende synchron zum aktuellen Überschuss halten
+		if (cashModalState.keepChangeActive) {
+			cashModalState.donationCents = excessCents;
+		} else if (cashModalState.donationCents > excessCents && excessCents > 0) {
+			cashModalState.donationCents = excessCents;
+		}
+
+		const effectiveChange = (cashModalState.givenCents - cashModalState.dueCents) - cashModalState.donationCents;
+
+		// Spenden-Zeile
+		if (donationRow && donationEl) {
+			if (cashModalState.donationCents > 0) {
+				donationRow.style.display = 'flex';
+				donationEl.textContent = formatCents(cashModalState.donationCents);
+			} else {
+				donationRow.style.display = 'none';
+			}
+		}
+
+		// Wechselgeld-Zeile
+		if (changeRow && changeEl) {
+			if (cashModalState.givenCents < cashModalState.dueCents) {
+				const missing = cashModalState.dueCents - cashModalState.givenCents;
+				changeEl.textContent = '-' + formatCents(missing);
+				changeRow.classList.add('negative');
+			} else {
+				changeEl.textContent = formatCents(Math.max(0, effectiveChange));
+				changeRow.classList.remove('negative');
+			}
+		}
+
+		// Schnellbutton: Restgeld als Spende behalten
+		if (donateQuickWrap && donateChangeBtn && donateBtnText) {
+			if (excessCents > 0) {
+				donateQuickWrap.style.display = 'block';
+				if (cashModalState.donationCents > 0 && cashModalState.donationCents === excessCents) {
+					donateChangeBtn.classList.add('active');
+					donateBtnText.innerHTML = '✓ ' + formatCents(cashModalState.donationCents) + ' Restgeld als Spende übernommen <span style="font-size:11px; font-weight:normal; opacity:0.85; margin-left:4px;">(Klicken zum Entfernen)</span>';
+				} else {
+					donateChangeBtn.classList.remove('active');
+					donateBtnText.textContent = 'Restgeld als Spende behalten (+' + formatCents(excessCents) + ')';
+				}
+			} else if (cashModalState.donationCents > 0) {
+				donateQuickWrap.style.display = 'block';
+				donateChangeBtn.classList.add('active');
+				donateBtnText.innerHTML = '✓ ' + formatCents(cashModalState.donationCents) + ' Spende erfasst <span style="font-size:11px; font-weight:normal; opacity:0.85; margin-left:4px;">(Klicken zum Entfernen)</span>';
+			} else {
+				donateQuickWrap.style.display = 'none';
+				donateChangeBtn.classList.remove('active');
+			}
+		}
+
+		// Kluger Schnell-Aufrunden-Button (z.B. 7 € -> 10 €, 14 € -> 15 € oder 20 €)
+		if (roundUpBtn) {
+			const due = cashModalState.dueCents;
+			let targetCents = 0;
+			if (due > 0) {
+				if (due < 1000 && due % 1000 !== 0) {
+					targetCents = 1000; // z.B. 7 € -> 10 €
+				} else if (due % 500 !== 0) {
+					targetCents = Math.ceil(due / 500) * 500;
+				} else {
+					targetCents = Math.ceil(due / 1000) * 1000;
+					if (targetCents === due) targetCents = due + 500;
+				}
+			}
+			if (targetCents > due) {
+				const diff = targetCents - due;
+				roundUpBtn.style.display = 'block';
+				roundUpBtn.innerHTML = '<span>Auf ' + formatCents(targetCents) + ' aufrunden (+ ' + formatCents(diff) + ' Spende)</span>';
+				roundUpBtn.dataset.target = targetCents;
+				roundUpBtn.dataset.diff = diff;
+			} else {
+				roundUpBtn.style.display = 'none';
+			}
+		}
+
+		// Bestätigen-Button
+		if (confirmBtn) {
+			const isUnderpaid = cashModalState.givenCents < cashModalState.dueCents;
+			confirmBtn.disabled = isUnderpaid;
+			if (!isUnderpaid && cashModalState.donationCents > 0) {
+				confirmBtn.innerHTML = '<span>Bezahlt (' + formatCents(cashModalState.dueCents + cashModalState.donationCents) + ' inkl. ' + formatCents(cashModalState.donationCents) + ' Spende)</span>';
+			} else {
+				confirmBtn.innerHTML = '<span>Bezahlt</span>';
+			}
+		}
+	}
 
  function openCashModal(regId, customBtnEl){
  const reg = allRegs.find(r => r.id === regId);
@@ -5545,7 +5697,7 @@ let allRatings = [];
  const isPartial = paidTickets.length > 0 && unpaidTickets.length > 0;
  const dueCents = ticketsDueCents(regId);
 
- cashModalState = { regId, btnEl, dueCents, givenCents: 0 };
+ cashModalState = { regId, btnEl, dueCents, givenCents: 0, donationCents: 0, keepChangeActive: false };
  document.getElementById('cashModalName').textContent = reg.name;
 
  const subEl = document.getElementById('cashModalSubtitle');
@@ -5586,7 +5738,7 @@ let allRatings = [];
 
  function closeCashModal(){
  document.getElementById('cashModalOverlay').classList.remove('show');
- cashModalState = { regId: null, btnEl: null, dueCents: 0, givenCents: 0 };
+ cashModalState = { regId: null, btnEl: null, dueCents: 0, givenCents: 0, donationCents: 0, keepChangeActive: false };
  const subEl = document.getElementById('cashModalSubtitle');
  if (subEl) subEl.innerHTML = '';
  }
@@ -5614,11 +5766,72 @@ let allRatings = [];
  document.getElementById('cashModalOverlay').addEventListener('click', (e) => {
  if (e.target.id === 'cashModalOverlay') closeCashModal();
  });
- document.getElementById('cashConfirmBtn').addEventListener('click', () => {
- const { regId, btnEl } = cashModalState;
- closeCashModal();
- if (regId && btnEl) markAsPaid(regId, btnEl);
- });
+ // Schnellbutton: Restgeld als Spende behalten
+	const donateChangeBtn = document.getElementById('cashDonateChangeBtn');
+	if (donateChangeBtn) {
+		donateChangeBtn.addEventListener('click', () => {
+			if (cashModalState.donationCents > 0) {
+				cashModalState.donationCents = 0;
+				cashModalState.keepChangeActive = false;
+			} else {
+				const excess = Math.max(0, cashModalState.givenCents - cashModalState.dueCents);
+				if (excess > 0) {
+					cashModalState.donationCents = excess;
+					cashModalState.keepChangeActive = true;
+				}
+			}
+			updateCashDisplay();
+		});
+	}
+
+	// Aufrunden-Button
+	const roundUpBtn = document.getElementById('cashRoundUpBtn');
+	if (roundUpBtn) {
+		roundUpBtn.addEventListener('click', () => {
+			const target = Number(roundUpBtn.dataset.target || 0);
+			const diff = Number(roundUpBtn.dataset.diff || 0);
+			if (target > 0) {
+				cashModalState.givenCents = target;
+				cashModalState.donationCents = diff;
+				cashModalState.keepChangeActive = true;
+				updateCashDisplay();
+			}
+		});
+	}
+
+	// Schnell-Spende Chips (+1 €, +2 €, +5 €)
+	document.querySelectorAll('.donation-chip[data-donate]').forEach(chip => {
+		chip.addEventListener('click', () => {
+			const add = Number(chip.dataset.donate || 0);
+			if (add > 0) {
+				cashModalState.donationCents += add;
+				if (cashModalState.givenCents < (cashModalState.dueCents + cashModalState.donationCents)) {
+					cashModalState.givenCents = cashModalState.dueCents + cashModalState.donationCents;
+				}
+				updateCashDisplay();
+			}
+		});
+	});
+
+	document.getElementById('cashExactBtn').addEventListener('click', () => {
+		cashModalState.givenCents = cashModalState.dueCents;
+		cashModalState.donationCents = 0;
+		cashModalState.keepChangeActive = false;
+		updateCashDisplay();
+	});
+
+	document.getElementById('cashClearBtn').addEventListener('click', () => {
+		cashModalState.givenCents = 0;
+		cashModalState.donationCents = 0;
+		cashModalState.keepChangeActive = false;
+		updateCashDisplay();
+	});
+
+	document.getElementById('cashConfirmBtn').addEventListener('click', () => {
+		const { regId, btnEl, donationCents } = cashModalState;
+		closeCashModal();
+		if (regId && btnEl) markAsPaid(regId, btnEl, donationCents);
+	});
 
  // --- Bestellung vollständig bearbeiten (Name, E-Mail, Kategorie, Begleitungen) ---
  let editRegId = null;
@@ -5893,27 +6106,36 @@ let allRatings = [];
  }
  });
 
- async function markAsPaid(regId, btnEl){
- if (btnEl) {
- btnEl.disabled = true;
- btnEl.textContent = 'Wird verarbeitet...';
- }
- const reg = allRegs.find(r => r.id === regId);
- const tickets = ticketsFor(regId);
- if(!reg || tickets.length === 0) return;
+ async function markAsPaid(regId, btnEl, donationCents = 0){
+		if (btnEl) {
+			btnEl.disabled = true;
+			btnEl.textContent = 'Wird verarbeitet...';
+		}
+		const reg = allRegs.find(r => r.id === regId);
+		const tickets = ticketsFor(regId);
+		if(!reg || tickets.length === 0) return;
 
- try {
- const batch = writeBatch(db);
- batch.update(doc(db, 'registrations', regId), { paid: true, paidAt: serverTimestamp() });
- tickets.forEach(t => batch.update(doc(db, 'tickets', t.id), { paid: true }));
- await batch.commit();
+		try {
+			const batch = writeBatch(db);
+			const donationEuro = (donationCents > 0) ? (Math.round(donationCents) / 100) : (Number(reg.donation) || 0);
+			const updateData = { paid: true, paidAt: serverTimestamp() };
+			if (donationEuro > 0) {
+				updateData.donation = donationEuro;
+			}
+			batch.update(doc(db, 'registrations', regId), updateData);
+			tickets.forEach(t => batch.update(doc(db, 'tickets', t.id), { paid: true }));
+			await batch.commit();
 
- // Sofort lokalen Zustand aktualisieren, damit UI & Kasse ohne Listener-Verzögerung umschalten
- reg.paid = true;
- reg.paidAt = new Date();
- tickets.forEach(t => { t.paid = true; });
- render();
- renderCashier();
+			// Sofort lokalen Zustand aktualisieren, damit UI & Kasse ohne Listener-Verzögerung umschalten
+			reg.paid = true;
+			reg.paidAt = new Date();
+			if (donationEuro > 0) {
+				reg.donation = donationEuro;
+			}
+			tickets.forEach(t => { t.paid = true; });
+			render();
+			renderCashier();
+			if (typeof renderCashierMode === 'function') renderCashierMode();
 
  // Preise IMMER frisch aus Firestore holen (nicht den evtl. veralteten
  // lokalen Cache nutzen) — verhindert 0€-Quittungen durch Timing-Probleme.
@@ -5949,7 +6171,7 @@ let allRatings = [];
  throw new Error(errData.error || `Server meldet HTTP ${res.status}`);
  }
 
- showAdminToast('Zahlung erfasst & Tickets erfolgreich per E-Mail versendet!');
+ if (donationCents > 0) { showAdminToast('Zahlung erfasst (' + formatCents(ticketsDueCents(regId)) + ' + ' + formatCents(donationCents) + ' Spende)! Vielen Dank! 💛'); } else { showAdminToast('Zahlung erfasst & Tickets erfolgreich per E-Mail versendet!'); }
  } catch(err){
  console.error(err.message || String(err));
  alert('Als bezahlt markiert, aber Ticket-Mail konnte nicht verschickt werden:\n\n' + err.message);
@@ -6552,7 +6774,8 @@ let allRatings = [];
  const dueCents = ticketsDueCents(r.id);
  const paidCount = tickets.filter(t => t.paid).length;
  const totalTickets = tickets.length;
- const totalCents = tickets.reduce((sum, t) => sum + Math.round((ticketPrices[t.category] || 0) * 100), 0);
+ const donationCents = r.donation ? Math.round(Number(r.donation) * 100) : 0;
+		const totalCents = tickets.reduce((sum, t) => sum + Math.round((ticketPrices[t.category] || 0) * 100), 0) + donationCents;
 
  const salutationBadge = (r.salutation === 'sie' || r.anrede === 'Sie')
  ? '<span class="badge out" style="color:#c4b5fd; border-color:rgba(196,181,253,0.35); background:rgba(196,181,253,0.12); font-weight:700;">Sie</span>'
@@ -6599,7 +6822,7 @@ let allRatings = [];
  </div>
  <div class="cashier-card-amount-box">
  ${r.paid
- ? `<div class="cashier-amount-paid"> Bezahlt</div><div class="cashier-amount-label">${formatCents(totalCents)} erhalten</div>`
+ ? `<div class="cashier-amount-paid"> Bezahlt</div><div class="cashier-amount-label">${formatCents(totalCents)} erhalten${donationCents > 0 ? ` (inkl. ${formatCents(donationCents)} Spende)` : ''}</div>`
  : `<div class="cashier-amount-due">${formatCents(dueCents)}</div><div class="cashier-amount-label">${isPartial ? `${paidCount}/${totalTickets} bezahlt · Rest offen` : 'Zu zahlen (Bar)'}</div>`
  }
  </div>
@@ -6716,20 +6939,28 @@ let allRatings = [];
  }
 
  function exportCsv(filename){
- const header = ['Besteller','Anrede','Altersgruppe','Klasse','Begleitungen','E-Mail','Tickets gesamt','Bezahlt','Angemeldet am','Bezahlt am'];
- const rows = allRegs.map(r => [
- r.name,
- r.salutation === 'sie' || r.anrede === 'Sie' ? 'Sie' : 'Du',
- categoryLabel(r.category),
- r.schoolClass || '',
- (r.companions||[]).map(c => `${c.name} (${categoryLabel(c.category)}${c.category === 'u18' && c.schoolClass ? ', Kl. ' + c.schoolClass : ''})`).join('; '),
- r.email,
- ticketsFor(r.id).length,
- r.paid ? 'ja':'nein',
- formatTimestamp(r.createdAt),
- r.paid ? formatTimestamp(r.paidAt) : ''
- ]);
- const csv = [header, ...rows].map(row => row.map(v => `"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const header = ['Besteller','Anrede','Altersgruppe','Klasse','Begleitungen','E-Mail','Tickets gesamt','Bezahlt','Spende (€)','Gesamtbetrag (€)','Angemeldet am','Bezahlt am'];
+  const rows = allRegs.map(r => {
+    const don = Number(r.donation) || 0;
+    const tkts = ticketsFor(r.id);
+    const ticketCost = tkts.reduce((sum, t) => sum + (ticketPrices[t.category] || 0), 0);
+    const total = r.paid ? (ticketCost + don) : 0;
+    return [
+      r.name,
+      r.salutation === 'sie' || r.anrede === 'Sie' ? 'Sie' : 'Du',
+      categoryLabel(r.category),
+      r.schoolClass || '',
+      (r.companions||[]).map(c => `${c.name} (${categoryLabel(c.category)}${c.category === 'u18' && c.schoolClass ? ', Kl. ' + c.schoolClass : ''})`).join('; '),
+      r.email,
+      tkts.length,
+      r.paid ? 'ja':'nein',
+      don > 0 ? don.toFixed(2).replace('.', ',') : '0,00',
+      r.paid ? total.toFixed(2).replace('.', ',') : '0,00',
+      formatTimestamp(r.createdAt),
+      r.paid ? formatTimestamp(r.paidAt) : ''
+    ];
+  });
+  const csv = [header, ...rows].map(row => row.map(v => `"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
  const url = URL.createObjectURL(blob);
  const a = document.createElement('a');
@@ -7272,27 +7503,35 @@ let allRatings = [];
  const regs = getPaymentsForPeriod(period);
 
  let totalCents = 0;
- let u18Count = 0;
- let ue18Count = 0;
- let u18Cents = 0;
- let ue18Cents = 0;
+		let u18Count = 0;
+		let ue18Count = 0;
+		let u18Cents = 0;
+		let ue18Cents = 0;
+		let donationCents = 0;
+		let donationCount = 0;
 
- regs.forEach(r => {
- const tickets = ticketsFor(r.id);
- tickets.forEach(t => {
- if (t.paid || r.paid) {
- const pr = Math.round((ticketPrices[t.category] || 0) * 100);
- totalCents += pr;
- if (t.category === 'u18') {
- u18Count++;
- u18Cents += pr;
- } else if (t.category === 'ue18') {
- ue18Count++;
- ue18Cents += pr;
- }
- }
- });
- });
+		regs.forEach(r => {
+			const tickets = ticketsFor(r.id);
+			tickets.forEach(t => {
+				if (t.paid || r.paid) {
+					const pr = Math.round((ticketPrices[t.category] || 0) * 100);
+					totalCents += pr;
+					if (t.category === 'u18') {
+						u18Count++;
+						u18Cents += pr;
+					} else if (t.category === 'ue18') {
+						ue18Count++;
+						ue18Cents += pr;
+					}
+				}
+			});
+			if (r.donation && Number(r.donation) > 0) {
+				const dC = Math.round(Number(r.donation) * 100);
+				donationCents += dC;
+				donationCount++;
+				totalCents += dC;
+			}
+		});
 
  const totalTickets = u18Count + ue18Count;
  const periodTitles = {
@@ -7308,7 +7547,11 @@ let allRatings = [];
  if (pAmt) pAmt.textContent = formatCents(totalCents);
  const pBreakdown = document.getElementById('kassensturzBreakdownText');
  if (pBreakdown) {
- pBreakdown.textContent = `${totalTickets} Tickets bezahlt (${u18Count}× U18 à ${formatCents(Math.round((ticketPrices.u18||0)*100))} · ${ue18Count}× Ü18 à ${formatCents(Math.round((ticketPrices.ue18||0)*100))})`;
+ let bText = `${totalTickets} Tickets bezahlt (${u18Count}× U18 à ${formatCents(Math.round((ticketPrices.u18||0)*100))} · ${ue18Count}× Ü18 à ${formatCents(Math.round((ticketPrices.ue18||0)*100))})`;
+		if (donationCents > 0) {
+			bText += ` + ${formatCents(donationCents)} freiwillige Spenden (${donationCount}×)`;
+		}
+		pBreakdown.textContent = bText;
  }
 
  const subDetailsEl = document.getElementById('kassensturzSubDetails');
@@ -7366,22 +7609,30 @@ let allRatings = [];
  }
 
  function printKassensturzProtocol(){
- const regs = getPaymentsForPeriod(kassensturzPeriod);
- const now = new Date();
- let totalCents = 0;
- let u18Count = 0;
- let ue18Count = 0;
+		const regs = getPaymentsForPeriod(kassensturzPeriod);
+		const now = new Date();
+		let totalCents = 0;
+		let u18Count = 0;
+		let ue18Count = 0;
+		let donationCents = 0;
+		let donationCount = 0;
 
- regs.forEach(r => {
- const tickets = ticketsFor(r.id);
- tickets.forEach(t => {
- if (t.paid || r.paid) {
- totalCents += Math.round((ticketPrices[t.category] || 0) * 100);
- if (t.category === 'u18') u18Count++;
- else if (t.category === 'ue18') ue18Count++;
- }
- });
- });
+		regs.forEach(r => {
+			const tickets = ticketsFor(r.id);
+			tickets.forEach(t => {
+				if (t.paid || r.paid) {
+					totalCents += Math.round((ticketPrices[t.category] || 0) * 100);
+					if (t.category === 'u18') u18Count++;
+					else if (t.category === 'ue18') ue18Count++;
+				}
+			});
+			if (r.donation && Number(r.donation) > 0) {
+				const dC = Math.round(Number(r.donation) * 100);
+				donationCents += dC;
+				donationCount++;
+				totalCents += dC;
+			}
+		});
 
  const periodNames = {
  today: 'Heute (Pausenverkauf)',
