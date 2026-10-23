@@ -793,88 +793,282 @@
  opacity:0; transition:opacity 0.25s ease;
  }
  .modal-overlay.show{display:flex; opacity:1;}
- .cash-modal{
- width:100%; max-width:360px;
- background:linear-gradient(145deg, rgba(22, 33, 62, 0.98), rgba(12, 18, 36, 0.99));
- border:1px solid rgba(143,180,255,0.36); border-radius:var(--radius); padding:24px;
- box-shadow:0 24px 70px rgba(0,0,0,0.7), 0 0 35px rgba(143,180,255,0.16);
- transform:scale(0.93) translateY(12px);
- transition:transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
- }
- .modal-overlay.show .cash-modal{transform:scale(1) translateY(0);}
- .cash-modal-name{font-size:16px; font-weight:700; margin-bottom:16px; text-align:center; color:#fff;}
- .cash-row{
- display:flex; justify-content:space-between; align-items:baseline; font-size:13.5px;
- color:var(--text-dim); padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.06);
- }
- .cash-row strong{font-size:16px; color:#fff; font-weight:700;}
- .cash-row.cash-change{border-bottom:none; margin-top:4px;}
- .cash-row.cash-change strong{font-size:20px; color:var(--success);}
- .cash-row.cash-change.negative strong{color:var(--warn);}
+ /* Breitbild-Kassen-Terminal (POS) & Großes Touch-Numpad über volle Bildschirmbreite */
+	.cash-modal{
+		width: min(96vw, 1180px);
+		max-width: 1180px;
+		max-height: calc(100vh - 36px);
+		overflow-y: auto;
+		background: linear-gradient(145deg, rgba(18, 27, 54, 0.98), rgba(9, 15, 30, 0.99));
+		border: 1px solid rgba(143,180,255,0.4);
+		border-radius: 22px;
+		padding: 28px 32px;
+		box-shadow: 0 30px 90px rgba(0,0,0,0.85), 0 0 50px rgba(143,180,255,0.18);
+		transform: scale(0.95) translateY(10px);
+		transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+		position: relative;
+	}
+	.modal-overlay.show .cash-modal{ transform: scale(1) translateY(0); }
 
- .numpad{display:grid; grid-template-columns:repeat(3, 1fr); gap:9px; margin:16px 0 12px;}
- .num-btn{
- padding:14px 0; border-radius:var(--radius-sm); border:1px solid var(--glass-border);
- background:rgba(255,255,255,0.06); color:#fff; font-size:18px; font-weight:700; cursor:pointer;
- transition:all 0.15s ease;
- }
- .num-btn:hover{background:rgba(255,255,255,0.14); border-color:rgba(143,180,255,0.4); transform:scale(1.02);}
- .num-btn:active{transform:scale(0.96);}
- .num-btn.num-clear{color:var(--warn); border-color:rgba(255,210,127,0.35);}
- .num-btn.num-back{color:var(--text-dim);}
+	.cash-modal-close-btn{
+		position: absolute; top: 20px; right: 22px;
+		width: 38px; height: 38px; border-radius: 50%;
+		border: 1px solid var(--glass-border);
+		background: rgba(255,255,255,0.06); color: var(--text-dim);
+		cursor: pointer; display: flex; align-items: center; justify-content: center;
+		transition: all 0.2s ease; z-index: 10;
+	}
+	.cash-modal-close-btn:hover{
+		background: rgba(255,128,128,0.2); border-color: rgba(255,128,128,0.4); color: var(--error);
+		transform: rotate(90deg);
+	}
+	.cash-modal-close-btn svg{ width: 17px; height: 17px; }
 
- .exact-btn{
- width:100%; padding:10px 0; margin-bottom:14px; border-radius:var(--radius-sm);
- border:1px solid rgba(143,180,255,0.35); background:rgba(143,180,255,0.12); color:var(--accent-glow);
- font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s ease;
- }
- .exact-btn:hover{background:rgba(143,180,255,0.24); border-color:var(--accent);}
-  .donate-change-btn{
-    width:100%; padding:11px 14px; border-radius:var(--radius-sm);
-    border:1.5px solid rgba(255,210,127,0.5);
-    background:linear-gradient(135deg, rgba(255,210,127,0.22), rgba(255,210,127,0.08));
-    color:#ffd27f; font-size:13px; font-weight:700; cursor:pointer;
-    display:flex; align-items:center; justify-content:center; gap:8px;
-    transition:all 0.18s ease; box-shadow:0 3px 12px rgba(255,210,127,0.18);
-  }
-  .donate-change-btn:hover{
-    background:linear-gradient(135deg, rgba(255,210,127,0.34), rgba(255,210,127,0.16)) !important;
-    border-color:#ffd27f !important; transform:translateY(-1px);
-    box-shadow:0 4px 16px rgba(255,210,127,0.3);
-  }
-  .donate-change-btn:active{ transform:scale(0.98); }
-  .donate-change-btn.active{
-    background:rgba(255,210,127,0.35) !important; border-color:#ffd27f !important; color:#fff !important;
-  }
-  .donation-chip{
-    flex:1; padding:7px 0; font-size:11.5px; border-radius:6px;
-    border:1px solid rgba(255,210,127,0.35); background:rgba(255,210,127,0.08);
-    color:#ffd27f; font-weight:700; cursor:pointer; transition:all 0.15s ease;
-  }
-  .donation-chip:hover{
-    background:rgba(255,210,127,0.22) !important; border-color:#ffd27f !important; transform:translateY(-1px);
-  }
-  .donation-chip:active{ transform:scale(0.96); }
+	.cash-modal-grid{
+		display: grid;
+		grid-template-columns: 1fr 1.32fr;
+		gap: 32px;
+		align-items: stretch;
+	}
 
- .cash-modal-actions{display:flex; gap:10px;}
- .cash-modal-actions button{
- flex:1; padding:12px 0; border-radius:var(--radius-sm); font-size:14px; font-weight:700; cursor:pointer;
- transition:all 0.2s ease;
- }
- .cash-modal-actions button:not(.secondary){
- border:none; background:linear-gradient(135deg, var(--success), #a5f0c3); color:#080c16;
- box-shadow:0 4px 16px rgba(127,224,168,0.3);
- }
- .cash-modal-actions button:not(.secondary):hover{filter:brightness(1.06); transform:translateY(-1px);}
- .cash-modal-actions button:not(.secondary):disabled{
- background:rgba(127,224,168,0.22); color:rgba(255,255,255,0.35); cursor:not-allowed; box-shadow:none;
- }
- .cash-modal-actions button.secondary{
- border:1px solid var(--glass-border); background:rgba(255,255,255,0.06); color:var(--text);
- }
- .cash-modal-actions button.secondary:hover{background:rgba(255,255,255,0.12);}
+	/* Linke Spalte: Übersicht & Kassenbon */
+	.cash-col-summary{
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		gap: 16px;
+	}
+	.cash-summary-header{ margin-bottom: 4px; padding-right: 30px; }
+	.cash-pos-tag{
+		display: inline-flex; align-items: center; gap: 6px;
+		font-size: 11px; font-weight: 800; letter-spacing: 0.8px;
+		color: var(--accent); background: rgba(143,180,255,0.12);
+		border: 1px solid rgba(143,180,255,0.25); border-radius: 100px;
+		padding: 4px 11px; margin-bottom: 8px;
+	}
+	.cash-pos-tag svg{ width: 13px; height: 13px; }
+	.cash-modal-name{
+		font-size: 25px; font-weight: 800; color: #fff;
+		letter-spacing: -0.4px; line-height: 1.25; margin-bottom: 6px;
+		word-break: break-word;
+	}
+	#cashModalSubtitle{
+		font-size: 13px; color: var(--text-dim); line-height: 1.45;
+	}
 
- /* Cashier POS View */
+	/* Digitaler Bon / Anzeige */
+	.cash-display-card{
+		background: rgba(255,255,255,0.035);
+		border: 1px solid rgba(255,255,255,0.09);
+		border-radius: 16px; padding: 16px 20px;
+		display: flex; flex-direction: column; gap: 10px;
+		box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+	}
+	.cash-row{
+		display: flex; justify-content: space-between; align-items: baseline;
+		font-size: 14px; color: var(--text-dim);
+		padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+	}
+	.cash-row:last-child{ border-bottom: none; }
+	.cash-row-label{
+		display: inline-flex; align-items: center; font-weight: 500; font-size: 14px;
+	}
+	.cash-row strong, .cash-row-val{
+		font-size: 20px; color: #fff; font-weight: 700;
+		font-family: 'Segoe UI', system-ui, sans-serif;
+		letter-spacing: -0.3px;
+	}
+	.cash-row-given{
+		background: rgba(143,180,255,0.08);
+		border: 1px solid rgba(143,180,255,0.24);
+		border-radius: 10px; padding: 10px 14px; margin: 2px 0;
+	}
+	.cash-row-given .cash-row-label{ color: var(--accent-glow); font-weight: 700; font-size: 14.5px; }
+	.cash-row-given .cash-row-val.highlight{
+		font-size: 26px; color: #fff; font-weight: 800;
+		text-shadow: 0 0 16px rgba(143,180,255,0.35);
+	}
+	.cash-row.cash-donation{
+		border-top: 1px dashed rgba(255,210,127,0.35);
+		border-bottom: 1px dashed rgba(255,210,127,0.35);
+		background: rgba(255,210,127,0.08);
+		border-radius: 10px; padding: 10px 14px;
+	}
+	.cash-row.cash-donation .donation-lbl{ color: #ffd27f; font-weight: 700; }
+	.cash-row.cash-donation .donation-val{ color: #ffd27f; font-size: 22px; font-weight: 800; }
+	.cash-row.cash-change{
+		padding: 10px 14px; border-radius: 10px;
+		background: rgba(127,224,168,0.08); border: 1px solid rgba(127,224,168,0.25);
+	}
+	.cash-row.cash-change .cash-row-label{ color: var(--success); font-weight: 700; font-size: 15px; }
+	.cash-row.cash-change .change-val{ color: var(--success); font-size: 28px; font-weight: 800; }
+	.cash-row.cash-change.negative{
+		background: rgba(255,210,127,0.08); border-color: rgba(255,210,127,0.3);
+	}
+	.cash-row.cash-change.negative .cash-row-label{ color: var(--warn); }
+	.cash-row.cash-change.negative .change-val{ color: var(--warn); }
+
+	/* Schnellbutton Spende */
+	.donate-change-btn{
+		width: 100%; min-height: 48px; padding: 12px 18px; border-radius: 12px;
+		border: 1.5px solid rgba(255,210,127,0.55);
+		background: linear-gradient(135deg, rgba(255,210,127,0.24), rgba(255,210,127,0.09));
+		color: #ffd27f; font-size: 14px; font-weight: 700; cursor: pointer;
+		display: flex; align-items: center; justify-content: center; gap: 9px;
+		transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+		box-shadow: 0 4px 16px rgba(255,210,127,0.18);
+	}
+	.donate-change-btn:hover{
+		background: linear-gradient(135deg, rgba(255,210,127,0.36), rgba(255,210,127,0.18)) !important;
+		border-color: #ffd27f !important; transform: translateY(-1.5px);
+		box-shadow: 0 6px 22px rgba(255,210,127,0.32);
+	}
+	.donate-change-btn:active{ transform: scale(0.98); }
+	.donate-change-btn.active{
+		background: rgba(255,210,127,0.36) !important; border-color: #ffd27f !important; color: #fff !important;
+	}
+
+	.cash-modal-actions{ display: flex; gap: 12px; margin-top: auto; padding-top: 8px; }
+	.cash-modal-actions button{
+		flex: 1; min-height: 54px; padding: 14px 18px; border-radius: 14px;
+		font-size: 15px; font-weight: 700; cursor: pointer;
+		transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+	.cash-modal-actions button:not(.secondary){
+		border: none; background: linear-gradient(135deg, #7fe0a8, #58cb88);
+		color: #05140b; font-size: 16px; font-weight: 800;
+		box-shadow: 0 6px 24px rgba(127,224,168,0.35);
+	}
+	.cash-modal-actions button:not(.secondary):hover{
+		filter: brightness(1.08); transform: translateY(-2px);
+		box-shadow: 0 8px 30px rgba(127,224,168,0.45);
+	}
+	.cash-modal-actions button:not(.secondary):disabled{
+		background: rgba(127,224,168,0.18); color: rgba(255,255,255,0.32);
+		cursor: not-allowed; box-shadow: none; transform: none; filter: none;
+	}
+	.cash-modal-actions button.secondary{
+		flex: 0 0 auto; min-width: 140px;
+		border: 1px solid var(--glass-border); background: rgba(255,255,255,0.06); color: var(--text);
+	}
+	.cash-modal-actions button.secondary:hover{
+		background: rgba(255,255,255,0.12); color: #fff;
+	}
+
+	/* Rechte Spalte: Großes Touch-Numpad & Schnell-Aktionen */
+	.cash-col-keypad{
+		display: flex; flex-direction: column; justify-content: space-between;
+		gap: 12px;
+	}
+	.cash-keypad-top{ margin-bottom: 2px; }
+	.cash-quick-bar{
+		display: flex; gap: 10px; margin-bottom: 10px;
+	}
+	.exact-btn{
+		flex: 1; min-height: 48px; padding: 12px 16px; border-radius: 12px;
+		border: 1px solid rgba(143,180,255,0.35); background: rgba(143,180,255,0.12);
+		color: var(--accent-glow); font-size: 14.5px; font-weight: 700; cursor: pointer;
+		display: flex; align-items: center; justify-content: center; gap: 8px;
+		transition: all 0.18s ease;
+	}
+	.exact-btn:hover{
+		background: rgba(143,180,255,0.24); border-color: var(--accent);
+		transform: translateY(-1px);
+	}
+	.exact-btn.donation-preset-btn{
+		border-color: rgba(255,210,127,0.45); color: #ffd27f;
+		background: rgba(255,210,127,0.12);
+	}
+	.exact-btn.donation-preset-btn:hover{
+		background: rgba(255,210,127,0.22); border-color: #ffd27f;
+	}
+
+	.cash-donation-chips-bar{
+		display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+	}
+	.chips-hint-label{
+		font-size: 12.5px; font-weight: 700; color: #ffd27f; margin-right: 2px;
+	}
+	.donation-chip{
+		flex: 1; min-width: 58px; min-height: 38px; padding: 8px 12px;
+		font-size: 13.5px; font-weight: 700; border-radius: 9px;
+		border: 1px solid rgba(255,210,127,0.35); background: rgba(255,210,127,0.08);
+		color: #ffd27f; cursor: pointer; transition: all 0.15s ease;
+		display: inline-flex; align-items: center; justify-content: center;
+	}
+	.donation-chip:hover{
+		background: rgba(255,210,127,0.24) !important; border-color: #ffd27f !important;
+		transform: translateY(-1px);
+	}
+	.donation-chip:active{ transform: scale(0.96); }
+
+	/* Das Riesige Touch-Numpad */
+	.numpad{
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 12px;
+		margin: 6px 0 10px;
+		flex: 1;
+	}
+	.num-btn{
+		min-height: 74px; padding: 16px 0; border-radius: 16px;
+		border: 1px solid rgba(255,255,255,0.12);
+		background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+		color: #fff; font-size: 28px; font-weight: 800; cursor: pointer;
+		display: flex; align-items: center; justify-content: center;
+		transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+		box-shadow: 0 4px 14px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+		user-select: none; -webkit-user-select: none;
+	}
+	.num-btn:hover{
+		background: linear-gradient(145deg, rgba(143,180,255,0.24), rgba(143,180,255,0.1));
+		border-color: rgba(143,180,255,0.45); color: #fff;
+		transform: scale(1.02) translateY(-1px);
+		box-shadow: 0 6px 18px rgba(143,180,255,0.2);
+	}
+	.num-btn:active{
+		transform: scale(0.97) translateY(1px);
+		background: rgba(143,180,255,0.3);
+	}
+	.num-btn.num-clear{
+		color: #ffd27f; border-color: rgba(255,210,127,0.35);
+		background: rgba(255,210,127,0.09);
+		font-size: 24px;
+	}
+	.num-btn.num-clear:hover{
+		background: rgba(255,210,127,0.22); border-color: #ffd27f; color: #fff;
+	}
+	.num-btn.num-back{
+		color: var(--text-dim); border-color: rgba(255,255,255,0.1);
+	}
+	.num-btn.num-back:hover{
+		color: #fff; border-color: rgba(255,255,255,0.3);
+		background: rgba(255,255,255,0.12);
+	}
+
+	.cash-keypad-hint{
+		font-size: 12px; color: var(--text-dim);
+		display: flex; align-items: center; justify-content: center; gap: 7px;
+		padding-top: 4px; text-align: center;
+	}
+	.cash-keypad-hint svg{ flex-shrink: 0; color: var(--accent); }
+
+	/* Responsive für Tablets & Smartphones */
+	@media (max-width: 860px){
+		.cash-modal{
+			width: 95vw; max-width: 500px; padding: 22px 18px;
+			border-radius: 18px; max-height: calc(100vh - 24px);
+		}
+		.cash-modal-grid{
+			grid-template-columns: 1fr;
+			gap: 20px;
+		}
+		.cash-modal-name{ font-size: 20px; }
+		.num-btn{ min-height: 56px; font-size: 22px; border-radius: 12px; }
+		.cash-modal-actions button{ min-height: 48px; }
+	}
+
+	/* Cashier POS View */
  .cashier-container{max-width:100%; margin:0 auto; padding:4px 0 24px;}
  .cashier-empty-state{
  text-align:center; padding:56px 20px;
@@ -2140,73 +2334,111 @@
 
 <!-- Kassen-Popup: Betrag eingeben, Rückgeld wird automatisch berechnet -->
 <div class="modal-overlay" id="cashModalOverlay">
- <div class="cash-modal">
- <div class="cash-modal-name" id="cashModalName"></div>
- <div id="cashModalSubtitle" style="margin-top:-6px; margin-bottom:14px;"></div>
-
- <div class="cash-row">
- <span>Fälliger Betrag</span>
- <strong id="cashDue">0,00 €</strong>
- </div>
- <div class="cash-row">
- <span>Gegeben</span>
- <strong id="cashGiven">0,00 €</strong>
- </div>
- <div class="cash-row cash-donation" id="cashDonationRow" style="display:none; color:#ffd27f; border-top:1px dashed rgba(255,210,127,0.3); padding-top:6px; margin-top:4px;">
-			<span style="display:inline-flex; align-items:center; gap:6px;">
-				<svg viewBox="0 0 24 24" fill="currentColor" style="width:14px; height:14px; color:#ffd27f;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-				<span>Freiwillige Spende</span>
-			</span>
-			<strong id="cashDonation" style="color:#ffd27f; font-size:18px;">0,00 €</strong>
-		</div>
-		<div class="cash-row cash-change" id="cashChangeRow">
-			<span>Rückgeld</span>
-			<strong id="cashChange">0,00 €</strong>
-		</div>
-
-		<!-- Schnellbutton: Restgeld als Spende behalten -->
-		<div id="cashDonateQuickWrap" style="display:none; margin:10px 0 6px;">
-			<button type="button" class="donate-change-btn" id="cashDonateChangeBtn" title="Restgeld direkt als Spende für Jahrgang 12 übernehmen">
-				<svg viewBox="0 0 24 24" fill="currentColor" style="width:15px; height:15px; flex-shrink:0;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-				<span id="cashDonateChangeBtnText">Restgeld als Spende behalten (+3,00 €)</span>
+		<div class="cash-modal">
+			<button type="button" class="cash-modal-close-btn" id="cashModalCloseX" title="Schließen (Esc)">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
 			</button>
+
+			<div class="cash-modal-grid">
+				<!-- Linke Spalte: Übersicht, Bon & Beträge -->
+				<div class="cash-col-summary">
+					<div class="cash-summary-header">
+						<div class="cash-pos-tag">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><circle cx="7" cy="15" r="1"/></svg>
+							<span>VORVERKAUFSKASSE · BARZAHLUNG</span>
+						</div>
+						<div class="cash-modal-name" id="cashModalName"></div>
+						<div id="cashModalSubtitle"></div>
+					</div>
+
+					<div class="cash-display-card">
+						<div class="cash-row">
+							<span class="cash-row-label">Fälliger Betrag</span>
+							<strong class="cash-row-val" id="cashDue">0,00 €</strong>
+						</div>
+						<div class="cash-row cash-row-given">
+							<span class="cash-row-label">
+								<span class="pulse-dot" style="background:var(--accent); width:8px; height:8px; display:inline-block; margin-right:6px;"></span>
+								Gegeben (Bar)
+							</span>
+							<strong class="cash-row-val highlight" id="cashGiven">0,00 €</strong>
+						</div>
+						<div class="cash-row cash-donation" id="cashDonationRow" style="display:none;">
+							<span class="cash-row-label donation-lbl">
+								<svg viewBox="0 0 24 24" fill="currentColor" style="width:15px; height:15px; color:#ffd27f; display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+								<span>Freiwillige Spende</span>
+							</span>
+							<strong class="cash-row-val donation-val" id="cashDonation">0,00 €</strong>
+						</div>
+						<div class="cash-row cash-change" id="cashChangeRow">
+							<span class="cash-row-label">Rückgeld</span>
+							<strong class="cash-row-val change-val" id="cashChange">0,00 €</strong>
+						</div>
+					</div>
+
+					<!-- Schnellbutton: Restgeld als Spende behalten -->
+					<div id="cashDonateQuickWrap" style="display:none; margin:14px 0 12px;">
+						<button type="button" class="donate-change-btn" id="cashDonateChangeBtn" title="Restgeld direkt als Spende für Jahrgang 12 übernehmen">
+							<svg viewBox="0 0 24 24" fill="currentColor" style="width:16px; height:16px; flex-shrink:0;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+							<span id="cashDonateChangeBtnText">Restgeld als Spende behalten (+3,00 €)</span>
+						</button>
+					</div>
+
+					<div class="cash-modal-actions">
+						<button type="button" class="secondary" id="cashCancelBtn">Abbrechen (Esc)</button>
+						<button type="button" id="cashConfirmBtn" disabled>Bezahlt</button>
+					</div>
+				</div>
+
+				<!-- Rechte Spalte: Großes Breites Touch-Numpad & Schnell-Aktionen -->
+				<div class="cash-col-keypad">
+					<div class="cash-keypad-top">
+						<div class="cash-quick-bar">
+							<button type="button" class="exact-btn" id="cashExactBtn" title="Exakten fälligen Betrag als gegeben setzen">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px; height:16px;"><polyline points="20 6 9 17 4 12"/></svg>
+								<span>Passend bezahlt</span>
+							</button>
+							<button type="button" class="exact-btn donation-preset-btn" id="cashRoundUpBtn" style="display:none;" title="Auf vollen Betrag aufrunden und Rest als Spende eintragen">
+								<span>Auf 10 € aufrunden</span>
+							</button>
+						</div>
+
+						<div id="cashQuickDonationChips" class="cash-donation-chips-bar">
+							<span class="chips-hint-label">💛 Spende:</span>
+							<button type="button" class="donation-chip" data-donate="100" title="1 Euro Spende hinzufügen">+ 1 €</button>
+							<button type="button" class="donation-chip" data-donate="200" title="2 Euro Spende hinzufügen">+ 2 €</button>
+							<button type="button" class="donation-chip" data-donate="500" title="5 Euro Spende hinzufügen">+ 5 €</button>
+							<button type="button" class="donation-chip" data-donate="1000" title="10 Euro Spende hinzufügen">+ 10 €</button>
+						</div>
+					</div>
+
+					<div class="numpad">
+						<button type="button" class="num-btn" data-num="1">1</button>
+						<button type="button" class="num-btn" data-num="2">2</button>
+						<button type="button" class="num-btn" data-num="3">3</button>
+						<button type="button" class="num-btn" data-num="4">4</button>
+						<button type="button" class="num-btn" data-num="5">5</button>
+						<button type="button" class="num-btn" data-num="6">6</button>
+						<button type="button" class="num-btn" data-num="7">7</button>
+						<button type="button" class="num-btn" data-num="8">8</button>
+						<button type="button" class="num-btn" data-num="9">9</button>
+						<button type="button" class="num-btn num-clear" id="cashClearBtn" title="Eingabe leeren (C)">C</button>
+						<button type="button" class="num-btn" data-num="0">0</button>
+						<button type="button" class="num-btn num-back" id="cashBackBtn" title="Letzte Ziffer löschen (⌫)">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:22px; height:22px;"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>
+						</button>
+					</div>
+
+					<div class="cash-keypad-hint">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px; height:14px;"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="6" y1="8" x2="6.01" y2="8"/><line x1="10" y1="8" x2="10.01" y2="8"/><line x1="14" y1="8" x2="14.01" y2="8"/><line x1="18" y1="8" x2="18.01" y2="8"/><line x1="6" y1="12" x2="6.01" y2="12"/><line x1="18" y1="12" x2="18.01" y2="12"/><line x1="10" y1="16" x2="14" y2="16"/></svg>
+						<span>Tastatur aktiv: Ziffern 0–9 · [Enter] Bezahlen · [P] Passend · [C] Löschen · [Esc] Schließen</span>
+					</div>
+				</div>
+			</div>
 		</div>
+	</div>
 
-		<div class="numpad">
- <button type="button" class="num-btn" data-num="1">1</button>
- <button type="button" class="num-btn" data-num="2">2</button>
- <button type="button" class="num-btn" data-num="3">3</button>
- <button type="button" class="num-btn" data-num="4">4</button>
- <button type="button" class="num-btn" data-num="5">5</button>
- <button type="button" class="num-btn" data-num="6">6</button>
- <button type="button" class="num-btn" data-num="7">7</button>
- <button type="button" class="num-btn" data-num="8">8</button>
- <button type="button" class="num-btn" data-num="9">9</button>
- <button type="button" class="num-btn num-clear" id="cashClearBtn">C</button>
- <button type="button" class="num-btn" data-num="0">0</button>
- <button type="button" class="num-btn num-back" id="cashBackBtn">⌫</button>
- </div>
-
- <div style="display:flex; gap:8px; margin-bottom:10px;">
-			<button type="button" class="exact-btn" id="cashExactBtn" style="margin-bottom:0; flex:1;">Passend</button>
-			<button type="button" class="exact-btn donation-preset-btn" id="cashRoundUpBtn" style="display:none; margin-bottom:0; flex:1.2; border-color:rgba(255,210,127,0.45); color:#ffd27f; background:rgba(255,210,127,0.12);" title="Auf vollen Schein aufrunden">
-				<span>Auf 10 € aufrunden</span>
-			</button>
-		</div>
-		<div id="cashQuickDonationChips" style="display:flex; gap:6px; margin-bottom:14px; justify-content:center;">
-			<button type="button" class="donation-chip" data-donate="100" title="1 Euro Spende hinzufügen">+ 1 € Spende</button>
-			<button type="button" class="donation-chip" data-donate="200" title="2 Euro Spende hinzufügen">+ 2 € Spende</button>
-			<button type="button" class="donation-chip" data-donate="500" title="5 Euro Spende hinzufügen">+ 5 € Spende</button>
-		</div>
-
- <div class="cash-modal-actions">
- <button type="button" class="secondary" id="cashCancelBtn">Abbrechen</button>
- <button type="button" id="cashConfirmBtn" disabled>Bezahlt</button>
- </div>
- </div>
-</div>
-
-<!-- Popup: nachträglich eine Begleitung zu einer bestehenden Bestellung hinzufügen -->
+	<!-- Popup: nachträglich eine Begleitung zu einer bestehenden Bestellung hinzufügen -->
 <div class="modal-overlay" id="addCompanionModalOverlay">
  <div class="cash-modal">
  <div class="cash-modal-name" id="addCompanionModalName"></div>
