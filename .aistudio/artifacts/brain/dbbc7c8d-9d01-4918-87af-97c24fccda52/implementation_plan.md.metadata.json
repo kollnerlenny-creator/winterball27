@@ -1,6 +1,6 @@
 {
-  "summary":  "Gliederung und Umsetzungsplan für den voraussichtlichen Umsatz, die neue intuitive Kassen-Oberfläche mit Ziffernblock-Zahlung und die Bereinigung des Bestellungen-Tabs.",
-  "updatedAt":  "2026-10-20T18:51:01.255463637Z",
+  "summary":  "Vollständige Überarbeitung, Harmonisierung und Ausbau aller 9 Widgets und Detail-Modale im Insights-Tab von admin.html:\n- 100% einheitliche Einnahmen- und Spendenberechnung über zentrales calculateRevenueStats()\n- Detaillierte Klassen- und Stufenanalyse (getGuestClassBreakdown) im Demografie-Modal inkl. Rangliste und Balkendiagramm\n- Echte Daten für Stoßzeiten mit Umschalter (Ticketbuchungen vs. Website-Aufrufe)\n- Robuster Konversionstrichter ohne künstliche Einbrüche bei Sparse Data\n- Präzise Prognose auf Basis der Ticket-Verkaufsgeschwindigkeit mit Schätzung des Ausverkaufsdatums und Catering-Empfehlungen",
+  "updatedAt":  "2026-10-24T10:04:53.148317754Z",
   "requestFeedback":  true,
   "userFacing":  true
 }
