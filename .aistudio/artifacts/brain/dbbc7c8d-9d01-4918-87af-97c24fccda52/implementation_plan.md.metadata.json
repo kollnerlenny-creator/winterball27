@@ -1,6 +1,6 @@
 {
-  "summary":  "Vollständige Überarbeitung, Harmonisierung und Ausbau aller 9 Widgets und Detail-Modale im Insights-Tab von admin.html:\n- 100% einheitliche Einnahmen- und Spendenberechnung über zentrales calculateRevenueStats()\n- Detaillierte Klassen- und Stufenanalyse (getGuestClassBreakdown) im Demografie-Modal inkl. Rangliste und Balkendiagramm\n- Echte Daten für Stoßzeiten mit Umschalter (Ticketbuchungen vs. Website-Aufrufe)\n- Robuster Konversionstrichter ohne künstliche Einbrüche bei Sparse Data\n- Präzise Prognose auf Basis der Ticket-Verkaufsgeschwindigkeit mit Schätzung des Ausverkaufsdatums und Catering-Empfehlungen",
-  "updatedAt":  "2026-10-24T10:04:53.148317754Z",
+  "summary":  "Vollständiger Ausbau des Conversion-Funnels in admin.html:\n- Widget-Modus-Umschalter: Direkte Umschaltung zwischen Formular-Trichter, Kassen-/Einlass-Status und End-to-End Trichter.\n- Interaktives Detail-Modal mit 4 Analyse-Tabs: \n  1. Formular-Trichter (Schritt 1 bis 7)\n  2. End-to-End Lifecycle (Besucher -> Reserviert -> Bezahlt -> Einlass)\n  3. Kassen- & Einlassstatus (U18/Ü18 Bezahlquote, offene Beträge)\n  4. Geräte-Vergleich (Mobile Smartphones vs. Desktop Laptops)\n- Zeitraum-Filter (Gesamt, 7 Tage, 24 Stunden)\n- Sofortmaßnahmen-Toolbox: Unbezahlte Buchungen mit 1 Klick filtern und Zahlungserinnerungstext für WhatsApp/Mail kopieren.",
+  "updatedAt":  "2026-10-24T10:31:27.580686445Z",
   "requestFeedback":  true,
   "userFacing":  true
 }

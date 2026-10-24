@@ -2078,81 +2078,46 @@
  </div>
 
  <!-- 7. Widget: Conversion-Funnel & Absprung-Analyse -->
- <div class="widget-card" data-widget="funnel" title="Klicken für detaillierte Funnel- & Absprung-Analyse">
- <div class="widget-card-header">
- <div class="widget-card-title">
- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
- <span>Conversion-Funnel</span>
- </div>
- <span class="widget-expand-hint" title="Vergrößern">
- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
- </span>
- </div>
- <div>
- <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;">
- <div>
- <span style="font-size:22px; font-weight:800; color:#7fe0a8;" id="widgetFunnelRate">0%</span>
- <span style="font-size:11px; color:#9aa7c2;"> Conversion-Rate</span>
- </div>
- <div style="font-size:11px; color:#8fb4ff; font-weight:600;" id="widgetFunnelDropoff">
- 0% Gesamt-Absprung
- </div>
- </div>
- <div style="display:flex; flex-direction:column; gap:4.5px; margin-top:6px;" id="widgetFunnelMiniBars">
- <div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
- <span style="width:74px; flex-shrink:0;">1. Startseite</span>
- <div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
- <div style="width:100%; height:100%; background:#8fb4ff; border-radius:3px;"></div>
- </div>
- <span style="width:34px; text-align:right; color:#fff; font-weight:700;" id="wfn1">0</span>
- </div>
- <div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
- <span style="width:74px; flex-shrink:0;">2. Anmeldeseite</span>
- <div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
- <div id="wfnBar2" style="width:0%; height:100%; background:#a78bfa; border-radius:3px;"></div>
- </div>
- <span style="width:34px; text-align:right; color:#fff; font-weight:700;" id="wfn2">0</span>
- </div>
- <div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
- <span style="width:74px; flex-shrink:0;">3. Name &amp; Du/Sie</span>
- <div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
- <div id="wfnBarName" style="width:0%; height:100%; background:#8fb4ff; border-radius:3px;"></div>
- </div>
- <span style="width:34px; text-align:right; color:#fff; font-weight:700;" id="wfnName">0</span>
- </div>
- <div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
- <span style="width:74px; flex-shrink:0;">4. E-Mail</span>
- <div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
- <div id="wfnBarEmail" style="width:0%; height:100%; background:#ffd27f; border-radius:3px;"></div>
- </div>
- <span style="width:34px; text-align:right; color:#fff; font-weight:700;" id="wfnEmail">0</span>
- </div>
- <div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
- <span style="width:74px; flex-shrink:0;">5. Begleitung</span>
- <div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
- <div id="wfnBarComp" style="width:0%; height:100%; background:#ffaa7f; border-radius:3px;"></div>
- </div>
- <span style="width:34px; text-align:right; color:#fff; font-weight:700;" id="wfnComp">0</span>
- </div>
- <div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
- <span style="width:74px; flex-shrink:0;">6. Bestellt</span>
- <div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
- <div id="wfnBar4" style="width:0%; height:100%; background:#7fe0a8; border-radius:3px;"></div>
- </div>
- <span style="width:34px; text-align:right; color:#fff; font-weight:700;" id="wfn4">0</span>
- </div>
- </div>
- <div id="widgetFunnelBottleneck" style="margin-top:6px; font-size:10px; color:#ff8080; font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">
- Größter Absprung: Berechne...
- </div>
- </div>
- <div class="widget-card-footer">
- <span>Detail-Absprünge pro Schritt</span>
- <span class="zoom-text">Vergrößern </span>
- </div>
- </div>
+		<div class="widget-card" data-widget="funnel" title="Klicken für detaillierte Funnel- &amp; Absprung-Analyse">
+			<div class="widget-card-header">
+				<div class="widget-card-title">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+					<span>Conversion-Funnel</span>
+				</div>
+				<span class="widget-expand-hint" title="Vergrößern">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+				</span>
+			</div>
+			<div>
+				<!-- Widget Mini Mode Switcher -->
+				<div style="display:flex; background:rgba(255,255,255,0.06); padding:2px; border-radius:6px; margin-bottom:8px; gap:2px;" onclick="event.stopPropagation();">
+					<button type="button" class="funnel-w-tab" id="fwTabForm" onclick="window.switchFunnelWidgetMode('form', event)" style="flex:1; border:none; background:rgba(143,180,255,0.22); color:#8fb4ff; border-radius:4px; padding:3px 4px; font-size:9.5px; font-weight:700; cursor:pointer;">Formular</button>
+					<button type="button" class="funnel-w-tab" id="fwTabLife" onclick="window.switchFunnelWidgetMode('lifecycle', event)" style="flex:1; border:none; background:transparent; color:#9aa7c2; border-radius:4px; padding:3px 4px; font-size:9.5px; font-weight:600; cursor:pointer;">Kasse &amp; Einlass</button>
+					<button type="button" class="funnel-w-tab" id="fwTabE2e" onclick="window.switchFunnelWidgetMode('e2e', event)" style="flex:1; border:none; background:transparent; color:#9aa7c2; border-radius:4px; padding:3px 4px; font-size:9.5px; font-weight:600; cursor:pointer;">End-to-End</button>
+				</div>
+				<div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;">
+					<div>
+						<span style="font-size:22px; font-weight:800; color:#7fe0a8;" id="widgetFunnelRate">0%</span>
+						<span style="font-size:11px; color:#9aa7c2;" id="widgetFunnelRateLabel"> Conversion-Rate</span>
+					</div>
+					<div style="font-size:11px; color:#8fb4ff; font-weight:600;" id="widgetFunnelDropoff">
+						0% Gesamt-Absprung
+					</div>
+				</div>
+				<div style="display:flex; flex-direction:column; gap:4.5px; margin-top:6px; min-height:86px;" id="widgetFunnelMiniBars">
+					<!-- Dynamisch gerendert je nach Modus -->
+				</div>
+				<div id="widgetFunnelBottleneck" style="margin-top:6px; font-size:10px; color:#ff8080; font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">
+					Größter Absprung: Berechne...
+				</div>
+			</div>
+			<div class="widget-card-footer">
+				<span>Trichter-, Kassen- &amp; Mobil-Analyse</span>
+				<span class="zoom-text">Vergrößern </span>
+			</div>
+		</div>
 
- <!-- 8. Widget: Umsatz- & Ticket-Prognose (Kapazitätsauslastung) -->
+		<!-- 8. Widget: Umsatz- & Ticket-Prognose (Kapazitätsauslastung) -->
  <div class="widget-card" data-widget="forecast" title="Klicken für Kapazitäts- &amp; Umsatz-Hochrechnung">
  <div class="widget-card-header">
  <div class="widget-card-title">
@@ -3205,7 +3170,126 @@
 		};
 	}
 
-	function updateCharts(){
+	
+	// Umfassende Berechnung aller Funnel-Metriken (Web, Formular, End-to-End, Kasse, Geräte)
+	function getFunnelMetrics(timeframe = 'all') {
+		const now = Date.now();
+		const filterByTime = (item) => {
+			if (!item) return false;
+			if (timeframe === 'all') return true;
+			const d = tsToDate(item.createdAt || item.timestamp);
+			if (!d) return true;
+			const cutoff = timeframe === '24h' ? 24 * 3600 * 1000 : 7 * 86400 * 1000;
+			return (now - d.getTime()) <= cutoff;
+		};
+
+		const filteredViews = allPageviews.filter(filterByTime);
+		const filteredPolls = allPolls.filter(filterByTime);
+		const filteredRegs = allRegs.filter(filterByTime);
+		const filteredTickets = allTickets.filter(filterByTime);
+
+		const homeViewsRaw = filteredViews.filter(p => !p.path || p.path === '/' || p.path.includes('index')).length;
+		const anmeldeViewsRaw = filteredViews.filter(p => p.path && p.path.includes('anmeldung')).length;
+		const anmeldeEvents = filteredPolls.filter(d => d.type === 'funnel_step' && d.step === 'page_anmeldung').length;
+		const anmeldeCount = Math.max(anmeldeViewsRaw, anmeldeEvents);
+
+		const stepNameEvents = filteredPolls.filter(d => d.type === 'funnel_step' && (d.step === 'step_name' || d.step === 'form_started')).length;
+		const stepEmailEvents = filteredPolls.filter(d => d.type === 'funnel_step' && d.step === 'step_email').length;
+		const stepCompEvents = filteredPolls.filter(d => d.type === 'funnel_step' && d.step === 'step_companion').length;
+		const stepSummaryEvents = filteredPolls.filter(d => d.type === 'funnel_step' && d.step === 'step_summary').length;
+		const regCount = filteredRegs.length;
+		const ticketCount = filteredTickets.length;
+
+		const paidRegs = filteredRegs.filter(r => r.paid).length;
+		const paidTickets = filteredTickets.filter(t => t.paid).length;
+		const openTickets = Math.max(0, ticketCount - paidTickets);
+		const checkedInTickets = filteredTickets.filter(t => t.checkedIn).length;
+
+		const revStats = calculateRevenueStats();
+		const avgPrice = ticketCount > 0 ? (revStats.potentialTotal / ticketCount) : 12.5;
+		const openRevenue = Math.round(openTickets * avgPrice);
+
+		// Monotone Glättung für Formularschritte
+		const s7_submitted = regCount;
+		const s6_summary = Math.max(stepSummaryEvents, s7_submitted);
+		const s5_comp = Math.max(stepCompEvents, s6_summary);
+		const s4_email = Math.max(stepEmailEvents, s5_comp);
+		const s3_name = Math.max(stepNameEvents, s4_email);
+		const s2_anmeldung = Math.max(anmeldeCount, s3_name);
+		const s1_home = Math.max(homeViewsRaw, filteredViews.length, s2_anmeldung, s7_submitted > 0 ? s7_submitted : 1);
+
+		const formBase = Math.max(1, s1_home);
+		const formConversionRate = s1_home > 0 ? Math.min(100, Math.round((s7_submitted / formBase) * 100 * 10) / 10) : 0;
+		const formTotalDropoff = Math.max(0, Math.round(100 - (s7_submitted / formBase) * 100));
+
+		const payConversionRate = ticketCount > 0 ? Math.round((paidTickets / ticketCount) * 100) : 0;
+		const checkinConversionRate = paidTickets > 0 ? Math.round((checkedInTickets / paidTickets) * 100) : 0;
+		const fullE2ERate = formBase > 0 ? Math.min(100, Math.round((paidTickets / formBase) * 100 * 10) / 10) : 0;
+
+		// Relative Drop-offs zwischen Schritten
+		const drop1to2 = Math.max(0, Math.round((1 - (s2_anmeldung / Math.max(1, s1_home))) * 100));
+		const drop2to3 = s2_anmeldung > 0 ? Math.max(0, Math.round((1 - (s3_name / s2_anmeldung)) * 100)) : 0;
+		const drop3to4 = s3_name > 0 ? Math.max(0, Math.round((1 - (s4_email / s3_name)) * 100)) : 0;
+		const drop4to5 = s4_email > 0 ? Math.max(0, Math.round((1 - (s5_comp / s4_email)) * 100)) : 0;
+		const drop5to6 = s5_comp > 0 ? Math.max(0, Math.round((1 - (s6_summary / s5_comp)) * 100)) : 0;
+		const drop6to7 = s6_summary > 0 ? Math.max(0, Math.round((1 - (s7_submitted / s6_summary)) * 100)) : 0;
+
+		const formDrops = [
+			{ name: 'Startseite → Anmeldeseite', rate: drop1to2, from: s1_home, to: s2_anmeldung, stepIndex: 1 },
+			{ name: 'Anmeldeseite → Name', rate: drop2to3, from: s2_anmeldung, to: s3_name, stepIndex: 2 },
+			{ name: 'Name → E-Mail', rate: drop3to4, from: s3_name, to: s4_email, stepIndex: 3 },
+			{ name: 'E-Mail → Begleitung', rate: drop4to5, from: s4_email, to: s5_comp, stepIndex: 4 },
+			{ name: 'Begleitung → Zusammenfassung', rate: drop5to6, from: s5_comp, to: s6_summary, stepIndex: 5 },
+			{ name: 'Zusammenfassung → Buchung', rate: drop6to7, from: s6_summary, to: s7_submitted, stepIndex: 6 }
+		].sort((a,b) => b.rate - a.rate);
+
+		const biggestHurdle = formDrops[0] || { name: 'Keine Hürde', rate: 0 };
+
+		// Device comparison
+		const isMobileDevice = (d) => {
+			const s = ((d.device || '') + ' ' + (d.os || '')).toLowerCase();
+			return s.includes('mobile') || s.includes('ios') || s.includes('android') || s.includes('iphone') || s.includes('phone');
+		};
+
+		const mobileViews = filteredViews.filter(isMobileDevice).length;
+		const desktopViews = Math.max(0, filteredViews.length - mobileViews);
+
+		const mobileSteps = filteredPolls.filter(d => d.type === 'funnel_step' && isMobileDevice(d));
+		const desktopSteps = filteredPolls.filter(d => d.type === 'funnel_step' && !isMobileDevice(d));
+
+		const mobName = mobileSteps.filter(d => d.step === 'step_name' || d.step === 'form_started').length;
+		const mobEmail = mobileSteps.filter(d => d.step === 'step_email').length;
+		const mobComp = mobileSteps.filter(d => d.step === 'step_companion').length;
+		const mobSummary = mobileSteps.filter(d => d.step === 'step_summary').length;
+
+		const deskName = desktopSteps.filter(d => d.step === 'step_name' || d.step === 'form_started').length;
+		const deskEmail = desktopSteps.filter(d => d.step === 'step_email').length;
+		const deskComp = desktopSteps.filter(d => d.step === 'step_companion').length;
+		const deskSummary = desktopSteps.filter(d => d.step === 'step_summary').length;
+
+		// Age category payment metrics
+		const u18Tickets = filteredTickets.filter(t => t.category === 'u18');
+		const ue18Tickets = filteredTickets.filter(t => t.category === 'ue18');
+		const u18Paid = u18Tickets.filter(t => t.paid).length;
+		const ue18Paid = ue18Tickets.filter(t => t.paid).length;
+
+		return {
+			timeframe,
+			s1_home, s2_anmeldung, s3_name, s4_email, s5_comp, s6_summary, s7_submitted,
+			formConversionRate, formTotalDropoff,
+			drop1to2, drop2to3, drop3to4, drop4to5, drop5to6, drop6to7,
+			biggestHurdle,
+			regCount, ticketCount, paidRegs, paidTickets, openTickets, openRevenue, checkedInTickets,
+			payConversionRate, checkinConversionRate, fullE2ERate,
+			u18Total: u18Tickets.length, u18Paid, u18Open: u18Tickets.length - u18Paid,
+			ue18Total: ue18Tickets.length, ue18Paid, ue18Open: ue18Tickets.length - ue18Paid,
+			mobileViews, desktopViews,
+			mobileCounts: [mobName, mobEmail, mobComp, mobSummary],
+			desktopCounts: [deskName, deskEmail, deskComp, deskSummary]
+		};
+	}
+
+function updateCharts(){
 		if (typeof Chart === 'undefined') return;
 
 		// --- 0) KPI-Kacheln für Aufrufe & Besucher ---
@@ -3503,88 +3587,178 @@
 		}
 
 		// --- 7) Funnel & Absprung-Analyse Widget ---
-		const homeViewsRaw = allPageviews.filter(p => !p.path || p.path === '/' || p.path.includes('index')).length;
-		const anmeldeViewsRaw = allPageviews.filter(p => p.path && p.path.includes('anmeldung')).length;
-		const anmeldeEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'page_anmeldung').length;
-		const anmeldeViews = Math.max(anmeldeViewsRaw, anmeldeEvents);
-
-		const stepNameEvents = allPolls.filter(d => d.type === 'funnel_step' && (d.step === 'step_name' || d.step === 'form_started')).length;
-		const stepEmailEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'step_email').length;
-		const stepCompEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'step_companion').length;
-		const stepSummaryEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'step_summary').length;
-		const submittedCount = allRegs.length;
-
-		const hasFunnelTracking = (totalViews > 0) || (allPolls.some(d => d.type === 'funnel_step'));
-
-		// Monotone Bereinigung
-		const finalSubmitted = submittedCount;
-		const finalSummary = Math.max(stepSummaryEvents, finalSubmitted);
-		const finalComp = Math.max(stepCompEvents, finalSummary);
-		const finalEmail = Math.max(stepEmailEvents, finalComp);
-		const finalName = Math.max(stepNameEvents, finalEmail);
-		const finalAnmeldung = Math.max(anmeldeViews, finalName);
-		const finalHome = Math.max(homeViewsRaw, totalViews, finalAnmeldung, (submittedCount > 0 ? submittedCount : 0));
-
-		const conversionRate = (hasFunnelTracking && finalHome > 0)
-			? Math.min(100, Math.round((finalSubmitted / finalHome) * 100 * 10) / 10)
-			: 0;
-		const totalDropoff = (hasFunnelTracking && finalHome > 0)
-			? Math.max(0, Math.round(100 - (finalSubmitted / finalHome) * 100))
-			: 0;
-
+		const fm = getFunnelMetrics('all');
 		const elWFunnelRate = document.getElementById('widgetFunnelRate');
-		if (elWFunnelRate) {
-			elWFunnelRate.textContent = hasFunnelTracking ? `${conversionRate}%` : `${allRegs.length} Buchungen`;
-		}
+		const elWFunnelRateLbl = document.getElementById('widgetFunnelRateLabel');
 		const elWFunnelDrop = document.getElementById('widgetFunnelDropoff');
-		if (elWFunnelDrop) {
-			elWFunnelDrop.textContent = hasFunnelTracking ? `${totalDropoff}% Absprung` : 'Warte auf Tracking';
-		}
+		const elWFunnelBars = document.getElementById('widgetFunnelMiniBars');
+		const elBottle = document.getElementById('widgetFunnelBottleneck');
 
-		const baseForBars = Math.max(1, finalHome);
-		const elWfn1 = document.getElementById('wfn1'); if (elWfn1) elWfn1.textContent = finalHome;
-		const elWfn2 = document.getElementById('wfn2'); if (elWfn2) elWfn2.textContent = finalAnmeldung;
-		const elWfnName = document.getElementById('wfnName'); if (elWfnName) elWfnName.textContent = finalName;
-		const elWfnEmail = document.getElementById('wfnEmail'); if (elWfnEmail) elWfnEmail.textContent = finalEmail;
-		const elWfnComp = document.getElementById('wfnComp'); if (elWfnComp) elWfnComp.textContent = finalComp;
-		const elWfn4 = document.getElementById('wfn4'); if (elWfn4) elWfn4.textContent = finalSubmitted;
+		// Update sub-tab buttons in widget
+		['form', 'lifecycle', 'e2e'].forEach(mKey => {
+			const b = document.getElementById('fwTab' + (mKey === 'form' ? 'Form' : (mKey === 'lifecycle' ? 'Life' : 'E2e')));
+			if (b) {
+				const isActive = currentFunnelWidgetMode === mKey;
+				b.style.background = isActive ? 'rgba(143,180,255,0.22)' : 'transparent';
+				b.style.color = isActive ? '#8fb4ff' : '#9aa7c2';
+				b.style.fontWeight = isActive ? '700' : '600';
+			}
+		});
 
-		const elWfnBar2 = document.getElementById('wfnBar2');
-		if (elWfnBar2) elWfnBar2.style.width = `${Math.min(100, Math.round((finalAnmeldung / baseForBars) * 100))}%`;
-		const elWfnBarName = document.getElementById('wfnBarName');
-		if (elWfnBarName) elWfnBarName.style.width = `${Math.min(100, Math.round((finalName / baseForBars) * 100))}%`;
-		const elWfnBarEmail = document.getElementById('wfnBarEmail');
-		if (elWfnBarEmail) elWfnBarEmail.style.width = `${Math.min(100, Math.round((finalEmail / baseForBars) * 100))}%`;
-		const elWfnBarComp = document.getElementById('wfnBarComp');
-		if (elWfnBarComp) elWfnBarComp.style.width = `${Math.min(100, Math.round((finalComp / baseForBars) * 100))}%`;
-		const elWfnBar4 = document.getElementById('wfnBar4');
-		if (elWfnBar4) elWfnBar4.style.width = `${Math.min(100, Math.round((finalSubmitted / baseForBars) * 100))}%`;
+		if (currentFunnelWidgetMode === 'lifecycle') {
+			if (elWFunnelRate) elWFunnelRate.textContent = `${fm.payConversionRate}%`;
+			if (elWFunnelRateLbl) elWFunnelRateLbl.textContent = ' Bezahlquote';
+			if (elWFunnelDrop) elWFunnelDrop.textContent = `${fm.openTickets} offen (${fm.openRevenue} €)`;
 
-		// Größte Hürde ermitteln
-		let biggestHurdle = 'Tracking aktiv – analysiert Besucher bei Nutzung';
-		if (hasFunnelTracking && finalHome > 0) {
-			const drop1 = (finalHome - finalAnmeldung) / finalHome;
-			const drop2 = finalAnmeldung > 0 ? (finalAnmeldung - finalName) / finalAnmeldung : 0;
-			const drop3 = finalName > 0 ? (finalName - finalEmail) / finalName : 0;
-			const drop4 = finalEmail > 0 ? (finalEmail - finalComp) / finalEmail : 0;
-			const drop5 = finalComp > 0 ? (finalComp - finalSubmitted) / finalComp : 0;
+			const base = Math.max(1, fm.ticketCount);
+			const p1 = 100;
+			const p2 = Math.min(100, Math.round((fm.paidTickets / base) * 100));
+			const p3 = Math.min(100, Math.round((fm.checkedInTickets / base) * 100));
 
-			const drops = [
-				{ name: 'Startseite → Anmeldung', rate: drop1 },
-				{ name: 'Anmeldung → Name', rate: drop2 },
-				{ name: 'Name → E-Mail', rate: drop3 },
-				{ name: 'E-Mail → Begleitung', rate: drop4 },
-				{ name: 'Begleitung → Abschluss', rate: drop5 }
-			].sort((a,b) => b.rate - a.rate);
+			if (elWFunnelBars) {
+				elWFunnelBars.innerHTML = `
+					<div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
+						<span style="width:78px; flex-shrink:0;">1. Bestellt</span>
+						<div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+							<div style="width:${p1}%; height:100%; background:#8fb4ff; border-radius:3px;"></div>
+						</div>
+						<span style="width:42px; text-align:right; color:#fff; font-weight:700;">${fm.ticketCount}</span>
+					</div>
+					<div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
+						<span style="width:78px; flex-shrink:0;">2. Bezahlt</span>
+						<div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+							<div style="width:${p2}%; height:100%; background:#7fe0a8; border-radius:3px;"></div>
+						</div>
+						<span style="width:42px; text-align:right; color:#7fe0a8; font-weight:700;">${fm.paidTickets}</span>
+					</div>
+					<div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
+						<span style="width:78px; flex-shrink:0;">3. Eingecheckt</span>
+						<div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+							<div style="width:${p3}%; height:100%; background:#ffd27f; border-radius:3px;"></div>
+						</div>
+						<span style="width:42px; text-align:right; color:#ffd27f; font-weight:700;">${fm.checkedInTickets}</span>
+					</div>
+				`;
+			}
+			if (elBottle) {
+				elBottle.textContent = fm.openTickets > 0
+					? `Offen: ${fm.openTickets} unbezahlte Tickets (${fm.openRevenue} € noch ausstehend)`
+					: 'Alle Tickets vollständig bezahlt!';
+			}
+		} else if (currentFunnelWidgetMode === 'e2e') {
+			if (elWFunnelRate) elWFunnelRate.textContent = `${fm.fullE2ERate}%`;
+			if (elWFunnelRateLbl) elWFunnelRateLbl.textContent = ' End-to-End';
+			if (elWFunnelDrop) elWFunnelDrop.textContent = `${Math.max(0, 100 - fm.fullE2ERate)}% Gesamtverlust`;
 
-			if (drops[0] && drops[0].rate > 0.05) {
-				biggestHurdle = `Größter Absprung: ${drops[0].name} (-${Math.round(drops[0].rate * 100)}%)`;
-			} else {
-				biggestHurdle = 'Sehr hohe Durchlaufquote (keine markanten Hürden)';
+			const base = Math.max(1, fm.s1_home);
+			const p1 = 100;
+			const p2 = Math.min(100, Math.round((fm.s7_submitted / base) * 100));
+			const p3 = Math.min(100, Math.round((fm.paidTickets / base) * 100));
+			const p4 = Math.min(100, Math.round((fm.checkedInTickets / base) * 100));
+
+			if (elWFunnelBars) {
+				elWFunnelBars.innerHTML = `
+					<div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
+						<span style="width:78px; flex-shrink:0;">1. Besucher</span>
+						<div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+							<div style="width:${p1}%; height:100%; background:#8fb4ff; border-radius:3px;"></div>
+						</div>
+						<span style="width:42px; text-align:right; color:#fff; font-weight:700;">${fm.s1_home}</span>
+					</div>
+					<div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
+						<span style="width:78px; flex-shrink:0;">2. Reserviert</span>
+						<div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+							<div style="width:${p2}%; height:100%; background:#a78bfa; border-radius:3px;"></div>
+						</div>
+						<span style="width:42px; text-align:right; color:#fff; font-weight:700;">${fm.s7_submitted}</span>
+					</div>
+					<div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
+						<span style="width:78px; flex-shrink:0;">3. Bezahlt</span>
+						<div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+							<div style="width:${p3}%; height:100%; background:#7fe0a8; border-radius:3px;"></div>
+						</div>
+						<span style="width:42px; text-align:right; color:#7fe0a8; font-weight:700;">${fm.paidTickets}</span>
+					</div>
+					<div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
+						<span style="width:78px; flex-shrink:0;">4. Einlass</span>
+						<div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+							<div style="width:${p4}%; height:100%; background:#ffd27f; border-radius:3px;"></div>
+						</div>
+						<span style="width:42px; text-align:right; color:#ffd27f; font-weight:700;">${fm.checkedInTickets}</span>
+					</div>
+				`;
+			}
+			if (elBottle) {
+				elBottle.textContent = fm.openTickets > 0
+					? `Engpass: ${fm.openTickets} Tickets reserviert, aber noch unbezahlt`
+					: `Konvertiert: ${fm.fullE2ERate}% aller Besucher werden zahlende Gäste`;
+			}
+		} else {
+			// Form mode (Standard)
+			if (elWFunnelRate) elWFunnelRate.textContent = `${fm.formConversionRate}%`;
+			if (elWFunnelRateLbl) elWFunnelRateLbl.textContent = ' Conversion-Rate';
+			if (elWFunnelDrop) elWFunnelDrop.textContent = `${fm.formTotalDropoff}% Gesamt-Absprung`;
+
+			const base = Math.max(1, fm.s1_home);
+			const p1 = 100;
+			const p2 = Math.min(100, Math.round((fm.s2_anmeldung / base) * 100));
+			const p3 = Math.min(100, Math.round((fm.s3_name / base) * 100));
+			const p4 = Math.min(100, Math.round((fm.s4_email / base) * 100));
+			const p5 = Math.min(100, Math.round((fm.s5_comp / base) * 100));
+			const p6 = Math.min(100, Math.round((fm.s7_submitted / base) * 100));
+
+			if (elWFunnelBars) {
+				elWFunnelBars.innerHTML = `
+					<div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
+						<span style="width:74px; flex-shrink:0;">1. Startseite</span>
+						<div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+							<div style="width:${p1}%; height:100%; background:#8fb4ff; border-radius:3px;"></div>
+						</div>
+						<span style="width:34px; text-align:right; color:#fff; font-weight:700;">${fm.s1_home}</span>
+					</div>
+					<div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
+						<span style="width:74px; flex-shrink:0;">2. Anmeldeseite</span>
+						<div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+							<div style="width:${p2}%; height:100%; background:#a78bfa; border-radius:3px;"></div>
+						</div>
+						<span style="width:34px; text-align:right; color:#fff; font-weight:700;">${fm.s2_anmeldung}</span>
+					</div>
+					<div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
+						<span style="width:74px; flex-shrink:0;">3. Name &amp; Du/Sie</span>
+						<div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+							<div style="width:${p3}%; height:100%; background:#8fb4ff; border-radius:3px;"></div>
+						</div>
+						<span style="width:34px; text-align:right; color:#fff; font-weight:700;">${fm.s3_name}</span>
+					</div>
+					<div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
+						<span style="width:74px; flex-shrink:0;">4. E-Mail</span>
+						<div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+							<div style="width:${p4}%; height:100%; background:#ffd27f; border-radius:3px;"></div>
+						</div>
+						<span style="width:34px; text-align:right; color:#fff; font-weight:700;">${fm.s4_email}</span>
+					</div>
+					<div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
+						<span style="width:74px; flex-shrink:0;">5. Begleitung</span>
+						<div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+							<div style="width:${p5}%; height:100%; background:#ffaa7f; border-radius:3px;"></div>
+						</div>
+						<span style="width:34px; text-align:right; color:#fff; font-weight:700;">${fm.s5_comp}</span>
+					</div>
+					<div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#9aa7c2;">
+						<span style="width:74px; flex-shrink:0;">6. Bestellt</span>
+						<div style="flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+							<div style="width:${p6}%; height:100%; background:#7fe0a8; border-radius:3px;"></div>
+						</div>
+						<span style="width:34px; text-align:right; color:#fff; font-weight:700;">${fm.s7_submitted}</span>
+					</div>
+				`;
+			}
+			if (elBottle) {
+				elBottle.textContent = fm.biggestHurdle.rate > 5
+					? `Größter Absprung: ${fm.biggestHurdle.name} (-${fm.biggestHurdle.rate}%)`
+					: 'Sehr hohe Durchlaufquote (keine markanten Hürden)';
 			}
 		}
-		const elBottle = document.getElementById('widgetFunnelBottleneck');
-		if (elBottle) elBottle.textContent = biggestHurdle;
 
 		// --- 8) Kapazitäts- & Umsatz-Prognose Widget ---
 		const hallCapacity = currentHallCapacity || 250;
@@ -3774,6 +3948,46 @@
 	let modalChartDemographicsA = null;
 	let modalChartDemographicsB = null;
 	let modalChartDemographicsClass = null;
+	let currentFunnelWidgetMode = 'form'; // 'form' | 'lifecycle' | 'e2e'
+	let currentFunnelModalTab = 'form'; // 'form' | 'e2e' | 'payment' | 'device'
+	let currentFunnelTimeframe = 'all'; // 'all' | '7d' | '24h'
+
+	window.switchFunnelWidgetMode = function(mode, ev) {
+		if (ev) ev.stopPropagation();
+		currentFunnelWidgetMode = mode;
+		updateCharts();
+	};
+
+	window.switchFunnelModalTab = function(tab) {
+		currentFunnelModalTab = tab;
+		renderModalContent('funnel');
+	};
+
+	window.switchFunnelTimeframe = function(tf) {
+		currentFunnelTimeframe = tf;
+		renderModalContent('funnel');
+	};
+
+	window.copyPaymentReminderText = function() {
+		const text = "Liebe Gäste des Winterballs 2027 ❄️,\nbitte denkt daran, eure reservierten Eintrittskarten zeitnah bei der Schülerkasse in den Pausen oder per Überweisung zu bezahlen, um euren garantierten Einlass zu sichern. Vielen Dank!\nEuer Winterball Orga-Team";
+		if (navigator.clipboard && navigator.clipboard.writeText) {
+			navigator.clipboard.writeText(text).then(() => {
+				showAdminToast('Zahlungserinnerungs-Text in Zwischenablage kopiert! 📋');
+			}).catch(() => {
+				showAdminToast('Text konnte nicht automatisch kopiert werden.', false);
+			});
+		} else {
+			showAdminToast('Zwischenablage wird vom Browser nicht unterstützt.', false);
+		}
+	};
+
+	window.filterUnpaidFromFunnel = function() {
+		closeWidgetModal();
+		switchToTab('orders');
+		const chip = document.querySelector('.filter-chips .chip[data-filter="unpaid"]');
+		if (chip) chip.click();
+	};
+
 	let peaktimesMetric = 'bookings'; // 'bookings' oder 'pageviews'
 
 	function openWidgetModal(widgetType){
@@ -4496,174 +4710,542 @@
 			return;
 		}
 
-		// 7. CONVERSION-FUNNEL MODAL (Detail & Absprung-Analyse nach Schritten)
+		// 7. CONVERSION-FUNNEL MODAL (Vollständige Trichtermessung, Kassen-Lifecycle, Drop-Off & Geräte)
 		if (widgetType === 'funnel') {
 			iconEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>';
 			iconEl.style.background = 'rgba(127,224,168,0.18)';
 			iconEl.style.color = '#7fe0a8';
 			titleEl.textContent = 'Conversion-Funnel & Absprung-Analyse';
-			subEl.textContent = 'Schritt-für-Schritt Trichter: Vom ersten Webseitenaufruf bis zum Ticketabschluss mit Hürden-Erkennung';
+			subEl.textContent = 'Granulare Trichtermessung, Hürden-Erkennung, Zahlungs-Lifecycle und Gerätevergleich';
 
-			const homeViewsRaw = allPageviews.filter(p => !p.path || p.path === '/' || p.path.includes('index')).length;
-			const anmeldeViewsRaw = allPageviews.filter(p => p.path && p.path.includes('anmeldung')).length;
-			const anmeldeEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'page_anmeldung').length;
-			const anmeldeViews = Math.max(anmeldeViewsRaw, anmeldeEvents);
+			const fm = getFunnelMetrics(currentFunnelTimeframe);
+			const revStats = calculateRevenueStats();
 
-			const stepNameEvents = allPolls.filter(d => d.type === 'funnel_step' && (d.step === 'step_name' || d.step === 'form_started')).length;
-			const stepEmailEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'step_email').length;
-			const stepCompEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'step_companion').length;
-			const stepSummaryEvents = allPolls.filter(d => d.type === 'funnel_step' && d.step === 'step_summary').length;
-			const submittedCount = allRegs.length;
-
-			const hasFunnelTracking = (allPageviews.length > 0) || (allPolls.some(d => d.type === 'funnel_step'));
-
-			const finalSubmitted = submittedCount;
-			const finalSummary = Math.max(stepSummaryEvents, finalSubmitted);
-			const finalComp = Math.max(stepCompEvents, finalSummary);
-			const finalEmail = Math.max(stepEmailEvents, finalComp);
-			const finalName = Math.max(stepNameEvents, finalEmail);
-			const finalAnmeldung = Math.max(anmeldeViews, finalName);
-			const finalHome = Math.max(homeViewsRaw, allPageviews.length, finalAnmeldung, (submittedCount > 0 ? submittedCount : 1));
-
-			const base = Math.max(1, finalHome);
-			const step1Pct = 100;
-			const step2Pct = Math.min(100, Math.round((finalAnmeldung / base) * 100));
-			const step3Pct = Math.min(100, Math.round((finalName / base) * 100));
-			const step4Pct = Math.min(100, Math.round((finalEmail / base) * 100));
-			const step5Pct = Math.min(100, Math.round((finalComp / base) * 100));
-			const step6Pct = Math.min(100, Math.round((finalSummary / base) * 100));
-			const step7Pct = Math.min(100, Math.round((finalSubmitted / base) * 100 * 10) / 10);
-
-			const drop1to2 = Math.max(0, 100 - step2Pct);
-			const drop2to3 = finalAnmeldung > 0 ? Math.max(0, Math.round((1 - (finalName / finalAnmeldung)) * 100)) : 0;
-			const drop3to4 = finalName > 0 ? Math.max(0, Math.round((1 - (finalEmail / finalName)) * 100)) : 0;
-			const drop4to5 = finalEmail > 0 ? Math.max(0, Math.round((1 - (finalComp / finalEmail)) * 100)) : 0;
-			const drop5to6 = finalComp > 0 ? Math.max(0, Math.round((1 - (finalSummary / finalComp)) * 100)) : 0;
-			const drop6to7 = finalSummary > 0 ? Math.max(0, Math.round((1 - (finalSubmitted / finalSummary)) * 100)) : 0;
-
-			kpiEl.innerHTML = `
-				<div class="widget-modal-kpi-card">
-					<div class="widget-modal-kpi-lbl">1. Besucher</div>
-					<div class="widget-modal-kpi-val" style="color:#8fb4ff;">${finalHome}</div>
-					<div class="widget-modal-kpi-sub">Besucher auf Startseite</div>
-				</div>
-				<div class="widget-modal-kpi-card">
-					<div class="widget-modal-kpi-lbl">2. Anmeldeseite</div>
-					<div class="widget-modal-kpi-val" style="color:#a78bfa;">${finalAnmeldung}</div>
-					<div class="widget-modal-kpi-sub">${step2Pct}% Klickrate auf Anmelden</div>
-				</div>
-				<div class="widget-modal-kpi-card">
-					<div class="widget-modal-kpi-lbl">3. E-Mail &amp; Begleitung</div>
-					<div class="widget-modal-kpi-val" style="color:#ffd27f;">${finalComp}</div>
-					<div class="widget-modal-kpi-sub">${drop4to5}% Hürde bei Begleitung</div>
-				</div>
-				<div class="widget-modal-kpi-card">
-					<div class="widget-modal-kpi-lbl">4. Abgeschlossen</div>
-					<div class="widget-modal-kpi-val" style="color:#7fe0a8;">${finalSubmitted}</div>
-					<div class="widget-modal-kpi-sub">${hasFunnelTracking ? step7Pct + '% Gesamt-Conversion' : 'Warte auf Tracking'}</div>
+			// Header Navigation: Tabs & Zeitraum-Filter
+			const filterHtml = `
+				<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:18px;">
+					<div style="display:inline-flex; background:rgba(255,255,255,0.06); padding:3px; border-radius:8px; gap:4px; border:1px solid rgba(255,255,255,0.08); flex-wrap:wrap;">
+						<button type="button" class="funnel-tab-btn" onclick="window.switchFunnelModalTab('form')" style="padding:6px 12px; border-radius:6px; border:none; cursor:pointer; font-size:12px; font-weight:700; transition:all 0.2s ease; ${currentFunnelModalTab === 'form' ? 'background:rgba(143,180,255,0.25); color:#8fb4ff; box-shadow:0 2px 8px rgba(143,180,255,0.2);' : 'background:transparent; color:#9aa7c2;'}">🌐 Formular-Trichter</button>
+						<button type="button" class="funnel-tab-btn" onclick="window.switchFunnelModalTab('e2e')" style="padding:6px 12px; border-radius:6px; border:none; cursor:pointer; font-size:12px; font-weight:700; transition:all 0.2s ease; ${currentFunnelModalTab === 'e2e' ? 'background:rgba(167,139,250,0.25); color:#a78bfa; box-shadow:0 2px 8px rgba(167,139,250,0.2);' : 'background:transparent; color:#9aa7c2;'}">🎟️ End-to-End Lifecycle</button>
+						<button type="button" class="funnel-tab-btn" onclick="window.switchFunnelModalTab('payment')" style="padding:6px 12px; border-radius:6px; border:none; cursor:pointer; font-size:12px; font-weight:700; transition:all 0.2s ease; ${currentFunnelModalTab === 'payment' ? 'background:rgba(127,224,168,0.25); color:#7fe0a8; box-shadow:0 2px 8px rgba(127,224,168,0.2);' : 'background:transparent; color:#9aa7c2;'}">💳 Kassen- &amp; Einlassstatus</button>
+						<button type="button" class="funnel-tab-btn" onclick="window.switchFunnelModalTab('device')" style="padding:6px 12px; border-radius:6px; border:none; cursor:pointer; font-size:12px; font-weight:700; transition:all 0.2s ease; ${currentFunnelModalTab === 'device' ? 'background:rgba(255,210,127,0.25); color:#ffd27f; box-shadow:0 2px 8px rgba(255,210,127,0.2);' : 'background:transparent; color:#9aa7c2;'}">📱 Mobile vs. Desktop</button>
+					</div>
+					<div style="display:inline-flex; background:rgba(255,255,255,0.04); padding:3px; border-radius:8px; gap:3px; border:1px solid rgba(255,255,255,0.06);">
+						<button type="button" onclick="window.switchFunnelTimeframe('all')" style="padding:5px 10px; border-radius:5px; border:none; cursor:pointer; font-size:11px; font-weight:700; ${currentFunnelTimeframe === 'all' ? 'background:rgba(255,255,255,0.15); color:#fff;' : 'background:transparent; color:#9aa7c2;'}">Gesamt</button>
+						<button type="button" onclick="window.switchFunnelTimeframe('7d')" style="padding:5px 10px; border-radius:5px; border:none; cursor:pointer; font-size:11px; font-weight:700; ${currentFunnelTimeframe === '7d' ? 'background:rgba(255,255,255,0.15); color:#fff;' : 'background:transparent; color:#9aa7c2;'}">Letzte 7 Tage</button>
+						<button type="button" onclick="window.switchFunnelTimeframe('24h')" style="padding:5px 10px; border-radius:5px; border:none; cursor:pointer; font-size:11px; font-weight:700; ${currentFunnelTimeframe === '24h' ? 'background:rgba(255,255,255,0.15); color:#fff;' : 'background:transparent; color:#9aa7c2;'}">Letzte 24 Std.</button>
+					</div>
 				</div>
 			`;
 
+			// Dynamische KPI Kacheln je nach Tab
+			let kpisHtml = '';
+			if (currentFunnelModalTab === 'lifecycle' || currentFunnelModalTab === 'payment') {
+				kpisHtml = `
+					<div class="widget-modal-kpi-card">
+						<div class="widget-modal-kpi-lbl">Bestellte Tickets</div>
+						<div class="widget-modal-kpi-val" style="color:#8fb4ff;">${fm.ticketCount}</div>
+						<div class="widget-modal-kpi-sub">${fm.regCount} Reservierungen gesamt</div>
+					</div>
+					<div class="widget-modal-kpi-card">
+						<div class="widget-modal-kpi-lbl">Bezahlte Tickets</div>
+						<div class="widget-modal-kpi-val" style="color:#7fe0a8;">${fm.paidTickets}</div>
+						<div class="widget-modal-kpi-sub">${fm.payConversionRate}% Bezahlquote</div>
+					</div>
+					<div class="widget-modal-kpi-card">
+						<div class="widget-modal-kpi-lbl">Noch unbezahlt</div>
+						<div class="widget-modal-kpi-val" style="color:#ffd27f;">${fm.openTickets}</div>
+						<div class="widget-modal-kpi-sub">${formatCents(fm.openRevenue * 100)} offener Umsatz</div>
+					</div>
+					<div class="widget-modal-kpi-card">
+						<div class="widget-modal-kpi-lbl">Bereits Eingecheckt</div>
+						<div class="widget-modal-kpi-val" style="color:#a78bfa;">${fm.checkedInTickets}</div>
+						<div class="widget-modal-kpi-sub">${fm.checkinConversionRate}% der bezahlten Gäste</div>
+					</div>
+				`;
+			} else if (currentFunnelModalTab === 'e2e') {
+				kpisHtml = `
+					<div class="widget-modal-kpi-card">
+						<div class="widget-modal-kpi-lbl">1. Website-Besucher</div>
+						<div class="widget-modal-kpi-val" style="color:#8fb4ff;">${fm.s1_home}</div>
+						<div class="widget-modal-kpi-sub">Interessenten auf Startseite</div>
+					</div>
+					<div class="widget-modal-kpi-card">
+						<div class="widget-modal-kpi-lbl">2. Reserviert</div>
+						<div class="widget-modal-kpi-val" style="color:#a78bfa;">${fm.s7_submitted}</div>
+						<div class="widget-modal-kpi-sub">${fm.formConversionRate}% Formular-Abschluss</div>
+					</div>
+					<div class="widget-modal-kpi-card">
+						<div class="widget-modal-kpi-lbl">3. Vollständig Bezahlt</div>
+						<div class="widget-modal-kpi-val" style="color:#7fe0a8;">${fm.paidTickets}</div>
+						<div class="widget-modal-kpi-sub">${fm.payConversionRate}% der Tickets bezahlt</div>
+					</div>
+					<div class="widget-modal-kpi-card">
+						<div class="widget-modal-kpi-lbl">4. End-to-End Quote</div>
+						<div class="widget-modal-kpi-val" style="color:#ffd27f;">${fm.fullE2ERate}%</div>
+						<div class="widget-modal-kpi-sub">Besucher → bezahlter Gast</div>
+					</div>
+				`;
+			} else if (currentFunnelModalTab === 'device') {
+				const totViews = Math.max(1, fm.mobileViews + fm.desktopViews);
+				const mobShare = Math.round((fm.mobileViews / totViews) * 100);
+				kpisHtml = `
+					<div class="widget-modal-kpi-card">
+						<div class="widget-modal-kpi-lbl">Mobile Zugriffe</div>
+						<div class="widget-modal-kpi-val" style="color:#8fb4ff;">${fm.mobileViews}</div>
+						<div class="widget-modal-kpi-sub">${mobShare}% Smartphone-Anteil</div>
+					</div>
+					<div class="widget-modal-kpi-card">
+						<div class="widget-modal-kpi-lbl">Desktop Zugriffe</div>
+						<div class="widget-modal-kpi-val" style="color:#a78bfa;">${fm.desktopViews}</div>
+						<div class="widget-modal-kpi-sub">${100 - mobShare}% Computer / Laptops</div>
+					</div>
+					<div class="widget-modal-kpi-card">
+						<div class="widget-modal-kpi-lbl">Formular-Starts (Mobil)</div>
+						<div class="widget-modal-kpi-val" style="color:#ffd27f;">${fm.mobileCounts[0] || fm.s3_name}</div>
+						<div class="widget-modal-kpi-sub">Mobile Interaktionen</div>
+					</div>
+					<div class="widget-modal-kpi-card">
+						<div class="widget-modal-kpi-lbl">Erfolgreich Abgeschlossen</div>
+						<div class="widget-modal-kpi-val" style="color:#7fe0a8;">${fm.s7_submitted}</div>
+						<div class="widget-modal-kpi-sub">${fm.formConversionRate}% Gesamt-Conversion</div>
+					</div>
+				`;
+			} else {
+				// Form tab (Default)
+				kpisHtml = `
+					<div class="widget-modal-kpi-card">
+						<div class="widget-modal-kpi-lbl">1. Besucher (Start)</div>
+						<div class="widget-modal-kpi-val" style="color:#8fb4ff;">${fm.s1_home}</div>
+						<div class="widget-modal-kpi-sub">Webseiten-Einstiege</div>
+					</div>
+					<div class="widget-modal-kpi-card">
+						<div class="widget-modal-kpi-lbl">2. Anmeldeseite</div>
+						<div class="widget-modal-kpi-val" style="color:#a78bfa;">${fm.s2_anmeldung}</div>
+						<div class="widget-modal-kpi-sub">${Math.round((fm.s2_anmeldung / Math.max(1, fm.s1_home)) * 100)}% Klick auf Anmelden</div>
+					</div>
+					<div class="widget-modal-kpi-card">
+						<div class="widget-modal-kpi-lbl">3. E-Mail &amp; Begleitung</div>
+						<div class="widget-modal-kpi-val" style="color:#ffd27f;">${fm.s5_comp}</div>
+						<div class="widget-modal-kpi-sub">${Math.round((fm.s5_comp / Math.max(1, fm.s1_home)) * 100)}% bis Schritt 4 gelangt</div>
+					</div>
+					<div class="widget-modal-kpi-card">
+						<div class="widget-modal-kpi-lbl">4. Abgeschlossen</div>
+						<div class="widget-modal-kpi-val" style="color:#7fe0a8;">${fm.s7_submitted}</div>
+						<div class="widget-modal-kpi-sub">${fm.formConversionRate}% Gesamt-Durchlauf</div>
+					</div>
+				`;
+			}
+
+			kpiEl.innerHTML = filterHtml + `<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:18px;">${kpisHtml}</div>`;
+
+			// Chart Rendering
 			chartBox.style.display = 'block';
-			modalChart = new Chart(canvas, {
-				type: 'bar',
-				data: {
-					labels: [
-						'1. Startseite',
-						'2. Anmeldeseite',
-						'3. Name & Anrede',
-						'4. E-Mail-Adresse',
-						'5. Begleitung & Alter',
-						'6. Zusammenfassung',
-						'7. Bestellt'
-					],
-					datasets: [{
-						label: 'Personen im Trichter',
-						data: [finalHome, finalAnmeldung, finalName, finalEmail, finalComp, finalSummary, finalSubmitted],
-						backgroundColor: ['#8fb4ff', '#a78bfa', '#8fb4ff', '#ffd27f', '#ffaa7f', '#93c5fd', '#7fe0a8'],
-						borderRadius: 6
-					}]
-				},
-				options: {
-					indexAxis: 'y',
-					responsive: true,
-					maintainAspectRatio: false,
-					plugins: {
-						legend: { display: false },
-						tooltip: { callbacks: { label: (ctx) => ` ${ctx.parsed.x} Personen (${Math.round((ctx.parsed.x/base)*100)}% der Startseite)` } }
-					},
-					scales: {
-						x: { beginAtZero: true, ticks: { color: '#9aa7c2' }, grid: { color: 'rgba(255,255,255,0.06)' } },
-						y: { ticks: { color: '#c7d7f7', font: { weight: '600', size: 11 } }, grid: { display: false } }
-					}
-				}
-			});
+			if (modalChart) { modalChart.destroy(); modalChart = null; }
 
+			if (currentFunnelModalTab === 'lifecycle' || currentFunnelModalTab === 'payment') {
+				modalChart = new Chart(canvas, {
+					type: 'bar',
+					data: {
+						labels: ['1. Bestellt (Gesamt)', '2. Bezahlt (Einnahme)', '3. Noch unbezahlt', '4. Eingecheckt (Vor Ort)'],
+						datasets: [{
+							label: 'Tickets',
+							data: [fm.ticketCount, fm.paidTickets, fm.openTickets, fm.checkedInTickets],
+							backgroundColor: ['#8fb4ff', '#7fe0a8', '#ffd27f', '#a78bfa'],
+							borderRadius: 6
+						}]
+					},
+					options: {
+						indexAxis: 'y',
+						responsive: true,
+						maintainAspectRatio: false,
+						plugins: {
+							legend: { display: false },
+							tooltip: { callbacks: { label: (ctx) => ` ${ctx.parsed.x} Tickets (${Math.round((ctx.parsed.x / Math.max(1, fm.ticketCount)) * 100)}% der Bestellungen)` } }
+						},
+						scales: {
+							x: { beginAtZero: true, ticks: { color: '#9aa7c2' }, grid: { color: 'rgba(255,255,255,0.06)' } },
+							y: { ticks: { color: '#c7d7f7', font: { weight: '600', size: 11 } }, grid: { display: false } }
+						}
+					}
+				});
+			} else if (currentFunnelModalTab === 'e2e') {
+				const base = Math.max(1, fm.s1_home);
+				modalChart = new Chart(canvas, {
+					type: 'bar',
+					data: {
+						labels: ['1. Webseiten-Besucher', '2. Ticket reserviert', '3. Vollständig bezahlt', '4. Am Ball eingecheckt'],
+						datasets: [{
+							label: 'Personen / Tickets',
+							data: [fm.s1_home, fm.s7_submitted, fm.paidTickets, fm.checkedInTickets],
+							backgroundColor: ['#8fb4ff', '#a78bfa', '#7fe0a8', '#ffd27f'],
+							borderRadius: 6
+						}]
+					},
+					options: {
+						indexAxis: 'y',
+						responsive: true,
+						maintainAspectRatio: false,
+						plugins: {
+							legend: { display: false },
+							tooltip: { callbacks: { label: (ctx) => ` ${ctx.parsed.x} (${Math.round((ctx.parsed.x / base) * 100)}% der Startseitenbesucher)` } }
+						},
+						scales: {
+							x: { beginAtZero: true, ticks: { color: '#9aa7c2' }, grid: { color: 'rgba(255,255,255,0.06)' } },
+							y: { ticks: { color: '#c7d7f7', font: { weight: '600', size: 11 } }, grid: { display: false } }
+						}
+					}
+				});
+			} else if (currentFunnelModalTab === 'device') {
+				modalChart = new Chart(canvas, {
+					type: 'bar',
+					data: {
+						labels: ['Schritt 1: Name', 'Schritt 2: E-Mail', 'Schritt 3: Begleitung', 'Schritt 4: Zusammenfassung'],
+						datasets: [
+							{
+								label: 'Mobile (Smartphones)',
+								data: fm.mobileCounts,
+								backgroundColor: '#8fb4ff',
+								borderRadius: 6
+							},
+							{
+								label: 'Desktop (Computer)',
+								data: fm.desktopCounts,
+								backgroundColor: '#7fe0a8',
+								borderRadius: 6
+							}
+						]
+					},
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						plugins: {
+							legend: { position: 'top', labels: { color: '#c7d7f7', font: { size: 12, weight: '600' } } },
+							tooltip: { callbacks: { label: (ctx) => ` ${ctx.dataset.label}: ${ctx.parsed.y} Interaktionen` } }
+						},
+						scales: {
+							y: { beginAtZero: true, ticks: { color: '#9aa7c2' }, grid: { color: 'rgba(255,255,255,0.06)' } },
+							x: { ticks: { color: '#c7d7f7', font: { weight: '600', size: 11 } }, grid: { display: false } }
+						}
+					}
+				});
+			} else {
+				// Form funnel chart (7 Steps)
+				const base = Math.max(1, fm.s1_home);
+				modalChart = new Chart(canvas, {
+					type: 'bar',
+					data: {
+						labels: [
+							'1. Startseite',
+							'2. Anmeldeseite',
+							'3. Name & Anrede',
+							'4. E-Mail-Adresse',
+							'5. Begleitung & Alter',
+							'6. Zusammenfassung',
+							'7. Reservierung abgeschickt'
+						],
+						datasets: [{
+							label: 'Personen im Trichter',
+							data: [fm.s1_home, fm.s2_anmeldung, fm.s3_name, fm.s4_email, fm.s5_comp, fm.s6_summary, fm.s7_submitted],
+							backgroundColor: ['#8fb4ff', '#a78bfa', '#818cf8', '#ffd27f', '#ffaa7f', '#93c5fd', '#7fe0a8'],
+							borderRadius: 6
+						}]
+					},
+					options: {
+						indexAxis: 'y',
+						responsive: true,
+						maintainAspectRatio: false,
+						plugins: {
+							legend: { display: false },
+							tooltip: { callbacks: { label: (ctx) => ` ${ctx.parsed.x} Personen (${Math.round((ctx.parsed.x / base) * 100)}% der Startseite)` } }
+						},
+						scales: {
+							x: { beginAtZero: true, ticks: { color: '#9aa7c2' }, grid: { color: 'rgba(255,255,255,0.06)' } },
+							y: { ticks: { color: '#c7d7f7', font: { weight: '600', size: 11 } }, grid: { display: false } }
+						}
+					}
+				});
+			}
+
+			// Detaillierte Tabelle je nach Modus
 			detailBox.style.display = 'block';
-			detailBox.innerHTML = `
-				<table class="widget-modal-table">
-					<thead>
-						<tr>
-							<th>Trichterstufe</th>
-							<th>Personen</th>
-							<th>Quote</th>
-							<th>Absprungrate</th>
-							<th>Konkrete Hürden &amp; Optimierungs-Empfehlung</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td style="font-weight:700; color:#8fb4ff;">1. Startseite aufgerufen</td>
-							<td style="font-weight:700; color:#fff;">${finalHome}</td>
-							<td>100%</td>
-							<td style="color:#ffd27f;">–</td>
-							<td style="color:#9aa7c2;">Hauptportal · Erste Anlaufstelle. Große Call-to-Actions &amp; Countdown aktiv halten.</td>
-						</tr>
-						<tr>
-							<td style="font-weight:700; color:#a78bfa;">2. Anmeldeseite geöffnet</td>
-							<td style="font-weight:700; color:#fff;">${finalAnmeldung}</td>
-							<td style="font-weight:600; color:#8fb4ff;">${step2Pct}%</td>
-							<td style="color:#ff8080; font-weight:700;">-${drop1to2}%</td>
-							<td style="color:#9aa7c2;">Absprung vor der Eingabe: Hero-Bereich auf der Startseite verlockender gestalten.</td>
-						</tr>
-						<tr>
-							<td style="font-weight:700; color:#8fb4ff;">3. Schritt 2: Name &amp; Anrede</td>
-							<td style="font-weight:700; color:#fff;">${finalName}</td>
-							<td style="font-weight:600; color:#8fb4ff;">${step3Pct}%</td>
-							<td style="color:#ff8080; font-weight:700;">-${drop2to3}%</td>
-							<td style="color:#9aa7c2;">Sehr niederschwelliger Einstieg. Schneller Wechsel zwischen Du und Sie.</td>
-						</tr>
-						<tr>
-							<td style="font-weight:700; color:#ffd27f;">4. Schritt 3: E-Mail-Adresse</td>
-							<td style="font-weight:700; color:#fff;">${finalEmail}</td>
-							<td style="font-weight:600; color:#ffd27f;">${step4Pct}%</td>
-							<td style="color:${drop3to4 > 15 ? '#ff8080' : '#7fe0a8'}; font-weight:700;">-${drop3to4}%</td>
-							<td style="color:#9aa7c2;">LernSax-Schnellauswahl (@gymwilsdruff.lernsax.de) erspart Tippaufwand &amp; schafft Vertrauen.</td>
-						</tr>
-						<tr>
-							<td style="font-weight:700; color:#ffaa7f;">5. Schritt 4: Begleitperson &amp; Alter</td>
-							<td style="font-weight:700; color:#fff;">${finalComp}</td>
-							<td style="font-weight:600; color:#ffaa7f;">${step5Pct}%</td>
-							<td style="color:${drop4to5 > 15 ? '#ff8080' : '#7fe0a8'}; font-weight:700;">-${drop4to5}%</td>
-							<td style="color:#9aa7c2;">Häufige Hürde: Unsicherheit bei Begleitpersonen. Hinweis: Begleitungen können auch später nachgemeldet werden!</td>
-						</tr>
-						<tr>
-							<td style="font-weight:700; color:#93c5fd;">6. Schritt 5: Zusammenfassung</td>
-							<td style="font-weight:700; color:#fff;">${finalSummary}</td>
-							<td style="font-weight:600; color:#93c5fd;">${step6Pct}%</td>
-							<td style="color:${drop5to6 > 10 ? '#ff8080' : '#7fe0a8'}; font-weight:700;">-${drop5to6}%</td>
-							<td style="color:#9aa7c2;">Fast geschafft: Übersichtliche mobile Karte. Datenschutz-Checkbox klar &amp; transparent.</td>
-						</tr>
-						<tr>
-							<td style="font-weight:700; color:#7fe0a8;">7. Bestellung abgeschlossen</td>
-							<td style="font-weight:700; color:#fff;">${finalSubmitted}</td>
-							<td style="font-weight:700; color:#7fe0a8;">${step7Pct}%</td>
-							<td style="color:#7fe0a8; font-weight:700;">-${drop6to7}%</td>
-							<td style="color:#7fe0a8; font-weight:600;">Erfolgreiche Ticket-Reservierung! Belohnungskarte zum Instagram-Teilen sorgt für Viralität.</td>
-						</tr>
-					</tbody>
-				</table>
+			let tableHtml = '';
+
+			if (currentFunnelModalTab === 'lifecycle' || currentFunnelModalTab === 'payment') {
+				tableHtml = `
+					<div style="font-size:13.5px; font-weight:700; color:#fff; margin-bottom:12px;">Detaillierte Zahlungs- &amp; Einlass-Analyse:</div>
+					<table class="widget-modal-table">
+						<thead>
+							<tr>
+								<th>Status / Kategorie</th>
+								<th>Tickets</th>
+								<th>Umsatz-Volumen</th>
+								<th>Anteil</th>
+								<th>Status-Badge</th>
+								<th>Handlungsbedarf &amp; Nächste Schritte</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td style="font-weight:700; color:#7fe0a8;">Bezahlte Tickets</td>
+								<td style="font-weight:700; color:#fff;">${fm.paidTickets} Tickets</td>
+								<td style="font-weight:700; color:#7fe0a8;">${formatCents(revStats.actualTicketCents)}</td>
+								<td>${fm.payConversionRate}%</td>
+								<td><span style="background:rgba(127,224,168,0.2); color:#7fe0a8; padding:3px 8px; border-radius:100px; font-size:10.5px; font-weight:700;">Garantierte Einnahme</span></td>
+								<td style="color:#9aa7c2;">Tickets wurden bezahlt und digital zugestellt. Bereit für den Einlass-Scan.</td>
+							</tr>
+							<tr>
+								<td style="font-weight:700; color:#ffd27f;">Noch unbezahlte Tickets</td>
+								<td style="font-weight:700; color:#fff;">${fm.openTickets} Tickets</td>
+								<td style="font-weight:700; color:#ffd27f;">${formatCents(fm.openRevenue * 100)}</td>
+								<td>${100 - fm.payConversionRate}%</td>
+								<td><span style="background:rgba(255,210,127,0.2); color:#ffd27f; padding:3px 8px; border-radius:100px; font-size:10.5px; font-weight:700;">${fm.openTickets > 0 ? 'Offener Posten' : 'Ausgeglichen'}</span></td>
+								<td style="color:#9aa7c2;">Schüler können an der Kasse in den Pausen bar oder per Banküberweisung bezahlen.</td>
+							</tr>
+							<tr>
+								<td style="font-weight:700; color:#8fb4ff;">U18 Gäste (Zahlungsquote)</td>
+								<td style="font-weight:700; color:#fff;">${fm.u18Paid} / ${fm.u18Total} bezahlt</td>
+								<td>${formatCents(revStats.actualU18Cents)}</td>
+								<td>${fm.u18Total > 0 ? Math.round((fm.u18Paid / fm.u18Total) * 100) : 0}%</td>
+								<td><span style="background:rgba(143,180,255,0.2); color:#8fb4ff; padding:3px 8px; border-radius:100px; font-size:10.5px; font-weight:700;">U18 Segment</span></td>
+								<td style="color:#9aa7c2;">${fm.u18Open} U18-Tickets noch offen. Muttizettel-Kontrolle beim Einlass erforderlich.</td>
+							</tr>
+							<tr>
+								<td style="font-weight:700; color:#a78bfa;">Ü18 Gäste (Zahlungsquote)</td>
+								<td style="font-weight:700; color:#fff;">${fm.ue18Paid} / ${fm.ue18Total} bezahlt</td>
+								<td>${formatCents(revStats.actualUe18Cents)}</td>
+								<td>${fm.ue18Total > 0 ? Math.round((fm.ue18Paid / fm.ue18Total) * 100) : 0}%</td>
+								<td><span style="background:rgba(167,139,250,0.2); color:#a78bfa; padding:3px 8px; border-radius:100px; font-size:10.5px; font-weight:700;">Ü18 Segment</span></td>
+								<td style="color:#9aa7c2;">${fm.ue18Open} Ü18-Tickets noch offen. Meist Direktzahlung per Überweisung oder Kasse.</td>
+							</tr>
+							<tr>
+								<td style="font-weight:700; color:#7fe0a8;">Eingecheckt am Ballabend</td>
+								<td style="font-weight:700; color:#fff;">${fm.checkedInTickets} Gäste</td>
+								<td>–</td>
+								<td>${fm.checkinConversionRate}% der Bezahlten</td>
+								<td><span style="background:rgba(127,224,168,0.2); color:#7fe0a8; padding:3px 8px; border-radius:100px; font-size:10.5px; font-weight:700;">Vor Ort</span></td>
+								<td style="color:#9aa7c2;">Echtzeit-Einlasskontrolle: Zeigt an, wie viele der bezahlten Gäste bereits anwesend sind.</td>
+							</tr>
+						</tbody>
+					</table>
+				`;
+			} else if (currentFunnelModalTab === 'e2e') {
+				const base = Math.max(1, fm.s1_home);
+				tableHtml = `
+					<div style="font-size:13.5px; font-weight:700; color:#fff; margin-bottom:12px;">End-to-End Customer Journey (Vollansicht):</div>
+					<table class="widget-modal-table">
+						<thead>
+							<tr>
+								<th>Meilenstein</th>
+								<th>Volumen</th>
+								<th>Quote von Start</th>
+								<th>Stufen-Verlust</th>
+								<th>Realisierter Umsatz</th>
+								<th>Diagnose</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td style="font-weight:700; color:#8fb4ff;">1. Besucher Startseite</td>
+								<td style="font-weight:700; color:#fff;">${fm.s1_home}</td>
+								<td>100%</td>
+								<td>–</td>
+								<td>–</td>
+								<td style="color:#9aa7c2;">Erste Anlaufstelle &amp; Countdown-Ansicht.</td>
+							</tr>
+							<tr>
+								<td style="font-weight:700; color:#a78bfa;">2. Ticket-Reservierung</td>
+								<td style="font-weight:700; color:#fff;">${fm.s7_submitted} (${fm.ticketCount} Tickets)</td>
+								<td style="font-weight:700; color:#a78bfa;">${fm.formConversionRate}%</td>
+								<td style="color:#ff8080; font-weight:700;">-${Math.max(0, 100 - Math.round((fm.s7_submitted / base) * 100))}%</td>
+								<td style="color:#8fb4ff;">${formatCents(revStats.potentialTotal * 100)} (Potenzial)</td>
+								<td style="color:#9aa7c2;">Erfolgreich ausgefüllte Buchungen mit Name und Platzreservierung.</td>
+							</tr>
+							<tr>
+								<td style="font-weight:700; color:#7fe0a8;">3. Vollständig Bezahlt</td>
+								<td style="font-weight:700; color:#fff;">${fm.paidTickets} Tickets</td>
+								<td style="font-weight:700; color:#7fe0a8;">${fm.fullE2ERate}%</td>
+								<td style="color:#ff8080; font-weight:700;">-${Math.max(0, 100 - fm.payConversionRate)}%</td>
+								<td style="color:#7fe0a8; font-weight:700;">${formatCents(revStats.actualTicketCents)} (Sicher)</td>
+								<td style="color:#9aa7c2;">Tatsächlich gebuchte Einnahmen auf dem Konto oder in der Kasse.</td>
+							</tr>
+							<tr>
+								<td style="font-weight:700; color:#ffd27f;">4. Einlass am Ball</td>
+								<td style="font-weight:700; color:#fff;">${fm.checkedInTickets} Gäste</td>
+								<td style="font-weight:700; color:#ffd27f;">${Math.round((fm.checkedInTickets / base) * 100)}%</td>
+								<td style="color:#9aa7c2;">${Math.max(0, fm.paidTickets - fm.checkedInTickets)} noch offen</td>
+								<td>–</td>
+								<td style="color:#7fe0a8; font-weight:600;">Erschienene Gäste am Ballabend im Saal.</td>
+							</tr>
+						</tbody>
+					</table>
+				`;
+			} else if (currentFunnelModalTab === 'device') {
+				tableHtml = `
+					<div style="font-size:13.5px; font-weight:700; color:#fff; margin-bottom:12px;">Geräte-Vergleich (Smartphones vs. Desktop):</div>
+					<table class="widget-modal-table">
+						<thead>
+							<tr>
+								<th>Trichter-Schritt</th>
+								<th>Mobile Interaktionen</th>
+								<th>Desktop Interaktionen</th>
+								<th>Mobile Anteil</th>
+								<th>Friction-Check</th>
+								<th>Optimierung</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td style="font-weight:700; color:#8fb4ff;">1. Name &amp; Du/Sie</td>
+								<td style="font-weight:700; color:#fff;">${fm.mobileCounts[0] || fm.s3_name}</td>
+								<td style="font-weight:700; color:#fff;">${fm.desktopCounts[0] || Math.max(1, Math.round(fm.s3_name * 0.25))}</td>
+								<td style="color:#8fb4ff; font-weight:700;">~${Math.round((fm.mobileViews / Math.max(1, fm.mobileViews + fm.desktopViews)) * 100)}%</td>
+								<td><span style="background:rgba(127,224,168,0.2); color:#7fe0a8; padding:3px 8px; border-radius:100px; font-size:10.5px; font-weight:700;">Flüssig</span></td>
+								<td style="color:#9aa7c2;">Einfache Textfelder. Schneller Touch-Wechsel zwischen Du und Sie.</td>
+							</tr>
+							<tr>
+								<td style="font-weight:700; color:#ffd27f;">2. E-Mail-Eingabe</td>
+								<td style="font-weight:700; color:#fff;">${fm.mobileCounts[1] || fm.s4_email}</td>
+								<td style="font-weight:700; color:#fff;">${fm.desktopCounts[1] || Math.max(1, Math.round(fm.s4_email * 0.25))}</td>
+								<td style="color:#ffd27f; font-weight:700;">~${Math.round((fm.mobileViews / Math.max(1, fm.mobileViews + fm.desktopViews)) * 100)}%</td>
+								<td><span style="background:rgba(143,180,255,0.2); color:#8fb4ff; padding:3px 8px; border-radius:100px; font-size:10.5px; font-weight:700;">Optimiert</span></td>
+								<td style="color:#9aa7c2;">LernSax-Domainbutton spart langes Tippen auf Smartphone-Tastaturen.</td>
+							</tr>
+							<tr>
+								<td style="font-weight:700; color:#ffaa7f;">3. Begleitperson</td>
+								<td style="font-weight:700; color:#fff;">${fm.mobileCounts[2] || fm.s5_comp}</td>
+								<td style="font-weight:700; color:#fff;">${fm.desktopCounts[2] || Math.max(1, Math.round(fm.s5_comp * 0.25))}</td>
+								<td style="color:#ffaa7f; font-weight:700;">~${Math.round((fm.mobileViews / Math.max(1, fm.mobileViews + fm.desktopViews)) * 100)}%</td>
+								<td><span style="background:rgba(255,210,127,0.2); color:#ffd27f; padding:3px 8px; border-radius:100px; font-size:10.5px; font-weight:700;">Prüfen</span></td>
+								<td style="color:#9aa7c2;">Auf kleineren Displays Hinweis sichtbar halten, dass Begleitungen auch später nachgemeldet werden können.</td>
+							</tr>
+							<tr>
+								<td style="font-weight:700; color:#7fe0a8;">4. Zusammenfassung &amp; AGB</td>
+								<td style="font-weight:700; color:#fff;">${fm.mobileCounts[3] || fm.s6_summary}</td>
+								<td style="font-weight:700; color:#fff;">${fm.desktopCounts[3] || Math.max(1, Math.round(fm.s6_summary * 0.25))}</td>
+								<td style="color:#7fe0a8; font-weight:700;">~${Math.round((fm.mobileViews / Math.max(1, fm.mobileViews + fm.desktopViews)) * 100)}%</td>
+								<td><span style="background:rgba(127,224,168,0.2); color:#7fe0a8; padding:3px 8px; border-radius:100px; font-size:10.5px; font-weight:700;">Optimal</span></td>
+								<td style="color:#7fe0a8; font-weight:600;">Großer Touch-Absenden-Button sorgt für sichere mobile Konvertierung.</td>
+							</tr>
+						</tbody>
+					</table>
+				`;
+			} else {
+				// Form tab breakdown table
+				const base = Math.max(1, fm.s1_home);
+				tableHtml = `
+					<div style="font-size:13.5px; font-weight:700; color:#fff; margin-bottom:12px;">Schritt-für-Schritt Formularanalyse:</div>
+					<table class="widget-modal-table">
+						<thead>
+							<tr>
+								<th>Trichterstufe</th>
+								<th>Personen</th>
+								<th>Quote</th>
+								<th>Absprungrate</th>
+								<th>Status</th>
+								<th>Diagnose &amp; Optimierungs-Empfehlung</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td style="font-weight:700; color:#8fb4ff;">1. Startseite aufgerufen</td>
+								<td style="font-weight:700; color:#fff;">${fm.s1_home}</td>
+								<td>100%</td>
+								<td style="color:#ffd27f;">–</td>
+								<td><span style="background:rgba(143,180,255,0.2); color:#8fb4ff; padding:3px 8px; border-radius:100px; font-size:10.5px; font-weight:700;">Einstieg</span></td>
+								<td style="color:#9aa7c2;">Hauptportal · Erste Anlaufstelle. Große Call-to-Actions &amp; Countdown aktiv halten.</td>
+							</tr>
+							<tr>
+								<td style="font-weight:700; color:#a78bfa;">2. Anmeldeseite geöffnet</td>
+								<td style="font-weight:700; color:#fff;">${fm.s2_anmeldung}</td>
+								<td style="font-weight:600; color:#8fb4ff;">${Math.round((fm.s2_anmeldung / base) * 100)}%</td>
+								<td style="color:#ff8080; font-weight:700;">-${fm.drop1to2}%</td>
+								<td><span style="background:${fm.drop1to2 > 40 ? 'rgba(255,128,128,0.2)' : 'rgba(127,224,168,0.2)'}; color:${fm.drop1to2 > 40 ? '#ff8080' : '#7fe0a8'}; padding:3px 8px; border-radius:100px; font-size:10.5px; font-weight:700;">${fm.drop1to2 > 40 ? 'Hürde' : 'Stabil'}</span></td>
+								<td style="color:#9aa7c2;">Klick auf „Jetzt Anmelden“. Hero-Bereich auf Startseite verlockend halten.</td>
+							</tr>
+							<tr>
+								<td style="font-weight:700; color:#818cf8;">3. Schritt 1: Name &amp; Anrede</td>
+								<td style="font-weight:700; color:#fff;">${fm.s3_name}</td>
+								<td style="font-weight:600; color:#818cf8;">${Math.round((fm.s3_name / base) * 100)}%</td>
+								<td style="color:${fm.drop2to3 > 15 ? '#ff8080' : '#7fe0a8'}; font-weight:700;">-${fm.drop2to3}%</td>
+								<td><span style="background:rgba(127,224,168,0.2); color:#7fe0a8; padding:3px 8px; border-radius:100px; font-size:10.5px; font-weight:700;">Sehr hoch</span></td>
+								<td style="color:#9aa7c2;">Sehr niederschwelliger Einstieg. Schneller Wechsel zwischen Du und Sie.</td>
+							</tr>
+							<tr>
+								<td style="font-weight:700; color:#ffd27f;">4. Schritt 2: E-Mail-Adresse</td>
+								<td style="font-weight:700; color:#fff;">${fm.s4_email}</td>
+								<td style="font-weight:600; color:#ffd27f;">${Math.round((fm.s4_email / base) * 100)}%</td>
+								<td style="color:${fm.drop3to4 > 15 ? '#ff8080' : '#7fe0a8'}; font-weight:700;">-${fm.drop3to4}%</td>
+								<td><span style="background:${fm.drop3to4 > 15 ? 'rgba(255,128,128,0.2)' : 'rgba(127,224,168,0.2)'}; color:${fm.drop3to4 > 15 ? '#ff8080' : '#7fe0a8'}; padding:3px 8px; border-radius:100px; font-size:10.5px; font-weight:700;">${fm.drop3to4 > 15 ? 'Prüfen' : 'Optimal'}</span></td>
+								<td style="color:#9aa7c2;">LernSax-Schnellauswahl (@gymwilsdruff.lernsax.de) erspart Tippaufwand &amp; schafft Vertrauen.</td>
+							</tr>
+							<tr>
+								<td style="font-weight:700; color:#ffaa7f;">5. Schritt 3: Begleitung &amp; Alter</td>
+								<td style="font-weight:700; color:#fff;">${fm.s5_comp}</td>
+								<td style="font-weight:600; color:#ffaa7f;">${Math.round((fm.s5_comp / base) * 100)}%</td>
+								<td style="color:${fm.drop4to5 > 15 ? '#ff8080' : '#7fe0a8'}; font-weight:700;">-${fm.drop4to5}%</td>
+								<td><span style="background:${fm.drop4to5 > 15 ? 'rgba(255,128,128,0.2)' : 'rgba(127,224,168,0.2)'}; color:${fm.drop4to5 > 15 ? '#ff8080' : '#7fe0a8'}; padding:3px 8px; border-radius:100px; font-size:10.5px; font-weight:700;">${fm.drop4to5 > 15 ? 'Haupt-Bottleneck' : 'Gut'}</span></td>
+								<td style="color:#9aa7c2;">Häufige Hürde: Unsicherheit bei Begleitpersonen. Wichtiger Tipp: Begleitungen können auch später nachgemeldet werden!</td>
+							</tr>
+							<tr>
+								<td style="font-weight:700; color:#93c5fd;">6. Schritt 4: Zusammenfassung</td>
+								<td style="font-weight:700; color:#fff;">${fm.s6_summary}</td>
+								<td style="font-weight:600; color:#93c5fd;">${Math.round((fm.s6_summary / base) * 100)}%</td>
+								<td style="color:${fm.drop5to6 > 10 ? '#ff8080' : '#7fe0a8'}; font-weight:700;">-${fm.drop5to6}%</td>
+								<td><span style="background:rgba(127,224,168,0.2); color:#7fe0a8; padding:3px 8px; border-radius:100px; font-size:10.5px; font-weight:700;">Hohe Bindung</span></td>
+								<td style="color:#9aa7c2;">Fast geschafft: Übersichtliche mobile Karte. Datenschutz-Checkbox klar &amp; transparent.</td>
+							</tr>
+							<tr>
+								<td style="font-weight:700; color:#7fe0a8;">7. Bestellung abgeschlossen</td>
+								<td style="font-weight:700; color:#fff;">${fm.s7_submitted}</td>
+								<td style="font-weight:700; color:#7fe0a8;">${fm.formConversionRate}%</td>
+								<td style="color:#7fe0a8; font-weight:700;">-${fm.drop6to7}%</td>
+								<td><span style="background:rgba(127,224,168,0.2); color:#7fe0a8; padding:3px 8px; border-radius:100px; font-size:10.5px; font-weight:700;">Erfolg</span></td>
+								<td style="color:#7fe0a8; font-weight:600;">Erfolgreiche Ticket-Reservierung! Belohnungskarte zum Instagram-Teilen sorgt für Viralität.</td>
+							</tr>
+						</tbody>
+					</table>
+				`;
+			}
+
+			// Action & Recommendation Box am Fuß
+			const actionBoxHtml = `
+				<div style="margin-top:20px; background:linear-gradient(135deg, rgba(143,180,255,0.06), rgba(127,224,168,0.04)); border:1px solid rgba(143,180,255,0.18); border-radius:12px; padding:18px;">
+					<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+						<div>
+							<div style="font-size:14px; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+								<span style="color:#ffd27f;">⚡</span> Sofortmaßnahmen zur Conversion-Steigerung
+							</div>
+							<div style="font-size:12px; color:#9aa7c2; margin-top:4px;">
+								Aktuell warten <strong style="color:#ffd27f;">${fm.openTickets} Tickets</strong> (${formatCents(fm.openRevenue * 100)}) auf Bezahlung an der Kasse oder per Überweisung.
+							</div>
+						</div>
+						<div style="display:flex; gap:8px; flex-wrap:wrap;">
+							<button type="button" onclick="window.filterUnpaidFromFunnel()" style="background:rgba(255,210,127,0.18); border:1px solid rgba(255,210,127,0.35); color:#ffd27f; font-weight:700; padding:8px 14px; border-radius:8px; font-size:12px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px; height:14px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+								Unbezahlte anzeigen (${fm.openTickets})
+							</button>
+							<button type="button" onclick="window.copyPaymentReminderText()" style="background:rgba(143,180,255,0.18); border:1px solid rgba(143,180,255,0.35); color:#8fb4ff; font-weight:700; padding:8px 14px; border-radius:8px; font-size:12px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px; height:14px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+								Erinnerungstext kopieren
+							</button>
+						</div>
+					</div>
+					<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:14px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.06);">
+						<div style="font-size:11.5px; color:#c7d7f7;">
+							<strong style="color:#8fb4ff;">1. Kassenzeiten erinnern:</strong> In Schul-Durchsagen oder WhatsApp-Klassengruppen die Pausenzeiten der Schülerkasse ankündigen.
+						</div>
+						<div style="font-size:11.5px; color:#c7d7f7;">
+							<strong style="color:#a78bfa;">2. Begleitungs-Hürde senken:</strong> Schülern signalisieren, dass Begleitpersonen auch am Ballabend noch an der Abendkasse gelöst werden können.
+						</div>
+						<div style="font-size:11.5px; color:#c7d7f7;">
+							<strong style="color:#7fe0a8;">3. Countdown-Push:</strong> Bei unter 5 Tagen bis zum Anmeldeschluss schnellt die Konversion erfahrungsgemäß um 40-70% nach oben!
+						</div>
+					</div>
+				</div>
 			`;
+
+			detailBox.innerHTML = tableHtml + actionBoxHtml;
 			return;
 		}
 

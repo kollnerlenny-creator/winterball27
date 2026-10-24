@@ -3,38 +3,26 @@
 ## Status: Abgeschlossen (Completed)
 
 ### 1. Zentralisierung & Harmonisierung der Finanzmetriken (`calculateRevenueStats()`)
-- [x] Zentrale Hilfsfunktion `calculateRevenueStats()` eingeführt, die:
-  - Tickets nach `t.paid` oder Parent-Registrierung `r.paid` prüft.
-  - Dynamische Preise (`ticketPrices.u18` / `ticketPrices.ue18` bzw. `t.price`) exakt berücksichtigt.
-  - Spenden (`r.donation`) separat und centgenau für bezahlte sowie noch offene Registrierungen ermittelt.
-  - Gesamtsummen auf den Cent genau errechnet: `actualTickets`, `actualDonations`, `actualTotal`, `pendingTotal`, `potentialTotal`.
-- [x] Überall synchronisiert:
-  - Oberste KPI-Kachel `statRevenue` & `statProjectedRevenue`
-  - Widget "Finanz- & Ticketprognose" (Kachel + Detailmodal)
-  - Widget "U18 / Ü18 Demografie" (Spendenkachel + Modal-Einnahmenverteilung)
-  - Pricing-Listener aktualisiert bei Preisänderungen sofort die Charts via `scheduleCharts()`.
+- [x] Zentrale Hilfsfunktion `calculateRevenueStats()` eingeführt.
+- [x] Oberste KPI-Kacheln, Prognose-Widget und Demografie centgenau synchronisiert.
 
-### 2. Neuer Klassen- & Stufen-Breakdown im Demografie-Modal (`getGuestClassBreakdown()`)
-- [x] Intelligente Zuordnung von Gästen zu Klassen/Stufen:
-  - Liest `t.schoolClass` / `r.schoolClass` aus oder extrahiert die Stufe aus LernSax-E-Mails (`s...` oder `jahrgang...`).
-  - Stellt Nicht-Schüler / Externe sauber als "Gäste / Externe" dar.
-- [x] Vollständige Visualisierung im Demografie-Modal:
-  - Horizontales Balkendiagramm mit Teilnehmerzahlen je Klasse
-  - Detaillierte Tabelle mit Rang, Klasse/Stufe, Gästezahl, U18/Ü18-Verteilung und Prozentanteil.
+### 2. Detaillierter Klassen- & Stufen-Breakdown (`getGuestClassBreakdown()`)
+- [x] Intelligente Klassenstufenzuordnung mit Rangliste und Balkendiagramm.
 
-### 3. Echte Daten & Toggle im Stoßzeiten-Widget (`peakTimes`)
-- [x] Fallback-Dummy-Zahlen entfernt:
-  - Widget aggregiert nun primär echte Buchungszeitpunkte (`allTickets.createdAt` / `allRegs.createdAt`).
-  - Wenn `allPageviews` vorhanden sind, steht im Modal ein interaktiver Toggle (`window.switchPeakTimeMetric('tickets')` vs `'pageviews'`) zur Verfügung.
-  - Bei noch geringer Datenbasis wird ein klarer Hinweis und der aktuelle Buchungsschwerpunkt angezeigt.
+### 3. Reale Daten für Stoßzeiten (`peakTimes`)
+- [x] 24h-Kurve aus realen Buchungs- bzw. Webseitenaufrufen mit Metrik-Umschalter.
 
-### 4. Bereinigung & Ausbau des Konversionstrichters (`conversionFunnel`)
-- [x] Robuste Fallback-Logik implementiert:
-  - Wenn noch keine Pageview-Events getrackt wurden, wird nicht mehr fälschlicherweise ein 0%-Absturz dargestellt, sondern die tatsächlichen Registrierungsphasen (Gestartet -> Bezahlt -> Eingecheckt) als zuverlässige Konversionskette.
-  - Im Modal wird eine Engpass-Analyse (Bottleneck) mit Optimierungsempfehlungen angezeigt.
-
-### 5. Intelligente Prognose & Catering-Empfehlungen (`getForecastMetrics()`)
-- [x] Verkaufsgeschwindigkeit (Tickets/Tag) wird auf Basis der tatsächlichen Ticket-Buchungstage errechnet (nicht verwässert durch Website-Traffic-Tage).
-- [x] Hochrechnung des Ausverkaufsdatums (`projectedSellOutDate`) relativ zur eingestellten Hallenkapazität.
-- [x] Catering- & Ressourcen-Planung im Modal:
-  - Empfohlene Mindestmengen für Begrüßungsgetränke, U18-Softdrinks und Ü18-Getränkevorrat basierend auf der aktuellen Altersverteilung.
+### 4. Vollständiger Ausbau des Conversion-Funnels (`getFunnelMetrics()`)
+- [x] **Widget-Card erweitert**:
+  - Segmentierter Sub-Tab Umschalter: `[Formular]`, `[Kasse & Einlass]`, `[End-to-End]` direkt im Dashboard ohne Neuladen.
+  - Dynamische Balken, Raten und Engpassanzeigen je nach Modus.
+- [x] **Detail-Modal zur Conversion-Intelligence Suite ausgebaut**:
+  - **Tab 1: 🌐 Formular-Trichter**: 7 granulare Schritte vom Startseitenbesuch über Name, E-Mail, Begleitung bis zur fertigen Reservierung inkl. Monotonie-Glättung und relativer Drop-off Analyse.
+  - **Tab 2: 🎟️ End-to-End Lifecycle**: Nahtlose Betrachtung von erstem Website-Besucher bis zum eingecheckten Ballgast mit quantifizierten Verlusten in Personen und Euro.
+  - **Tab 3: 💳 Kassen- & Einlassstatus**: Fokus auf bezahlte vs. unbezahlte Tickets, U18- vs. Ü18-Bezahlquoten und tatsächliche Check-in Quote am Einlass.
+  - **Tab 4: 📱 Mobile vs. Desktop**: Vergleich der Conversion und Abbruchraten zwischen Smartphones und Computern mit Touch-Optimierungsempfehlungen.
+  - **Zeitraum-Filter**: Umschalter für `Gesamt`, `Letzte 7 Tage` und `Letzte 24 Stunden`.
+  - **Action-Box**: 
+    - 1-Klick-Sprung zur Gästeliste mit Vorfilter auf `unpaid` (`filterUnpaidFromFunnel()`).
+    - 1-Klick-Kopierfunktion für freundliche Zahlungserinnerungen für WhatsApp & Mail (`copyPaymentReminderText()`).
+    - Automatische Conversion-Tipps basierend auf dem aktuell größten Engpass.
