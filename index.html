@@ -1636,7 +1636,56 @@
  updateCountdown();
  setInterval(updateCountdown, 1000);
 
- // --- Live-Ticketzähler ---
+ // --- Wartungsmodus-Überwachung ---
+	onSnapshot(doc(db, 'settings', 'maintenance'), (snap) => {
+		const data = snap.exists() ? snap.data() : {};
+		const enabled = !!data.enabled;
+		const message = data.message || 'Wir führen gerade planmäßige Wartungsarbeiten durch, um die Seite für euch zu optimieren. In Kürze ist die Anmeldung wieder regulär geöffnet!';
+
+		let overlay = document.getElementById('winterballMaintenanceOverlay');
+		if (enabled) {
+			if (!overlay) {
+				overlay = document.createElement('div');
+				overlay.id = 'winterballMaintenanceOverlay';
+				overlay.style.cssText = 'position:fixed; inset:0; z-index:9999999; background:radial-gradient(circle at 50% 30%, #152238 0%, #080c14 100%); display:flex; align-items:center; justify-content:center; padding:20px; font-family:system-ui, -apple-system, sans-serif; color:#fff; text-align:center;';
+				document.body.appendChild(overlay);
+				document.body.style.overflow = 'hidden';
+			}
+			overlay.innerHTML = `
+				<div style="background:rgba(14,22,38,0.88); border:1px solid rgba(255,255,255,0.14); box-shadow:0 25px 70px rgba(0,0,0,0.7); backdrop-filter:blur(25px); -webkit-backdrop-filter:blur(25px); border-radius:22px; padding:42px 28px; max-width:500px; width:100%; position:relative;">
+					<div style="width:68px; height:68px; margin:0 auto 20px; border-radius:50%; background:rgba(255,210,127,0.15); border:1px solid rgba(255,210,127,0.35); display:flex; align-items:center; justify-content:center; font-size:32px; box-shadow:0 0 25px rgba(255,210,127,0.2);">
+						❄️
+					</div>
+					<div style="font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#ffd27f; margin-bottom:8px;">
+						WINTERBALL 2027
+					</div>
+					<h1 style="font-size:26px; font-weight:800; margin:0 0 14px; color:#fff; line-height:1.25;">
+						Kurze Wartungsarbeiten
+					</h1>
+					<p style="font-size:14px; color:#c7d7f7; line-height:1.6; margin:0 0 24px;">
+						${escapeHtml(message)}
+					</p>
+					<div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.05); padding:8px 16px; border-radius:100px; border:1px solid rgba(255,255,255,0.08); font-size:12px; color:#9aa7c2; margin-bottom:24px;">
+						<span style="width:8px; height:8px; border-radius:50%; background:#ffd27f; box-shadow:0 0 8px #ffd27f; display:inline-block;"></span>
+						<span>Optimierung im Gange · Gleich wieder da</span>
+					</div>
+					<div>
+						<button type="button" onclick="window.location.reload()" style="background:linear-gradient(135deg, rgba(143,180,255,0.25), rgba(127,224,168,0.25)); border:1px solid rgba(143,180,255,0.4); color:#fff; font-weight:700; padding:11px 24px; border-radius:10px; font-size:13px; cursor:pointer; transition:all 0.2s ease;">
+							Seite neu laden ↻
+						</button>
+					</div>
+				</div>
+			`;
+			overlay.style.display = 'flex';
+		} else {
+			if (overlay) {
+				overlay.style.display = 'none';
+				document.body.style.overflow = '';
+			}
+		}
+	}, (err) => console.warn('Wartungsmodus-Listener:', err));
+
+	// --- Live-Ticketzähler ---
  onSnapshot(doc(db, 'settings', 'stats'), (snap) => {
  const count = snap.exists() ? Number(snap.data().ticketCount || 0) : 0;
  const wrap = document.getElementById('liveCounter');

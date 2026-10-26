@@ -1473,6 +1473,14 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 <body>
+	<!-- Wartungsmodus Alert Banner für Admins -->
+	<div id="adminMaintenanceAlertBanner" style="display:none; background:linear-gradient(90deg, rgba(255,100,100,0.25), rgba(245,158,11,0.22)); border-bottom:1px solid rgba(255,170,127,0.45); padding:10px 16px; text-align:center; font-size:12.5px; font-weight:700; color:#ffd27f; position:sticky; top:0; z-index:9999; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);">
+		<span>⚠️ WARTUNGSMODUS IST AKTIV: Öffentliche Besucher sehen derzeit den Wartungshinweis und können keine Tickets buchen!</span>
+		<button type="button" onclick="window.quickDisableMaintenance()" style="margin-left:12px; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.3); color:#fff; border-radius:6px; padding:3px 12px; font-size:11.5px; font-weight:700; cursor:pointer; transition:all 0.2s ease;">
+			Jetzt beenden (Live schalten) 🚀
+		</button>
+	</div>
+
 
 <div class="login-card" id="loginCard">
  <h1 style="margin-bottom:16px;">Admin Login</h1>
@@ -2396,8 +2404,9 @@
  </div>
 
  <div class="info-editor">
- <label for="lernsaxThresholdInput">LernSax-Versand: Ab dieser Klassenstufe funktioniert der Weltweit-Modus (Mail geht normal raus). Darunter wird automatisch über deine eigene LernSax-Adresse verschickt.</label>
- <input type="number" id="lernsaxThresholdInput" min="1" max="13" style="max-width:120px;" placeholder="z.B. 9">
+ <label for="lernsaxThresholdInput">LernSax-Versand: Bis einschließlich zu dieser Klassenstufe über deine eigene LernSax-Adresse verschicken (z.B. 7 = Klassen 5, 6 und 7 über LernSax; ab Klasse 8 normal über Brevo).</label>
+ <input type="number" id="lernsaxThresholdInput" min="1" max="13" style="max-width:120px;" placeholder="z.B. 7">
+ <div style="font-size:11.5px; color:var(--text-dim); margin-top:4px;">Schüler bis einschließlich dieser Klasse können meist keine weltweiten E-Mails empfangen. Mails an sie gehen automatisch von deiner LernSax-Adresse raus.</div>
  <div class="info-editor-actions">
  <button id="lernsaxThresholdSaveBtn">Speichern</button>
  <span class="price-saved" id="lernsaxThresholdSaved">
@@ -2408,7 +2417,46 @@
  </div>
  </div>
 
- <div class="settings-section">
+ <div class="settings-section" style="border:1px solid rgba(255,170,127,0.28); background:rgba(255,170,127,0.03);">
+				<div class="settings-section-title" style="color:#ffd27f;">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-title-svg" style="color:#ffd27f;"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+					<span>Wartungsmodus (Website &amp; Anmeldung pausieren)</span>
+				</div>
+				<div class="info-editor">
+					<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
+						<div style="flex:1; min-width:240px;">
+							<div style="font-weight:700; color:#fff; font-size:14px;">Wartungsarbeiten-Sperre für Besucher</div>
+							<div style="font-size:12px; color:var(--text-dim); margin-top:3px; line-height:1.45;">
+								Wenn aktiviert, sehen reguläre Gäste auf der Start- und Anmeldeseite einen edlen Wartungsbildschirm. Buchungen sind währenddessen pausiert. Der Admin-Bereich bleibt für euch jederzeit voll erreichbar.
+							</div>
+						</div>
+						<div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+							<span id="maintenanceStatusBadge" style="padding:5px 12px; border-radius:100px; font-size:11.5px; font-weight:700; background:rgba(127,224,168,0.15); color:#7fe0a8; border:1px solid rgba(127,224,168,0.3);">
+								● Website ist LIVE (Wartung AUS)
+							</span>
+							<button type="button" id="maintenanceToggleBtn" style="padding:8px 16px; border-radius:8px; font-weight:700; font-size:12.5px; cursor:pointer; transition:all 0.2s ease; background:rgba(255,170,127,0.2); color:#ffd27f; border:1px solid rgba(255,170,127,0.4);">
+								Wartungsmodus aktivieren
+							</button>
+						</div>
+					</div>
+
+					<label for="maintenanceMessageInput" style="margin-top:10px;">Individuelle Meldung für Besucher (optional)</label>
+					<textarea id="maintenanceMessageInput" placeholder="z.B. Wir führen gerade planmäßige Wartungsarbeiten durch. In Kürze ist die Anmeldung wieder erreichbar!" style="min-height:68px;"></textarea>
+
+					<div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; flex-wrap:wrap; gap:10px;">
+						<div style="font-size:11.5px; color:#c7d7f7;" id="maintenanceLastUpdated">Zuletzt aktualisiert: —</div>
+						<div class="info-editor-actions">
+							<button id="maintenanceMessageSaveBtn">Nachricht speichern</button>
+							<span class="price-saved" id="maintenanceSaved">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><polyline points="20 6 9 17 4 12"/></svg>
+								<span>Gespeichert</span>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="settings-section">
  <div class="settings-section-title">
  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="section-title-svg"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
  <span>Ablaufplan des Abends</span>
@@ -6229,11 +6277,29 @@ let allRatings = [];
  return `${localPart}@gymwilsdruff.lernsax.de`;
  }
 
- function shouldUseLernSax(email){
+ function shouldUseLernSax(email, schoolClass = null){
  if (!lernsaxThreshold) return false;
+ const [local, domain] = String(email || '').toLowerCase().split('@');
+ if (!domain || !domain.endsWith('lernsax.de')) return false;
+
+ // 1. Wenn Klassenstufe angegeben (z.B. "7a", "7", "Klasse 7")
+ if (schoolClass) {
+ const m = String(schoolClass).match(/(\d+)/);
+ if (m) {
+ const g = parseInt(m[1], 10);
+ if (g >= 5 && g <= 12) {
+ return g <= lernsaxThreshold;
+ }
+ }
+ }
+
+ // 2. Klassenstufe aus LernSax-Adresse berechnen
  const grade = gradeFromEmail(email);
- if (grade === null) return false;
- return grade < lernsaxThreshold;
+ if (grade !== null) {
+ return grade <= lernsaxThreshold;
+ }
+
+ return false;
  }
 
  onAuthStateChanged(auth, (user) => {
@@ -6408,7 +6474,15 @@ let allRatings = [];
  scheduleCharts();
  }, onErr('pricing'));
 
- onSnapshot(doc(db, 'settings', 'info'), (snap) => {
+ onSnapshot(doc(db, 'settings', 'maintenance'), (snap) => {
+			const data = snap.exists() ? snap.data() : {};
+			const enabled = !!data.enabled;
+			const msg = data.message || '';
+			const updated = data.updatedAt ? tsToDate(data.updatedAt) : null;
+			updateMaintenanceUI(enabled, msg, updated);
+		}, onErr('maintenance'));
+
+		onSnapshot(doc(db, 'settings', 'info'), (snap) => {
  document.getElementById('infoText').value = snap.exists() ? (snap.data().text || '') : '';
  }, onErr('info'));
 
@@ -7690,13 +7764,16 @@ let allRatings = [];
  ...t,
  price: freshPrices[t.category] || 0
  })),
- useLernSax: shouldUseLernSax(email),
+ useLernSax: shouldUseLernSax(email, schoolClass),
   donation: Number(reg.donation || 0)
  })
  });
+ const resData = await res.json().catch(() => ({}));
  if (!res.ok) {
- const errData = await res.json().catch(() => ({}));
- throw new Error(errData.error || `Ticket-Mail konnte nicht gesendet werden (${res.status})`);
+ throw new Error(resData.error || `Ticket-Mail konnte nicht gesendet werden (${res.status})`);
+ }
+ if (resData.via) {
+ console.log('Ticket mail dispatch via:', resData.via);
  }
  } else {
  saveBtn.textContent = 'Bestätigung wird gesendet...';
@@ -7786,17 +7863,31 @@ let allRatings = [];
  name: t.name, ticketId: t.ticketId, category: t.category,
  price: freshPrices[t.category] || 0
  })),
- useLernSax: shouldUseLernSax(reg.email),
+ useLernSax: shouldUseLernSax(reg.email, reg.schoolClass),
   donation: donationEuro
  })
  });
 
+ const resData = await res.json().catch(() => ({}));
  if(!res.ok) {
- const errData = await res.json().catch(() => ({}));
- throw new Error(errData.error || `Server meldet HTTP ${res.status}`);
+ throw new Error(resData.error || `Server meldet HTTP ${res.status}`);
  }
 
- if (donationCents > 0) { showAdminToast('Zahlung erfasst (' + formatCents(ticketsDueCents(regId)) + ' + ' + formatCents(donationCents) + ' Spende)! Vielen Dank! 💛'); } else { showAdminToast('Zahlung erfasst & Tickets erfolgreich per E-Mail versendet!'); }
+ const expectedLernSax = shouldUseLernSax(reg.email, reg.schoolClass);
+ let channelNotice = '';
+ if (resData.via === 'lernsax') {
+ channelNotice = ' (über LernSax ✉️)';
+ } else if (resData.via === 'brevo') {
+ channelNotice = expectedLernSax
+ ? ' (über Brevo ⚠️ – LernSax-SMTP fehlgeschlagen oder nicht erreichbar)'
+ : ' (über Brevo 🚀)';
+ }
+
+ if (donationCents > 0) {
+ showAdminToast('Zahlung erfasst (' + formatCents(ticketsDueCents(regId)) + ' + ' + formatCents(donationCents) + ' Spende)! Mails versendet' + channelNotice + '! 💛');
+ } else {
+ showAdminToast('Zahlung erfasst & Tickets versendet' + channelNotice + '!');
+ }
  } catch(err){
  console.error(err.message || String(err));
  alert('Als bezahlt markiert, aber Ticket-Mail konnte nicht verschickt werden:\n\n' + err.message);
@@ -8886,7 +8977,7 @@ let allRatings = [];
  name: t.name, ticketId: t.ticketId, category: t.category,
  price: freshPrices[t.category] || 0
  })),
- useLernSax: shouldUseLernSax(reg.email),
+ useLernSax: shouldUseLernSax(reg.email, reg.schoolClass),
   donation: Number(reg.donation || 0)
  })
  });
@@ -9578,6 +9669,117 @@ let allRatings = [];
  if (prevEl) prevEl.innerHTML = html;
  });
  document.getElementById('executePrintBtn')?.addEventListener('click', executeEmergencyPrint);
+
+	// --- Wartungsmodus Management & UI ---
+	let isMaintenanceActive = false;
+
+	function updateMaintenanceUI(enabled, message, updatedDate) {
+		isMaintenanceActive = enabled;
+		const badge = document.getElementById('maintenanceStatusBadge');
+		const toggleBtn = document.getElementById('maintenanceToggleBtn');
+		const alertBanner = document.getElementById('adminMaintenanceAlertBanner');
+		const msgInput = document.getElementById('maintenanceMessageInput');
+		const updatedEl = document.getElementById('maintenanceLastUpdated');
+
+		if (badge) {
+			if (enabled) {
+				badge.style.background = 'rgba(255, 128, 128, 0.2)';
+				badge.style.color = '#ff8080';
+				badge.style.borderColor = 'rgba(255, 128, 128, 0.45)';
+				badge.innerHTML = '● Wartungsmodus AKTIV (Besucher gesperrt)';
+			} else {
+				badge.style.background = 'rgba(127, 224, 168, 0.15)';
+				badge.style.color = '#7fe0a8';
+				badge.style.borderColor = 'rgba(127, 224, 168, 0.3)';
+				badge.innerHTML = '● Website ist LIVE (Wartung AUS)';
+			}
+		}
+
+		if (toggleBtn) {
+			if (enabled) {
+				toggleBtn.style.background = 'rgba(127, 224, 168, 0.2)';
+				toggleBtn.style.color = '#7fe0a8';
+				toggleBtn.style.border = '1px solid rgba(127, 224, 168, 0.4)';
+				toggleBtn.textContent = 'Wartungsmodus beenden (Live schalten)';
+			} else {
+				toggleBtn.style.background = 'rgba(255, 170, 127, 0.2)';
+				toggleBtn.style.color = '#ffd27f';
+				toggleBtn.style.border = '1px solid rgba(255, 170, 127, 0.4)';
+				toggleBtn.textContent = 'Wartungsmodus aktivieren';
+			}
+		}
+
+		if (alertBanner) {
+			alertBanner.style.display = enabled ? 'block' : 'none';
+		}
+
+		if (msgInput && document.activeElement !== msgInput) {
+			msgInput.value = message || '';
+		}
+
+		if (updatedEl) {
+			if (updatedDate) {
+				updatedEl.textContent = 'Zuletzt aktualisiert: ' + updatedDate.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }) + ' Uhr';
+			} else {
+				updatedEl.textContent = 'Zuletzt aktualisiert: —';
+			}
+		}
+	}
+
+	window.quickDisableMaintenance = async function() {
+		try {
+			await setDoc(doc(db, 'settings', 'maintenance'), {
+				enabled: false,
+				updatedAt: serverTimestamp()
+			}, { merge: true });
+			showAdminToast('Wartungsmodus beendet – Website ist wieder live! 🚀');
+		} catch(err) {
+			alert('Fehler beim Deaktivieren: ' + (err.message || String(err)));
+		}
+	};
+
+	document.getElementById('maintenanceToggleBtn')?.addEventListener('click', async () => {
+		const newStatus = !isMaintenanceActive;
+		const msgInput = document.getElementById('maintenanceMessageInput');
+		const message = msgInput ? msgInput.value.trim() : '';
+
+		if (newStatus) {
+			const ok = confirm('Möchtest du den Wartungsmodus wirklich aktivieren?\n\nNormale Besucher auf der Start- und Anmeldeseite sehen dann eine Wartungsseite und können keine Tickets buchen. Der Admin-Bereich bleibt für euch wie gewohnt offen.');
+			if (!ok) return;
+		}
+
+		try {
+			await setDoc(doc(db, 'settings', 'maintenance'), {
+				enabled: newStatus,
+				message,
+				updatedAt: serverTimestamp()
+			}, { merge: true });
+
+			showAdminToast(newStatus ? 'Wartungsmodus aktiviert! ⚠️' : 'Website ist wieder live! 🚀');
+		} catch(err) {
+			console.error('Wartungsmodus-Fehler:', err);
+			alert('Fehler beim Speichern: ' + (err.message || String(err)));
+		}
+	});
+
+	document.getElementById('maintenanceMessageSaveBtn')?.addEventListener('click', async () => {
+		const message = document.getElementById('maintenanceMessageInput').value.trim();
+		try {
+			await setDoc(doc(db, 'settings', 'maintenance'), {
+				message,
+				updatedAt: serverTimestamp()
+			}, { merge: true });
+
+			const savedEl = document.getElementById('maintenanceSaved');
+			if (savedEl) {
+				savedEl.classList.add('show');
+				setTimeout(() => savedEl.classList.remove('show'), 2000);
+			}
+			showAdminToast('Wartungsnachricht gespeichert!');
+		} catch(err) {
+			alert('Fehler beim Speichern: ' + (err.message || String(err)));
+		}
+	});
 </script>
 </body>
 </html>

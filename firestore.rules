@@ -47,7 +47,7 @@ service cloud.firestore {
 
     match /settings/{docId} {
       // Öffentliche Anzeigeeinstellungen dürfen von Gästen gelesen werden.
-      allow get: if docId == 'info' || docId == 'deadline' || docId == 'opensAt' || docId == 'lernsaxThreshold' || docId == 'pricing' || docId == 'schedule' || docId == 'stats' || docId == 'capacity' || request.auth != null;
+      allow get: if docId == 'info' || docId == 'deadline' || docId == 'opensAt' || docId == 'lernsaxThreshold' || docId == 'pricing' || docId == 'schedule' || docId == 'stats' || docId == 'capacity' || docId == 'maintenance' || request.auth != null;
       allow list: if request.auth != null;
       allow write: if request.auth != null;
 

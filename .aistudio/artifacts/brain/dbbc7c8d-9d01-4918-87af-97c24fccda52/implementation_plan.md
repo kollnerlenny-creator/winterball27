@@ -1,28 +1,21 @@
-# Implementierungsplan: Vollständige Überarbeitung und Ausbau des Insights-Tabs (admin.html)
+# Implementierungsplan: Wartungsmodus (Maintenance Mode)
 
 ## Status: Abgeschlossen (Completed)
 
-### 1. Zentralisierung & Harmonisierung der Finanzmetriken (`calculateRevenueStats()`)
-- [x] Zentrale Hilfsfunktion `calculateRevenueStats()` eingeführt.
-- [x] Oberste KPI-Kacheln, Prognose-Widget und Demografie centgenau synchronisiert.
+### 1. Firestore-Sicherheitsregeln (`firestore.rules`)
+- [x] `docId == 'maintenance'` in den öffentlichen `settings`-Lesezugriff aufgenommen, damit unauthentifizierte Besucher den Status in Echtzeit abrufen können.
 
-### 2. Detaillierter Klassen- & Stufen-Breakdown (`getGuestClassBreakdown()`)
-- [x] Intelligente Klassenstufenzuordnung mit Rangliste und Balkendiagramm.
+### 2. Admin-Verwaltung (`admin.html`)
+- [x] **Einstellungen-Bereich**: Neuer Abschnitt *„Wartungsmodus (Website & Anmeldung pausieren)“* mit:
+  - Live-Status-Badge (`● Website ist LIVE` vs. `● Wartungsmodus AKTIV`).
+  - Ein/Aus-Schalter mit Bestätigungsabfrage (`Wartungsmodus aktivieren` / `Wartungsmodus beenden (Live schalten)`).
+  - Textarea für optionale individuelle Besuchernachrichten.
+  - Zeitstempel der letzten Änderung.
+- [x] **Globales Warn-Banner**: Prominenter, sticky gelb-oranger Warnstreifen am oberen Rand des Admin-Dashboards mit Schnell-Button *„Jetzt beenden (Live schalten) 🚀“*.
+- [x] **Echtzeit-Synchronisation**: `onSnapshot` auf `settings/maintenance` sorgt für sofortige Aktualisierung auf allen offenen Admin-Geräten.
 
-### 3. Reale Daten für Stoßzeiten (`peakTimes`)
-- [x] 24h-Kurve aus realen Buchungs- bzw. Webseitenaufrufen mit Metrik-Umschalter.
-
-### 4. Vollständiger Ausbau des Conversion-Funnels (`getFunnelMetrics()`)
-- [x] **Widget-Card erweitert**:
-  - Segmentierter Sub-Tab Umschalter: `[Formular]`, `[Kasse & Einlass]`, `[End-to-End]` direkt im Dashboard ohne Neuladen.
-  - Dynamische Balken, Raten und Engpassanzeigen je nach Modus.
-- [x] **Detail-Modal zur Conversion-Intelligence Suite ausgebaut**:
-  - **Tab 1: 🌐 Formular-Trichter**: 7 granulare Schritte vom Startseitenbesuch über Name, E-Mail, Begleitung bis zur fertigen Reservierung inkl. Monotonie-Glättung und relativer Drop-off Analyse.
-  - **Tab 2: 🎟️ End-to-End Lifecycle**: Nahtlose Betrachtung von erstem Website-Besucher bis zum eingecheckten Ballgast mit quantifizierten Verlusten in Personen und Euro.
-  - **Tab 3: 💳 Kassen- & Einlassstatus**: Fokus auf bezahlte vs. unbezahlte Tickets, U18- vs. Ü18-Bezahlquoten und tatsächliche Check-in Quote am Einlass.
-  - **Tab 4: 📱 Mobile vs. Desktop**: Vergleich der Conversion und Abbruchraten zwischen Smartphones und Computern mit Touch-Optimierungsempfehlungen.
-  - **Zeitraum-Filter**: Umschalter für `Gesamt`, `Letzte 7 Tage` und `Letzte 24 Stunden`.
-  - **Action-Box**: 
-    - 1-Klick-Sprung zur Gästeliste mit Vorfilter auf `unpaid` (`filterUnpaidFromFunnel()`).
-    - 1-Klick-Kopierfunktion für freundliche Zahlungserinnerungen für WhatsApp & Mail (`copyPaymentReminderText()`).
-    - Automatische Conversion-Tipps basierend auf dem aktuell größten Engpass.
+### 3. Öffentliche Besucher-Seiten (`index.html`, `anmeldung.html`, `vorabstimmung.html`)
+- [x] `onSnapshot` auf `settings/maintenance` integriert.
+- [x] Bei aktiver Wartung: Eleganter, vollflächiger Winterball-Gala-Wartungsbildschirm mit Schneeflocken-Emblem, Countdown-/Puls-Badge, Admin-Nachricht und Neuladen-Button.
+- [x] Bei Deaktivierung: Bildschirm schließt sich in Echtzeit automatisch ohne Neuladen.
+- [x] Formulare und Ticketbestellungen sind während der Wartung zuverlässig gesperrt.
