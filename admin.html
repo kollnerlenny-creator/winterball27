@@ -3834,7 +3834,7 @@ function updateCharts(){
 		const elWFA = document.getElementById('widgetForecastActRev');
 		if (elWFA) elWFA.textContent = formatCents(revStats.totalActualCents);
 		const elWFD = document.getElementById('widgetForecastDonRev');
-		if (elWFD) elWFD.textContent = formatCents(actualDonationCents);
+		if (elWFD) elWFD.textContent = formatCents(revStats.actualDonationCents);
 
 		const elWForeTickets = document.getElementById('widgetForecastTickets');
 		if (elWForeTickets) elWForeTickets.textContent = foreMetrics.currentTickets;
@@ -5825,22 +5825,27 @@ let allRatings = [];
  let allPageviews = [];
  let allPresenceEvents = [];
  let apiActiveVisitors = [];
- let lastPresenceCleanup = 0;
+ let lastPresenceCleanup = 0;	let serverPresenceDisabled = false;
 
- async function fetchServerPresence(){
- try {
- const res = await fetch('/api/presence');
- if (res.ok) {
- const data = await res.json();
- if (data && Array.isArray(data.visitors)) {
- apiActiveVisitors = data.visitors;
- renderLivePresence();
- }
- }
- } catch(e) {}
- }
- setInterval(fetchServerPresence, 15000);
- fetchServerPresence();
+	async function fetchServerPresence(){
+		if (serverPresenceDisabled) return;
+		try {
+			const res = await fetch('/api/presence');
+			if (res.status === 404) {
+				serverPresenceDisabled = true;
+				return;
+			}
+			if (res.ok) {
+				const data = await res.json();
+				if (data && Array.isArray(data.visitors)) {
+					apiActiveVisitors = data.visitors;
+					renderLivePresence();
+				}
+			}
+		} catch(e) {}
+	}
+	setInterval(fetchServerPresence, 15000);
+	fetchServerPresence();
 
  function getActiveVisitors(){
  const now = Date.now();
@@ -6539,16 +6544,16 @@ let allRatings = [];
 
  let activeFilter = 'all'; // 'all', 'unpaid', 'paid', 'checkedin', 'notcheckedin'
 
- function showAdminToast(msg, isSuccess = true){
- const toast = document.getElementById('adminToast');
- if (!toast) return;
- toast.textContent = msg;
- toast.className = 'admin-toast show ' + (isSuccess ? 'success' : '');
- clearTimeout(toast._timer);
- toast._timer = setTimeout(() => {
- toast.classList.remove('show');
- }, 2500);
- }
+	function showAdminToast(msg, isSuccess = true, duration = 4000){
+		const toast = document.getElementById('adminToast');
+		if (!toast) return;
+		toast.textContent = msg;
+		toast.className = 'admin-toast show ' + (isSuccess ? 'success' : '');
+		clearTimeout(toast._timer);
+		toast._timer = setTimeout(() => {
+			toast.classList.remove('show');
+		}, duration);
+	}
 
  function playCheckinChime(){
  try {
@@ -6682,7 +6687,10 @@ let allRatings = [];
  <span>Begleitung</span>
  </button>
  </td>
- <td>${escapeHtml(r.email||'')}</td>
+ <td>
+					<div>${escapeHtml(r.email||'')}</div>
+					${r.mailVia === 'lernsax' ? `<div style="margin-top:3px;"><span class="badge in" style="font-size:9.5px; padding:1px 6px; background:rgba(127,224,168,0.15); color:#7fe0a8; border:1px solid rgba(127,224,168,0.3);" title="E-Mail über LernSax versendet">LernSax ✉️</span></div>` : (r.mailVia === 'brevo' ? `<div style="margin-top:3px;"><span class="badge out" style="font-size:9.5px; padding:1px 6px; color:#8fb4ff; border:1px solid rgba(143,180,255,0.3); background:rgba(143,180,255,0.1);" title="E-Mail über Brevo versendet">Brevo 🚀</span></div>` : '')}
+				</td>
  <td>${ticketsHtml}</td>
  <td>
  <div class="paid-cell">
@@ -7769,35 +7777,51 @@ let allRatings = [];
  })
  });
  const resData = await res.json().catch(() => ({}));
- if (!res.ok) {
- throw new Error(resData.error || `Ticket-Mail konnte nicht gesendet werden (${res.status})`);
- }
- if (resData.via) {
- console.log('Ticket mail dispatch via:', resData.via);
- }
- } else {
- saveBtn.textContent = 'Bestätigung wird gesendet...';
- const res = await workerFetch('/send-confirmation', {
- method: 'POST',
- headers: {'Content-Type':'application/json'},
- body: JSON.stringify({
- name,
- email,
- salutation,
- anrede,
- isFormal: salutation === 'sie',
- formell: salutation === 'sie',
- greeting: salutation === 'sie' ? `Guten Tag ${name}` : `Hallo ${name}`,
- attendeeNames: allUpdatedAttendees.map(t => t.name),
- useLernSax: shouldUseLernSax(email)
- })
- });
- if (!res.ok) {
- console.warn('Aktualisierte Bestätigungsmail konnte nicht gesendet werden');
- }
- }
+		if (!res.ok) {
+			throw new Error(resData.error || `Ticket-Mail konnte nicht gesendet werden (${res.status})`);
+		}
+		const expectedLernSax = shouldUseLernSax(email, schoolClass);
+		const via = resData.via || (expectedLernSax ? 'lernsax' : 'brevo');
+		try {
+			await updateDoc(doc(db, 'registrations', regId), { mailVia: via, ticketsSentAt: serverTimestamp() });
+			reg.mailVia = via;
+		} catch(e) {}
+		const channelNotice = (via === 'lernsax') ? ' (über LernSax ✉️)' : (expectedLernSax ? ' (über Brevo ⚠️)' : ' (über Brevo 🚀)');
+		showAdminToast(`Bestellung aktualisiert & Tickets versendet${channelNotice}!`);
+	} else {
+		saveBtn.textContent = 'Bestätigung wird gesendet...';
+		const expectedLernSax = shouldUseLernSax(email, schoolClass);
+		const res = await workerFetch('/send-confirmation', {
+			method: 'POST',
+			headers: {'Content-Type':'application/json'},
+			body: JSON.stringify({
+				name,
+				email,
+				salutation,
+				anrede,
+				isFormal: salutation === 'sie',
+				formell: salutation === 'sie',
+				greeting: salutation === 'sie' ? `Guten Tag ${name}` : `Hallo ${name}`,
+				attendeeNames: allUpdatedAttendees.map(t => t.name),
+				useLernSax: expectedLernSax
+			})
+		});
+		const resData = await res.json().catch(() => ({}));
+		if (!res.ok) {
+			console.warn('Aktualisierte Bestätigungsmail konnte nicht gesendet werden');
+			showAdminToast(`Bestellung aktualisiert (⚠️ Mailversand fehlgeschlagen).`);
+		} else {
+			const via = resData.via || (expectedLernSax ? 'lernsax' : 'brevo');
+			try {
+				await updateDoc(doc(db, 'registrations', regId), { mailVia: via });
+				reg.mailVia = via;
+			} catch(e) {}
+			const channelNotice = (via === 'lernsax') ? ' (über LernSax ✉️)' : (expectedLernSax ? ' (über Brevo ⚠️)' : ' (über Brevo 🚀)');
+			showAdminToast(`Bestellung aktualisiert! Bestätigungsmail versendet${channelNotice}.`);
+		}
+	}
 
- closeEditRegModal();
+	closeEditRegModal();
  } catch (err) {
  console.error(err.message || String(err));
  alert('Änderungen konnten nicht vollständig gespeichert werden: ' + err.message);
@@ -7980,31 +8004,45 @@ let allRatings = [];
  await batch.commit();
 
  // 2) Bestätigungs-Mail über die hinzugefügte Begleitung senden (keine Ticket-Mail, da noch unbezahlt)
- try {
- const attendeeNames = [reg.name, ...(reg.companions || []).map(c => c.name), name];
- const salutation = reg.salutation || (reg.anrede === 'Sie' ? 'sie' : 'du');
- const anrede = salutation === 'sie' ? 'Sie' : 'Du';
- await workerFetch('/send-confirmation', {
- method: 'POST',
- headers: {'Content-Type':'application/json'},
- body: JSON.stringify({
- name: reg.name,
- email: reg.email,
- salutation,
- anrede,
- isFormal: salutation === 'sie',
- formell: salutation === 'sie',
- greeting: salutation === 'sie' ? `Guten Tag ${reg.name}` : `Hallo ${reg.name}`,
- attendeeNames,
- useLernSax: shouldUseLernSax(reg.email)
- })
- });
- } catch (mailErr) {
- console.warn('Bestätigungsmail für Begleitung konnte nicht verschickt werden:', mailErr);
- }
+		let channelNotice = '';
+		try {
+			const attendeeNames = [reg.name, ...(reg.companions || []).map(c => c.name), name];
+			const salutation = reg.salutation || (reg.anrede === 'Sie' ? 'sie' : 'du');
+			const anrede = salutation === 'sie' ? 'Sie' : 'Du';
+			const compMailRes = await workerFetch('/send-confirmation', {
+				method: 'POST',
+				headers: {'Content-Type':'application/json'},
+				body: JSON.stringify({
+					name: reg.name,
+					email: reg.email,
+					salutation,
+					anrede,
+					isFormal: salutation === 'sie',
+					formell: salutation === 'sie',
+					greeting: salutation === 'sie' ? `Guten Tag ${reg.name}` : `Hallo ${reg.name}`,
+					attendeeNames,
+					useLernSax: shouldUseLernSax(reg.email, reg.schoolClass)
+				})
+			});
+			const resData = await compMailRes.json().catch(() => ({}));
+			if (compMailRes.ok) {
+				const via = resData.via || (shouldUseLernSax(reg.email, reg.schoolClass) ? 'lernsax' : 'brevo');
+				if (via === 'lernsax') {
+					channelNotice = ' (über LernSax ✉️)';
+				} else if (via === 'brevo') {
+					channelNotice = shouldUseLernSax(reg.email, reg.schoolClass) ? ' (über Brevo ⚠️)' : ' (über Brevo 🚀)';
+				}
+				try {
+					await updateDoc(doc(db, 'registrations', regId), { mailVia: via });
+					reg.mailVia = via;
+				} catch(e) {}
+			}
+		} catch (mailErr) {
+			console.warn('Bestätigungsmail für Begleitung konnte nicht verschickt werden:', mailErr);
+		}
 
- closeAddCompanionModal();
- showAdminToast(`Begleitung "${name}" hinzugefügt! Nachzahlung an der Kasse möglich.`);
+		closeAddCompanionModal();
+		showAdminToast(`Begleitung "${name}" hinzugefügt! Bestätigungsmail versendet${channelNotice || ''}. Nachzahlung an der Kasse möglich.`);
  } catch (err) {
  console.error(err.message || String(err));
  alert('Begleitung konnte nicht hinzugefügt werden: ' + err.message);
@@ -8099,114 +8137,199 @@ let allRatings = [];
  // sofort danach (unabhängig von scheduleRender, damit z.B. der Pay-Button in der
  // Tabelle für "Anlegen & gleich bezahlen" direkt existiert). Gibt die neue
  // Registrations-ID zurück, oder null bei einem Validierungsfehler.
- async function createManualRegistration(){
- const name = document.getElementById('addName').value.trim();
- const klasse = document.getElementById('addKlasse').value.trim();
- const email = sanitizeEmail(document.getElementById('addEmail').value.trim());
- const category = document.getElementById('addCategory').value;
- const companionRows = Array.from(document.querySelectorAll('.companion-add-row'));
- const companions = companionRows.map(row => ({
- name: row.querySelector('.add-companion-name').value.trim(),
- category: row.querySelector('.add-companion-category').value,
- schoolClass: (row.querySelector('.add-companion-class')?.value || '').trim() || null
- })).filter(c => c.name.length > 0);
 
- if(!name || !email || !category){
- alert('Bitte Name, E-Mail und Altersgruppe des Bestellers ausfüllen.');
- return null;
- }
- if(companions.some(c => !c.category)){
- alert('Bitte bei jeder Begleitung die Altersgruppe angeben.');
- return null;
- }
+	async function createManualRegistration(options = {}){
+		const name = document.getElementById('addName').value.trim();
+		const klasse = document.getElementById('addKlasse').value.trim();
+		const email = sanitizeEmail(document.getElementById('addEmail').value.trim());
+		const category = document.getElementById('addCategory').value;
+		const companionRows = Array.from(document.querySelectorAll('.companion-add-row'));
+		const companions = companionRows.map(row => ({
+			name: row.querySelector('.add-companion-name').value.trim(),
+			category: row.querySelector('.add-companion-category').value,
+			schoolClass: (row.querySelector('.add-companion-class')?.value || '').trim() || null
+		})).filter(c => c.name.length > 0);
 
- const schoolClassVal = category === 'u18' ? (klasse || null) : null;
- const salutation = (document.getElementById('addSalutation')?.value || 'du').toLowerCase();
- const anrede = salutation === 'sie' ? 'Sie' : 'Du';
+		if(!name || !email || !category){
+			alert('Bitte Name, E-Mail und Altersgruppe des Bestellers ausfüllen.');
+			return null;
+		}
+		if(companions.some(c => !c.category)){
+			alert('Bitte bei jeder Begleitung die Altersgruppe angeben.');
+			return null;
+		}
 
- const regRef = await addDoc(collection(db, 'registrations'), {
- name, email, salutation, anrede, category, schoolClass: schoolClassVal, companions, paid: false, createdAt: serverTimestamp()
- });
+		const schoolClassVal = category === 'u18' ? (klasse || null) : null;
+		const salutation = (document.getElementById('addSalutation')?.value || 'du').toLowerCase();
+		const anrede = salutation === 'sie' ? 'Sie' : 'Du';
 
- const attendees = [{ name, category, schoolClass: schoolClassVal }, ...companions];
- const ticketRefs = attendees.map(() => doc(collection(db, 'tickets')));
- const batch = writeBatch(db);
- attendees.forEach((attendee, i) => {
- batch.set(ticketRefs[i], {
- registrationId: regRef.id, name: attendee.name, category: attendee.category, schoolClass: attendee.schoolClass || null, email,
- salutation, anrede,
- ticketId: genTicketId(), paid: false, checkedIn: false, createdAt: serverTimestamp()
- });
- });
- await batch.commit();
+		const regRef = await addDoc(collection(db, 'registrations'), {
+			name, email, salutation, anrede, category, schoolClass: schoolClassVal, companions, paid: false, createdAt: serverTimestamp()
+		});
 
- // Lokal sofort ergänzen (statt auf den Firestore-Listener zu warten), damit
- // Tabelle/Statistik/Cash-Popup unmittelbar den neuen Stand zeigen. Der Listener
- // aus startListening() kann aber genau in diesem Moment (während des Schreibens
- // oben) schon selbst mit den frischen Firestore-Daten dazwischenfunken — daher
- // hier zur Sicherheit auf Duplikate prüfen, statt blind einzufügen.
- const now = new Date();
- if (!allRegs.some(r => r.id === regRef.id)) {
- allRegs.unshift({ id: regRef.id, name, email, salutation, anrede, category, schoolClass: schoolClassVal, companions, paid: false, createdAt: now });
- }
- attendees.forEach((attendee, i) => {
- const ticketDocId = ticketRefs[i].id;
- if (!allTickets.some(t => t.id === ticketDocId)) {
- allTickets.push({
- id: ticketDocId, registrationId: regRef.id, name: attendee.name, category: attendee.category, schoolClass: attendee.schoolClass || null,
- email, salutation, anrede, ticketId: null, paid: false, checkedIn: false, createdAt: now
- });
- }
- });
- render();
- renderCashier();
- updateCharts();
+		const attendees = [{ name, category, schoolClass: schoolClassVal }, ...companions];
+		const ticketRefs = attendees.map(() => doc(collection(db, 'tickets')));
+		const batch = writeBatch(db);
+		attendees.forEach((attendee, i) => {
+			batch.set(ticketRefs[i], {
+				registrationId: regRef.id, name: attendee.name, category: attendee.category, schoolClass: attendee.schoolClass || null, email,
+				salutation, anrede,
+				ticketId: genTicketId(), paid: false, checkedIn: false, createdAt: serverTimestamp()
+			});
+		});
+		await batch.commit();
 
- document.getElementById('addName').value = '';
- document.getElementById('addEmail').value = '';
- document.getElementById('addCategory').value = '';
- resetCustomSelectVisual(document.getElementById('addCategory'));
- const addSalEl = document.getElementById('addSalutation');
- if (addSalEl) {
- addSalEl.value = 'du';
- resetCustomSelectVisual(addSalEl);
- }
- document.getElementById('addKlasse').value = '';
- companionsBlock.innerHTML = '';
+		const now = new Date();
+		const newRegObj = { id: regRef.id, name, email, salutation, anrede, category, schoolClass: schoolClassVal, companions, paid: false, createdAt: now };
+		if (!allRegs.some(r => r.id === regRef.id)) {
+			allRegs.unshift(newRegObj);
+		}
+		attendees.forEach((attendee, i) => {
+			const ticketDocId = ticketRefs[i].id;
+			if (!allTickets.some(t => t.id === ticketDocId)) {
+				allTickets.push({
+					id: ticketDocId, registrationId: regRef.id, name: attendee.name, category: attendee.category, schoolClass: attendee.schoolClass || null,
+					email, salutation, anrede, ticketId: null, paid: false, checkedIn: false, createdAt: now
+				});
+			}
+		});
+		render();
+		renderCashier();
+		updateCharts();
 
- return regRef.id;
- }
+		let mailNotice = '';
+		if (!options.skipConfirmationMail) {
+			const expectedLernSax = shouldUseLernSax(email, schoolClassVal);
+			try {
+				const mailPayload = {
+					name,
+					email,
+					salutation,
+					anrede,
+					isFormal: salutation === 'sie',
+					formell: salutation === 'sie',
+					greeting: salutation === 'sie' ? `Guten Tag ${name}` : `Hallo ${name}`,
+					attendeeNames: attendees.map(a => a.name),
+					useLernSax: expectedLernSax
+				};
 
- document.getElementById('addSaveBtn').addEventListener('click', async (e) => {
- const btn = e.currentTarget;
- btn.disabled = true;
- const nameVal = (document.getElementById('addName')?.value || '').trim();
- const regId = await createManualRegistration().finally(() => { btn.disabled = false; });
- if (!regId) return;
- document.getElementById('addForm').classList.remove('show');
- setAddFormOpen(false);
- const cInp = document.getElementById('cashierSearch');
- if (cInp && nameVal) {
- cInp.value = nameVal;
- }
- renderCashier();
- });
+				let sent = false;
+				let resData = {};
+				try {
+					const proxyRes = await fetch('/api/send-confirmation', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify(mailPayload)
+					});
+					if (proxyRes.ok) {
+						sent = true;
+						resData = await proxyRes.json().catch(() => ({}));
+					}
+				} catch(e) {}
 
- document.getElementById('addPayNowBtn').addEventListener('click', async (e) => {
- const btn = e.currentTarget;
- btn.disabled = true;
- const nameVal = (document.getElementById('addName')?.value || '').trim();
- const regId = await createManualRegistration().finally(() => { btn.disabled = false; });
- if (!regId) return;
- document.getElementById('addForm').classList.remove('show');
- setAddFormOpen(false);
- const cInp = document.getElementById('cashierSearch');
- if (cInp && nameVal) {
- cInp.value = nameVal;
- }
- renderCashier();
- openCashModal(regId);
- });
+				if (!sent) {
+					const workerRes = await fetch(WORKER_URL + '/send-confirmation', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify(mailPayload)
+					});
+					if (workerRes.ok) {
+						sent = true;
+						resData = await workerRes.json().catch(() => ({}));
+					}
+				}
+
+				if (sent) {
+					const via = resData.via || (expectedLernSax ? 'lernsax' : 'brevo');
+					if (via === 'lernsax') {
+						mailNotice = ' (Bestätigung über LernSax ✉️ gesendet)';
+					} else if (via === 'brevo') {
+						mailNotice = expectedLernSax
+							? ' (Bestätigung über Brevo ⚠️ – LernSax nicht erreicht)'
+							: ' (Bestätigung über Brevo 🚀 gesendet)';
+					}
+					try {
+						await updateDoc(doc(db, 'registrations', regRef.id), { mailVia: via, confirmationSentAt: serverTimestamp() });
+						newRegObj.mailVia = via;
+						render();
+						renderCashier();
+					} catch(e) {}
+				} else {
+					mailNotice = ' (⚠️ Bestätigungsmail konnte nicht versendet werden)';
+				}
+			} catch (mErr) {
+				console.warn('Mailversand fehlgeschlagen:', mErr);
+				mailNotice = ' (⚠️ Mailversand fehlgeschlagen)';
+			}
+		}
+
+		document.getElementById('addName').value = '';
+		document.getElementById('addEmail').value = '';
+		document.getElementById('addCategory').value = '';
+		resetCustomSelectVisual(document.getElementById('addCategory'));
+		const addSalEl = document.getElementById('addSalutation');
+		if (addSalEl) {
+			addSalEl.value = 'du';
+			resetCustomSelectVisual(addSalEl);
+		}
+		document.getElementById('addKlasse').value = '';
+		companionsBlock.innerHTML = '';
+
+		return { regId: regRef.id, mailNotice, name };
+	}
+
+	document.getElementById('addSaveBtn').addEventListener('click', async (e) => {
+		const btn = e.currentTarget;
+		const prevText = btn.textContent;
+		btn.disabled = true;
+		btn.textContent = 'Wird angelegt & Mail gesendet...';
+		const nameVal = (document.getElementById('addName')?.value || '').trim();
+		try {
+			const res = await createManualRegistration();
+			if (!res) return;
+			document.getElementById('addForm').classList.remove('show');
+			setAddFormOpen(false);
+			const cInp = document.getElementById('cashierSearch');
+			if (cInp && nameVal) {
+				cInp.value = nameVal;
+			}
+			renderCashier();
+			showAdminToast(`Bestellung für ${nameVal} erfolgreich angelegt!${res.mailNotice}`);
+		} catch(err) {
+			console.error(err);
+			alert('Fehler beim Anlegen: ' + err.message);
+		} finally {
+			btn.disabled = false;
+			btn.textContent = prevText;
+		}
+	});
+
+	document.getElementById('addPayNowBtn').addEventListener('click', async (e) => {
+		const btn = e.currentTarget;
+		const prevText = btn.textContent;
+		btn.disabled = true;
+		btn.textContent = 'Wird angelegt...';
+		const nameVal = (document.getElementById('addName')?.value || '').trim();
+		try {
+			const res = await createManualRegistration({ skipConfirmationMail: true });
+			if (!res) return;
+			document.getElementById('addForm').classList.remove('show');
+			setAddFormOpen(false);
+			const cInp = document.getElementById('cashierSearch');
+			if (cInp && nameVal) {
+				cInp.value = nameVal;
+			}
+			renderCashier();
+			showAdminToast(`Bestellung für ${nameVal} angelegt – Kassenfenster geöffnet!`);
+			openCashModal(res.regId);
+		} catch(err) {
+			console.error(err);
+			alert('Fehler beim Anlegen: ' + err.message);
+		} finally {
+			btn.disabled = false;
+			btn.textContent = prevText;
+		}
+	});
 
  document.getElementById('priceSaveBtn').addEventListener('click', async () => {
  const u18 = Number(document.getElementById('priceU18Input').value);
@@ -8532,6 +8655,7 @@ let allRatings = [];
  </div>
  <div class="cashier-card-meta">
  <span>E-Mail: <strong style="color:var(--text);">${escapeHtml(r.email || '–')}</strong></span>
+							${r.mailVia === 'lernsax' ? `<span class="badge in" style="font-size:9.5px; margin-left:6px; padding:1px 6px; background:rgba(127,224,168,0.15); color:#7fe0a8; border:1px solid rgba(127,224,168,0.3);">LernSax ✉️</span>` : (r.mailVia === 'brevo' ? `<span class="badge out" style="font-size:9.5px; margin-left:6px; padding:1px 6px; color:#8fb4ff; border:1px solid rgba(143,180,255,0.3); background:rgba(143,180,255,0.1);">Brevo 🚀</span>` : '')}
  <span style="margin:0 6px;">·</span>
  <span>Registriert: ${formatTimestamp(r.createdAt)}</span>
  </div>
