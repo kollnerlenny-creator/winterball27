@@ -3254,7 +3254,7 @@
 		const checkedInTickets = filteredTickets.filter(t => t.checkedIn).length;
 
 		const revStats = calculateRevenueStats();
-		const avgPrice = ticketCount > 0 ? (revStats.potentialTotal / ticketCount) : 12.5;
+		const avgPrice = ticketCount > 0 ? ((revStats.totalProjectedCents / 100) / ticketCount) : 12.5;
 		const openRevenue = Math.round(openTickets * avgPrice);
 
 		// Monotone Glättung für Formularschritte
@@ -6830,10 +6830,10 @@ let allRatings = [];
  if (progressTxt) progressTxt.textContent = `${checkinPct}% da (${countCheckedIn}/${allTickets.length})`;
 
  const revStats = calculateRevenueStats();
- document.getElementById('statRevenue').textContent = formatCents(Math.round(revStats.actualTotal * 100));
+ document.getElementById('statRevenue').textContent = formatCents(revStats.totalActualCents);
  const elProjected = document.getElementById('statProjectedRevenue');
  if (elProjected) {
- elProjected.textContent = formatCents(Math.round(revStats.potentialTotal * 100));
+ elProjected.textContent = formatCents(revStats.totalProjectedCents);
  }
 
  const u18Count = allTickets.filter(t => t.category === 'u18').length;
