@@ -160,4 +160,3 @@ export async function sendViaLernSax(env, { to, subject, text, html, attachments
     try { socket.close(); } catch (e) {}
   }
 }
-

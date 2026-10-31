@@ -26,8 +26,17 @@
  };
  })();
 </script>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <title>Winterball · Admin</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#070b16">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="WB Admin">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <style>
  :root{
  --bg-1:#070b16; --bg-2:#0f172a;
@@ -480,8 +489,446 @@
  /* Mobile responsive cards view */
  .mobile-cards-wrap{display:none; flex-direction:column; gap:14px;}
  @media (max-width:860px){
- .desktop-table-wrap{display:none;}
+ body {
+ padding: 12px 10px calc(88px + env(safe-area-inset-bottom, 12px)) 10px !important;
+ -webkit-tap-highlight-color: transparent;
+ }
+ .wrap {
+ max-width: 100% !important;
+ margin: 0 !important;
+ }
+ .desktop-table-wrap{display:none !important;}
  .mobile-cards-wrap{display:flex;}
+ .tabs { display: none !important; }
+ 
+ .admin-header {
+ margin-bottom: 14px;
+ gap: 12px;
+ }
+ .admin-title-row {
+ gap: 8px;
+ }
+ .admin-title-row h1 {
+ font-size: 20px;
+ }
+ .admin-header-actions {
+ width: 100%;
+ overflow-x: auto;
+ padding-bottom: 4px;
+ scrollbar-width: none;
+ flex-wrap: nowrap;
+ }
+ .admin-header-actions::-webkit-scrollbar { display: none; }
+ .header-action-btn {
+ padding: 7px 11px;
+ font-size: 12px;
+ white-space: nowrap;
+ flex-shrink: 0;
+ }
+  /* Mobile: Schnellstatistiken NUR im Insights-Tab sichtbar & optimiertes Layout */
+  #globalStatsBar {
+    display: none; /* Auf allen anderen Tabs (Bestellungen, Einlass etc.) ausgeblendet */
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    margin-bottom: 18px !important;
+    padding: 0 !important;
+  }
+  body.mobile-tab-insights #globalStatsBar {
+    display: grid !important;
+    animation: tabFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Karten-Reihenfolge auf dem Handy für maximale Übersicht */
+  #globalStatsBar .stat:nth-child(5) { order: 1; } /* Umsatz bezahlt */
+  #globalStatsBar .stat:nth-child(6) { order: 2; } /* Vorauss. Umsatz */
+  #globalStatsBar .stat:nth-child(2) { order: 3; } /* Tickets gesamt */
+  #globalStatsBar .stat:nth-child(3) { order: 4; } /* Bezahlt */
+  #globalStatsBar .stat:nth-child(4) { order: 5; } /* Eingecheckt */
+  #globalStatsBar .stat:nth-child(1) { order: 6; } /* Bestellungen */
+  #globalStatsBar .stat:nth-child(7) {             /* Altersgruppen über volle Breite */
+    order: 7;
+    grid-column: span 2 !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 12px 14px !important;
+  }
+  #globalStatsBar .stat:nth-child(7) .stat-header {
+    margin-bottom: 0 !important;
+  }
+  #globalStatsBar .stat:nth-child(7) .stat-sub {
+    margin-top: 2px !important;
+    text-align: right !important;
+  }
+
+  /* Touch-freundliches, kompaktes und übersichtliches Kartendesign */
+  .stat {
+    padding: 12px 13px !important;
+    border-radius: 14px !important;
+    background: linear-gradient(145deg, rgba(255,255,255,0.065) 0%, rgba(255,255,255,0.02) 100%) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3) !important;
+  }
+  .stat-header {
+    margin-bottom: 6px !important;
+  }
+  .stat-lbl {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #9aa7c2 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.35px !important;
+  }
+  .stat-icon-wrap {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 8px !important;
+  }
+  .stat-icon-wrap svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+  .stat .num {
+    font-size: 19px !important;
+    font-weight: 800 !important;
+    line-height: 1.15 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    letter-spacing: -0.3px !important;
+  }
+  .stat .stat-sub {
+    font-size: 10.5px !important;
+    color: #7d8ba7 !important;
+    margin-top: 4px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .stat-progress {
+    margin-top: 6px !important;
+    height: 4px !important;
+  }
+
+  /* Redundantes großes Banner im Insights-Tab auf Mobile ausblenden */
+  .insights-revenue-banner {
+    display: none !important;
+  }
+
+  /* Kasse auf dem Handy komplett ausblenden */
+  .mobile-nav-item.mobile-nav-cashier,
+  .mobile-nav-item[data-tab="cashier"],
+  .tab-btn[data-tab="cashier"],
+  [data-tab="cashier"],
+  .tab-content[data-tab-content="cashier"] {
+    display: none !important;
+  }
+ }
+
+ /* Mobile App Bottom Navigation Bar */
+ .mobile-bottom-nav {
+ display: none;
+ position: fixed;
+ bottom: 0;
+ left: 0;
+ right: 0;
+ z-index: 1000;
+ background: rgba(8, 14, 28, 0.94);
+ backdrop-filter: blur(28px) saturate(180%);
+ -webkit-backdrop-filter: blur(28px) saturate(180%);
+ border-top: 1px solid rgba(255, 255, 255, 0.12);
+ padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 8px)) 8px;
+ box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.65);
+ justify-content: space-around;
+ align-items: center;
+ }
+ @media (max-width: 860px) {
+ .mobile-bottom-nav {
+ display: flex;
+ }
+ }
+ .mobile-nav-item {
+ flex: 1;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ gap: 3px;
+ background: none;
+ border: none;
+ color: var(--text-dim);
+ font-family: inherit;
+ font-size: 10px;
+ font-weight: 600;
+ cursor: pointer;
+ padding: 6px 2px 4px 2px;
+ border-radius: 12px;
+ position: relative;
+ transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+ -webkit-tap-highlight-color: transparent;
+ outline: none;
+ }
+ .mobile-nav-item:active {
+ transform: scale(0.92);
+ }
+ .mobile-nav-item svg {
+ width: 20px;
+ height: 20px;
+ stroke-width: 2.1;
+ transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.2s, color 0.2s;
+ }
+ .mobile-nav-item.active {
+ color: #fff;
+ }
+ .mobile-nav-item.active svg {
+ color: var(--accent);
+ stroke: var(--accent);
+ transform: translateY(-2px);
+ filter: drop-shadow(0 0 8px rgba(143, 180, 255, 0.6));
+ }
+ .mobile-nav-item .mobile-nav-badge {
+ position: absolute;
+ top: 2px;
+ right: calc(50% - 18px);
+ background: rgba(143, 180, 255, 0.35);
+ border: 1px solid rgba(143, 180, 255, 0.6);
+ color: #fff;
+ font-size: 9px;
+ font-weight: 800;
+ padding: 1px 4px;
+ border-radius: 8px;
+ min-width: 14px;
+ text-align: center;
+ line-height: 1.1;
+ }
+ .mobile-nav-item.active::after {
+ content: '';
+ position: absolute;
+ bottom: 0px;
+ width: 18px;
+ height: 2.5px;
+ border-radius: 2px;
+ background: linear-gradient(90deg, var(--accent), var(--success));
+ box-shadow: 0 0 8px var(--accent);
+ }
+
+ /* Center Highlight for Cashier (Kasse) Button */
+ .mobile-nav-item.mobile-nav-cashier {
+ position: relative;
+ }
+ .mobile-nav-item.mobile-nav-cashier .cashier-icon-wrap {
+ width: 38px;
+ height: 38px;
+ border-radius: 12px;
+ background: linear-gradient(135deg, rgba(127, 224, 168, 0.22), rgba(127, 224, 168, 0.08));
+ border: 1px solid rgba(127, 224, 168, 0.45);
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ margin-top: -6px;
+ box-shadow: 0 4px 14px rgba(127, 224, 168, 0.25);
+ transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+ }
+ .mobile-nav-item.mobile-nav-cashier.active .cashier-icon-wrap {
+ background: linear-gradient(135deg, #7fe0a8, #58cb88);
+ border-color: #fff;
+ box-shadow: 0 6px 20px rgba(127, 224, 168, 0.5);
+ transform: translateY(-3px) scale(1.05);
+ }
+ .mobile-nav-item.mobile-nav-cashier.active .cashier-icon-wrap svg {
+ stroke: #06150b !important;
+ color: #06150b !important;
+ filter: none;
+ }
+
+ /* PWA Install Banner & Buttons */
+ .pwa-install-banner {
+ display: none;
+ align-items: center;
+ justify-content: space-between;
+ gap: 10px;
+ margin-bottom: 16px;
+ padding: 10px 14px;
+ border-radius: 14px;
+ background: linear-gradient(135deg, rgba(143, 180, 255, 0.16), rgba(127, 224, 168, 0.12));
+ border: 1px solid rgba(143, 180, 255, 0.35);
+ backdrop-filter: blur(16px);
+ -webkit-backdrop-filter: blur(16px);
+ box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+ }
+ .pwa-install-banner.show {
+ display: flex;
+ }
+ .pwa-install-left {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ }
+ .pwa-install-icon {
+ width: 36px;
+ height: 36px;
+ border-radius: 9px;
+ background: rgba(143, 180, 255, 0.25);
+ border: 1px solid rgba(143, 180, 255, 0.4);
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ flex-shrink: 0;
+ }
+ .pwa-install-text h4 {
+ font-size: 13px;
+ font-weight: 700;
+ color: #fff;
+ line-height: 1.2;
+ }
+ .pwa-install-text p {
+ font-size: 11px;
+ color: var(--text-dim);
+ margin-top: 1px;
+ }
+ .pwa-install-btn {
+ padding: 8px 14px;
+ border-radius: 10px;
+ background: linear-gradient(135deg, #8fb4ff, #adcaff);
+ color: #070c18;
+ border: none;
+ font-size: 12px;
+ font-weight: 800;
+ cursor: pointer;
+ white-space: nowrap;
+ box-shadow: 0 4px 14px rgba(143, 180, 255, 0.35);
+ }
+ .pwa-install-close {
+ background: none;
+ border: none;
+ color: var(--text-dim);
+ font-size: 18px;
+ cursor: pointer;
+ padding: 4px;
+ line-height: 1;
+ }
+
+ /* iOS Safari Guide Modal */
+ .ios-guide-modal {
+ position: fixed;
+ inset: 0;
+ background: rgba(4, 7, 16, 0.88);
+ backdrop-filter: blur(16px);
+ -webkit-backdrop-filter: blur(16px);
+ z-index: 10001;
+ display: none;
+ align-items: flex-end;
+ justify-content: center;
+ padding: 16px;
+ }
+ .ios-guide-modal.show {
+ display: flex;
+ }
+ .ios-guide-card {
+ width: 100%;
+ max-width: 440px;
+ background: linear-gradient(160deg, #131c32 0%, #0c1424 100%);
+ border: 1.5px solid rgba(143, 180, 255, 0.35);
+ border-radius: 24px;
+ padding: 24px 20px;
+ box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85);
+ text-align: center;
+ }
+ .ios-step {
+ display: flex;
+ align-items: center;
+ gap: 12px;
+ text-align: left;
+ background: rgba(255, 255, 255, 0.04);
+ border: 1px solid rgba(255, 255, 255, 0.08);
+ border-radius: 12px;
+ padding: 12px 14px;
+ margin-top: 10px;
+ font-size: 13px;
+ color: var(--text);
+ }
+ .ios-step-num {
+ width: 26px;
+ height: 26px;
+ border-radius: 50%;
+ background: rgba(143, 180, 255, 0.25);
+ color: var(--accent);
+ font-weight: 800;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-size: 12px;
+ flex-shrink: 0;
+ }
+ .ios-icon-badge {
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ background: rgba(255, 255, 255, 0.12);
+ border-radius: 6px;
+ padding: 2px 7px;
+ color: #fff;
+ font-weight: 700;
+ font-size: 12px;
+ }
+
+ /* Mobile "Mehr" Sheet Modal */
+ .mobile-more-sheet {
+ position: fixed;
+ inset: 0;
+ background: rgba(4, 7, 16, 0.82);
+ backdrop-filter: blur(14px);
+ -webkit-backdrop-filter: blur(14px);
+ z-index: 10000;
+ display: none;
+ align-items: flex-end;
+ justify-content: center;
+ padding: 12px;
+ }
+ .mobile-more-sheet.show {
+ display: flex;
+ }
+ .mobile-more-card {
+ width: 100%;
+ max-width: 480px;
+ background: linear-gradient(160deg, #131c32 0%, #0c1424 100%);
+ border: 1px solid rgba(143, 180, 255, 0.28);
+ border-radius: 22px;
+ padding: 20px 18px calc(20px + env(safe-area-inset-bottom, 8px)) 18px;
+ box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85);
+ }
+ .mobile-more-grid {
+ display: grid;
+ grid-template-columns: repeat(2, 1fr);
+ gap: 10px;
+ margin-top: 14px;
+ }
+ .mobile-more-item {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ padding: 12px 14px;
+ border-radius: 12px;
+ background: rgba(255, 255, 255, 0.04);
+ border: 1px solid var(--glass-border);
+ color: var(--text);
+ font-size: 13px;
+ font-weight: 600;
+ cursor: pointer;
+ transition: all 0.15s ease;
+ text-decoration: none;
+ }
+ .mobile-more-item:active {
+ background: rgba(143, 180, 255, 0.18);
+ border-color: var(--accent);
+ transform: scale(0.97);
+ }
+ .mobile-more-item svg {
+ width: 18px;
+ height: 18px;
+ stroke-width: 2.2;
+ color: var(--accent);
+ flex-shrink: 0;
  }
  .order-card{
  background:linear-gradient(145deg, rgba(255,255,255,0.065) 0%, rgba(255,255,255,0.02) 100%);
@@ -1504,6 +1951,10 @@
  <div class="sub">30. Januar 2027 · 17:30 Uhr · Gymnasium Wilsdruff</div>
  </div>
  <div class="admin-header-actions">
+ <button type="button" id="headerPwaInstallBtn" class="header-action-btn" title="Winterball Admin als Handy-App installieren" style="background:linear-gradient(135deg, rgba(143,180,255,0.22), rgba(127,224,168,0.16)); border-color:rgba(143,180,255,0.45); color:#fff;">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+ <span>App installieren</span>
+ </button>
  <button type="button" id="headerKassensturzBtn" class="header-action-btn gold-btn" title="Kassensturz für die heutigen Pausen öffnen">
  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 6v12"/></svg>
  <span>Kassensturz</span>
@@ -1520,6 +1971,23 @@
  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
  <span>Abmelden</span>
  </button>
+ </div>
+ </div>
+
+ <!-- Mobile PWA Install Banner (Nur sichtbar im mobilen Browser wenn noch nicht installiert) -->
+ <div class="pwa-install-banner" id="mobilePwaBanner">
+ <div class="pwa-install-left">
+ <div class="pwa-install-icon">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px; height:20px; color:var(--accent);"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+ </div>
+ <div class="pwa-install-text">
+ <h4>Winterball Admin als App</h4>
+ <p>Schnellzugriff vom Startbildschirm im Vollbild</p>
+ </div>
+ </div>
+ <div style="display:flex; align-items:center; gap:8px;">
+ <button type="button" class="pwa-install-btn" id="pwaBannerInstallBtn">Installieren</button>
+ <button type="button" class="pwa-install-close" id="pwaBannerCloseBtn" aria-label="Schließen">✕</button>
  </div>
  </div>
 
@@ -2860,6 +3328,108 @@
  </div>
 </div>
 
+<!-- Mobile Native App Bottom Navigation Bar -->
+<nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Mobile Navigation">
+ <button type="button" class="mobile-nav-item active" data-tab="orders">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+ <span>Bestellungen</span>
+ <span class="mobile-nav-badge" id="mobileBadgeOrders">0</span>
+ </button>
+ <button type="button" class="mobile-nav-item" data-tab="guestlist">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+ <span>Einlass</span>
+ <span class="mobile-nav-badge" id="mobileBadgeGuests">0</span>
+ </button>
+ <button type="button" class="mobile-nav-item" data-tab="insights">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+ <span>Insights</span>
+ <span class="mobile-nav-badge" id="mobileBadgeLive" style="background:rgba(127,224,168,0.25); border-color:#7fe0a8; color:#7fe0a8;">0</span>
+ </button>
+ <button type="button" class="mobile-nav-item" id="mobileMoreBtn">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/><circle cx="5" cy="12" r="1.5"/></svg>
+ <span>Mehr</span>
+ </button>
+</nav>
+
+<!-- Mobile "Mehr" Sheet Modal -->
+<div class="mobile-more-sheet" id="mobileMoreSheet">
+ <div class="mobile-more-card">
+ <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.08);">
+ <div style="display:flex; align-items:center; gap:8px;">
+ <div style="width:28px; height:28px; border-radius:8px; background:rgba(143,180,255,0.18); display:flex; align-items:center; justify-content:center; color:var(--accent);">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+ </div>
+ <span style="font-size:15px; font-weight:800; color:#fff;">Weitere Bereiche &amp; Aktionen</span>
+ </div>
+ <button type="button" id="mobileMoreCloseBtn" style="background:none; border:none; color:var(--text-dim); font-size:20px; cursor:pointer; padding:4px;">✕</button>
+ </div>
+ <div class="mobile-more-grid">
+ <div class="mobile-more-item" data-action="tab-settings">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+ <span>Einstellungen</span>
+ </div>
+ <div class="mobile-more-item" data-action="tab-ratings">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+ <span>Bewertungen</span>
+ </div>
+ <div class="mobile-more-item" data-action="kassensturz">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:#ffd27f;"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 6v12"/></svg>
+ <span>Kassensturz</span>
+ </div>
+ <div class="mobile-more-item" data-action="emergency-print">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:#8fb4ff;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+ <span>Notfall-Liste</span>
+ </div>
+ <div class="mobile-more-item" data-action="pwa-install" id="mobileMoreInstallItem" style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(143,180,255,0.18), rgba(127,224,168,0.12)); border-color: rgba(143,180,255,0.4);">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:#7fe0a8;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+ <div style="flex:1;">
+ <div style="font-weight:700; color:#fff;">App zum Startbildschirm</div>
+ <div style="font-size:11px; color:var(--text-dim);">Als Handy-App installieren</div>
+ </div>
+ <span style="font-size:12px; color:var(--accent); font-weight:700;">Installieren →</span>
+ </div>
+ <div class="mobile-more-item" data-action="refresh" style="color:var(--text-dim);">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+ <span>Aktualisieren</span>
+ </div>
+ <div class="mobile-more-item" data-action="logout" style="color:var(--error); border-color:rgba(255,128,128,0.3); background:rgba(255,128,128,0.06);">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--error);"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+ <span>Abmelden</span>
+ </div>
+ </div>
+ </div>
+</div>
+
+<!-- iOS Safari Installation Guide Modal -->
+<div class="ios-guide-modal" id="iosInstallModal">
+ <div class="ios-guide-card">
+ <div style="width:48px; height:48px; border-radius:14px; background:linear-gradient(135deg, rgba(143,180,255,0.25), rgba(127,224,168,0.2)); border:1.5px solid rgba(143,180,255,0.45); display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px; box-shadow:0 6px 20px rgba(143,180,255,0.3);">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px; height:24px; color:#fff;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+ </div>
+ <h3 style="font-size:18px; font-weight:800; color:#fff; margin-bottom:4px;">Winterball Admin installieren</h3>
+ <p style="font-size:12.5px; color:var(--text-dim); margin-bottom:16px;">Füge die App zu deinem iPhone- oder iPad-Startbildschirm hinzu:</p>
+ 
+ <div class="ios-step">
+ <div class="ios-step-num">1</div>
+ <div>Tippe unten in der Safari-Leiste auf das <span class="ios-icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px; vertical-align:middle; margin-right:3px;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>Teilen-Symbol</span>.</div>
+ </div>
+ 
+ <div class="ios-step">
+ <div class="ios-step-num">2</div>
+ <div>Scrolle im Menü nach unten und wähle <strong style="color:#fff;">„Zum Home-Bildschirm“</strong> <span class="ios-icon-badge">➕</span>.</div>
+ </div>
+ 
+ <div class="ios-step">
+ <div class="ios-step-num">3</div>
+ <div>Tippe oben rechts auf <strong style="color:var(--accent);">„Hinzufügen“</strong>. Fertig!</div>
+ </div>
+ 
+ <button type="button" id="iosModalCloseBtn" style="margin-top:18px; width:100%; padding:12px; border-radius:12px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); color:#fff; font-size:14px; font-weight:700; cursor:pointer;">
+ Verstanden
+ </button>
+ </div>
+</div>
+
 <!-- Unsichtbarer Druck-Container (wird bei @media print aktiv und formatiert) -->
 <div id="printContainer" style="display:none;"></div>
 
@@ -2972,7 +3542,7 @@
 
  let allRegs = [];
  let allTickets = [];
- let ticketPrices = { u18: 0, ue18: 0 };
+ let ticketPrices = { u18: 10, ue18: 15 };
  let lernsaxThreshold = null;
  let scheduleLoaded = false;
  let statsSyncTimer = null;
@@ -3043,16 +3613,55 @@
  }
 
 	// =========================================================================
-	// ZENTRALE HILFSFUNKTIONEN FÜR INSIGHTS & STATISTIKEN
+	// ZENTRALE HILFSFUNKTIONEN FÜR FINANZEN, PREISE & STATISTIKEN
 	// =========================================================================
+
+	// Robustes Parsen von Euro-Werten (verarbeitet Zahlen, Strings mit Komma "10,00", "5 €" etc.)
+	function parseMoneyNumber(val, fallback = 0) {
+		if (val === null || val === undefined || val === '') return fallback;
+		if (typeof val === 'number') {
+			return (isNaN(val) || !isFinite(val)) ? fallback : val;
+		}
+		if (typeof val === 'string') {
+			const cleaned = val.replace(/[^0-9.,-]/g, '').replace(',', '.');
+			const num = parseFloat(cleaned);
+			return (isNaN(num) || !isFinite(num)) ? fallback : num;
+		}
+		const num = Number(val);
+		return (isNaN(num) || !isFinite(num)) ? fallback : num;
+	}
+
+	// Robustes Parsen in Cent (Cent-Ganzzahl)
+	function parseMoneyCents(val, fallbackCents = 0) {
+		if (val === null || val === undefined || val === '') return fallbackCents;
+		if (typeof val === 'number') {
+			return (isNaN(val) || !isFinite(val)) ? fallbackCents : Math.round(val);
+		}
+		const euro = parseMoneyNumber(val, fallbackCents / 100);
+		const cents = Math.round(euro * 100);
+		return (isNaN(cents) || !isFinite(cents)) ? fallbackCents : cents;
+	}
+
+	// Ermittelt den Ticketpreis für eine Kategorie mit sauberen Fallbacks (U18: 10€, Ü18: 15€)
+	function getTicketPrice(category) {
+		const pU18 = parseMoneyNumber(ticketPrices?.u18, 10) || 10;
+		const pUe18 = parseMoneyNumber(ticketPrices?.ue18, 15) || 15;
+		if (category === 'u18') return pU18;
+		if (category === 'ue18') return pUe18;
+		return parseMoneyNumber(ticketPrices?.[category], pUe18);
+	}
+
+	function getTicketPriceCents(category) {
+		return Math.round(getTicketPrice(category) * 100);
+	}
 
 	// Berechnet konsistente Umsatz- & Spendenzahlen über alle Widgets hinweg
 	function calculateRevenueStats() {
-		const pU18 = (ticketPrices && typeof ticketPrices.u18 === 'number') ? ticketPrices.u18 : 10;
-		const pUe18 = (ticketPrices && typeof ticketPrices.ue18 === 'number') ? ticketPrices.ue18 : 15;
+		const pU18 = getTicketPrice('u18');
+		const pUe18 = getTicketPrice('ue18');
 
 		const regMap = new Map();
-		allRegs.forEach(r => regMap.set(r.id, r));
+		(allRegs || []).forEach(r => { if (r && r.id) regMap.set(r.id, r); });
 
 		let projectedTicketCents = 0;
 		let actualTicketCents = 0;
@@ -3065,9 +3674,15 @@
 		let ue18Count = 0;
 		let ue18PaidCount = 0;
 
-		allTickets.forEach(t => {
-			const price = typeof t.price === 'number' ? t.price : (t.category === 'u18' ? pU18 : pUe18);
+		(allTickets || []).forEach(t => {
+			if (!t) return;
+			const defaultPrice = (t.category === 'u18' ? pU18 : pUe18);
+			const price = (t.price !== undefined && t.price !== null && t.price !== '')
+				? parseMoneyNumber(t.price, defaultPrice)
+				: defaultPrice;
 			const c = Math.round(price * 100);
+			if (isNaN(c) || !isFinite(c)) return;
+
 			projectedTicketCents += c;
 
 			const parentReg = regMap.get(t.registrationId);
@@ -3099,8 +3714,9 @@
 		let donationCount = 0;
 		let donationPaidCount = 0;
 
-		allRegs.forEach(r => {
-			const d = Math.round(Number(r.donation || 0) * 100);
+		(allRegs || []).forEach(r => {
+			if (!r) return;
+			const d = parseMoneyCents(r.donation, 0);
 			if (d > 0) {
 				projectedDonationCents += d;
 				donationCount++;
@@ -3116,21 +3732,21 @@
 		const openCents = Math.max(0, totalProjectedCents - totalActualCents);
 
 		return {
-			projectedTicketCents,
-			actualTicketCents,
-			projectedDonationCents,
-			actualDonationCents,
-			totalProjectedCents,
-			totalActualCents,
-			openCents,
+			projectedTicketCents: isNaN(projectedTicketCents) ? 0 : projectedTicketCents,
+			actualTicketCents: isNaN(actualTicketCents) ? 0 : actualTicketCents,
+			projectedDonationCents: isNaN(projectedDonationCents) ? 0 : projectedDonationCents,
+			actualDonationCents: isNaN(actualDonationCents) ? 0 : actualDonationCents,
+			totalProjectedCents: isNaN(totalProjectedCents) ? 0 : totalProjectedCents,
+			totalActualCents: isNaN(totalActualCents) ? 0 : totalActualCents,
+			openCents: isNaN(openCents) ? 0 : openCents,
 			u18Count,
 			u18PaidCount,
 			ue18Count,
 			ue18PaidCount,
-			projectedU18Cents,
-			actualU18Cents,
-			projectedUe18Cents,
-			actualUe18Cents,
+			projectedU18Cents: isNaN(projectedU18Cents) ? 0 : projectedU18Cents,
+			actualU18Cents: isNaN(actualU18Cents) ? 0 : actualU18Cents,
+			projectedUe18Cents: isNaN(projectedUe18Cents) ? 0 : projectedUe18Cents,
+			actualUe18Cents: isNaN(actualUe18Cents) ? 0 : actualUe18Cents,
 			donationCount,
 			donationPaidCount
 		};
@@ -5936,6 +6552,10 @@ let allRatings = [];
  if (elBadgeActive) {
  elBadgeActive.textContent = count;
  }
+ const mobLiveBadge = document.getElementById('mobileBadgeLive');
+ if (mobLiveBadge) {
+ mobLiveBadge.textContent = count;
+ }
 
  // Widget 1: Live auf der Seite
  const elWidgetLiveCount = document.getElementById('widgetLiveCount');
@@ -6310,7 +6930,10 @@ let allRatings = [];
  onAuthStateChanged(auth, (user) => {
  document.getElementById('loginCard').style.display = user ? 'none' : 'block';
  document.getElementById('dashboard').style.display = user ? 'block' : 'none';
- if(user) startListening();
+ if(user) {
+  if (typeof switchToTab === 'function') switchToTab('orders');
+  startListening();
+ }
  });
 
  async function performLogin() {
@@ -6385,34 +7008,195 @@ let allRatings = [];
 
  document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
- function switchToTab(tabName){
- document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabName));
- document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.dataset.tabContent === tabName));
- const globalStats = document.getElementById('globalStatsBar');
- if (globalStats) {
- globalStats.style.display = (tabName === 'insights') ? 'none' : 'grid';
- }
- if (tabName === 'cashier') {
- renderCashier();
- setTimeout(() => {
- const inp = document.getElementById('cashierSearch');
- if (inp) inp.focus();
- }, 50);
- }
- if (tabName === 'guestlist') {
- renderGuestList();
- }
- if (tabName === 'insights') {
- updateCharts();
- renderLivePresence();
- }
- if (tabName === 'ratings') renderRatings();
- if (tabName === 'poll') renderPolls();
- }
+	function switchToTab(tabName){
+		const isMobile = window.innerWidth <= 860;
+		if (isMobile && tabName === 'cashier') {
+			tabName = 'orders';
+		}
 
+		document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabName));
+		document.querySelectorAll('.mobile-nav-item[data-tab]').forEach(b => b.classList.toggle('active', b.dataset.tab === tabName));
+		document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.dataset.tabContent === tabName));
+		
+		// Am Handy: Schnellstatistiken NUR im Insights-Tab sichtbar
+		document.body.classList.toggle('mobile-tab-insights', isMobile && tabName === 'insights');
+		const globalStats = document.getElementById('globalStatsBar');
+		if (globalStats) {
+			if (isMobile) {
+				globalStats.style.display = (tabName === 'insights') ? 'grid' : 'none';
+			} else {
+				globalStats.style.display = (tabName === 'insights') ? 'none' : 'grid';
+			}
+		}
+		if (tabName === 'cashier') {
+			renderCashier();
+			setTimeout(() => {
+				const inp = document.getElementById('cashierSearch');
+				if (inp) inp.focus();
+			}, 50);
+		}
+		if (tabName === 'guestlist') {
+			renderGuestList();
+		}
+		if (tabName === 'insights') {
+			updateCharts();
+			renderLivePresence();
+		}
+		if (tabName === 'ratings') renderRatings();
+		if (tabName === 'poll') renderPolls();
+	}
+
+	window.addEventListener('resize', () => {
+		const isMobile = window.innerWidth <= 860;
+		const activeTab = document.querySelector('.tab-content.active')?.dataset?.tabContent || 'orders';
+		document.body.classList.toggle('mobile-tab-insights', isMobile && activeTab === 'insights');
+		const globalStats = document.getElementById('globalStatsBar');
+		if (globalStats) {
+			if (isMobile) {
+				globalStats.style.display = (activeTab === 'insights') ? 'grid' : 'none';
+			} else {
+				globalStats.style.display = (activeTab === 'insights') ? 'none' : 'grid';
+			}
+		}
+	});
  document.querySelectorAll('.tab-btn').forEach(btn => {
  btn.addEventListener('click', () => switchToTab(btn.dataset.tab));
  });
+
+ // Mobile Native App Navigation & "Mehr" Sheet Logic
+ function initMobileNavigation() {
+ document.querySelectorAll('.mobile-nav-item[data-tab]').forEach(btn => {
+ btn.addEventListener('click', () => {
+ switchToTab(btn.dataset.tab);
+ window.scrollTo({ top: 0, behavior: 'smooth' });
+ });
+ });
+
+ const moreSheet = document.getElementById('mobileMoreSheet');
+ const moreBtn = document.getElementById('mobileMoreBtn');
+ const moreCloseBtn = document.getElementById('mobileMoreCloseBtn');
+
+ function openMoreSheet() {
+ moreSheet?.classList.add('show');
+ document.body.style.overflow = 'hidden';
+ }
+ function closeMoreSheet() {
+ moreSheet?.classList.remove('show');
+ document.body.style.overflow = '';
+ }
+
+ moreBtn?.addEventListener('click', openMoreSheet);
+ moreCloseBtn?.addEventListener('click', closeMoreSheet);
+ moreSheet?.addEventListener('click', (e) => {
+ if (e.target === moreSheet) closeMoreSheet();
+ });
+
+ document.querySelectorAll('.mobile-more-item[data-action]').forEach(item => {
+ item.addEventListener('click', () => {
+ const action = item.dataset.action;
+ closeMoreSheet();
+ if (action === 'tab-settings') {
+ switchToTab('settings');
+ window.scrollTo({ top: 0, behavior: 'smooth' });
+ } else if (action === 'tab-ratings') {
+ switchToTab('ratings');
+ window.scrollTo({ top: 0, behavior: 'smooth' });
+ } else if (action === 'kassensturz') {
+ document.getElementById('headerKassensturzBtn')?.click();
+ } else if (action === 'emergency-print') {
+ document.getElementById('headerEmergencyPrintBtn')?.click();
+ } else if (action === 'pwa-install') {
+ document.getElementById('headerPwaInstallBtn')?.click();
+ } else if (action === 'refresh') {
+ document.getElementById('headerRefreshBtn')?.click();
+ } else if (action === 'logout') {
+ signOut(auth);
+ }
+ });
+ });
+ }
+ initMobileNavigation();
+
+ // PWA Installation & Service Worker Logic
+ let deferredPwaPrompt = null;
+ const isIosDevice = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+ const isAppStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator.standalone === true);
+
+ function initPwaInstall() {
+ const banner = document.getElementById('mobilePwaBanner');
+ const headerBtn = document.getElementById('headerPwaInstallBtn');
+ const moreItem = document.getElementById('mobileMoreInstallItem');
+
+ if (isAppStandalone) {
+ if (banner) banner.style.display = 'none';
+ if (headerBtn) headerBtn.style.display = 'none';
+ if (moreItem) moreItem.style.display = 'none';
+ return;
+ }
+
+ const dismissed = sessionStorage.getItem('wb_pwa_banner_dismissed');
+ if (banner && !dismissed && window.innerWidth <= 860) {
+ banner.classList.add('show');
+ }
+
+ window.addEventListener('beforeinstallprompt', (e) => {
+ e.preventDefault();
+ deferredPwaPrompt = e;
+ if (banner && !sessionStorage.getItem('wb_pwa_banner_dismissed')) {
+ banner.classList.add('show');
+ }
+ if (headerBtn) headerBtn.style.display = 'inline-flex';
+ });
+
+ window.addEventListener('appinstalled', () => {
+ deferredPwaPrompt = null;
+ if (banner) banner.classList.remove('show');
+ if (headerBtn) headerBtn.style.display = 'none';
+ if (moreItem) moreItem.style.display = 'none';
+ showAdminToast('Winterball Admin erfolgreich als App installiert! 🎉');
+ });
+
+ async function triggerInstallFlow() {
+ if (deferredPwaPrompt) {
+ deferredPwaPrompt.prompt();
+ const choice = await deferredPwaPrompt.userChoice;
+ if (choice && choice.outcome === 'accepted') {
+ deferredPwaPrompt = null;
+ if (banner) banner.classList.remove('show');
+ }
+ } else if (isIosDevice) {
+ document.getElementById('iosInstallModal')?.classList.add('show');
+ } else {
+ alert('Tippe im Browser-Menü (oben rechts ⋮) auf „App installieren“ oder „Zum Startbildschirm hinzufügen“.');
+ }
+ }
+
+ headerBtn?.addEventListener('click', triggerInstallFlow);
+ document.getElementById('pwaBannerInstallBtn')?.addEventListener('click', triggerInstallFlow);
+ document.getElementById('pwaBannerCloseBtn')?.addEventListener('click', () => {
+ banner?.classList.remove('show');
+ sessionStorage.setItem('wb_pwa_banner_dismissed', '1');
+ });
+
+ document.getElementById('iosModalCloseBtn')?.addEventListener('click', () => {
+ document.getElementById('iosInstallModal')?.classList.remove('show');
+ });
+ document.getElementById('iosInstallModal')?.addEventListener('click', (e) => {
+ if (e.target === document.getElementById('iosInstallModal')) {
+ document.getElementById('iosInstallModal')?.classList.remove('show');
+ }
+ });
+ }
+ initPwaInstall();
+
+ // Service Worker Registration
+ if ('serviceWorker' in navigator) {
+ window.addEventListener('load', () => {
+ navigator.serviceWorker.register('/sw.js').catch((err) => {
+ console.warn('PWA ServiceWorker Registration:', err);
+ });
+ });
+ }
 
  // Klick auf Widget-Kacheln öffnet vergrößertes Detail-Modal
  document.querySelectorAll('.widget-card').forEach(card => {
@@ -6472,9 +7256,16 @@ let allRatings = [];
 
  onSnapshot(doc(db, 'settings', 'pricing'), (snap) => {
  const data = snap.exists() ? snap.data() : {};
- ticketPrices = { u18: Number(data.u18 || 0), ue18: Number(data.ue18 || 0) };
- document.getElementById('priceU18Input').value = ticketPrices.u18 || '';
- document.getElementById('priceUe18Input').value = ticketPrices.ue18 || '';
+ const u18Val = parseMoneyNumber(data.u18, 10);
+ const ue18Val = parseMoneyNumber(data.ue18, 15);
+ ticketPrices = {
+ u18: u18Val > 0 ? u18Val : 10,
+ ue18: ue18Val > 0 ? ue18Val : 15
+ };
+ const pU18El = document.getElementById('priceU18Input');
+ if (pU18El) pU18El.value = ticketPrices.u18 || '';
+ const pUe18El = document.getElementById('priceUe18Input');
+ if (pUe18El) pUe18El.value = ticketPrices.ue18 || '';
  scheduleRender();
  scheduleCharts();
  }, onErr('pricing'));
@@ -6634,6 +7425,10 @@ let allRatings = [];
  // Tab orders badge
  const tabOrdersBadge = document.getElementById('tabOrdersCount');
  if (tabOrdersBadge) tabOrdersBadge.textContent = allRegs.length;
+ const mobOrdersBadge = document.getElementById('mobileBadgeOrders');
+ if (mobOrdersBadge) mobOrdersBadge.textContent = allRegs.length;
+ const mobGuestsBadge = document.getElementById('mobileBadgeGuests');
+ if (mobGuestsBadge) mobGuestsBadge.textContent = allTickets.length;
 
  // 1) Desktop Table View
  const tbody = document.getElementById('tableBody');
@@ -7122,13 +7917,15 @@ let allRatings = [];
  ? tickets.filter(t => !t.paid)
  : tickets;
 
- const total = unpaid.reduce((sum, t) => sum + (ticketPrices[t.category] || 0), 0);
- return Math.round(total * 100);
- }
+		const totalCents = unpaid.reduce((sum, t) => sum + getTicketPriceCents(t.category), 0);
+		return isNaN(totalCents) ? 0 : totalCents;
+	}
 
- function formatCents(cents){
- return (cents / 100).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
- }
+	function formatCents(cents){
+		const c = parseMoneyNumber(cents, 0);
+		const valid = (isNaN(c) || !isFinite(c)) ? 0 : c;
+		return (valid / 100).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+	}
 
  function updateCashDisplay(){
 		const dueEl = document.getElementById('cashDue');
@@ -7280,7 +8077,7 @@ let allRatings = [];
 		const subEl = document.getElementById('cashModalSubtitle');
 		if (subEl) {
 			if (isPartial) {
-				const unpaidNames = unpaidTickets.map(t => `<span style="font-weight:700; color:#fff;">${escapeHtml(t.name)}</span> <span style="color:#9aa7c2;">(${categoryLabel(t.category)} · ${formatCents(Math.round((ticketPrices[t.category]||0)*100))})</span>`).join(', ');
+				const unpaidNames = unpaidTickets.map(t => `<span style="font-weight:700; color:#fff;">${escapeHtml(t.name)}</span> <span style="color:#9aa7c2;">(${categoryLabel(t.category)} · ${formatCents(getTicketPriceCents(t.category))})</span>`).join(', ');
 				const paidNames = paidTickets.map(t => `<span style="color:#7fe0a8; font-weight:600;">${escapeHtml(t.name)}</span>`).join(', ');
 				subEl.innerHTML = `
 					<div style="background:rgba(255,210,127,0.08); border:1px solid rgba(255,210,127,0.25); border-radius:8px; padding:8px 11px; text-align:left; font-size:12px; line-height:1.45;">
@@ -8613,8 +9410,8 @@ let allRatings = [];
  const dueCents = ticketsDueCents(r.id);
  const paidCount = tickets.filter(t => t.paid).length;
  const totalTickets = tickets.length;
- const donationCents = r.donation ? Math.round(Number(r.donation) * 100) : 0;
-		const totalCents = tickets.reduce((sum, t) => sum + Math.round((ticketPrices[t.category] || 0) * 100), 0) + donationCents;
+ const donationCents = parseMoneyCents(r.donation, 0);
+		const totalCents = tickets.reduce((sum, t) => sum + getTicketPriceCents(t.category), 0) + donationCents;
 
  const salutationBadge = (r.salutation === 'sie' || r.anrede === 'Sie')
  ? '<span class="badge out" style="color:#c4b5fd; border-color:rgba(196,181,253,0.35); background:rgba(196,181,253,0.12); font-weight:700;">Sie</span>'
@@ -8637,7 +9434,7 @@ let allRatings = [];
  <div>
  ${t.paid
  ? `<span class="badge in" style="font-size:11px;"> Bezahlt</span>`
- : `<span class="badge out" style="font-size:11px; background:rgba(255,210,127,0.14); color:#ffd27f; border-color:rgba(255,210,127,0.3);">Offen: ${formatCents(Math.round((ticketPrices[t.category]||0)*100))}</span>`}
+ : `<span class="badge out" style="font-size:11px; background:rgba(255,210,127,0.14); color:#ffd27f; border-color:rgba(255,210,127,0.3);">Offen: ${formatCents(getTicketPriceCents(t.category))}</span>`}
  </div>
  </div>
  `;
@@ -8781,9 +9578,9 @@ let allRatings = [];
  function exportCsv(filename){
   const header = ['Besteller','Anrede','Altersgruppe','Klasse','Begleitungen','E-Mail','Tickets gesamt','Bezahlt','Spende (€)','Gesamtbetrag (€)','Angemeldet am','Bezahlt am'];
   const rows = allRegs.map(r => {
-    const don = Number(r.donation) || 0;
+    const don = parseMoneyNumber(r.donation, 0);
     const tkts = ticketsFor(r.id);
-    const ticketCost = tkts.reduce((sum, t) => sum + (ticketPrices[t.category] || 0), 0);
+    const ticketCost = tkts.reduce((sum, t) => sum + getTicketPrice(t.category), 0);
     const total = r.paid ? (ticketCost + don) : 0;
     return [
       r.name,
@@ -9133,8 +9930,8 @@ let allRatings = [];
  const tickets = ticketsFor(r.id);
  tickets.forEach(t => {
  if (t.paid || r.paid) {
- const pr = ticketPrices[t.category] || 0;
- todayPaidCents += Math.round(pr * 100);
+ const pr = getTicketPriceCents(t.category);
+ todayPaidCents += pr;
  if (t.category === 'u18') todayU18Tickets++;
  else if (t.category === 'ue18') todayUe18Tickets++;
  }
@@ -9193,7 +9990,7 @@ let allRatings = [];
  const cl = t.schoolClass || (t.name === r.name ? r.schoolClass : null);
  return `<div style="display:flex; justify-content:space-between; align-items:center; padding:2px 0;">
  <span>• <strong>${escapeHtml(t.name)}</strong> (${cat}${cl ? `, Kl. ${escapeHtml(cl)}` : ''})</span>
- <span style="color:${t.paid ? '#7fe0a8' : '#ffd27f'}; font-weight:600;">${t.paid ? ' Bezahlt' : formatCents(Math.round((ticketPrices[t.category]||0)*100))}</span>
+ <span style="color:${t.paid ? '#7fe0a8' : '#ffd27f'}; font-weight:600;">${t.paid ? ' Bezahlt' : formatCents(getTicketPriceCents(t.category))}</span>
  </div>`;
  }).join('');
 
@@ -9208,7 +10005,7 @@ let allRatings = [];
  ${r.schoolClass ? `Klasse ${escapeHtml(r.schoolClass)} · ` : ''}${tickets.length} Ticket${tickets.length > 1 ? 's' : ''}
  </div>
  </div>
- <div class="cashier-card-due">${isFullyPaid ? ('<span style="color:#7fe0a8; font-size:16px;">✓ Bezahlt</span>' + (r.donation > 0 ? (' <div style="font-size:11.5px; color:#ffd27f; font-weight:700; text-align:right; margin-top:2px;">+' + formatCents(Math.round(r.donation*100)) + ' Spende</div>') : '')) : formatCents(dueCents)}</div>
+ <div class="cashier-card-due">${isFullyPaid ? ('<span style="color:#7fe0a8; font-size:16px;">✓ Bezahlt</span>' + (parseMoneyNumber(r.donation, 0) > 0 ? (' <div style="font-size:11.5px; color:#ffd27f; font-weight:700; text-align:right; margin-top:2px;">+' + formatCents(parseMoneyCents(r.donation)) + ' Spende</div>') : '')) : formatCents(dueCents)}</div>
  </div>
 
  <div class="cashier-card-tickets">
@@ -9271,8 +10068,8 @@ let allRatings = [];
  const tickets = ticketsFor(r.id);
  const u18Count = tickets.filter(t => t.category === 'u18').length;
  const ue18Count = tickets.filter(t => t.category === 'ue18').length;
- 					const baseCents = tickets.reduce((sum, t) => sum + Math.round((ticketPrices[t.category] || 0) * 100), 0);
-					const donCents = (r.donation && Number(r.donation) > 0) ? Math.round(Number(r.donation) * 100) : 0;
+					const baseCents = tickets.reduce((sum, t) => sum + getTicketPriceCents(t.category), 0);
+					const donCents = parseMoneyCents(r.donation, 0);
 					const paidCents = baseCents + donCents;
 					let detailStr = `${tickets.length}× (${u18Count > 0 ? u18Count + '× U18' : ''}${u18Count > 0 && ue18Count > 0 ? ' · ' : ''}${ue18Count > 0 ? ue18Count + '× Ü18' : ''})`;
 					if (donCents > 0) {
@@ -9360,7 +10157,7 @@ let allRatings = [];
 			const tickets = ticketsFor(r.id);
 			tickets.forEach(t => {
 				if (t.paid || r.paid) {
-					const pr = Math.round((ticketPrices[t.category] || 0) * 100);
+					const pr = getTicketPriceCents(t.category);
 					totalCents += pr;
 					if (t.category === 'u18') {
 						u18Count++;
@@ -9371,8 +10168,8 @@ let allRatings = [];
 					}
 				}
 			});
-			if (r.donation && Number(r.donation) > 0) {
-				const dC = Math.round(Number(r.donation) * 100);
+			const dC = parseMoneyCents(r.donation, 0);
+			if (dC > 0) {
 				donationCents += dC;
 				donationCount++;
 				totalCents += dC;
@@ -9393,7 +10190,7 @@ let allRatings = [];
  if (pAmt) pAmt.textContent = formatCents(totalCents);
  const pBreakdown = document.getElementById('kassensturzBreakdownText');
  if (pBreakdown) {
- let bText = `${totalTickets} Tickets bezahlt (${u18Count}× U18 à ${formatCents(Math.round((ticketPrices.u18||0)*100))} · ${ue18Count}× Ü18 à ${formatCents(Math.round((ticketPrices.ue18||0)*100))})`;
+ let bText = `${totalTickets} Tickets bezahlt (${u18Count}× U18 à ${formatCents(getTicketPriceCents('u18'))} · ${ue18Count}× Ü18 à ${formatCents(getTicketPriceCents('ue18'))})`;
 		if (donationCents > 0) {
 			bText += ` + ${formatCents(donationCents)} freiwillige Spenden (${donationCount}×)`;
 		}
@@ -9433,8 +10230,8 @@ let allRatings = [];
  const tickets = ticketsFor(r.id);
  const u18 = tickets.filter(t => t.category === 'u18').length;
  const ue18 = tickets.filter(t => t.category === 'ue18').length;
- const baseCents = tickets.reduce((sum, t) => sum + Math.round((ticketPrices[t.category] || 0) * 100), 0);
-				const donCents = (r.donation && Number(r.donation) > 0) ? Math.round(Number(r.donation) * 100) : 0;
+ const baseCents = tickets.reduce((sum, t) => sum + getTicketPriceCents(t.category), 0);
+				const donCents = parseMoneyCents(r.donation, 0);
 				const paidCents = baseCents + donCents;
 				const donBadge = donCents > 0 ? ` <span style="color:#ffd27f; font-size:11px; font-weight:700;">(+${formatCents(donCents)} Spende)</span>` : '';
 
@@ -9470,13 +10267,13 @@ let allRatings = [];
 			const tickets = ticketsFor(r.id);
 			tickets.forEach(t => {
 				if (t.paid || r.paid) {
-					totalCents += Math.round((ticketPrices[t.category] || 0) * 100);
+					totalCents += getTicketPriceCents(t.category);
 					if (t.category === 'u18') u18Count++;
 					else if (t.category === 'ue18') ue18Count++;
 				}
 			});
-			if (r.donation && Number(r.donation) > 0) {
-				const dC = Math.round(Number(r.donation) * 100);
+			const dC = parseMoneyCents(r.donation, 0);
+			if (dC > 0) {
 				donationCents += dC;
 				donationCount++;
 				totalCents += dC;
@@ -9510,8 +10307,8 @@ let allRatings = [];
  <div style="font-size:32px; font-weight:900; color:#000; margin:4px 0;">${formatCents(totalCents)}</div>
  <div style="font-size:14px; font-weight:600;">
  Stückelung: <strong>${u18Count + ue18Count} Tickets gesamt</strong>
- (<strong>${u18Count}× U18</strong> à ${formatCents(Math.round((ticketPrices.u18||0)*100))} = ${formatCents(u18Count * Math.round((ticketPrices.u18||0)*100))} ·
- <strong>${ue18Count}× Ü18</strong> à ${formatCents(Math.round((ticketPrices.ue18||0)*100))} = ${formatCents(ue18Count * Math.round((ticketPrices.ue18||0)*100))})
+ (<strong>${u18Count}× U18</strong> à ${formatCents(getTicketPriceCents('u18'))} = ${formatCents(u18Count * getTicketPriceCents('u18'))} ·
+ <strong>${ue18Count}× Ü18</strong> à ${formatCents(getTicketPriceCents('ue18'))} = ${formatCents(ue18Count * getTicketPriceCents('ue18'))})
  </div>
  <div style="font-size:12px; color:#666; margin-top:4px;">Erfasst über ${regs.length} Schüler-Bestellungen · Abrechnung ohne Klassenfilter${donationCents > 0 ? ` · davon <strong>${formatCents(donationCents)} freiwillige Spenden</strong> (${donationCount} Spender für JG 12)` : ''}</div>
  </div>
@@ -9535,8 +10332,8 @@ let allRatings = [];
  const tickets = ticketsFor(r.id);
  const u18 = tickets.filter(t => t.category === 'u18').length;
  const ue18 = tickets.filter(t => t.category === 'ue18').length;
- const baseCents = tickets.reduce((sum, t) => sum + Math.round((ticketPrices[t.category] || 0) * 100), 0);
-			const donCents = (r.donation && Number(r.donation) > 0) ? Math.round(Number(r.donation) * 100) : 0;
+ const baseCents = tickets.reduce((sum, t) => sum + getTicketPriceCents(t.category), 0);
+			const donCents = parseMoneyCents(r.donation, 0);
 			const paidCents = baseCents + donCents;
 			const pDonBadge = donCents > 0 ? ` · <strong style="color:#059669;">+${formatCents(donCents)} Spende</strong>` : '';
  return `
@@ -9662,8 +10459,8 @@ let allRatings = [];
  const roleText = g.isOrderer ? 'Besteller' : escapeHtml(g.role);
  const catText = `${categoryLabel(g.category)}${g.schoolClass ? ' (Kl. ' + escapeHtml(g.schoolClass) + ')' : ''}`;
  const payText = g.paid
- ? `<span style="color:#0f5132; font-weight:700;"> Bezahlt</span>`
- : `<span style="color:#842029; font-weight:800;"> OFFEN (${formatCents(Math.round((ticketPrices[g.category]||0)*100))})</span>`;
+ ? `<span style="color:#0f5132; font-weight:700;">✓ Bezahlt</span>`
+ : `<span style="color:#842029; font-weight:800;">✗ OFFEN (${formatCents(getTicketPriceCents(g.category))})</span>`;
 
  rowsHtml += `
  <tr style="page-break-inside:avoid;">
