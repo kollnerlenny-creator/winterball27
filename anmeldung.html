@@ -163,28 +163,6 @@
  }
  }
 
- /* Desktop Layout: Volle Breite mit aufgeräumtem 2-Spalten-Grid */
- @media (min-width: 769px){
- .desktop-grid-2{
- display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start;
- }
- .mobile-wizard-header,
- .mobile-only,
- .mobile-summary-card,
- .step-intro-badge,
- .step-heading,
- .step-subheading,
- .step-trust-card{
- display:none !important;
- }
- .desktop-only{
- display:block;
- }
- .form-step{
- display:block !important; animation:none !important;
- }
- }
-
  /* Handy-Layout: Schritt-für-Schritt Wizard */
  @media (max-width: 768px){
  .desktop-only{ display:none !important; }
@@ -250,6 +228,17 @@
  }
  .salutation-toggle-btn{
  padding:15px 16px; font-size:15px; border-radius:14px;
+ }
+ .email-mode-switch{
+ background:transparent; border:none; padding:0; gap:10px; border-radius:0;
+ }
+ .email-mode-btn{
+ padding:15px 12px; font-size:14.5px; border-radius:14px;
+ border:1px solid var(--glass-border); background:rgba(255,255,255,0.04); color:var(--text);
+ }
+ .email-mode-btn.active{
+ background:rgba(143,180,255,0.18); border-color:var(--accent-glow); color:#ffffff;
+ box-shadow:0 2px 12px rgba(143,180,255,0.2);
  }
  .mobile-only{ display:flex; }
  .mobile-step-hint{
@@ -368,6 +357,22 @@
  }
  input::placeholder{color:rgba(255,255,255,0.3);}
  input:focus, select:focus{border-color:var(--accent-glow); background:rgba(255,255,255,0.08);}
+ input:-webkit-autofill,
+ input:-webkit-autofill:hover,
+ input:-webkit-autofill:focus{
+ -webkit-text-fill-color:var(--text);
+ caret-color:var(--text);
+ -webkit-box-shadow:0 0 0 1000px rgba(19,28,48,0.92) inset;
+ box-shadow:0 0 0 1000px rgba(19,28,48,0.92) inset;
+ border-color:rgba(143,180,255,0.35);
+ transition:background-color 9999s ease-out 0s;
+ }
+ .lernsax-input-group input:-webkit-autofill,
+ .lernsax-input-group input:-webkit-autofill:hover,
+ .lernsax-input-group input:-webkit-autofill:focus{
+ -webkit-box-shadow:0 0 0 1000px rgba(19,28,48,0.85) inset;
+ box-shadow:0 0 0 1000px rgba(19,28,48,0.85) inset;
+ }
  select option{background:#131c30; color:var(--text);}
 
  /* Custom-Dropdown statt nativer Browser-Auswahlliste */
@@ -436,14 +441,18 @@
  border-color:var(--accent-glow); background:var(--accent-glow); color:#0a0e1a; font-weight:700;
  }
 
+ .age-toggle,
  .companion-toggle{display:flex; gap:10px; margin-top:6px;}
+ .age-toggle-btn,
  .companion-toggle-btn{
  flex:1; padding:14px; border-radius:var(--radius-sm); border:1px solid var(--glass-border);
  background:rgba(255,255,255,0.04); color:var(--text); font-size:15px; font-weight:600; cursor:pointer;
- transition:background 0.2s, border-color 0.2s, color 0.2s;
+ transition:background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
  }
+ .age-toggle-btn.active,
  .companion-toggle-btn.active{
- background:rgba(143,180,255,0.16); border-color:var(--accent-glow); color:var(--accent-glow);
+ background:rgba(143,180,255,0.18); border-color:var(--accent-glow); color:var(--accent-glow);
+ box-shadow:0 2px 12px rgba(143,180,255,0.2);
  }
  .add-companion{
  display:block; width:100%; margin-top:10px; padding:13px;
@@ -504,24 +513,24 @@
 
  /* E-Mail-Eingabe mit LernSax-Schnellauswahl (@gymwilsdruff.lernsax.de) */
  .email-header-row{
- display:flex; justify-content:space-between; align-items:center;
- margin-bottom:8px; flex-wrap:wrap; gap:6px;
+ display:flex; flex-direction:column; align-items:stretch;
+ margin-bottom:10px; gap:8px;
  }
  .email-header-row label{margin-bottom:0;}
  .email-mode-switch{
- display:inline-flex; gap:3px; background:rgba(255,255,255,0.05);
- padding:3px; border:1px solid var(--glass-border); border-radius:20px;
+ display:flex; width:100%; gap:4px; background:rgba(255,255,255,0.05);
+ padding:4px; border:1px solid var(--glass-border); border-radius:var(--radius-sm);
  }
  .email-mode-btn{
- background:transparent; border:none; border-radius:14px;
- padding:5px 11px; font-size:12px; font-weight:600; color:var(--text-dim);
- cursor:pointer; transition:all 0.2s ease; display:inline-flex; align-items:center; gap:5px;
+ flex:1; background:transparent; border:1px solid transparent; border-radius:10px;
+ padding:10px 12px; font-size:13.5px; font-weight:600; color:var(--text-dim);
+ cursor:pointer; transition:all 0.2s ease; display:inline-flex; align-items:center; justify-content:center; gap:6px;
  line-height:1.2;
  }
  .email-mode-btn:hover{color:var(--text);}
  .email-mode-btn.active{
- background:rgba(143,180,255,0.22); color:var(--accent-glow);
- box-shadow:0 2px 8px rgba(143,180,255,0.18);
+ background:rgba(143,180,255,0.22); border-color:rgba(143,180,255,0.45); color:#ffffff;
+ box-shadow:0 2px 10px rgba(143,180,255,0.2);
  }
  .lernsax-input-group{
  display:flex; align-items:stretch; width:100%;
@@ -554,6 +563,10 @@
  .email-hint.highlight{
  color:var(--accent-glow);
  }
+ .email-hint.warn{
+ color:#ff9c9c;
+ font-weight:500;
+ }
  @media (max-width: 440px){
  .lernsax-domain-suffix{
  font-size:11px; padding:0 8px;
@@ -562,7 +575,7 @@
  padding:14px 10px; font-size:14px;
  }
  .email-mode-btn{
- padding:4px 8px; font-size:11px;
+ padding:9px 10px; font-size:12.5px;
  }
  }
 
@@ -605,6 +618,226 @@
  .status.error{
  display:block; background:rgba(255,100,100,0.12); color:#ff9c9c;
  border:1px solid rgba(255,100,100,0.32); box-shadow:0 4px 16px rgba(255,80,80,0.12);
+ }
+
+ /* Desktop Layout: Aufgeräumtes 2-Spalten-Grid (nach Basis-Styles für saubere Pill-Rundungen) */
+ @media (min-width: 769px){
+ .card{
+ max-width:820px;
+ padding:38px 46px 32px;
+ }
+ .moon{
+ width:72px;
+ height:72px;
+ margin:0 auto 6px;
+ }
+ h1{
+ margin-bottom:0;
+ }
+ h1 span{
+ font-size:clamp(38px,5vw,56px);
+ line-height:1.35;
+ padding:4px 0;
+ }
+ .subtitle{
+ margin-bottom:24px;
+ }
+ #regForm{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:18px 26px;
+ align-items:start;
+ }
+ #step1{
+ grid-column:1;
+ grid-row:1;
+ }
+ #step2{
+ grid-column:2;
+ grid-row:1;
+ }
+ #step4{
+ display:contents !important;
+ }
+ .desktop-altersgruppe-block{
+ grid-column:1;
+ grid-row:2;
+ }
+ #step3{
+ grid-column:2;
+ grid-row:2;
+ }
+ .desktop-begleitung-block{
+ grid-column:1;
+ grid-row:3;
+ }
+ .desktop-klasse-block{
+ grid-column:2;
+ grid-row:3;
+ }
+ .desktop-companions-list-block{
+ grid-column:1 / -1;
+ grid-row:4;
+ }
+ #step5{
+ grid-column:1 / -1;
+ grid-row:5;
+ margin-top:4px;
+ }
+ #regForm .field{
+ margin-bottom:0;
+ }
+ #regForm label{
+ font-size:12.5px;
+ font-weight:500;
+ color:var(--text-dim);
+ margin-bottom:8px;
+ line-height:1.3;
+ }
+ /* Einheitliche 46px-Höhe & harmonische Pill-Rundungen für alle Felder & Umschalter */
+ #name,
+ #otherEmailInput,
+ #schoolClass{
+ height:46px;
+ padding:0 18px;
+ font-size:14px;
+ border-radius:999px;
+ }
+ .lernsax-input-group{
+ height:46px;
+ border-radius:999px;
+ }
+ .lernsax-input-group input{
+ height:44px;
+ padding:0 16px;
+ font-size:14px;
+ }
+ .lernsax-domain-suffix{
+ padding:0 16px 0 12px;
+ }
+ .salutation-toggle,
+ .age-toggle,
+ .companion-toggle,
+ .email-mode-switch{
+ display:flex;
+ width:100%;
+ height:46px;
+ margin-top:0;
+ padding:3px;
+ gap:4px;
+ border-radius:999px;
+ background:rgba(255,255,255,0.04);
+ border:1px solid rgba(255,255,255,0.14);
+ box-shadow:inset 0 1px 3px rgba(0,0,0,0.28);
+ }
+ .salutation-toggle-btn,
+ .age-toggle-btn,
+ .companion-toggle-btn,
+ .email-mode-btn{
+ flex:1;
+ height:100%;
+ padding:0 12px;
+ border-radius:999px;
+ border:1px solid transparent;
+ background:transparent;
+ color:var(--text-dim);
+ font-size:13.5px;
+ font-weight:600;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ gap:6px;
+ text-align:center;
+ box-shadow:none;
+ transition:background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+ }
+ .salutation-toggle-btn:hover,
+ .age-toggle-btn:hover,
+ .companion-toggle-btn:hover,
+ .email-mode-btn:hover{
+ background:rgba(255,255,255,0.05);
+ border-color:transparent;
+ color:var(--text);
+ }
+ .salutation-toggle-btn.active,
+ .age-toggle-btn.active,
+ .companion-toggle-btn.active,
+ .email-mode-btn.active{
+ background:linear-gradient(135deg, rgba(143,180,255,0.28), rgba(143,180,255,0.14));
+ border-color:rgba(165,200,255,0.55);
+ color:#ffffff;
+ box-shadow:0 0 16px rgba(143,180,255,0.28), inset 0 1px 1px rgba(255,255,255,0.3);
+ }
+ .salutation-toggle-btn .btn-inner{
+ width:auto;
+ justify-content:center;
+ }
+ .salutation-toggle-btn .btn-left{
+ align-items:center;
+ }
+ .salutation-toggle-btn .btn-title{
+ font-size:13.5px;
+ font-weight:600;
+ color:inherit;
+ justify-content:center;
+ }
+ .salutation-toggle-btn .btn-title small{
+ font-size:11.5px !important;
+ font-weight:400;
+ color:inherit;
+ opacity:0.8;
+ }
+ #nameHint{
+ font-size:11.5px;
+ margin-top:6px;
+ line-height:1.35;
+ }
+ #nameHint:not(.warn):not(.success){
+ display:none;
+ }
+ .email-header-row{
+ flex-direction:column;
+ align-items:stretch;
+ gap:0;
+ margin-bottom:0;
+ }
+ .email-header-row label{
+ margin-bottom:8px;
+ }
+ #lernsaxInputGroup,
+ #otherInputGroup{
+ margin-top:10px;
+ }
+ .email-hint{
+ font-size:11.5px;
+ margin-top:6px;
+ line-height:1.35;
+ }
+ #companionsSection{
+ margin-top:0 !important;
+ }
+ .consent-field{
+ margin-bottom:14px;
+ }
+ button[type="submit"]{
+ margin-top:2px;
+ border-radius:999px;
+ }
+ .mobile-wizard-header,
+ .mobile-only,
+ .mobile-summary-card,
+ .step-intro-badge,
+ .step-heading,
+ .step-subheading,
+ .step-trust-card{
+ display:none !important;
+ }
+ .desktop-only{
+ display:block;
+ }
+ .form-step{
+ display:block !important; animation:none !important;
+ }
  }
  .success-view{display:none; text-align:center;}
  .success-view.active{display:block;}
@@ -1249,19 +1482,15 @@
  </div>
  </div>
 
- <!-- DESKTOP GRID 1: Name & E-Mail (am PC nebeneinander, am Handy 2 separate Schritte) -->
- <div class="desktop-grid-2">
- <!-- SCHRITT 2: NAME -->
+ <!-- SCHRITT 2: VOR- UND NACHNAME -->
  <div class="form-step" data-step="2" id="step2">
  <h2 class="step-heading mobile-only" id="step2Heading">Wie heißt du?</h2>
- <p class="step-subheading mobile-only" id="step2Subheading">Bitte gib deinen vollständigen Vor- und Nachnamen für das Einlass-Ticket an.</p>
+ <p class="step-subheading mobile-only" id="step2Subheading">Bitte gib deinen echten Vor- und Nachnamen für das Einlass-Ticket an.</p>
 
  <div class="field">
  <label for="name" id="nameLabel">Dein Vor- und Nachname</label>
- <input type="text" id="name" placeholder="Max Mustermann" required autocomplete="name">
- <div class="name-hint" id="nameHint">
- Bitte gib deinen vollständigen Vor- und Nachnamen an (z. B. Max Mustermann)
- </div>
+ <input type="text" id="name" placeholder="z.B. Max Mustermann" required autocomplete="name">
+ <div class="name-hint" id="nameHint"> Bitte gib deinen vollständigen Vor- und Nachnamen an (z. B. Max Mustermann).</div>
  </div>
 
  <div class="step-trust-card mobile-only">
@@ -1283,8 +1512,8 @@
  <div class="field" id="emailField">
  <div class="email-header-row">
  <label for="lernsaxUsername" id="emailLabel">Deine E-Mail-Adresse</label>
- <div class="email-mode-switch" role="tablist" aria-label="E-Mail-Typ auswählen">
- <button type="button" class="email-mode-btn active" id="btnModeLernsax" title="Schnelleingabe: Nur Kennung vor @gymwilsdruff.lernsax.de eingeben">
+ <div class="email-mode-switch" id="emailModeSwitch" role="tablist" aria-label="E-Mail-Typ auswählen">
+ <button type="button" class="email-mode-btn" id="btnModeLernsax" title="Schnelleingabe: Nur Kennung vor @gymwilsdruff.lernsax.de eingeben">
  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block; vertical-align:middle; margin-right:3px;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 6 3 6 3s6-1 6-3v-5"/></svg><span>LernSax</span>
  </button>
  <button type="button" class="email-mode-btn" id="btnModeOther" title="Private E-Mail (z. B. Gmail, GMX, Web.de)">
@@ -1294,7 +1523,7 @@
  </div>
 
  <!-- Modus 1: LernSax (Schnelleingabe: nur Kennung vor @gymwilsdruff.lernsax.de) -->
- <div class="lernsax-input-group" id="lernsaxInputGroup">
+ <div class="lernsax-input-group" id="lernsaxInputGroup" style="display:none;">
  <input type="text" id="lernsaxUsername" placeholder="vorname.nachname2026" autocomplete="off" autocapitalize="none" spellcheck="false">
  <span class="lernsax-domain-suffix" id="lernsaxSuffix" title="Klicke hier, um ins Eingabefeld zu springen">@gymwilsdruff.lernsax.de</span>
  </div>
@@ -1308,7 +1537,7 @@
  <input type="hidden" id="email" name="email">
 
  <div class="email-hint" id="emailHint">
- Gib nur deinen Benutzernamen vor dem @ ein
+ Bitte wähle oben aus, ob du eine LernSax-E-Mail oder eine andere E-Mail-Adresse nutzen möchtest.
  </div>
  </div>
 
@@ -1322,24 +1551,29 @@
  <button type="button" class="btn-step-next" id="nextToAge">Weiter zu Alter &amp; Begleitung →</button>
  </div>
  </div>
- </div>
 
  <!-- SCHRITT 4: ALTER & BEGLEITUNG -->
  <div class="form-step" data-step="4" id="step4">
  <h2 class="step-heading mobile-only" id="step4Heading">Alter &amp; Begleitpersonen</h2>
  <p class="step-subheading mobile-only" id="step4Subheading">Wähle deine Altersgruppe und gib an, ob du weitere Gäste mitbringst.</p>
 
- <div class="desktop-grid-2">
+ <div class="desktop-altersgruppe-block">
  <div class="field">
- <label for="category" id="categoryLabel">Deine Altersgruppe</label>
- <select id="category">
+ <label id="categoryLabel">Deine Altersgruppe</label>
+ <div class="age-toggle" id="ageToggle" role="radiogroup" aria-labelledby="categoryLabel">
+ <button type="button" class="age-toggle-btn" id="ageU18Btn" data-age="u18" role="radio" aria-checked="false">U18</button>
+ <button type="button" class="age-toggle-btn" id="ageUe18Btn" data-age="ue18" role="radio" aria-checked="false">Ü18</button>
+ </div>
+ <select id="category" data-no-cs="1" style="display:none;" aria-hidden="true" tabindex="-1">
  <option value="">Bitte wählen</option>
  <option value="u18">Unter 18</option>
  <option value="ue18">18 oder älter</option>
  </select>
  <div class="name-hint" id="categoryHint" style="display:none; margin-top:6px;"></div>
  </div>
+ </div>
 
+ <div class="desktop-klasse-block">
  <div class="field" id="schoolClassField" style="display:none;">
  <label for="schoolClass" id="schoolClassLabel">Deine Klasse <span style="color:var(--accent-glow);">*</span></label>
  <input type="text" id="schoolClass" placeholder="z.B. 10b oder 11/1" autocomplete="off">
@@ -1347,19 +1581,22 @@
  </div>
  </div>
 
- <div class="field" style="margin-top:10px;">
+ <div class="desktop-begleitung-block">
+ <div class="field">
  <label id="companionQuestionLabel">Bringst du eine Begleitung mit?</label>
  <div class="companion-toggle">
  <button type="button" class="companion-toggle-btn" id="companionYesBtn">Ja</button>
  <button type="button" class="companion-toggle-btn active" id="companionNoBtn">Nein</button>
  </div>
- <div id="companionsSection" style="display:none; margin-top:14px;">
+ </div>
+ </div>
+
+ <div id="companionsSection" class="desktop-companions-list-block" style="display:none; margin-top:14px;">
  <div class="name-hint" id="companionNoticeHint" style="margin-bottom:12px; display:block;">
  <strong>Wichtig für die Tickets:</strong> Bitte gib für jede Begleitperson den vollständigen <strong>Vor- und Nachnamen</strong> an (z. B. Anna Müller).
  </div>
  <div id="companionsList"></div>
  <button type="button" class="add-companion" id="addCompanionBtn">+ Weitere Begleitung hinzufügen</button>
- </div>
  </div>
 
  <div class="step-trust-card mobile-only">
@@ -1736,7 +1973,7 @@
  // das native <select> bleibt (unsichtbar) bestehen, damit der Rest des Codes
  // ganz normal .value lesen/schreiben und auf 'change' hören kann. ---
  function enhanceSelect(select){
- if (!select || select.dataset.csEnhanced) return;
+ if (!select || select.dataset.csEnhanced || select.dataset.noCs === '1') return;
  select.dataset.csEnhanced = '1';
 
  const wrap = document.createElement('div');
@@ -1900,7 +2137,7 @@
  }
 
  // --- E-Mail-Eingabe: Umschaltung zwischen LernSax (@gymwilsdruff.lernsax.de) & Anderer E-Mail ---
- let emailMode = 'lernsax'; // Standard: LernSax-Schnelleingabe
+ let emailMode = null; // Standard: Noch nicht ausgewählt
  const btnModeLernsax = document.getElementById('btnModeLernsax');
  const btnModeOther = document.getElementById('btnModeOther');
  const lernsaxInputGroup = document.getElementById('lernsaxInputGroup');
@@ -1940,6 +2177,18 @@
  }
 
  function syncEmail(){
+  if (!emailMode) {
+  if (lernsaxInputGroup) lernsaxInputGroup.style.display = 'none';
+  if (otherInputGroup) otherInputGroup.style.display = 'none';
+  hiddenEmail.value = '';
+  if (emailHint) {
+  emailHint.className = 'email-hint';
+  const salVal = (document.getElementById('salutation')?.value || 'du').toLowerCase();
+  const isSie = salVal === 'sie';
+  emailHint.textContent = isSie ? 'Bitte wählen Sie oben aus, ob Sie eine LernSax-E-Mail oder eine andere E-Mail-Adresse nutzen möchten.' : 'Bitte wähle oben aus, ob du eine LernSax-E-Mail oder eine andere E-Mail-Adresse nutzen möchtest.';
+  }
+  return;
+  }
  if (emailMode === 'lernsax') {
  let raw = (lernsaxUsername.value || '').trim().toLowerCase();
  let hadDomain = false;
@@ -2275,7 +2524,7 @@
  document.getElementById('name')?.focus();
  } else if (currentStep === 3) {
  if (emailMode === 'lernsax') lernsaxUsername?.focus();
- else otherEmailInput?.focus();
+ else if (emailMode === 'other') otherEmailInput?.focus();
  }
  }, 150);
  }
@@ -2416,15 +2665,40 @@
  const emailVal = sanitizeEmail((document.getElementById('email')?.value || '').trim());
  const salVal = (document.getElementById('salutation')?.value || 'du').toLowerCase();
  const isSie = salVal === 'sie';
+ if (!emailMode) {
+ const sw = document.getElementById('emailModeSwitch');
+ if (sw) {
+ sw.style.outline = '2px solid rgba(255,100,100,0.6)';
+ setTimeout(() => { sw.style.outline = 'none'; }, 2500);
+ }
+ if (emailHint) {
+ emailHint.className = 'email-hint warn';
+ emailHint.textContent = isSie ? 'Bitte wählen Sie zuerst LernSax oder Andere E-Mail aus.' : 'Bitte wähle zuerst LernSax oder Andere E-Mail aus.';
+ }
+ highlightError(isSie ? 'Bitte wählen Sie zuerst LernSax oder Andere E-Mail aus.' : 'Bitte wähle zuerst LernSax oder Andere E-Mail aus.', sw);
+ return;
+ }
  if (emailMode === 'lernsax' && !lernsaxUsername.value.trim()) {
+ if (emailHint) {
+ emailHint.className = 'email-hint warn';
+ emailHint.textContent = isSie ? 'Bitte geben Sie Ihren LernSax-Benutzernamen an.' : 'Bitte gib deinen LernSax-Benutzernamen an.';
+ }
  highlightError(isSie ? 'Bitte geben Sie Ihren LernSax-Benutzernamen an.' : 'Bitte gib deinen LernSax-Benutzernamen an.', lernsaxUsername);
  return;
  }
  if (emailMode === 'other' && !otherEmailInput.value.trim()) {
+ if (emailHint) {
+ emailHint.className = 'email-hint warn';
+ emailHint.textContent = isSie ? 'Bitte geben Sie Ihre E-Mail-Adresse an.' : 'Bitte gib deine E-Mail-Adresse an.';
+ }
  highlightError(isSie ? 'Bitte geben Sie Ihre E-Mail-Adresse an.' : 'Bitte gib deine E-Mail-Adresse an.', otherEmailInput);
  return;
  }
  if (!emailVal || !emailVal.includes('@') || !emailVal.includes('.')) {
+ if (emailHint) {
+ emailHint.className = 'email-hint warn';
+ emailHint.textContent = isSie ? 'Bitte geben Sie eine gültige E-Mail-Adresse an.' : 'Bitte gib eine gültige E-Mail-Adresse an.';
+ }
  highlightError(isSie ? 'Bitte geben Sie eine gültige E-Mail-Adresse an.' : 'Bitte gib eine gültige E-Mail-Adresse an.', emailMode === 'lernsax' ? lernsaxUsername : otherEmailInput);
  return;
  }
@@ -2455,10 +2729,9 @@
  catHint.textContent = isSie ? ' Bitte wählen Sie Ihre Altersgruppe aus.' : ' Bitte wähle deine Altersgruppe aus.';
  catHint.style.display = 'block';
  }
- const wrap = catSelect?.closest('.cs-wrap') || catSelect;
+ const wrap = document.getElementById('ageToggle') || catSelect?.closest('.cs-wrap') || catSelect;
  if (wrap) {
  wrap.style.outline = '2px solid rgba(255,100,100,0.6)';
- wrap.style.borderRadius = 'var(--radius-sm)';
  setTimeout(() => { wrap.style.outline = 'none'; }, 2500);
  try {
  wrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2529,8 +2802,26 @@
 
  // Dynamische Anzeige des Klassenfelds für den Besteller bei U18
  const categorySelect = document.getElementById('category');
+ const ageU18Btn = document.getElementById('ageU18Btn');
+ const ageUe18Btn = document.getElementById('ageUe18Btn');
  const schoolClassField = document.getElementById('schoolClassField');
  const schoolClassInput = document.getElementById('schoolClass');
+
+ function setAgeCategory(val){
+ if (!categorySelect) return;
+ categorySelect.value = val;
+ if (ageU18Btn) {
+ ageU18Btn.classList.toggle('active', val === 'u18');
+ ageU18Btn.setAttribute('aria-checked', val === 'u18' ? 'true' : 'false');
+ }
+ if (ageUe18Btn) {
+ ageUe18Btn.classList.toggle('active', val === 'ue18');
+ ageUe18Btn.setAttribute('aria-checked', val === 'ue18' ? 'true' : 'false');
+ }
+ categorySelect.dispatchEvent(new Event('change', { bubbles: true }));
+ }
+ ageU18Btn?.addEventListener('click', () => setAgeCategory('u18'));
+ ageUe18Btn?.addEventListener('click', () => setAgeCategory('ue18'));
 
  function updateMainClassVisibility(){
  const catHint = document.getElementById('categoryHint');
@@ -2822,6 +3113,15 @@
  highlightError(isSie ? 'Bitte geben Sie Ihren vollständigen Vor- und Nachnamen an (z. B. Max Mustermann).' : 'Bitte gib deinen vollständigen Vor- und Nachnamen an (z. B. Max Mustermann).', document.getElementById('name'));
  return;
  }
+ if(!emailMode){
+ const sw = document.getElementById('emailModeSwitch');
+ if (sw) {
+ sw.style.outline = '2px solid rgba(255,100,100,0.6)';
+ setTimeout(() => { sw.style.outline = 'none'; }, 2500);
+ }
+ highlightError(isSie ? 'Bitte wählen Sie zuerst LernSax oder Andere E-Mail aus.' : 'Bitte wähle zuerst LernSax oder Andere E-Mail aus.', sw);
+ return;
+ }
  if(emailMode === 'lernsax' && !lernsaxUsername.value.trim()){
  highlightError(isSie ? 'Bitte geben Sie Ihren LernSax-Benutzernamen an (vor @gymwilsdruff.lernsax.de).' : 'Bitte gib deinen LernSax-Benutzernamen an (vor @gymwilsdruff.lernsax.de).', lernsaxUsername);
  return;
@@ -2839,7 +3139,12 @@
  return;
  }
  if(!category){
- highlightError(isSie ? 'Bitte wählen Sie Ihre Altersgruppe aus.' : 'Bitte wähle deine Altersgruppe aus.', document.getElementById('category'));
+ const ageToggleEl = document.getElementById('ageToggle');
+ if (ageToggleEl) {
+ ageToggleEl.style.outline = '2px solid rgba(255,100,100,0.6)';
+ setTimeout(() => { ageToggleEl.style.outline = 'none'; }, 2500);
+ }
+ highlightError(isSie ? 'Bitte wählen Sie Ihre Altersgruppe aus.' : 'Bitte wähle deine Altersgruppe aus.', ageToggleEl || document.getElementById('category'));
  return;
  }
  if(category === 'u18' && !schoolClass){
