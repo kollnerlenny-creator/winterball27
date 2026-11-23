@@ -567,6 +567,63 @@
  color:#ff9c9c;
  font-weight:500;
  }
+ @keyframes juniorRedBlink{
+ 0%, 100%{
+  background:rgba(255,68,85,0.14);
+  border-color:rgba(255,95,110,0.55);
+  box-shadow:0 0 8px rgba(255,70,90,0.18);
+ }
+ 50%{
+  background:rgba(255,60,80,0.32);
+  border-color:rgba(255,120,130,0.98);
+  box-shadow:0 0 22px rgba(255,70,90,0.55);
+ }
+ }
+ .junior-lernsax-warning{
+ display:none;
+ margin-top:10px;
+ padding:12px 14px;
+ border-radius:12px;
+ font-size:12px;
+ line-height:1.5;
+ color:#ffe4e7;
+ border:1.5px solid rgba(255,95,110,0.65);
+ background:rgba(255,68,85,0.16);
+ }
+ .junior-lernsax-warning.active{
+ display:block;
+ animation:juniorRedBlink 1.1s ease-in-out infinite;
+ }
+ .junior-lernsax-warning.safe{
+ display:block;
+ animation:none;
+ background:rgba(127,224,168,0.1);
+ border-color:rgba(127,224,168,0.38);
+ color:#d7f9e5;
+ box-shadow:none;
+ }
+ .junior-lernsax-warning strong{
+ color:#ffffff;
+ }
+ .junior-switch-email-btn{
+ margin-top:8px;
+ display:inline-flex;
+ align-items:center;
+ gap:6px;
+ padding:7px 12px;
+ border-radius:9px;
+ border:1px solid rgba(255,170,180,0.55);
+ background:rgba(255,255,255,0.12);
+ color:#ffffff;
+ font-size:11.5px;
+ font-weight:600;
+ cursor:pointer;
+ transition:background 0.18s ease, transform 0.15s ease;
+ }
+ .junior-switch-email-btn:hover{
+ background:rgba(255,255,255,0.22);
+ transform:translateY(-1px);
+ }
  @media (max-width: 440px){
  .lernsax-domain-suffix{
  font-size:11px; padding:0 8px;
@@ -1539,6 +1596,7 @@
  <div class="email-hint" id="emailHint">
  Bitte wähle oben aus, ob du eine LernSax-E-Mail oder eine andere E-Mail-Adresse nutzen möchtest.
  </div>
+ <div class="junior-lernsax-warning" id="emailJuniorWarning" role="alert" aria-live="polite"></div>
  </div>
 
  <div class="step-trust-card mobile-only">
@@ -1578,6 +1636,7 @@
  <label for="schoolClass" id="schoolClassLabel">Deine Klasse <span style="color:var(--accent-glow);">*</span></label>
  <input type="text" id="schoolClass" placeholder="z.B. 10b oder 11/1" autocomplete="off">
  <div style="font-size:11.5px; color:var(--text-dim); margin-top:6px;">Pflichtangabe für alle Minderjährigen (U18) zur Zuordnung und für den Jugendschutz.</div>
+ <div class="junior-lernsax-warning" id="classJuniorWarning" role="alert" aria-live="polite"></div>
  </div>
  </div>
 
@@ -2187,6 +2246,7 @@
   const isSie = salVal === 'sie';
   emailHint.textContent = isSie ? 'Bitte wählen Sie oben aus, ob Sie eine LernSax-E-Mail oder eine andere E-Mail-Adresse nutzen möchten.' : 'Bitte wähle oben aus, ob du eine LernSax-E-Mail oder eine andere E-Mail-Adresse nutzen möchtest.';
   }
+  if (typeof updateJuniorLernSaxWarning === 'function') updateJuniorLernSaxWarning();
   return;
   }
  if (emailMode === 'lernsax') {
@@ -2238,6 +2298,7 @@
  emailHint.textContent = ' Sowohl LernSax- als auch private E-Mail-Adressen (z. B. Gmail, GMX, Web.de) funktionieren.';
  }
  }
+ if (typeof updateJuniorLernSaxWarning === 'function') updateJuniorLernSaxWarning();
  }
 
  function setEmailMode(mode){
@@ -2287,6 +2348,75 @@
  otherEmailInput.addEventListener('input', syncEmail);
  otherEmailInput.addEventListener('paste', () => setTimeout(syncEmail, 0));
  }
+
+ const emailJuniorWarning = document.getElementById('emailJuniorWarning');
+ const classJuniorWarning = document.getElementById('classJuniorWarning');
+
+ function updateJuniorLernSaxWarning(){
+  const clsRaw = (document.getElementById('schoolClass')?.value || '').trim();
+  const isClass567 = /(?:^|[^\d])([567])(?:[^\d]|$)/.test(clsRaw);
+  const rawLernSax = (lernsaxUsername?.value || '').trim().toLowerCase();
+  const rawOther = (otherEmailInput?.value || '').trim().toLowerCase();
+  const currentFull = (hiddenEmail?.value || '').trim().toLowerCase();
+  const isLernSaxSelected = emailMode === 'lernsax' || currentFull.includes('lernsax.de');
+  const hasJuniorYearInLernSax =
+   (emailMode === 'lernsax' && /(?:2024|2025|2026)/.test(rawLernSax)) ||
+   (currentFull.includes('lernsax.de') && /(?:2024|2025|2026)/.test(currentFull.split('@')[0] || ''));
+  const hasNonLernSaxPrivateEmail = emailMode === 'other' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(rawOther) && !rawOther.includes('lernsax.de');
+  const salVal = (document.getElementById('salutation')?.value || 'du').toLowerCase();
+  const isSie = salVal === 'sie';
+
+  const shouldBlinkRed = hasJuniorYearInLernSax || (isClass567 && !hasNonLernSaxPrivateEmail);
+  const warnText = isSie
+   ? '<strong>Wichtiger Hinweis (Klasse 5–7 / Jahrgang 2024–2026):</strong> Viele Schüler-LernSax-Konten dieser Klassenstufen sind für externe E-Mails gesperrt. Bitte geben Sie möglichst eine <strong>Eltern- oder private E-Mail-Adresse</strong> (z. B. Gmail, GMX, Web.de oder die <em>e...</em>-Eltern-LernSax-Adresse) an, damit die Tickets sicher ankommen.'
+   : '<strong>Wichtiger Hinweis (Klasse 5–7 / Jahrgang 2024–2026):</strong> Viele Schüler-LernSax-Konten dieser Klassenstufen sind für externe E-Mails gesperrt. Bitte gib möglichst eine <strong>Eltern- oder private E-Mail-Adresse</strong> (z. B. Gmail, GMX, Web.de oder die <em>e...</em>-Eltern-LernSax-Adresse) an, damit dein Ticket sicher ankommt.';
+  const showSwitchBtn = isLernSaxSelected || !emailMode || emailMode === 'lernsax';
+  const warnHtml = `${warnText}${showSwitchBtn ? '<div><button type="button" class="junior-switch-email-btn">Andere / Eltern-E-Mail eingeben</button></div>' : ''}`;
+
+  if (emailJuniorWarning) {
+   if (shouldBlinkRed) {
+    emailJuniorWarning.className = 'junior-lernsax-warning active';
+    emailJuniorWarning.innerHTML = warnHtml;
+   } else {
+    emailJuniorWarning.className = 'junior-lernsax-warning';
+    emailJuniorWarning.innerHTML = '';
+   }
+  }
+
+  if (classJuniorWarning) {
+   if (shouldBlinkRed) {
+    classJuniorWarning.className = 'junior-lernsax-warning active';
+    classJuniorWarning.innerHTML = warnHtml;
+   } else if (isClass567 && hasNonLernSaxPrivateEmail) {
+    classJuniorWarning.className = 'junior-lernsax-warning safe';
+    classJuniorWarning.innerHTML = isSie
+     ? '<strong>Hinweis Klasse 5–7:</strong> Super — mit Ihrer privaten E-Mail-Adresse kommen alle Ticket-Mails zuverlässig an.'
+     : '<strong>Hinweis Klasse 5–7:</strong> Super — mit deiner privaten E-Mail-Adresse kommen alle Ticket-Mails zuverlässig an.';
+   } else {
+    classJuniorWarning.className = 'junior-lernsax-warning';
+    classJuniorWarning.innerHTML = '';
+   }
+  }
+ }
+
+ [emailJuniorWarning, classJuniorWarning].forEach(box => {
+  box?.addEventListener('click', (e) => {
+   const btn = e.target.closest('.junior-switch-email-btn');
+   if (!btn) return;
+   if (emailMode === 'lernsax' && otherEmailInput && otherEmailInput.value.includes('lernsax.de')) {
+    otherEmailInput.value = '';
+   }
+   setEmailMode('other');
+   if (typeof isMobileWizard === 'function' && isMobileWizard() && typeof goToStep === 'function') {
+    goToStep(3);
+   }
+   setTimeout(() => {
+    otherEmailInput?.focus();
+    otherEmailInput?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+   }, 120);
+  });
+ });
+
  syncEmail();
 
  // --- Anrede-Umschaltung: Du vs. Sie ---
@@ -2426,6 +2556,9 @@
 
  if (typeof syncEmail === 'function') {
  syncEmail();
+ }
+ if (typeof updateJuniorLernSaxWarning === 'function') {
+ updateJuniorLernSaxWarning();
  }
  if (typeof updateMobileSummary === 'function') {
  updateMobileSummary();
@@ -2842,8 +2975,15 @@
  schoolClassInput.required = false;
  schoolClassInput.value = '';
  }
+ if (typeof updateJuniorLernSaxWarning === 'function') updateJuniorLernSaxWarning();
  }
  categorySelect.addEventListener('change', updateMainClassVisibility);
+ schoolClassInput?.addEventListener('input', () => {
+  if (typeof updateJuniorLernSaxWarning === 'function') updateJuniorLernSaxWarning();
+ });
+ schoolClassInput?.addEventListener('change', () => {
+  if (typeof updateJuniorLernSaxWarning === 'function') updateJuniorLernSaxWarning();
+ });
 
  const companionsList = document.getElementById('companionsList');
  const companionsSection = document.getElementById('companionsSection');
@@ -3267,11 +3407,13 @@
  try {
  const lernsaxSnap = await getDoc(doc(db, 'settings', 'lernsaxThreshold'));
  const threshold = lernsaxSnap.exists() ? lernsaxSnap.data().grade : null;
+ const emailDomain = String(email || '').trim().toLowerCase().split('@')[1] || '';
+ const isLernSaxMail = emailDomain === 'lernsax.de' || emailDomain.endsWith('.lernsax.de');
  const grade = gradeFromEmail(email);
  const clMatch = String(category === 'u18' ? (schoolClass || '') : '').match(/(\d+)/);
  const classGrade = clMatch ? parseInt(clMatch[1], 10) : null;
  const effectiveGrade = classGrade || grade;
- const useLernSax = !!(threshold && effectiveGrade !== null && effectiveGrade <= threshold);
+ const useLernSax = !!(isLernSaxMail && threshold && effectiveGrade !== null && effectiveGrade <= threshold);
 
  const mailPayload = {
  name,

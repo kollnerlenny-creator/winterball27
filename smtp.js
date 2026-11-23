@@ -271,14 +271,17 @@ export async function sendViaLernSax(env, { to, subject, text, html, attachments
   const decoder = new TextDecoder();
   const encoder = new TextEncoder();
 
-  async function readResponse() {
+  async function readResponse(stepLabel = "SMTP Antwort", timeoutMs = 20000) {
     let data = "";
     while (true) {
-      const { value, done } = await withTimeout(reader.read(), 8000, "SMTP Antwort");
-      if (done) break;
+      const { value, done } = await withTimeout(reader.read(), timeoutMs, stepLabel);
+      if (done) {
+        if (data.trim()) break;
+        throw new Error(`SMTP-Verbindung unerwartet geschlossen (${stepLabel})`);
+      }
       data += decoder.decode(value, { stream: true });
-      if (data.endsWith("\r\n")) {
-        const lines = data.trimEnd().split("\r\n");
+      if (/\r?\n$/.test(data)) {
+        const lines = data.replace(/\r?\n$/, "").split(/\r?\n/);
         const last = lines[lines.length - 1];
         if (last && /^\d{3}(?: |$)/.test(last)) break; // letzte Zeile einer Mehrzeilenantwort erkannt
       }
@@ -286,68 +289,68 @@ export async function sendViaLernSax(env, { to, subject, text, html, attachments
     return data;
   }
 
-  async function send(line) {
-    await withTimeout(writer.write(encoder.encode(line + "\r\n")), 6000, "SMTP Senden");
+  async function send(line, stepLabel = "SMTP Senden") {
+    await withTimeout(writer.write(encoder.encode(line + "\r\n")), 10000, stepLabel);
   }
 
   let mimePair;
   try {
-    const greeting = await readResponse(); // Begrüßung (220)
+    const greeting = await readResponse("SMTP Begrüßung (220)", 20000); // Begrüßung (220)
     if (!greeting.startsWith("220")) {
       throw new Error("Unerwartete Server-Begrüßung: " + greeting);
     }
 
-    await send(`EHLO winterball27.de`);
-    const ehloResp = await readResponse();
+    await send(`EHLO winterball27.de`, "SMTP EHLO Senden");
+    const ehloResp = await readResponse("SMTP EHLO Antwort", 15000);
     if (!ehloResp.includes("250")) {
       throw new Error("EHLO abgelehnt: " + ehloResp);
     }
 
-    await send(`AUTH LOGIN`);
-    const authPrompt1 = await readResponse();
+    await send(`AUTH LOGIN`, "SMTP AUTH LOGIN");
+    const authPrompt1 = await readResponse("SMTP AUTH Antwort", 15000);
     if (!authPrompt1.startsWith("334")) {
       throw new Error("AUTH LOGIN nicht akzeptiert: " + authPrompt1);
     }
 
-    await send(toBase64Safe(user));
-    const authPrompt2 = await readResponse();
+    await send(toBase64Safe(user), "SMTP Benutzer Senden");
+    const authPrompt2 = await readResponse("SMTP Benutzer Antwort", 15000);
     if (!authPrompt2.startsWith("334")) {
       throw new Error("Benutzername nicht akzeptiert: " + authPrompt2);
     }
 
-    await send(toBase64Safe(pass));
-    const authResp = await readResponse();
+    await send(toBase64Safe(pass), "SMTP Passwort Senden");
+    const authResp = await readResponse("SMTP Login Antwort", 15000);
     if (!authResp.includes("235")) {
       throw new Error("LernSax-Login fehlgeschlagen (Passwort oder Benutzer ungültig): " + authResp.trim());
     }
 
-    await send(`MAIL FROM:<${user}>`);
-    const mailResp = await readResponse();
+    await send(`MAIL FROM:<${user}>`, "SMTP MAIL FROM Senden");
+    const mailResp = await readResponse("SMTP MAIL FROM Antwort", 15000);
     if (!mailResp.includes("250")) {
       throw new Error("MAIL FROM abgelehnt: " + mailResp.trim());
     }
 
     const cleanRecipient = sanitizeHeaderValue(to).replace(/^.*<([^>]+)>.*$/, "$1");
-    await send(`RCPT TO:<${cleanRecipient}>`);
-    const rcptResp = await readResponse();
+    await send(`RCPT TO:<${cleanRecipient}>`, "SMTP RCPT TO Senden");
+    const rcptResp = await readResponse("SMTP Empfänger-Prüfung (RCPT TO)", 20000);
     if (!rcptResp.includes("250")) {
       throw new Error("Empfänger abgelehnt: " + rcptResp.trim());
     }
 
-    await send(`DATA`);
-    const dataPrompt = await readResponse();
+    await send(`DATA`, "SMTP DATA Start");
+    const dataPrompt = await readResponse("SMTP DATA Bereitschaft", 15000);
     if (!dataPrompt.includes("354")) {
       throw new Error("DATA abgelehnt: " + dataPrompt.trim());
     }
 
     mimePair = buildMimeMessage({ fromAddress: user, to: cleanRecipient, subject, text, html, attachments });
-    await withTimeout(writer.write(encoder.encode(mimePair.smtpMessage + "\r\n.\r\n")), 10000, "SMTP DATA");
-    const dataResp = await readResponse();
+    await withTimeout(writer.write(encoder.encode(mimePair.smtpMessage + "\r\n.\r\n")), 15000, "SMTP Nachricht Senden");
+    const dataResp = await readResponse("SMTP Versand-Abschluss (DATA)", 25000);
     if (!dataResp.includes("250")) {
       throw new Error("Versand fehlgeschlagen: " + dataResp.trim());
     }
 
-    await send(`QUIT`);
+    await send(`QUIT`, "SMTP QUIT");
   } finally {
     try { await writer.close(); } catch (_) {}
     try { socket.close(); } catch (_) {}

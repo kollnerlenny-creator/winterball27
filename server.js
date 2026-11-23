@@ -83,7 +83,7 @@ async function proxyToWorker(endpoint, req, res) {
     const fetchOptions = {
       method: req.method,
       headers: upstreamHeaders,
-      signal: AbortSignal.timeout(25000)
+      signal: AbortSignal.timeout(35000)
     };
 
     if (req.method !== 'GET' && req.method !== 'HEAD' && req.body && Object.keys(req.body).length > 0) {

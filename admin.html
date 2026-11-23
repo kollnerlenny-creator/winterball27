@@ -517,6 +517,59 @@
  }
  .resend-lernsax-btn:disabled{opacity:0.55; cursor:wait;}
  .resend-lernsax-btn svg{width:11px; height:11px; stroke-width:2.2; flex-shrink:0;}
+ .manual-lernsax-btn{
+  padding:3px 9px; border-radius:100px; font-size:10.5px; font-weight:700;
+  border:1px solid rgba(143,180,255,0.4); background:rgba(143,180,255,0.12); color:#b8ceff;
+  cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:4px;
+  transition:all 0.18s ease;
+ }
+ .manual-lernsax-btn:hover{
+  background:rgba(143,180,255,0.24); border-color:rgba(143,180,255,0.72); color:#fff; transform:translateY(-1px);
+ }
+ .manual-lernsax-modal{
+  background:#11192e; border:1px solid rgba(143,180,255,0.28); border-radius:20px;
+  width:min(620px, 95vw); max-height:90vh; overflow-y:auto; padding:22px 22px 20px;
+  box-shadow:0 24px 64px rgba(0,0,0,0.65); color:var(--text);
+ }
+ .manual-copy-row{
+  display:flex; gap:8px; align-items:stretch;
+ }
+ .manual-copy-row input, .manual-copy-row textarea{
+  flex:1; min-width:0; padding:9px 11px; background:rgba(255,255,255,0.05);
+  border:1px solid var(--glass-border); border-radius:10px; color:#eef3ff;
+  font-size:12.5px; font-family:inherit;
+ }
+ .manual-copy-row textarea{
+  min-height:190px; resize:vertical; line-height:1.5; font-size:12px;
+ }
+ .manual-copy-btn{
+  padding:8px 12px; border-radius:10px; border:1px solid rgba(143,180,255,0.4);
+  background:rgba(143,180,255,0.14); color:#d8e6ff; font-size:12px; font-weight:600;
+  cursor:pointer; white-space:nowrap; transition:all 0.16s ease; align-self:flex-start;
+ }
+ .manual-copy-btn:hover{
+  background:rgba(143,180,255,0.28); color:#fff;
+ }
+ .manual-lernsax-error{
+  display:none; margin-bottom:14px; padding:11px 13px; border-radius:12px;
+  background:rgba(255,90,105,0.14); border:1px solid rgba(255,110,125,0.48);
+  color:#ffd6da; font-size:12px; line-height:1.5;
+ }
+ .manual-lernsax-error.show{display:block;}
+ .manual-lernsax-attach-row{
+  display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;
+ }
+ .manual-lernsax-attach-row button, .manual-lernsax-open-link{
+  display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  padding:8px 13px; border-radius:10px; font-size:12px; font-weight:600;
+  text-decoration:none; cursor:pointer; transition:all 0.16s ease;
+ }
+ .manual-lernsax-open-link{
+  border:1px solid rgba(127,224,168,0.45); background:rgba(127,224,168,0.14); color:#8be8b2;
+ }
+ .manual-lernsax-open-link:hover{
+  background:rgba(127,224,168,0.26); color:#fff;
+ }
 
  /* Mobile responsive cards view */
  .mobile-cards-wrap{display:none; flex-direction:column; gap:14px;}
@@ -3189,7 +3242,7 @@
  <input type="email" id="editRegEmailInput"
  style="padding:10px 12px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:14px;">
  </div>
- <div style="display:flex; flex-direction:column; gap:4px; margin-bottom:12px;">
+ <div id="editRegMailMethodRow" style="display:flex; flex-direction:column; gap:4px; margin-bottom:12px;">
  <label style="font-size:12px; color:var(--text-dim);" for="editRegMailMethod">E-Mail-Versandweg</label>
  <select id="editRegMailMethod">
  <option value="auto">Automatisch (nach Klassenstufe)</option>
@@ -3226,6 +3279,60 @@
  <button type="button" class="secondary" id="editRegCancelBtn">Abbrechen</button>
  <button type="button" id="editRegSaveBtn">Speichern</button>
  </div>
+ </div>
+</div>
+
+<!-- Manuell über LernSax-Webmail senden Modal -->
+<div class="modal-overlay" id="manualLernSaxModalOverlay">
+ <div class="manual-lernsax-modal">
+  <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px;">
+   <div>
+    <div style="font-size:16px; font-weight:700; color:#fff;">Manuell über LernSax-Webmail senden</div>
+    <div id="manualLernSaxSubtitle" style="font-size:12px; color:var(--text-dim); margin-top:2px;"></div>
+   </div>
+   <button type="button" id="manualLernSaxCloseTopBtn" class="widget-modal-close-btn">✕ Schließen</button>
+  </div>
+
+  <div id="manualLernSaxErrorBox" class="manual-lernsax-error"></div>
+
+  <div style="font-size:12px; color:#b8c6e0; margin-bottom:12px; line-height:1.5;">
+   Wenn ein Schüler-Konto externe SMTP-Mails blockiert (<code style="color:#ffd6da;">550 User unknown</code>), funktioniert die Zustellung trotzdem <strong>intern direkt in LernSax-Webmail</strong>. Kopiere Empfänger, Betreff &amp; Text und füge bei bezahlten Tickets die PDFs als Anhang bei:
+  </div>
+
+  <div style="display:flex; flex-direction:column; gap:10px;">
+   <div>
+    <label style="display:block; font-size:11.5px; color:var(--text-dim); margin-bottom:4px;">Empfänger (An)</label>
+    <div class="manual-copy-row">
+     <input type="text" id="manualLernSaxToInput" readonly>
+     <button type="button" class="manual-copy-btn" data-copy-target="manualLernSaxToInput">Kopieren</button>
+    </div>
+   </div>
+   <div>
+    <label style="display:block; font-size:11.5px; color:var(--text-dim); margin-bottom:4px;">Betreff</label>
+    <div class="manual-copy-row">
+     <input type="text" id="manualLernSaxSubjectInput" readonly>
+     <button type="button" class="manual-copy-btn" data-copy-target="manualLernSaxSubjectInput">Kopieren</button>
+    </div>
+   </div>
+   <div>
+    <label style="display:block; font-size:11.5px; color:var(--text-dim); margin-bottom:4px;">Nachrichtentext</label>
+    <div class="manual-copy-row">
+     <textarea id="manualLernSaxBodyInput" readonly></textarea>
+     <button type="button" class="manual-copy-btn" data-copy-target="manualLernSaxBodyInput">Text kopieren</button>
+    </div>
+   </div>
+  </div>
+
+  <div class="manual-lernsax-attach-row" id="manualLernSaxAttachRow">
+   <button type="button" class="pdf-btn" id="manualLernSaxPdfBtn" style="padding:8px 13px; font-size:12px;">Tickets-PDF laden</button>
+   <button type="button" class="invoice-btn" id="manualLernSaxInvoiceBtn" style="padding:8px 13px; font-size:12px;">Quittung-PDF laden</button>
+   <a href="https://www.lernsax.de" target="_blank" rel="noopener noreferrer" class="manual-lernsax-open-link">LernSax öffnen ↗</a>
+  </div>
+
+  <div class="cash-modal-actions" style="margin-top:16px;">
+   <button type="button" class="secondary" id="manualLernSaxCancelBtn">Schließen</button>
+   <button type="button" id="manualLernSaxMarkSentBtn" style="background:linear-gradient(135deg,#7fe0a8,#59c68a); color:#07130d; font-weight:700;">✓ Als über LernSax gesendet markieren</button>
+  </div>
  </div>
 </div>
 
@@ -6944,8 +7051,8 @@ let allRatings = [];
 
  function shouldUseLernSax(email, schoolClass = null){
  if (!lernsaxThreshold) return false;
- const [local, domain] = String(email || '').toLowerCase().split('@');
- if (!domain || !domain.endsWith('lernsax.de')) return false;
+ const [local, domain] = String(email || '').trim().toLowerCase().split('@');
+ if (!domain || (domain !== 'lernsax.de' && !domain.endsWith('.lernsax.de'))) return false;
 
  // 1. Wenn Klassenstufe angegeben (z.B. "7a", "7", "Klasse 7")
  if (schoolClass) {
@@ -6967,11 +7074,18 @@ let allRatings = [];
  return false;
  }
 
+ function isLernSaxEmail(email){
+ const parts = String(email || '').trim().toLowerCase().split('@');
+ const domain = parts[1] || '';
+ return domain === 'lernsax.de' || domain.endsWith('.lernsax.de');
+ }
+
  function normalizeMailMethod(val){
  return (val === 'lernsax' || val === 'brevo') ? val : 'auto';
  }
 
  function resolveUseLernSax(reg){
+ if (!isLernSaxEmail(reg?.email)) return false;
  const mode = normalizeMailMethod(reg?.mailMethod);
  if (mode === 'lernsax') return true;
  if (mode === 'brevo') return false;
@@ -6992,14 +7106,18 @@ let allRatings = [];
  }
 
  function renderMailChannelControls(r){
+ const badgeHtml = renderMailChannelBadge(r);
+ // LernSax-Auswahl & "Über LernSax senden" nur bei echten LernSax-Adressen anzeigen
+ if (!isLernSaxEmail(r?.email)) {
+ return badgeHtml ? `<div class="mail-controls-row">${badgeHtml}</div>` : '';
+ }
  const mode = normalizeMailMethod(r?.mailMethod);
  const autoTarget = shouldUseLernSax(r?.email, r?.schoolClass) ? 'LernSax' : 'Brevo';
  const modeClass = mode === 'lernsax' ? 'mode-lernsax' : (mode === 'brevo' ? 'mode-brevo' : '');
- const badgeHtml = renderMailChannelBadge(r);
  return `
  <div class="mail-controls-row">
  ${badgeHtml}
- <select class="mail-channel-select ${modeClass}" data-id="${r.id}" title="Versandweg für diese E-Mail-Adresse wählen">
+ <select class="mail-channel-select ${modeClass}" data-id="${r.id}" title="Versandweg für diese LernSax-Adresse wählen">
  <option value="auto"${mode === 'auto' ? ' selected' : ''}>Auto (${autoTarget})</option>
  <option value="lernsax"${mode === 'lernsax' ? ' selected' : ''}>LernSax ✉️</option>
  <option value="brevo"${mode === 'brevo' ? ' selected' : ''}>Brevo 🚀</option>
@@ -7008,13 +7126,17 @@ let allRatings = [];
  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
  <span>Über LernSax senden</span>
  </button>
+ <button type="button" class="manual-lernsax-btn" data-id="${r.id}" title="Empfänger, Betreff, Text & PDFs für manuellen Versand im LernSax-Webmail öffnen">📋 Manuell</button>
  </div>`;
  }
 
  async function updateRegMailMethod(regId, method){
  const reg = allRegs.find(r => r.id === regId);
  if (!reg) return;
- const normalized = normalizeMailMethod(method);
+ let normalized = normalizeMailMethod(method);
+ if (!isLernSaxEmail(reg.email) && normalized === 'lernsax') {
+ normalized = 'auto';
+ }
  try {
  await updateDoc(doc(db, 'registrations', regId), { mailMethod: normalized });
  reg.mailMethod = normalized;
@@ -7035,10 +7157,15 @@ let allRatings = [];
  alert('Keine gültige E-Mail-Adresse für diese Bestellung hinterlegt.');
  return;
  }
+ if (channel === 'lernsax' && !isLernSaxEmail(reg.email)) {
+ alert('Der Versand über LernSax ist nur für LernSax-E-Mail-Adressen verfügbar.');
+ return;
+ }
  const tickets = ticketsFor(regId);
  const paidTickets = tickets.filter(t => t.paid === true);
  const isTicketMail = !!reg.paid || paidTickets.length > 0;
  const useLernSax = channel === 'lernsax' ? true : (channel === 'brevo' ? false : resolveUseLernSax(reg));
+ const strictLernSax = channel === 'lernsax';
 
  if (btnEl) {
  btnEl.disabled = true;
@@ -7076,6 +7203,7 @@ let allRatings = [];
  price: freshPrices[t.category] || 0
  })),
  useLernSax,
+ strictLernSax,
  donation: Number(reg.donation || 0)
  })
  });
@@ -7095,7 +7223,8 @@ let allRatings = [];
  formell: salutation === 'sie',
  greeting,
  attendeeNames,
- useLernSax
+ useLernSax,
+ strictLernSax
  })
  });
  }
@@ -7132,7 +7261,7 @@ let allRatings = [];
 
  const mailKind = isTicketMail ? 'Ticket-Mail' : 'Bestätigungsmail';
  if (channel === 'lernsax' && actualVia !== 'lernsax') {
- alert(`Hinweis: Obwohl LernSax ausgewählt war, hat der Worker über Brevo gesendet (LernSax-SMTP fehlgeschlagen oder Worker-Einstellung).\n\nEmpfänger: ${reg.email}`);
+ openManualLernSaxModal(regId, resData.lernSaxError || 'LernSax-SMTP fehlgeschlagen (Worker ist auf Brevo ausgewichen).');
  } else if (actualVia === 'lernsax') {
  if (resData.savedToSent === true) {
  showAdminToast(`${mailKind} an ${reg.email} über LernSax ✉️ gesendet & in „${resData.sentFolder || 'Gesendet'}“ abgelegt!`);
@@ -7146,7 +7275,11 @@ let allRatings = [];
  }
  } catch (err) {
  console.error(err);
- alert('Versand über LernSax fehlgeschlagen:\n\n' + (err.message || String(err)));
+ if (channel === 'lernsax') {
+ openManualLernSaxModal(regId, err.message || String(err));
+ } else {
+ alert('E-Mail-Versand fehlgeschlagen:\n\n' + (err.message || String(err)));
+ }
  } finally {
  if (btnEl && document.body.contains(btnEl)) {
  btnEl.disabled = false;
@@ -7154,6 +7287,160 @@ let allRatings = [];
  }
  }
  }
+
+ let activeManualLernSaxRegId = null;
+
+ function buildManualLernSaxEmailContent(reg){
+  const tickets = ticketsFor(reg.id);
+  const paidTickets = tickets.filter(t => t.paid === true);
+  const isTicketMail = !!reg.paid || paidTickets.length > 0;
+  const formal = (reg.salutation || (reg.anrede === 'Sie' ? 'sie' : 'du')).toLowerCase() === 'sie';
+  const greetingLine = formal ? `Guten Tag ${reg.name},` : `Hallo ${reg.name},`;
+
+  if (isTicketMail) {
+   const targetTickets = paidTickets.length > 0 ? paidTickets : tickets;
+   const plural = targetTickets.length > 1;
+   const list = targetTickets.map(t => `- ${t.name} (Ticket-ID: ${t.ticketId})`).join('\n');
+   const title = formal
+    ? (plural ? `${targetTickets.length} Tickets` : 'Ihr Ticket')
+    : (plural ? `${targetTickets.length} Tickets` : 'Dein Ticket');
+   const ticketsText = formal
+    ? (plural ? 'Ihre Tickets' : 'Ihr Ticket')
+    : (plural ? 'Eure Tickets' : 'Dein Ticket');
+   const forPersonText = formal ? 'Sie' : 'dich';
+   const receiptText = formal ? 'Ihre Quittung liegt' : (plural ? 'Eure Quittung liegt' : 'Deine Quittung liegt');
+   const cancelText = formal
+    ? (plural ? 'Ihre Tickets sind mit der Bezahlung verbindlich gebucht und können nicht mehr storniert oder erstattet werden.' : 'Ihr Ticket ist mit der Bezahlung verbindlich gebucht und kann nicht mehr storniert oder erstattet werden.')
+    : (plural ? 'Eure Tickets sind mit der Bezahlung verbindlich gebucht und können nicht mehr storniert oder erstattet werden.' : 'Dein Ticket ist mit der Bezahlung verbindlich gebucht und kann nicht mehr storniert oder erstattet werden.');
+   const signoff = formal
+    ? 'Wir freuen uns auf Ihren Besuch!\n\nIhre Klassenstufe 12'
+    : `${plural ? 'Wir freuen uns auf euch!' : 'Wir freuen uns auf dich!'}\n\n${plural ? 'Eure Klassenstufe 12' : 'Deine Klassenstufe 12'}`;
+
+   const subject = formal
+    ? (plural ? `✨ Ihre ${targetTickets.length} Tickets für den Winter Ball ✨` : '✨ Ihr Ticket für den Winter Ball ✨')
+    : (plural ? `✨ Eure ${targetTickets.length} Tickets für den Winter Ball ✨` : '✨ Dein Ticket für den Winter Ball ✨');
+
+   const body = `WINTER BALL — ${title}\n\n${greetingLine}\n\n${list}\n\n${ticketsText} mit QR-Code ${plural ? 'liegen' : 'liegt'} dieser Mail als PDF bei. Bitte den passenden Code am Einlass für ${plural ? 'jede Person' : forPersonText} bereithalten. ${receiptText} ebenfalls als PDF bei.\n\nWebsite: https://winterball27.de\n30. Januar 2027 · 17:30 Uhr\n\nHinweis: ${cancelText}\n\n${signoff}\n\nFragen? info@winterball27.de`;
+   return { subject, body, isTicketMail: true, hasTickets: targetTickets.length > 0 };
+  } else {
+   const attendeeNames = tickets.length > 0
+    ? tickets.map(t => t.name)
+    : [reg.name, ...(reg.companions || []).map(c => c.name)].filter(Boolean);
+   const others = attendeeNames.filter(n => n !== reg.name);
+   const plural = attendeeNames.length > 1;
+   const othersLine = others.length ? `\nMit dabei: ${others.join(', ')}\n` : '';
+   const introText = formal
+    ? (plural ? 'Ihre Anmeldungen sind bei uns eingegangen.' : 'Ihre Anmeldung ist bei uns eingegangen.')
+    : (plural ? 'eure Anmeldungen sind bei uns eingegangen.' : 'deine Anmeldung ist bei uns eingegangen.');
+   const payText = formal
+    ? `Bitte bezahlen Sie ${plural ? 'die Tickets' : 'Ihr Ticket'} bar an der Vorverkaufskasse in der Schule.\nSobald das erledigt ist, erhalten Sie ${plural ? 'die Tickets' : 'Ihr Ticket'} mit QR-Code in einer separaten Mail zugeschickt.`
+    : `Bitte bezahle ${plural ? 'die Tickets' : 'dein Ticket'} bar an der Vorverkaufskasse in der Schule.\nSobald das erledigt ist, bekommst du ${plural ? 'die Tickets' : 'dein Ticket'} mit QR-Code in einer separaten Mail zugeschickt.`;
+   const signoff = formal
+    ? 'Wir freuen uns auf Ihren Besuch!\n\nIhre Klassenstufe 12'
+    : `${plural ? 'Wir freuen uns auf euch!' : 'Wir freuen uns auf dich!'}\n\n${plural ? 'Eure Klassenstufe 12' : 'Deine Klassenstufe 12'}`;
+
+   const subject = '✨ Anmeldung zum Winter Ball eingegangen ✨';
+   const body = `WINTER BALL — Anmeldung eingegangen\n\n${greetingLine}\n\n${introText}${othersLine}\n${payText}\n\nWebsite: https://winterball27.de\n30. Januar 2027 · 17:30 Uhr\n\n${signoff}\n\nFragen? info@winterball27.de`;
+   return { subject, body, isTicketMail: false, hasTickets: tickets.length > 0 };
+  }
+ }
+
+ function openManualLernSaxModal(regId, errorMsg = ''){
+  const reg = allRegs.find(r => r.id === regId);
+  if (!reg) return;
+  activeManualLernSaxRegId = regId;
+
+  const { subject, body, isTicketMail, hasTickets } = buildManualLernSaxEmailContent(reg);
+  const subEl = document.getElementById('manualLernSaxSubtitle');
+  const errBox = document.getElementById('manualLernSaxErrorBox');
+  const toInp = document.getElementById('manualLernSaxToInput');
+  const subjInp = document.getElementById('manualLernSaxSubjectInput');
+  const bodyInp = document.getElementById('manualLernSaxBodyInput');
+  const pdfBtn = document.getElementById('manualLernSaxPdfBtn');
+  const invBtn = document.getElementById('manualLernSaxInvoiceBtn');
+  const overlay = document.getElementById('manualLernSaxModalOverlay');
+
+  if (subEl) {
+   subEl.textContent = `${reg.name} · ${isTicketMail ? 'Ticket-Mail (bezahlt)' : 'Anmelde-Bestätigung (offen)'}`;
+  }
+  if (errBox) {
+   if (errorMsg) {
+    const is550 = /550|unknown/i.test(errorMsg);
+    errBox.innerHTML = `<strong>Automatischer LernSax-SMTP-Versand fehlgeschlagen:</strong><br>${escapeHtml(errorMsg)}${is550 ? '<br><br><span style="color:#fff;">Dieses LernSax-Schülerkonto lässt nur interne LernSax-Nachrichten zu. Kopiere Empfänger, Betreff &amp; Text unten und sende sie direkt im LernSax-Webmail.</span>' : ''}`;
+    errBox.classList.add('show');
+   } else {
+    errBox.classList.remove('show');
+    errBox.innerHTML = '';
+   }
+  }
+  if (toInp) toInp.value = reg.email || '';
+  if (subjInp) subjInp.value = subject;
+  if (bodyInp) bodyInp.value = body;
+  if (pdfBtn) pdfBtn.style.display = (isTicketMail && hasTickets) ? 'inline-flex' : 'none';
+  if (invBtn) invBtn.style.display = (isTicketMail && hasTickets) ? 'inline-flex' : 'none';
+  if (overlay) overlay.classList.add('show');
+ }
+
+ function closeManualLernSaxModal(){
+  document.getElementById('manualLernSaxModalOverlay')?.classList.remove('show');
+  activeManualLernSaxRegId = null;
+ }
+
+ document.getElementById('manualLernSaxCloseTopBtn')?.addEventListener('click', closeManualLernSaxModal);
+ document.getElementById('manualLernSaxCancelBtn')?.addEventListener('click', closeManualLernSaxModal);
+ document.getElementById('manualLernSaxModalOverlay')?.addEventListener('click', (e) => {
+  if (e.target.id === 'manualLernSaxModalOverlay') closeManualLernSaxModal();
+ });
+ document.querySelectorAll('#manualLernSaxModalOverlay .manual-copy-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+   const target = document.getElementById(btn.dataset.copyTarget);
+   const val = target?.value || '';
+   if (!val) return;
+   try {
+    await navigator.clipboard.writeText(val);
+    const orig = btn.textContent;
+    btn.textContent = 'Kopiert ✓';
+    setTimeout(() => { btn.textContent = orig; }, 1600);
+   } catch (_) {
+    target?.select();
+    showAdminToast('Bitte Text markiert kopieren (Strg+C / Cmd+C).');
+   }
+  });
+ });
+ document.getElementById('manualLernSaxPdfBtn')?.addEventListener('click', (e) => {
+  if (activeManualLernSaxRegId) downloadTicketsPdf(activeManualLernSaxRegId, e.currentTarget);
+ });
+ document.getElementById('manualLernSaxInvoiceBtn')?.addEventListener('click', (e) => {
+  if (activeManualLernSaxRegId) downloadInvoicePdf(activeManualLernSaxRegId, e.currentTarget);
+ });
+ document.getElementById('manualLernSaxMarkSentBtn')?.addEventListener('click', async () => {
+  if (!activeManualLernSaxRegId) return;
+  const reg = allRegs.find(r => r.id === activeManualLernSaxRegId);
+  if (!reg) return;
+  const tickets = ticketsFor(reg.id);
+  const isTicketMail = !!reg.paid || tickets.some(t => t.paid === true);
+  const payload = {
+   mailVia: 'lernsax',
+   savedToSent: true,
+   sentFolder: 'Manuell (Webmail)',
+   manualLernSaxSentAt: serverTimestamp(),
+   lastMailSentAt: serverTimestamp()
+  };
+  if (isTicketMail) payload.ticketSentAt = serverTimestamp();
+  else payload.confirmationSentAt = serverTimestamp();
+  try {
+   await updateDoc(doc(db, 'registrations', reg.id), payload);
+   reg.mailVia = 'lernsax';
+   reg.savedToSent = true;
+   reg.sentFolder = 'Manuell (Webmail)';
+   render();
+   closeManualLernSaxModal();
+   showAdminToast(`${reg.name} als manuell über LernSax versendet markiert ✓`);
+  } catch (err) {
+   console.error(err);
+   alert('Status konnte nicht gespeichert werden: ' + (err.message || String(err)));
+  }
+ });
 
  onAuthStateChanged(auth, (user) => {
  document.getElementById('loginCard').style.display = user ? 'none' : 'block';
@@ -7897,6 +8184,9 @@ let allRatings = [];
  container.querySelectorAll('.resend-lernsax-btn').forEach(btn => {
  btn.addEventListener('click', () => sendOrderMailViaChannel(btn.dataset.id, 'lernsax', btn));
  });
+ container.querySelectorAll('.manual-lernsax-btn').forEach(btn => {
+ btn.addEventListener('click', () => openManualLernSaxModal(btn.dataset.id));
+ });
  });
  }
 
@@ -8581,6 +8871,16 @@ let allRatings = [];
  });
  }
 
+ const editRegEmailEl = document.getElementById('editRegEmailInput');
+ if (editRegEmailEl) {
+ editRegEmailEl.addEventListener('input', () => {
+ const mailMethodRow = document.getElementById('editRegMailMethodRow');
+ if (mailMethodRow) {
+ mailMethodRow.style.display = isLernSaxEmail(editRegEmailEl.value) ? 'flex' : 'none';
+ }
+ });
+ }
+
  function makeEditCompanionRow(companion, ticketId){
  const row = document.createElement('div');
  row.className = 'companion-add-row';
@@ -8627,8 +8927,13 @@ let allRatings = [];
  }
 
  const mailMethodEl = document.getElementById('editRegMailMethod');
+ const mailMethodRow = document.getElementById('editRegMailMethodRow');
+ const isLsMail = isLernSaxEmail(reg.email);
+ if (mailMethodRow) {
+ mailMethodRow.style.display = isLsMail ? 'flex' : 'none';
+ }
  if (mailMethodEl) {
- mailMethodEl.value = normalizeMailMethod(reg.mailMethod);
+ mailMethodEl.value = isLsMail ? normalizeMailMethod(reg.mailMethod) : 'auto';
  resetCustomSelectVisual(mailMethodEl);
  }
 
@@ -8734,7 +9039,8 @@ let allRatings = [];
  // 1) Bestellungs-Grunddaten aktualisieren
  const salutation = (document.getElementById('editRegSalutation')?.value || reg.salutation || 'du').toLowerCase();
  const anrede = salutation === 'sie' ? 'Sie' : 'Du';
- const mailMethod = normalizeMailMethod(document.getElementById('editRegMailMethod')?.value || reg.mailMethod);
+ const rawMailMethod = normalizeMailMethod(document.getElementById('editRegMailMethod')?.value || reg.mailMethod);
+ const mailMethod = isLernSaxEmail(email) ? rawMailMethod : 'auto';
 
  batch.update(doc(db, 'registrations', regId), {
  name, email, salutation, anrede, category, mailMethod,
@@ -9798,6 +10104,9 @@ let allRatings = [];
  });
  resultsWrap.querySelectorAll('.resend-lernsax-btn').forEach(btn => {
  btn.addEventListener('click', () => sendOrderMailViaChannel(btn.dataset.id, 'lernsax', btn));
+ });
+ resultsWrap.querySelectorAll('.manual-lernsax-btn').forEach(btn => {
+ btn.addEventListener('click', () => openManualLernSaxModal(btn.dataset.id));
  });
  }
 
