@@ -486,6 +486,38 @@
  }
  .pdf-btn svg, .invoice-btn svg{width:12px; height:12px; stroke-width:2;}
 
+ .mail-controls-row{
+ display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin-top:5px;
+ }
+ .mail-channel-select{
+ appearance:none; -webkit-appearance:none;
+ padding:3px 20px 3px 8px; border-radius:100px; font-size:10.5px; font-weight:600;
+ border:1px solid var(--glass-border);
+ background:rgba(255,255,255,0.06) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%239fb0cc' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 6px center;
+ color:var(--text); cursor:pointer; outline:none; transition:all 0.18s ease;
+ }
+ .mail-channel-select:hover, .mail-channel-select:focus{
+ border-color:rgba(143,180,255,0.55); background-color:rgba(143,180,255,0.12);
+ }
+ .mail-channel-select.mode-lernsax{
+ border-color:rgba(127,224,168,0.42); color:#7fe0a8; background-color:rgba(127,224,168,0.1);
+ }
+ .mail-channel-select.mode-brevo{
+ border-color:rgba(143,180,255,0.42); color:#8fb4ff; background-color:rgba(143,180,255,0.1);
+ }
+ .mail-channel-select option{background:#0f172a; color:#eef3ff;}
+ .resend-lernsax-btn{
+ padding:3px 9px; border-radius:100px; font-size:10.5px; font-weight:700;
+ border:1px solid rgba(127,224,168,0.4); background:rgba(127,224,168,0.12); color:#7fe0a8;
+ cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:4px;
+ transition:all 0.18s ease;
+ }
+ .resend-lernsax-btn:hover:not(:disabled){
+ background:rgba(127,224,168,0.24); border-color:rgba(127,224,168,0.7); color:#fff; transform:translateY(-1px);
+ }
+ .resend-lernsax-btn:disabled{opacity:0.55; cursor:wait;}
+ .resend-lernsax-btn svg{width:11px; height:11px; stroke-width:2.2; flex-shrink:0;}
+
  /* Mobile responsive cards view */
  .mobile-cards-wrap{display:none; flex-direction:column; gap:14px;}
  @media (max-width:860px){
@@ -3156,6 +3188,14 @@
  <label style="font-size:12px; color:var(--text-dim);" for="editRegEmailInput">E-Mail</label>
  <input type="email" id="editRegEmailInput"
  style="padding:10px 12px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:var(--radius-sm); color:var(--text); font-size:14px;">
+ </div>
+ <div style="display:flex; flex-direction:column; gap:4px; margin-bottom:12px;">
+ <label style="font-size:12px; color:var(--text-dim);" for="editRegMailMethod">E-Mail-Versandweg</label>
+ <select id="editRegMailMethod">
+ <option value="auto">Automatisch (nach Klassenstufe)</option>
+ <option value="lernsax">Immer über LernSax ✉️</option>
+ <option value="brevo">Immer über Brevo 🚀</option>
+ </select>
  </div>
  <div style="display:flex; flex-direction:column; gap:4px; margin-bottom:12px;">
  <label style="font-size:12px; color:var(--text-dim);" for="editRegSalutation">Anrede (Du / Sie)</label>
@@ -6927,6 +6967,194 @@ let allRatings = [];
  return false;
  }
 
+ function normalizeMailMethod(val){
+ return (val === 'lernsax' || val === 'brevo') ? val : 'auto';
+ }
+
+ function resolveUseLernSax(reg){
+ const mode = normalizeMailMethod(reg?.mailMethod);
+ if (mode === 'lernsax') return true;
+ if (mode === 'brevo') return false;
+ return shouldUseLernSax(reg?.email, reg?.schoolClass);
+ }
+
+ function renderMailChannelBadge(r){
+ const sentHint = r.savedToSent === true
+ ? ` · in ${escapeHtml(r.sentFolder || 'Gesendet')} ✓`
+ : '';
+ if (r.mailVia === 'lernsax') {
+ return `<span class="badge in" style="font-size:9.5px; padding:1px 6px; background:rgba(127,224,168,0.15); color:#7fe0a8; border:1px solid rgba(127,224,168,0.3);" title="Zuletzt über LernSax versendet${sentHint}">LernSax ✉️${sentHint}</span>`;
+ }
+ if (r.mailVia === 'brevo') {
+ return `<span class="badge out" style="font-size:9.5px; padding:1px 6px; color:#8fb4ff; border:1px solid rgba(143,180,255,0.3); background:rgba(143,180,255,0.1);" title="Zuletzt über Brevo versendet">Brevo 🚀</span>`;
+ }
+ return '';
+ }
+
+ function renderMailChannelControls(r){
+ const mode = normalizeMailMethod(r?.mailMethod);
+ const autoTarget = shouldUseLernSax(r?.email, r?.schoolClass) ? 'LernSax' : 'Brevo';
+ const modeClass = mode === 'lernsax' ? 'mode-lernsax' : (mode === 'brevo' ? 'mode-brevo' : '');
+ const badgeHtml = renderMailChannelBadge(r);
+ return `
+ <div class="mail-controls-row">
+ ${badgeHtml}
+ <select class="mail-channel-select ${modeClass}" data-id="${r.id}" title="Versandweg für diese E-Mail-Adresse wählen">
+ <option value="auto"${mode === 'auto' ? ' selected' : ''}>Auto (${autoTarget})</option>
+ <option value="lernsax"${mode === 'lernsax' ? ' selected' : ''}>LernSax ✉️</option>
+ <option value="brevo"${mode === 'brevo' ? ' selected' : ''}>Brevo 🚀</option>
+ </select>
+ <button type="button" class="resend-lernsax-btn" data-id="${r.id}" title="Aktuelle E-Mail (Bestätigung oder Tickets) jetzt direkt über LernSax senden und in Gesendet speichern">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+ <span>Über LernSax senden</span>
+ </button>
+ </div>`;
+ }
+
+ async function updateRegMailMethod(regId, method){
+ const reg = allRegs.find(r => r.id === regId);
+ if (!reg) return;
+ const normalized = normalizeMailMethod(method);
+ try {
+ await updateDoc(doc(db, 'registrations', regId), { mailMethod: normalized });
+ reg.mailMethod = normalized;
+ render();
+ const label = normalized === 'lernsax' ? 'LernSax ✉️' : (normalized === 'brevo' ? 'Brevo 🚀' : 'Automatisch');
+ showAdminToast(`Versandweg für ${reg.name}: ${label}`);
+ } catch (err) {
+ console.error(err);
+ alert('Versandweg konnte nicht gespeichert werden: ' + (err.message || String(err)));
+ }
+ }
+
+ const RESEND_LERNSAX_BTN_CONTENT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span>Über LernSax senden</span>';
+
+ async function sendOrderMailViaChannel(regId, channel = 'lernsax', btnEl = null){
+ const reg = allRegs.find(r => r.id === regId);
+ if (!reg || !reg.email) {
+ alert('Keine gültige E-Mail-Adresse für diese Bestellung hinterlegt.');
+ return;
+ }
+ const tickets = ticketsFor(regId);
+ const paidTickets = tickets.filter(t => t.paid === true);
+ const isTicketMail = !!reg.paid || paidTickets.length > 0;
+ const useLernSax = channel === 'lernsax' ? true : (channel === 'brevo' ? false : resolveUseLernSax(reg));
+
+ if (btnEl) {
+ btnEl.disabled = true;
+ btnEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="animation:spin 0.8s linear infinite;"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"/></svg><span>Sende...</span>';
+ }
+
+ try {
+ const salutation = (reg.salutation || (reg.anrede === 'Sie' ? 'sie' : 'du')).toLowerCase();
+ const anrede = salutation === 'sie' ? 'Sie' : 'Du';
+ const greeting = salutation === 'sie' ? `Guten Tag ${reg.name}` : `Hallo ${reg.name}`;
+
+ let res;
+ if (isTicketMail) {
+ const priceSnap = await getDoc(doc(db, 'settings', 'pricing'));
+ const freshPrices = priceSnap.exists()
+ ? { u18: Number(priceSnap.data().u18 || 0), ue18: Number(priceSnap.data().ue18 || 0) }
+ : { u18: 0, ue18: 0 };
+ const idToken = await auth.currentUser.getIdToken();
+ const targetTickets = paidTickets.length > 0 ? paidTickets : tickets;
+ res = await workerFetch('/send-tickets', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+ body: JSON.stringify({
+ email: reg.email,
+ ordererName: reg.name,
+ salutation,
+ anrede,
+ isFormal: salutation === 'sie',
+ formell: salutation === 'sie',
+ greeting,
+ attendees: targetTickets.map(t => ({
+ name: t.name,
+ ticketId: t.ticketId,
+ category: t.category,
+ price: freshPrices[t.category] || 0
+ })),
+ useLernSax,
+ donation: Number(reg.donation || 0)
+ })
+ });
+ } else {
+ const attendeeNames = tickets.length > 0
+ ? tickets.map(t => t.name)
+ : [reg.name, ...(reg.companions || []).map(c => c.name)].filter(Boolean);
+ res = await workerFetch('/send-confirmation', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({
+ name: reg.name,
+ email: reg.email,
+ salutation,
+ anrede,
+ isFormal: salutation === 'sie',
+ formell: salutation === 'sie',
+ greeting,
+ attendeeNames,
+ useLernSax
+ })
+ });
+ }
+
+ const resData = await res.json().catch(() => ({}));
+ if (!res.ok) {
+ throw new Error(resData.error || `E-Mail konnte nicht gesendet werden (HTTP ${res.status})`);
+ }
+
+ const actualVia = resData.via || (useLernSax ? 'lernsax' : 'brevo');
+ const updatePayload = {
+ mailVia: actualVia,
+ lastMailSentAt: serverTimestamp()
+ };
+ if (channel === 'lernsax' || channel === 'brevo') {
+ updatePayload.mailMethod = channel;
+ reg.mailMethod = channel;
+ }
+ if (typeof resData.savedToSent === 'boolean') {
+ updatePayload.savedToSent = resData.savedToSent;
+ reg.savedToSent = resData.savedToSent;
+ if (resData.sentFolder) {
+ updatePayload.sentFolder = resData.sentFolder;
+ reg.sentFolder = resData.sentFolder;
+ }
+ }
+
+ try {
+ await updateDoc(doc(db, 'registrations', regId), updatePayload);
+ reg.mailVia = actualVia;
+ } catch (_) {}
+
+ render();
+
+ const mailKind = isTicketMail ? 'Ticket-Mail' : 'Bestätigungsmail';
+ if (channel === 'lernsax' && actualVia !== 'lernsax') {
+ alert(`Hinweis: Obwohl LernSax ausgewählt war, hat der Worker über Brevo gesendet (LernSax-SMTP fehlgeschlagen oder Worker-Einstellung).\n\nEmpfänger: ${reg.email}`);
+ } else if (actualVia === 'lernsax') {
+ if (resData.savedToSent === true) {
+ showAdminToast(`${mailKind} an ${reg.email} über LernSax ✉️ gesendet & in „${resData.sentFolder || 'Gesendet'}“ abgelegt!`);
+ } else if (resData.savedToSent === false) {
+ showAdminToast(`${mailKind} über LernSax ✉️ gesendet (⚠️ Kopie in Gesendet fehlgeschlagen: ${resData.sentError || 'IMAP-Fehler'})`);
+ } else {
+ showAdminToast(`${mailKind} an ${reg.email} über LernSax ✉️ gesendet!`);
+ }
+ } else {
+ showAdminToast(`${mailKind} an ${reg.email} über Brevo 🚀 gesendet!`);
+ }
+ } catch (err) {
+ console.error(err);
+ alert('Versand über LernSax fehlgeschlagen:\n\n' + (err.message || String(err)));
+ } finally {
+ if (btnEl && document.body.contains(btnEl)) {
+ btnEl.disabled = false;
+ btnEl.innerHTML = RESEND_LERNSAX_BTN_CONTENT;
+ }
+ }
+ }
+
  onAuthStateChanged(auth, (user) => {
  document.getElementById('loginCard').style.display = user ? 'none' : 'block';
  document.getElementById('dashboard').style.display = user ? 'block' : 'none';
@@ -7483,9 +7711,9 @@ let allRatings = [];
  </button>
  </td>
  <td>
-					<div>${escapeHtml(r.email||'')}</div>
-					${r.mailVia === 'lernsax' ? `<div style="margin-top:3px;"><span class="badge in" style="font-size:9.5px; padding:1px 6px; background:rgba(127,224,168,0.15); color:#7fe0a8; border:1px solid rgba(127,224,168,0.3);" title="E-Mail über LernSax versendet">LernSax ✉️</span></div>` : (r.mailVia === 'brevo' ? `<div style="margin-top:3px;"><span class="badge out" style="font-size:9.5px; padding:1px 6px; color:#8fb4ff; border:1px solid rgba(143,180,255,0.3); background:rgba(143,180,255,0.1);" title="E-Mail über Brevo versendet">Brevo 🚀</span></div>` : '')}
-				</td>
+ <div>${escapeHtml(r.email||'')}</div>
+ ${renderMailChannelControls(r)}
+ </td>
  <td>${ticketsHtml}</td>
  <td>
  <div class="paid-cell">
@@ -7572,6 +7800,7 @@ let allRatings = [];
  </span>
  </div>
  <div class="order-card-email">${escapeHtml(r.email || '')}</div>
+ ${renderMailChannelControls(r)}
  </div>
  </div>
 
@@ -7661,6 +7890,12 @@ let allRatings = [];
  });
  container.querySelectorAll('.add-companion-btn').forEach(btn => {
  btn.addEventListener('click', () => openAddCompanionModal(btn.dataset.id));
+ });
+ container.querySelectorAll('.mail-channel-select').forEach(sel => {
+ sel.addEventListener('change', () => updateRegMailMethod(sel.dataset.id, sel.value));
+ });
+ container.querySelectorAll('.resend-lernsax-btn').forEach(btn => {
+ btn.addEventListener('click', () => sendOrderMailViaChannel(btn.dataset.id, 'lernsax', btn));
  });
  });
  }
@@ -8391,6 +8626,12 @@ let allRatings = [];
  resetCustomSelectVisual(salEl);
  }
 
+ const mailMethodEl = document.getElementById('editRegMailMethod');
+ if (mailMethodEl) {
+ mailMethodEl.value = normalizeMailMethod(reg.mailMethod);
+ resetCustomSelectVisual(mailMethodEl);
+ }
+
  const classInput = document.getElementById('editRegClassInput');
  const classRow = document.getElementById('editRegClassRow');
  if (classInput) classInput.value = reg.schoolClass || '';
@@ -8493,15 +8734,17 @@ let allRatings = [];
  // 1) Bestellungs-Grunddaten aktualisieren
  const salutation = (document.getElementById('editRegSalutation')?.value || reg.salutation || 'du').toLowerCase();
  const anrede = salutation === 'sie' ? 'Sie' : 'Du';
+ const mailMethod = normalizeMailMethod(document.getElementById('editRegMailMethod')?.value || reg.mailMethod);
 
  batch.update(doc(db, 'registrations', regId), {
- name, email, salutation, anrede, category,
+ name, email, salutation, anrede, category, mailMethod,
  schoolClass: schoolClass || null,
  companions: companionEntries.map(c => ({ name: c.name, category: c.category, schoolClass: c.schoolClass || null })),
  paid: updatedPaidStatus
  });
  reg.salutation = salutation;
  reg.anrede = anrede;
+ reg.mailMethod = mailMethod;
 
  // 2) Ticket des Bestellers mitziehen (umbenennen/Kategorie ändern), oder
  // anlegen, falls aus irgendeinem Grund noch keins existiert
@@ -8554,6 +8797,7 @@ let allRatings = [];
  ? { u18: Number(priceSnap.data().u18 || 0), ue18: Number(priceSnap.data().ue18 || 0) }
  : { u18: 0, ue18: 0 };
  const idToken = await auth.currentUser.getIdToken();
+ const expectedLernSax = resolveUseLernSax({ email, schoolClass, mailMethod });
  const res = await workerFetch('/send-tickets', {
  method: 'POST',
  headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
@@ -8569,25 +8813,32 @@ let allRatings = [];
  ...t,
  price: freshPrices[t.category] || 0
  })),
- useLernSax: shouldUseLernSax(email, schoolClass),
-  donation: Number(reg.donation || 0)
+ useLernSax: expectedLernSax,
+ donation: Number(reg.donation || 0)
  })
  });
  const resData = await res.json().catch(() => ({}));
 		if (!res.ok) {
 			throw new Error(resData.error || `Ticket-Mail konnte nicht gesendet werden (${res.status})`);
 		}
-		const expectedLernSax = shouldUseLernSax(email, schoolClass);
 		const via = resData.via || (expectedLernSax ? 'lernsax' : 'brevo');
 		try {
-			await updateDoc(doc(db, 'registrations', regId), { mailVia: via, ticketsSentAt: serverTimestamp() });
+			await updateDoc(doc(db, 'registrations', regId), {
+				mailVia: via,
+				ticketsSentAt: serverTimestamp(),
+				...(typeof resData.savedToSent === 'boolean' ? { savedToSent: resData.savedToSent, sentFolder: resData.sentFolder || null } : {})
+			});
 			reg.mailVia = via;
+			if (typeof resData.savedToSent === 'boolean') {
+				reg.savedToSent = resData.savedToSent;
+				reg.sentFolder = resData.sentFolder || null;
+			}
 		} catch(e) {}
 		const channelNotice = (via === 'lernsax') ? ' (über LernSax ✉️)' : (expectedLernSax ? ' (über Brevo ⚠️)' : ' (über Brevo 🚀)');
 		showAdminToast(`Bestellung aktualisiert & Tickets versendet${channelNotice}!`);
 	} else {
 		saveBtn.textContent = 'Bestätigung wird gesendet...';
-		const expectedLernSax = shouldUseLernSax(email, schoolClass);
+		const expectedLernSax = resolveUseLernSax({ email, schoolClass, mailMethod });
 		const res = await workerFetch('/send-confirmation', {
 			method: 'POST',
 			headers: {'Content-Type':'application/json'},
@@ -8610,8 +8861,15 @@ let allRatings = [];
 		} else {
 			const via = resData.via || (expectedLernSax ? 'lernsax' : 'brevo');
 			try {
-				await updateDoc(doc(db, 'registrations', regId), { mailVia: via });
+				await updateDoc(doc(db, 'registrations', regId), {
+					mailVia: via,
+					...(typeof resData.savedToSent === 'boolean' ? { savedToSent: resData.savedToSent, sentFolder: resData.sentFolder || null } : {})
+				});
 				reg.mailVia = via;
+				if (typeof resData.savedToSent === 'boolean') {
+					reg.savedToSent = resData.savedToSent;
+					reg.sentFolder = resData.sentFolder || null;
+				}
 			} catch(e) {}
 			const channelNotice = (via === 'lernsax') ? ' (über LernSax ✉️)' : (expectedLernSax ? ' (über Brevo ⚠️)' : ' (über Brevo 🚀)');
 			showAdminToast(`Bestellung aktualisiert! Bestätigungsmail versendet${channelNotice}.`);
@@ -8669,6 +8927,7 @@ let allRatings = [];
  const idToken = await auth.currentUser.getIdToken();
  const salutation = reg.salutation || (reg.anrede === 'Sie' ? 'sie' : 'du');
  const anrede = salutation === 'sie' ? 'Sie' : 'Du';
+ const expectedLernSax = resolveUseLernSax(reg);
  const res = await workerFetch('/send-tickets', {
  method: 'POST',
  headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
@@ -8684,8 +8943,8 @@ let allRatings = [];
  name: t.name, ticketId: t.ticketId, category: t.category,
  price: freshPrices[t.category] || 0
  })),
- useLernSax: shouldUseLernSax(reg.email, reg.schoolClass),
-  donation: donationEuro
+ useLernSax: expectedLernSax,
+ donation: donationEuro
  })
  });
 
@@ -8694,11 +8953,26 @@ let allRatings = [];
  throw new Error(resData.error || `Server meldet HTTP ${res.status}`);
  }
 
- const expectedLernSax = shouldUseLernSax(reg.email, reg.schoolClass);
+ const via = resData.via || (expectedLernSax ? 'lernsax' : 'brevo');
+ try {
+ await updateDoc(doc(db, 'registrations', regId), {
+ mailVia: via,
+ ticketsSentAt: serverTimestamp(),
+ ...(typeof resData.savedToSent === 'boolean' ? { savedToSent: resData.savedToSent, sentFolder: resData.sentFolder || null } : {})
+ });
+ reg.mailVia = via;
+ if (typeof resData.savedToSent === 'boolean') {
+ reg.savedToSent = resData.savedToSent;
+ reg.sentFolder = resData.sentFolder || null;
+ }
+ render();
+ renderCashier();
+ } catch(_) {}
+
  let channelNotice = '';
- if (resData.via === 'lernsax') {
+ if (via === 'lernsax') {
  channelNotice = ' (über LernSax ✉️)';
- } else if (resData.via === 'brevo') {
+ } else if (via === 'brevo') {
  channelNotice = expectedLernSax
  ? ' (über Brevo ⚠️ – LernSax-SMTP fehlgeschlagen oder nicht erreichbar)'
  : ' (über Brevo 🚀)';
@@ -8806,6 +9080,7 @@ let allRatings = [];
 			const attendeeNames = [reg.name, ...(reg.companions || []).map(c => c.name), name];
 			const salutation = reg.salutation || (reg.anrede === 'Sie' ? 'sie' : 'du');
 			const anrede = salutation === 'sie' ? 'Sie' : 'Du';
+			const expectedCompLernSax = resolveUseLernSax(reg);
 			const compMailRes = await workerFetch('/send-confirmation', {
 				method: 'POST',
 				headers: {'Content-Type':'application/json'},
@@ -8818,20 +9093,27 @@ let allRatings = [];
 					formell: salutation === 'sie',
 					greeting: salutation === 'sie' ? `Guten Tag ${reg.name}` : `Hallo ${reg.name}`,
 					attendeeNames,
-					useLernSax: shouldUseLernSax(reg.email, reg.schoolClass)
+					useLernSax: expectedCompLernSax
 				})
 			});
 			const resData = await compMailRes.json().catch(() => ({}));
 			if (compMailRes.ok) {
-				const via = resData.via || (shouldUseLernSax(reg.email, reg.schoolClass) ? 'lernsax' : 'brevo');
+				const via = resData.via || (expectedCompLernSax ? 'lernsax' : 'brevo');
 				if (via === 'lernsax') {
 					channelNotice = ' (über LernSax ✉️)';
 				} else if (via === 'brevo') {
-					channelNotice = shouldUseLernSax(reg.email, reg.schoolClass) ? ' (über Brevo ⚠️)' : ' (über Brevo 🚀)';
+					channelNotice = expectedCompLernSax ? ' (über Brevo ⚠️)' : ' (über Brevo 🚀)';
 				}
 				try {
-					await updateDoc(doc(db, 'registrations', regId), { mailVia: via });
+					await updateDoc(doc(db, 'registrations', regId), {
+						mailVia: via,
+						...(typeof resData.savedToSent === 'boolean' ? { savedToSent: resData.savedToSent, sentFolder: resData.sentFolder || null } : {})
+					});
 					reg.mailVia = via;
+					if (typeof resData.savedToSent === 'boolean') {
+						reg.savedToSent = resData.savedToSent;
+						reg.sentFolder = resData.sentFolder || null;
+					}
 				} catch(e) {}
 			}
 		} catch (mailErr) {
@@ -9046,8 +9328,16 @@ let allRatings = [];
 							: ' (Bestätigung über Brevo 🚀 gesendet)';
 					}
 					try {
-						await updateDoc(doc(db, 'registrations', regRef.id), { mailVia: via, confirmationSentAt: serverTimestamp() });
+						await updateDoc(doc(db, 'registrations', regRef.id), {
+							mailVia: via,
+							confirmationSentAt: serverTimestamp(),
+							...(typeof resData.savedToSent === 'boolean' ? { savedToSent: resData.savedToSent, sentFolder: resData.sentFolder || null } : {})
+						});
 						newRegObj.mailVia = via;
+						if (typeof resData.savedToSent === 'boolean') {
+							newRegObj.savedToSent = resData.savedToSent;
+							newRegObj.sentFolder = resData.sentFolder || null;
+						}
 						render();
 						renderCashier();
 					} catch(e) {}
@@ -9452,9 +9742,9 @@ let allRatings = [];
  </div>
  <div class="cashier-card-meta">
  <span>E-Mail: <strong style="color:var(--text);">${escapeHtml(r.email || '–')}</strong></span>
-							${r.mailVia === 'lernsax' ? `<span class="badge in" style="font-size:9.5px; margin-left:6px; padding:1px 6px; background:rgba(127,224,168,0.15); color:#7fe0a8; border:1px solid rgba(127,224,168,0.3);">LernSax ✉️</span>` : (r.mailVia === 'brevo' ? `<span class="badge out" style="font-size:9.5px; margin-left:6px; padding:1px 6px; color:#8fb4ff; border:1px solid rgba(143,180,255,0.3); background:rgba(143,180,255,0.1);">Brevo 🚀</span>` : '')}
  <span style="margin:0 6px;">·</span>
  <span>Registriert: ${formatTimestamp(r.createdAt)}</span>
+ ${renderMailChannelControls(r)}
  </div>
  </div>
  <div class="cashier-card-amount-box">
@@ -9502,6 +9792,12 @@ let allRatings = [];
  });
  resultsWrap.querySelectorAll('.invoice-btn').forEach(btn => {
  btn.addEventListener('click', () => downloadInvoicePdf(btn.dataset.id, btn));
+ });
+ resultsWrap.querySelectorAll('.mail-channel-select').forEach(sel => {
+ sel.addEventListener('change', () => updateRegMailMethod(sel.dataset.id, sel.value));
+ });
+ resultsWrap.querySelectorAll('.resend-lernsax-btn').forEach(btn => {
+ btn.addEventListener('click', () => sendOrderMailViaChannel(btn.dataset.id, 'lernsax', btn));
  });
  }
 
@@ -9884,7 +10180,8 @@ let allRatings = [];
  const idToken = await auth.currentUser.getIdToken();
  const salutation = reg.salutation || (reg.anrede === 'Sie' ? 'sie' : 'du');
  const anrede = salutation === 'sie' ? 'Sie' : 'Du';
- await workerFetch('/send-tickets', {
+ const expectedLernSax = resolveUseLernSax(reg);
+ const res = await workerFetch('/send-tickets', {
  method: 'POST',
  headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + idToken},
  body: JSON.stringify({
@@ -9898,10 +10195,28 @@ let allRatings = [];
  name: t.name, ticketId: t.ticketId, category: t.category,
  price: freshPrices[t.category] || 0
  })),
- useLernSax: shouldUseLernSax(reg.email, reg.schoolClass),
-  donation: Number(reg.donation || 0)
+ useLernSax: expectedLernSax,
+ donation: Number(reg.donation || 0)
  })
  });
+ const resData = await res.json().catch(() => ({}));
+ if (res.ok) {
+ const via = resData.via || (expectedLernSax ? 'lernsax' : 'brevo');
+ try {
+ await updateDoc(doc(db, 'registrations', regId), {
+ mailVia: via,
+ ticketsSentAt: serverTimestamp(),
+ ...(typeof resData.savedToSent === 'boolean' ? { savedToSent: resData.savedToSent, sentFolder: resData.sentFolder || null } : {})
+ });
+ reg.mailVia = via;
+ if (typeof resData.savedToSent === 'boolean') {
+ reg.savedToSent = resData.savedToSent;
+ reg.sentFolder = resData.sentFolder || null;
+ }
+ render();
+ renderCashier();
+ } catch(_) {}
+ }
  } catch(e) {
  console.warn('Background ticket email dispatch:', e);
  }
