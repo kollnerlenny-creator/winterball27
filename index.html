@@ -1079,7 +1079,7 @@
  .final-cta{padding-top:14px; padding-bottom:40px;}
  .final-cta .section-title{margin-bottom:20px;}
  .timeline-item{grid-template-columns:70px 1fr; gap:14px;}
- footer{padding:24px 18px 56px;}
+ footer{padding:24px 18px calc(56px + env(safe-area-inset-bottom, 0px));}
  }
 
  @media (pointer:coarse){
@@ -2448,6 +2448,7 @@
  const floatingCtaBar = document.getElementById('floatingCtaBar');
  const heroCta = document.querySelector('.hero .cta');
  const finalCta = document.querySelector('.final-cta .cta');
+ const pageFooter = document.querySelector('footer');
 
  function updateFloatingCta(){
  if (!floatingCtaBar) return;
@@ -2458,13 +2459,17 @@
  heroCtaPassed = rect.bottom < 40;
  }
 
- let finalCtaInView = false;
+ let bottomZoneReached = false;
  if (finalCta) {
  const fRect = finalCta.getBoundingClientRect();
- finalCtaInView = (fRect.top < (window.innerHeight - 20) && fRect.bottom > 20);
+ bottomZoneReached = fRect.top < (window.innerHeight - 20);
+ }
+ if (!bottomZoneReached && pageFooter) {
+ const footerRect = pageFooter.getBoundingClientRect();
+ bottomZoneReached = footerRect.top < window.innerHeight;
  }
 
- if (heroCtaPassed && !finalCtaInView) {
+ if (heroCtaPassed && !bottomZoneReached) {
  floatingCtaBar.classList.add('visible');
  floatingCtaBar.setAttribute('aria-hidden', 'false');
  } else {
