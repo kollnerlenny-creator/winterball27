@@ -517,8 +517,8 @@ function buildConfirmationEmailHtml({ name, attendeeNames, formal, greeting }) {
     : (plural ? 'eure Anmeldungen sind bei uns eingegangen.' : 'deine Anmeldung ist bei uns eingegangen.');
 
   const payText = formal
-    ? `Bitte bezahlen Sie ${plural ? 'die Tickets' : 'Ihr Ticket'} bar am <strong>14.12.2026 in allen Pausen in der Aula</strong>. Sobald das erledigt ist, erhalten Sie ${plural ? 'die Tickets' : 'Ihr Ticket'} mit QR-Code in einer separaten Mail zugeschickt.`
-    : `Bitte bezahle ${plural ? 'die Tickets' : 'dein Ticket'} bar am <strong>14.12.2026 in allen Pausen in der Aula</strong>. Sobald das erledigt ist, bekommst du ${plural ? 'die Tickets' : 'dein Ticket'} mit QR-Code in einer separaten Mail zugeschickt.`;
+    ? `Bitte bezahlen Sie ${plural ? 'die Tickets' : 'Ihr Ticket'} bar am <strong>14.12.2026 in allen Pausen im Foyer</strong>. Sobald das erledigt ist, erhalten Sie ${plural ? 'die Tickets' : 'Ihr Ticket'} mit QR-Code in einer separaten Mail zugeschickt.`
+    : `Bitte bezahle ${plural ? 'die Tickets' : 'dein Ticket'} bar am <strong>14.12.2026 in allen Pausen im Foyer</strong>. Sobald das erledigt ist, bekommst du ${plural ? 'die Tickets' : 'dein Ticket'} mit QR-Code in einer separaten Mail zugeschickt.`;
 
   return `
   <div style="background:#0a0e1a;padding:40px 16px;font-family:'Segoe UI',system-ui,sans-serif;">
@@ -563,8 +563,8 @@ function buildConfirmationEmailText({ name, attendeeNames, formal, greeting }) {
     : (plural ? 'eure Anmeldungen sind bei uns eingegangen.' : 'deine Anmeldung ist bei uns eingegangen.');
 
   const payText = formal
-    ? `Bitte bezahlen Sie ${plural ? 'die Tickets' : 'Ihr Ticket'} bar am 14.12.2026 in allen Pausen in der Aula.\nSobald das erledigt ist, erhalten Sie ${plural ? 'die Tickets' : 'Ihr Ticket'} mit QR-Code in einer separaten Mail zugeschickt.`
-    : `Bitte bezahle ${plural ? 'die Tickets' : 'dein Ticket'} bar am 14.12.2026 in allen Pausen in der Aula.\nSobald das erledigt ist, bekommst du ${plural ? 'die Tickets' : 'dein Ticket'} mit QR-Code in einer separaten Mail zugeschickt.`;
+    ? `Bitte bezahlen Sie ${plural ? 'die Tickets' : 'Ihr Ticket'} bar am 14.12.2026 in allen Pausen im Foyer.\nSobald das erledigt ist, erhalten Sie ${plural ? 'die Tickets' : 'Ihr Ticket'} mit QR-Code in einer separaten Mail zugeschickt.`
+    : `Bitte bezahle ${plural ? 'die Tickets' : 'dein Ticket'} bar am 14.12.2026 in allen Pausen im Foyer.\nSobald das erledigt ist, bekommst du ${plural ? 'die Tickets' : 'dein Ticket'} mit QR-Code in einer separaten Mail zugeschickt.`;
 
   return `WINTER BALL — Anmeldung eingegangen
 
@@ -600,8 +600,8 @@ function buildStatusEmailHtml({ name, companionNames, paid, formal }) {
       ? `Ihre Anmeldung für den Winter Ball 2027 ist vollständig bestätigt (${totalTickets} Ticket${plural ? 's' : ''}) und bereits bezahlt. Ihre Tickets mit QR-Code wurden bereits versendet — falls Sie die Mail nicht finden, schauen Sie bitte kurz im Spam-Ordner oder schreiben Sie an info@winterball27.de.`
       : `deine Anmeldung für den Winter Ball 2027 ist vollständig bestätigt (${totalTickets} Ticket${plural ? 's' : ''}) und bereits bezahlt. Deine Tickets mit QR-Code wurden bereits verschickt — falls du die Mail nicht findest, schau bitte kurz im Spam-Ordner oder schreib an info@winterball27.de.`)
     : (formal
-      ? `Ihre Anmeldung für den Winter Ball 2027 ist im System gespeichert (${totalTickets} Ticket${plural ? 's' : ''}). Die Bezahlung ist noch offen: Kommen Sie dafür bitte am <strong>Montag, 14.12.2026 in allen Pausen in die Aula</strong> des Gymnasium Wilsdruff.`
-      : `deine Anmeldung für den Winter Ball 2027 ist im System gespeichert (${totalTickets} Ticket${plural ? 's' : ''}). Die Bezahlung ist noch offen: Komm dafür bitte am <strong>Montag, 14.12.2026 in allen Pausen in die Aula</strong> des Gymnasium Wilsdruff.`);
+      ? `Ihre Anmeldung für den Winter Ball 2027 ist im System gespeichert (${totalTickets} Ticket${plural ? 's' : ''}). Die Bezahlung ist noch offen: Kommen Sie dafür bitte am <strong>Montag, 14.12.2026 in allen Pausen ins Foyer</strong> des Gymnasium Wilsdruff.`
+      : `deine Anmeldung für den Winter Ball 2027 ist im System gespeichert (${totalTickets} Ticket${plural ? 's' : ''}). Die Bezahlung ist noch offen: Komm dafür bitte am <strong>Montag, 14.12.2026 in allen Pausen ins Foyer</strong> des Gymnasium Wilsdruff.`);
 
   return `
   <div style="background:#0a0e1a;padding:40px 16px;font-family:'Segoe UI',system-ui,sans-serif;">
@@ -644,8 +644,8 @@ function buildStatusEmailText({ name, companionNames, paid, formal }) {
       ? `Ihre Anmeldung für den Winter Ball 2027 ist bestätigt (${totalTickets} Ticket${plural ? 's' : ''}) und bereits bezahlt.`
       : `deine Anmeldung für den Winter Ball 2027 ist bestätigt (${totalTickets} Ticket${plural ? 's' : ''}) und bereits bezahlt.`)
     : (formal
-      ? `Ihre Anmeldung für den Winter Ball 2027 ist gespeichert (${totalTickets} Ticket${plural ? 's' : ''}). Bitte bezahlen Sie bar am Montag, 14.12.2026 in allen Pausen in der Aula.`
-      : `deine Anmeldung für den Winter Ball 2027 ist gespeichert (${totalTickets} Ticket${plural ? 's' : ''}). Bitte bezahle bar am Montag, 14.12.2026 in allen Pausen in der Aula.`);
+      ? `Ihre Anmeldung für den Winter Ball 2027 ist gespeichert (${totalTickets} Ticket${plural ? 's' : ''}). Bitte bezahlen Sie bar am Montag, 14.12.2026 in allen Pausen im Foyer.`
+      : `deine Anmeldung für den Winter Ball 2027 ist gespeichert (${totalTickets} Ticket${plural ? 's' : ''}). Bitte bezahle bar am Montag, 14.12.2026 in allen Pausen im Foyer.`);
 
   return `WINTER BALL — Anmeldestatus
 ${statusLine}
