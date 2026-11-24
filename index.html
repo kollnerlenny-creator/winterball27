@@ -1313,12 +1313,26 @@
     }
     .ticket-sale-actions {
         flex: 0 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
     }
     .ticket-sale-actions .route-btn {
         margin-top: 0;
         white-space: nowrap;
         min-height: 44px;
         padding: 11px 20px;
+        cursor: pointer;
+    }
+    .route-btn-secondary {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.24);
+        color: #eef2fb;
+    }
+    .route-btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.13);
+        border-color: rgba(223, 233, 255, 0.45);
     }
 
     /* Hero / Final CTA-Gruppe mit Status-Check-Button */
@@ -1529,6 +1543,16 @@
         line-height: 1.5;
         color: rgba(185, 200, 232, 0.68);
     }
+    .status-modal-warn {
+        margin-top: 10px;
+        padding: 11px 13px;
+        border-radius: 12px;
+        background: rgba(255, 180, 90, 0.13);
+        border: 1px solid rgba(255, 195, 110, 0.45);
+        color: #ffe8c2;
+        font-size: 12.5px;
+        line-height: 1.5;
+    }
 
 </style>
 </head>
@@ -1552,8 +1576,8 @@
     <span class="ios-notif-app">Winter Ball 2027</span>
     <span class="ios-notif-time">Jetzt</span>
    </div>
-   <div class="ios-notif-title">Ticketverkauf am 14.12.2026</div>
-   <div class="ios-notif-body">In allen Pausen im Foyer — dort kannst du dein Ticket bar bezahlen.</div>
+   <div class="ios-notif-title" id="iosSaleBannerTitle">Ticketverkauf am 14.12.2026</div>
+   <div class="ios-notif-body" id="iosSaleBannerBody">In allen Pausen im Foyer — dort kannst du dein Ticket bar bezahlen.</div>
   </div>
   <button type="button" class="ios-notif-close" id="iosSaleCloseBtn" aria-label="Benachrichtigung schließen">&times;</button>
  </div>
@@ -1697,6 +1721,10 @@
     Jetzt anmelden
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
    </a>
+   <button type="button" class="route-btn route-btn-secondary" id="downloadSaleIcsBtn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="15" height="15" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    14.12. in meinen Kalender
+   </button>
   </div>
  </div>
 
@@ -2210,6 +2238,19 @@
  if (data.ue18) document.getElementById('priceUe18').innerHTML = `${data.ue18}<span> €</span>`;
  }).catch(() => {});
 
+ getDoc(doc(db, 'settings', 'info')).then(snap => {
+ const saleCfg = snap.exists() ? (snap.data().saleBanner || null) : null;
+ if (typeof window.__applySaleBannerConfig === 'function') {
+ window.__applySaleBannerConfig(saleCfg);
+ } else {
+ window.__pendingSaleBannerConfig = saleCfg;
+ }
+ }).catch(() => {
+ if (typeof window.__applySaleBannerConfig === 'function') {
+ window.__applySaleBannerConfig(null);
+ }
+ });
+
  // --- Schneeflocken-Bewertung ---
  let selectedRating = 0;
  const starButtons = Array.from(document.querySelectorAll('#starRow .snowflake-btn, #starRow .star'));
@@ -2605,8 +2646,92 @@
    }
   });
 
-  const delay = reduceMotion ? 60 : 650;
-  setTimeout(showBanner, delay);
+  function isBannerExpired(dateStr) {
+   const target = String(dateStr || '2026-12-14').trim();
+   if (!/^\d{4}-\d{2}-\d{2}$/.test(target)) return false;
+   const [y, m, d] = target.split('-').map(Number);
+   const endOfDay = new Date(y, m - 1, d, 23, 59, 59, 999).getTime();
+   return Date.now() > endOfDay;
+  }
+
+  let bannerEligible = !isBannerExpired('2026-12-14');
+  let configResolved = false;
+
+  window.__applySaleBannerConfig = function(cfg) {
+   configResolved = true;
+   const titleEl = document.getElementById('iosSaleBannerTitle');
+   const bodyEl = document.getElementById('iosSaleBannerBody');
+   if (cfg && typeof cfg === 'object') {
+    if (cfg.title && titleEl) titleEl.textContent = cfg.title;
+    if (cfg.body && bodyEl) bodyEl.textContent = cfg.body;
+    const enabled = cfg.enabled !== false;
+    const expired = isBannerExpired(cfg.date || '2026-12-14');
+    bannerEligible = enabled && !expired;
+   } else {
+    bannerEligible = !isBannerExpired('2026-12-14');
+   }
+   if (!bannerEligible) {
+    dismissBanner();
+   } else {
+    showBanner();
+   }
+  };
+
+  if (typeof window.__pendingSaleBannerConfig !== 'undefined') {
+   window.__applySaleBannerConfig(window.__pendingSaleBannerConfig);
+  } else {
+   const delay = reduceMotion ? 60 : 650;
+   setTimeout(() => {
+    if (!configResolved && bannerEligible) showBanner();
+   }, delay);
+  }
+ })();
+</script>
+
+<!-- Kalender-Export für Ticketverkauf am 14.12.2026 -->
+<script>
+ (function() {
+  const btn = document.getElementById('downloadSaleIcsBtn');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+   const ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Winter Ball 2027//Ticketverkauf//DE',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'BEGIN:VEVENT',
+    'UID:winterball-2027-ticketverkauf-20261214@winterball27.de',
+    'DTSTAMP:20261124T100000Z',
+    'DTSTART:20261214T080000Z',
+    'DTEND:20261214T130000Z',
+    'SUMMARY:Winter Ball 2027 – Ticketverkauf (Foyer)',
+    'DESCRIPTION:Ticketverkauf für den Winter Ball 2027 in allen Pausen im Foyer.\\nBitte Betrag passend in bar mitbringen (U18: 5 € / Ü18: 7 €).\\nWebsite: https://winterball27.de',
+    'LOCATION:Foyer des Gymnasium Wilsdruff\\, An der Schule 9\\, 01723 Wilsdruff',
+    'STATUS:CONFIRMED',
+    'BEGIN:VALARM',
+    'TRIGGER:-P1D',
+    'ACTION:DISPLAY',
+    'DESCRIPTION:Erinnerung: Morgen ist Winterball-Ticketverkauf in allen Pausen im Foyer!',
+    'END:VALARM',
+    'BEGIN:VALARM',
+    'TRIGGER:-PT1H',
+    'ACTION:DISPLAY',
+    'DESCRIPTION:Heute Ticketverkauf in allen Pausen im Foyer!',
+    'END:VALARM',
+    'END:VEVENT',
+    'END:VCALENDAR'
+   ].join('\r\n');
+   const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+   const url = URL.createObjectURL(blob);
+   const a = document.createElement('a');
+   a.href = url;
+   a.setAttribute('download', 'Winterball-Ticketverkauf-14-12.ics');
+   document.body.appendChild(a);
+   a.click();
+   document.body.removeChild(a);
+   setTimeout(() => URL.revokeObjectURL(url), 2000);
+  });
  })();
 </script>
 
@@ -2629,11 +2754,14 @@
     placeholder="name@beispiel.de oder ...@gymwilsdruff.lernsax.de"
     required
    >
+   <div id="statusCheckLernSaxWarn" class="status-modal-warn" hidden>
+    <strong>Achtung:</strong> LernSax-Konten ab 2024 blockieren oft E-Mails – falls du bei der Anmeldung eine Eltern-Mail angegeben hast, gib bitte diese ein. Falls du bereits eine Bestätigungsmail erhalten hast, hat alles funktioniert und du musst dir keine Sorgen machen.
+   </div>
    <button type="submit" class="status-modal-submit" id="statusCheckSubmitBtn">Status per E-Mail anfordern</button>
   </form>
   <div id="statusCheckFeedback" class="status-modal-feedback" aria-live="polite"></div>
   <div class="status-modal-privacy">
-   Hinweis: Auf der Website wird aus Datenschutzgründen nie angezeigt, welche E-Mail-Adressen registriert sind. Falls du keine Mail findest (z. B. wegen LernSax-Einschränkungen in Klasse 5–7), schreib uns kurz an <a href="mailto:info@winterball27.de" style="color:var(--accent-glow); text-decoration:none;">info@winterball27.de</a>.
+   Hinweis: Auf der Website wird aus Datenschutzgründen nie angezeigt, welche E-Mail-Adressen registriert sind. Jede Adresse kann pro Gerät nur einmal abgefragt werden (60-Sekunden-Schutz). Bei Fragen: <a href="mailto:info@winterball27.de" style="color:var(--accent-glow); text-decoration:none;">info@winterball27.de</a>.
   </div>
  </div>
 </div>
@@ -2641,21 +2769,87 @@
 <script>
  (function() {
   const WORKER_URL = 'https://winterball-worker.kollnerlenny.workers.dev';
+  const COOLDOWN_MS = 60000;
+  const LAST_SENT_KEY = 'wb27_status_last_sent_at';
+  const CHECKED_EMAILS_KEY = 'wb27_status_checked_emails';
+
   const modal = document.getElementById('statusCheckModal');
   const closeBtn = document.getElementById('statusCheckCloseBtn');
   const form = document.getElementById('statusCheckForm');
   const emailInput = document.getElementById('statusCheckEmailInput');
+  const lernSaxWarn = document.getElementById('statusCheckLernSaxWarn');
   const submitBtn = document.getElementById('statusCheckSubmitBtn');
   const feedback = document.getElementById('statusCheckFeedback');
   const triggers = document.querySelectorAll('[data-open-status-check]');
 
   if (!modal || !form || !emailInput || !submitBtn || !feedback) return;
 
+  function isBlockedLernSaxInput(val) {
+   const s = String(val || '').trim().toLowerCase();
+   const parts = s.split('@');
+   if (parts.length !== 2) return false;
+   const local = parts[0];
+   const domain = parts[1];
+   const isLernSax = domain === 'lernsax.de' || domain.endsWith('.lernsax.de');
+   return isLernSax && /(2024|2025|2026)/.test(local);
+  }
+
+  function updateLernSaxWarn() {
+   if (!lernSaxWarn) return;
+   lernSaxWarn.hidden = !isBlockedLernSaxInput(emailInput.value);
+  }
+
+  emailInput.addEventListener('input', updateLernSaxWarn);
+
+  async function hashEmail(email) {
+   try {
+    if (window.crypto && window.crypto.subtle && window.TextEncoder) {
+     const buf = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(email));
+     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+   } catch (_) {}
+   return email;
+  }
+
+  function getCheckedEmails() {
+   try {
+    const raw = localStorage.getItem(CHECKED_EMAILS_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+   } catch (_) {
+    return [];
+   }
+  }
+
+  function markEmailChecked(hash) {
+   try {
+    const list = getCheckedEmails();
+    if (!list.includes(hash)) {
+     list.push(hash);
+     localStorage.setItem(CHECKED_EMAILS_KEY, JSON.stringify(list));
+    }
+    localStorage.setItem(LAST_SENT_KEY, String(Date.now()));
+   } catch (_) {}
+  }
+
+  function getCooldownRemainingSec() {
+   try {
+    const last = Number(localStorage.getItem(LAST_SENT_KEY) || 0);
+    if (!last) return 0;
+    const diff = Date.now() - last;
+    if (diff < COOLDOWN_MS) {
+     return Math.max(1, Math.ceil((COOLDOWN_MS - diff) / 1000));
+    }
+   } catch (_) {}
+   return 0;
+  }
+
   function openModal() {
    modal.hidden = false;
    modal.classList.add('is-open');
    feedback.className = 'status-modal-feedback';
    feedback.textContent = '';
+   updateLernSaxWarn();
    setTimeout(() => emailInput.focus(), 40);
   }
 
@@ -2709,6 +2903,20 @@
     return;
    }
 
+   const emailHash = await hashEmail(email);
+   if (getCheckedEmails().includes(emailHash)) {
+    feedback.className = 'status-modal-feedback is-error';
+    feedback.textContent = 'Für diese E-Mail-Adresse wurde von diesem Gerät bereits eine Status-Mail angefordert. Schau bitte in deinem Postfach (auch im Spam-Ordner) nach — dieselbe E-Mail kann hier nur einmal verwendet werden.';
+    return;
+   }
+
+   const waitSec = getCooldownRemainingSec();
+   if (waitSec > 0) {
+    feedback.className = 'status-modal-feedback is-error';
+    feedback.textContent = `Bitte warte noch ${waitSec} Sekunden, bevor du eine weitere Status-Abfrage absendest.`;
+    return;
+   }
+
    submitBtn.disabled = true;
    submitBtn.textContent = 'Wird geprüft...';
    feedback.className = 'status-modal-feedback';
@@ -2720,6 +2928,7 @@
     if (!res.ok) {
      throw new Error(data.error || 'Die Anfrage konnte gerade nicht gesendet werden.');
     }
+    markEmailChecked(emailHash);
     feedback.className = 'status-modal-feedback is-info';
     feedback.innerHTML = 'Falls unter <strong>' + email.replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c])) + '</strong> eine Anmeldung vorliegt, haben wir dir deinen aktuellen Anmelde- und Zahlungsstatus soeben per E-Mail gesendet. Bitte schau auch im Spam-Ordner nach.';
    } catch (err) {

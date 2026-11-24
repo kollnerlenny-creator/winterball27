@@ -258,6 +258,42 @@ async function lookupLernSaxThreshold() {
   }
 }
 
+const statusCooldownMap = new Map();
+const STATUS_COOLDOWN_SEC = 60;
+
+async function checkAndSetStatusCooldown(email) {
+  const now = Date.now();
+  const memTs = statusCooldownMap.get(email);
+  if (memTs && (now - memTs) < STATUS_COOLDOWN_SEC * 1000) {
+    return Math.max(1, Math.ceil((STATUS_COOLDOWN_SEC * 1000 - (now - memTs)) / 1000));
+  }
+
+  try {
+    if (typeof caches !== "undefined" && caches.default) {
+      const cacheKey = new Request(`https://winterball-cooldown.invalid/check-status?email=${encodeURIComponent(email)}`);
+      const cached = await caches.default.match(cacheKey);
+      if (cached) {
+        const ts = Number(await cached.text());
+        if (ts && (now - ts) < STATUS_COOLDOWN_SEC * 1000) {
+          statusCooldownMap.set(email, ts);
+          return Math.max(1, Math.ceil((STATUS_COOLDOWN_SEC * 1000 - (now - ts)) / 1000));
+        }
+      }
+      statusCooldownMap.set(email, now);
+      await caches.default.put(
+        cacheKey,
+        new Response(String(now), {
+          headers: { "Cache-Control": `public, max-age=${STATUS_COOLDOWN_SEC}` },
+        })
+      );
+      return 0;
+    }
+  } catch (_) {}
+
+  statusCooldownMap.set(email, now);
+  return 0;
+}
+
 // ---------- PDF-Ticket-Generierung ----------
 
 async function fetchQrPng(ticketId) {
@@ -820,6 +856,14 @@ export default {
         const email = String(payload?.email || "").trim().toLowerCase();
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
           return json({ error: "Bitte gib eine gültige E-Mail-Adresse ein." }, 400);
+        }
+
+        const retryAfter = await checkAndSetStatusCooldown(email);
+        if (retryAfter > 0) {
+          return json({
+            error: `Für diese E-Mail-Adresse wurde gerade erst eine Anfrage gesendet. Bitte warte noch ${retryAfter} Sekunden und schau auch im Spam-Ordner nach.`,
+            retryAfter,
+          }, 429);
         }
 
         const reg = await lookupRegistrationByEmail(email);

@@ -28,6 +28,7 @@
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <title>Winterball · Admin</title>
+<meta name="robots" content="noindex, nofollow">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#070b16">
 <meta name="mobile-web-app-capable" content="yes">
@@ -2956,6 +2957,36 @@
  </div>
  </div>
 
+ <div class="info-editor" style="margin-top:16px; padding-top:16px; border-top:1px solid var(--glass-border);">
+  <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+   <label for="saleBannerEnabled" style="margin:0; font-weight:700; color:#fff;">iPhone-Benachrichtigung auf Startseite (Ticketverkauf)</label>
+   <label style="display:inline-flex; align-items:center; gap:8px; margin:0; cursor:pointer; font-size:12.5px; color:var(--accent);">
+    <input type="checkbox" id="saleBannerEnabled" checked style="width:16px; height:16px; accent-color:var(--accent-glow);">
+    <span>Aktiv</span>
+   </label>
+  </div>
+  <div style="display:grid; grid-template-columns:180px 1fr; gap:10px; margin-bottom:8px;">
+   <div>
+    <label for="saleBannerDate" style="font-size:11.5px;">Ausblenden nach Datum</label>
+    <input type="date" id="saleBannerDate" value="2026-12-14">
+   </div>
+   <div>
+    <label for="saleBannerTitle" style="font-size:11.5px;">Überschrift der Benachrichtigung</label>
+    <input type="text" id="saleBannerTitle" placeholder="Ticketverkauf am 14.12.2026">
+   </div>
+  </div>
+  <label for="saleBannerBody" style="font-size:11.5px;">Nachrichtentext</label>
+  <input type="text" id="saleBannerBody" placeholder="In allen Pausen im Foyer — dort kannst du dein Ticket bar bezahlen.">
+  <div style="font-size:11.5px; color:var(--text-dim); margin-top:5px;">Blendet sich nach dem gewählten Tag (ab 00:00 Uhr am Folgetag) automatisch aus – ideal, falls ihr im Januar noch einen zweiten Verkaufstag ergänzt.</div>
+  <div class="info-editor-actions">
+   <button id="saleBannerSaveBtn">Benachrichtigung speichern</button>
+   <span class="price-saved" id="saleBannerSaved">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><polyline points="20 6 9 17 4 12"/></svg>
+    <span>Gespeichert</span>
+   </span>
+  </div>
+ </div>
+
  <div class="info-editor">
  <label for="lernsaxThresholdInput">LernSax-Versand: Bis einschließlich zu dieser Klassenstufe über deine eigene LernSax-Adresse verschicken (z.B. 7 = Klassen 5, 6 und 7 über LernSax; ab Klasse 8 normal über Brevo).</label>
  <input type="number" id="lernsaxThresholdInput" min="1" max="13" style="max-width:120px;" placeholder="z.B. 7">
@@ -3069,6 +3100,14 @@
 							</div>
 							<div class="cash-modal-name" id="cashModalName"></div>
 							<div id="cashModalSubtitle"></div>
+							<div style="margin-top:10px; text-align:left; background:rgba(255,255,255,0.03); border:1px solid var(--glass-border); border-radius:10px; padding:9px 11px;">
+								<div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:5px;">
+									<label for="cashModalEmailInput" style="font-size:11px; color:var(--text-dim); font-weight:600; margin:0;">Ticket-E-Mail (direkt änderbar, z. B. Eltern-Mail)</label>
+									<button type="button" id="cashModalManualBtn" style="display:none; padding:3px 8px; font-size:11px; border-radius:6px; border:1px solid rgba(143,180,255,0.4); background:rgba(143,180,255,0.14); color:#dfe9ff; cursor:pointer; font-weight:600;">📋 Manuell</button>
+								</div>
+								<input type="email" id="cashModalEmailInput" placeholder="E-Mail für Ticketversand" style="width:100%; box-sizing:border-box; padding:7px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.14); background:rgba(7,11,22,0.55); color:#fff; font-size:12.5px;">
+								<div id="cashModalEmailWarn" style="display:none; font-size:11px; color:#ffd27f; margin-top:5px; line-height:1.4;">⚠️ LernSax ab Jg. 2024 blockiert oft Mails – am besten kurz Eltern-Mail eintragen oder nach Zahlung „📋 Manuell“ nutzen.</div>
+							</div>
 						</div>
 
 						<div class="cash-display-card" style="margin-top:12px;">
@@ -7794,7 +7833,17 @@ let allRatings = [];
 		}, onErr('maintenance'));
 
 		onSnapshot(doc(db, 'settings', 'info'), (snap) => {
- document.getElementById('infoText').value = snap.exists() ? (snap.data().text || '') : '';
+ const data = snap.exists() ? snap.data() : {};
+ document.getElementById('infoText').value = data.text || '';
+ const sb = data.saleBanner || {};
+ const sbEnabled = document.getElementById('saleBannerEnabled');
+ const sbDate = document.getElementById('saleBannerDate');
+ const sbTitle = document.getElementById('saleBannerTitle');
+ const sbBody = document.getElementById('saleBannerBody');
+ if (sbEnabled) sbEnabled.checked = sb.enabled !== false;
+ if (sbDate) sbDate.value = sb.date || '2026-12-14';
+ if (sbTitle) sbTitle.value = sb.title || 'Ticketverkauf am 14.12.2026';
+ if (sbBody) sbBody.value = sb.body || 'In allen Pausen im Foyer — dort kannst du dein Ticket bar bezahlen.';
  }, onErr('info'));
 
  onSnapshot(doc(db, 'settings', 'deadline'), (snap) => {
@@ -8630,6 +8679,28 @@ let allRatings = [];
 			}
 		}
 
+		const emailInp = document.getElementById('cashModalEmailInput');
+		const emailWarn = document.getElementById('cashModalEmailWarn');
+		const manualBtn = document.getElementById('cashModalManualBtn');
+		if (emailInp) {
+			emailInp.value = reg.email || '';
+			const syncCashEmailHint = () => {
+				const val = String(emailInp.value || '').trim().toLowerCase();
+				const isLernSax = val.endsWith('@gymwilsdruff.lernsax.de') || val.endsWith('@lernsax.de');
+				const isYoungYear = /(2024|2025|2026)@/.test(val);
+				if (emailWarn) emailWarn.style.display = (isLernSax && isYoungYear) ? 'block' : 'none';
+				if (manualBtn) manualBtn.style.display = isLernSax ? 'inline-block' : 'none';
+			};
+			emailInp.oninput = syncCashEmailHint;
+			syncCashEmailHint();
+		}
+		if (manualBtn) {
+			manualBtn.onclick = () => {
+				closeCashModal();
+				openManualLernSaxModal(regId);
+			};
+		}
+
 		updateCashDisplay();
 		document.getElementById('cashModalOverlay').classList.add('show');
 	}
@@ -8762,8 +8833,9 @@ let allRatings = [];
 	// Bezahlt bestätigen
 	document.getElementById('cashConfirmBtn')?.addEventListener('click', () => {
 		const { regId, btnEl, donationCents } = cashModalState;
+		const editedEmail = String(document.getElementById('cashModalEmailInput')?.value || '').trim().toLowerCase();
 		closeCashModal();
-		if (regId) markAsPaid(regId, btnEl, donationCents);
+		if (regId) markAsPaid(regId, btnEl, donationCents, editedEmail);
 	});
 
 	// =========================================================================
@@ -9192,7 +9264,7 @@ let allRatings = [];
  }
  });
 
- async function markAsPaid(regId, btnEl, donationCents = 0){
+ async function markAsPaid(regId, btnEl, donationCents = 0, overrideEmail = ''){
 		if (btnEl) {
 			btnEl.disabled = true;
 			btnEl.textContent = 'Wird verarbeitet...';
@@ -9204,21 +9276,36 @@ let allRatings = [];
 		try {
 			const batch = writeBatch(db);
 			const donationEuro = (donationCents > 0) ? (Math.round(donationCents) / 100) : (Number(reg.donation) || 0);
+			const cleanOverride = String(overrideEmail || '').trim().toLowerCase();
+			const emailChanged = !!(cleanOverride && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanOverride) && cleanOverride !== String(reg.email || '').trim().toLowerCase());
 			const updateData = { paid: true, paidAt: serverTimestamp() };
 			if (donationEuro > 0) {
 				updateData.donation = donationEuro;
 			}
+			if (emailChanged) {
+				updateData.email = cleanOverride;
+			}
 			batch.update(doc(db, 'registrations', regId), updateData);
-			tickets.forEach(t => batch.update(doc(db, 'tickets', t.id), { paid: true }));
+			tickets.forEach(t => {
+				const tUpd = { paid: true };
+				if (emailChanged) tUpd.email = cleanOverride;
+				batch.update(doc(db, 'tickets', t.id), tUpd);
+			});
 			await batch.commit();
 
 			// Sofort lokalen Zustand aktualisieren, damit UI & Kasse ohne Listener-Verzögerung umschalten
 			reg.paid = true;
 			reg.paidAt = new Date();
+			if (emailChanged) {
+				reg.email = cleanOverride;
+			}
 			if (donationEuro > 0) {
 				reg.donation = donationEuro;
 			}
-			tickets.forEach(t => { t.paid = true; });
+			tickets.forEach(t => {
+				t.paid = true;
+				if (emailChanged) t.email = cleanOverride;
+			});
 			render();
 			renderCashier();
 			if (typeof renderCashierMode === 'function') renderCashierMode();
@@ -9806,10 +9893,25 @@ let allRatings = [];
 
  document.getElementById('infoSaveBtn').addEventListener('click', async () => {
  const text = document.getElementById('infoText').value.trim();
- await setDoc(doc(db, 'settings', 'info'), { text });
+ await setDoc(doc(db, 'settings', 'info'), { text }, { merge: true });
  const savedEl = document.getElementById('infoSaved');
  savedEl.classList.add('show');
  setTimeout(() => savedEl.classList.remove('show'), 2000);
+ });
+
+ document.getElementById('saleBannerSaveBtn')?.addEventListener('click', async () => {
+ const saleBanner = {
+  enabled: !!document.getElementById('saleBannerEnabled')?.checked,
+  date: String(document.getElementById('saleBannerDate')?.value || '2026-12-14').trim(),
+  title: String(document.getElementById('saleBannerTitle')?.value || '').trim() || 'Ticketverkauf am 14.12.2026',
+  body: String(document.getElementById('saleBannerBody')?.value || '').trim() || 'In allen Pausen im Foyer — dort kannst du dein Ticket bar bezahlen.'
+ };
+ await setDoc(doc(db, 'settings', 'info'), { saleBanner }, { merge: true });
+ const savedEl = document.getElementById('saleBannerSaved');
+ if (savedEl) {
+  savedEl.classList.add('show');
+  setTimeout(() => savedEl.classList.remove('show'), 2000);
+ }
  });
 
  document.getElementById('deadlineSaveBtn').addEventListener('click', async () => {
