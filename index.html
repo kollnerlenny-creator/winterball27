@@ -1099,6 +1099,228 @@
             inset 0 10px 20px -8px rgba(255, 255, 255, 0.12) !important;
     }
     
+    /* iPhone-Style Ticketverkauf Notification Banner */
+    .ios-notif-banner {
+        position: fixed;
+        top: calc(14px + env(safe-area-inset-top, 0px));
+        left: 50%;
+        width: min(414px, calc(100vw - 24px));
+        z-index: 950;
+        padding: 12px 14px 10px;
+        border-radius: 24px;
+        background: linear-gradient(160deg, rgba(38, 49, 76, 0.86) 0%, rgba(16, 22, 38, 0.90) 100%);
+        backdrop-filter: blur(28px) saturate(195%);
+        -webkit-backdrop-filter: blur(28px) saturate(195%);
+        border: 1px solid rgba(255, 255, 255, 0.24);
+        box-shadow:
+            0 20px 50px rgba(0, 0, 0, 0.52),
+            0 4px 14px rgba(0, 0, 0, 0.28),
+            inset 0 1px 0 rgba(255, 255, 255, 0.34);
+        color: #f4f7ff;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+        cursor: pointer;
+        user-select: none;
+        touch-action: pan-x;
+        transform: translate3d(-50%, calc(-100% - 42px), 0) scale(0.92);
+        opacity: 0;
+        pointer-events: none;
+        transition:
+            transform 0.62s cubic-bezier(0.22, 1.22, 0.36, 1),
+            opacity 0.34s ease;
+    }
+    .ios-notif-banner.is-visible {
+        transform: translate3d(-50%, 0, 0) scale(1);
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .ios-notif-banner.is-dragging {
+        transition: none;
+    }
+    .ios-notif-banner.is-dismissed {
+        transform: translate3d(-50%, calc(-100% - 42px), 0) scale(0.92);
+        opacity: 0;
+        pointer-events: none;
+        transition:
+            transform 0.32s cubic-bezier(0.4, 0, 1, 1),
+            opacity 0.24s ease;
+    }
+    .ios-notif-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .ios-notif-icon {
+        width: 38px;
+        height: 38px;
+        flex-shrink: 0;
+        border-radius: 10px;
+        background: radial-gradient(circle at 30% 25%, #2b457a 0%, #101930 78%);
+        border: 1px solid rgba(223, 233, 255, 0.32);
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.28), 0 4px 10px rgba(0, 0, 0, 0.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 2px;
+        color: #f2f6ff;
+    }
+    .ios-notif-icon svg {
+        width: 21px;
+        height: 21px;
+    }
+    .ios-notif-content {
+        flex: 1;
+        min-width: 0;
+    }
+    .ios-notif-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 2px;
+    }
+    .ios-notif-app {
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        color: rgba(215, 227, 252, 0.72);
+        text-transform: uppercase;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .ios-notif-time {
+        font-size: 11.5px;
+        color: rgba(215, 227, 252, 0.56);
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    .ios-notif-title {
+        font-size: 14.5px;
+        font-weight: 700;
+        line-height: 1.3;
+        color: #ffffff;
+        margin-bottom: 2px;
+    }
+    .ios-notif-body {
+        font-size: 13px;
+        line-height: 1.4;
+        color: rgba(235, 241, 255, 0.88);
+    }
+    .ios-notif-close {
+        flex-shrink: 0;
+        width: 34px;
+        height: 34px;
+        margin: -4px -4px 0 0;
+        border: none;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(240, 244, 255, 0.8);
+        font-size: 18px;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+    .ios-notif-close:hover,
+    .ios-notif-close:focus-visible {
+        background: rgba(255, 255, 255, 0.18);
+        color: #ffffff;
+        outline: none;
+    }
+    .ios-notif-grabber {
+        width: 36px;
+        height: 4px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.26);
+        margin: 8px auto 0;
+    }
+    @media (max-width: 600px) {
+        .ios-notif-banner {
+            top: calc(10px + env(safe-area-inset-top, 0px));
+            padding: 11px 12px 8px;
+            border-radius: 22px;
+        }
+        .ios-notif-title { font-size: 14px; }
+        .ios-notif-body { font-size: 12.5px; }
+        .ios-notif-close {
+            width: 36px;
+            height: 36px;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .ios-notif-banner {
+            transition: opacity 0.2s ease;
+            transform: translate3d(-50%, 0, 0) scale(1);
+        }
+        .ios-notif-banner.is-dismissed {
+            transform: translate3d(-50%, 0, 0) scale(1);
+        }
+    }
+
+    /* Permanenter Hinweis Ticketverkauf in Details */
+    .ticket-sale-card {
+        margin-bottom: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px 24px;
+        border-color: rgba(143, 180, 255, 0.34) !important;
+        transition: border-color 0.45s ease, box-shadow 0.45s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ticket-sale-card.is-highlighted {
+        border-color: rgba(223, 233, 255, 0.72) !important;
+        box-shadow:
+            0 24px 54px rgba(0, 0, 0, 0.45),
+            0 0 0 2px rgba(143, 180, 255, 0.35),
+            inset 0 1.5px 1.5px rgba(255, 255, 255, 0.55) !important;
+    }
+    .ticket-sale-main {
+        flex: 1 1 320px;
+        min-width: 0;
+    }
+    .ticket-sale-eyebrow {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 1.6px;
+        text-transform: uppercase;
+        color: var(--accent-glow);
+        margin-bottom: 6px;
+    }
+    .ticket-sale-card h3 {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 6px;
+    }
+    .ticket-sale-meta {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--accent);
+        margin-bottom: 8px;
+        line-height: 1.5;
+    }
+    .ticket-sale-card p {
+        margin: 0;
+        color: var(--text-dim);
+        font-size: 14.5px;
+        line-height: 1.6;
+    }
+    .ticket-sale-actions {
+        flex: 0 0 auto;
+    }
+    .ticket-sale-actions .route-btn {
+        margin-top: 0;
+        white-space: nowrap;
+        min-height: 44px;
+        padding: 11px 20px;
+    }
+
 </style>
 </head>
 <body>
@@ -1106,6 +1328,28 @@
 <div class="scroll-progress" id="scrollProgress"></div>
 <canvas id="snowCanvas"></canvas>
 <div id="clickRippleContainer"></div>
+
+<!-- iPhone-Style Push-Benachrichtigung -->
+<div id="iosSaleBanner" class="ios-notif-banner" role="region" aria-label="Hinweis zum Ticketverkauf" tabindex="0">
+ <div class="ios-notif-row">
+  <div class="ios-notif-icon" aria-hidden="true">
+   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7Z"/>
+    <path d="M17.5 4.5v3M16 6h3"/>
+   </svg>
+  </div>
+  <div class="ios-notif-content">
+   <div class="ios-notif-meta">
+    <span class="ios-notif-app">Winter Ball 2027</span>
+    <span class="ios-notif-time">Jetzt</span>
+   </div>
+   <div class="ios-notif-title">Ticketverkauf am 14.12.2026</div>
+   <div class="ios-notif-body">In allen Pausen in der Aula — dort kannst du dein Ticket bar bezahlen.</div>
+  </div>
+  <button type="button" class="ios-notif-close" id="iosSaleCloseBtn" aria-label="Benachrichtigung schließen">&times;</button>
+ </div>
+ <div class="ios-notif-grabber" aria-hidden="true"></div>
+</div>
 
 <!-- Hero -->
 <section class="hero">
@@ -1223,6 +1467,27 @@
  </div>
  </div>
 
+ <div class="info-card ticket-sale-card reveal" id="ticketSaleNotice">
+  <div class="icon" style="margin-bottom:0; flex-shrink:0;" aria-hidden="true">
+   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v1.5a1.5 1.5 0 0 0 0 3V15a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1.5a1.5 1.5 0 0 0 0-3V9Z"/>
+    <path d="M9 7v10"/>
+   </svg>
+  </div>
+  <div class="ticket-sale-main">
+   <div class="ticket-sale-eyebrow">Aktueller Hinweis · Vorverkauf</div>
+   <h3>Ticketverkauf am 14.12.2026</h3>
+   <div class="ticket-sale-meta">Montag, 14. Dezember 2026 &middot; Alle Pausen &middot; Aula des Gymnasium Wilsdruff</div>
+   <p>Melde dich vorab online an und bezahle dein Ticket am <strong>14.12.2026 in allen Pausen in der Aula</strong> bar an unserer Vorverkaufskasse.</p>
+  </div>
+  <div class="ticket-sale-actions">
+   <a class="route-btn" href="anmeldung.html">
+    Jetzt anmelden
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+   </a>
+  </div>
+ </div>
+
  <div class="card-grid reveal-group">
  <div class="info-card reveal-item">
  <div class="icon">
@@ -1268,7 +1533,7 @@
  </div>
  <div class="step reveal-item">
  <div class="step-num">2</div>
- <div class="step-text"><h4>Bar bezahlen</h4><p>Im Vorverkauf in der Schule dein Ticket bar bezahlen.</p></div>
+ <div class="step-text"><h4>Bar bezahlen</h4><p>Am <strong>14.12.2026</strong> in <strong>allen Pausen in der Aula</strong> dein Ticket bar bezahlen.</p></div>
  </div>
  <div class="step reveal-item">
  <div class="step-num">3</div>
@@ -1353,7 +1618,7 @@
  </button>
  <div class="faq-answer">
  <div class="faq-answer-inner">
- Die Bezahlung erfolgt bar an der Vorverkaufskasse direkt am Gymnasium Wilsdruff während der großen Pausen. Die genauen Vorverkaufstage und der Raum werden rechtzeitig in der Schule sowie über unsere Social-Media-Kanäle bekanntgegeben. Sobald bezahlt ist, wird dein Ticket aktiviert und dir per Mail zugeschickt.
+ Die Bezahlung erfolgt bar an der Vorverkaufskasse direkt am Gymnasium Wilsdruff: Der Ticketverkauf findet am <strong>Montag, 14.12.2026, in allen Pausen in der Aula</strong> statt. Sobald bezahlt ist, wird dein Ticket aktiviert und dir per Mail zugeschickt.
  </div>
  </div>
  </div>
@@ -2028,6 +2293,105 @@
  }
  animate();
  window.addEventListener('resize', () => { initFlakes(); });
+ })();
+</script>
+
+<!-- iPhone-Style Ticketverkauf Notification Steuerung -->
+<script>
+ (function() {
+  const banner = document.getElementById('iosSaleBanner');
+  const closeBtn = document.getElementById('iosSaleCloseBtn');
+  const saleNotice = document.getElementById('ticketSaleNotice');
+  if (!banner) return;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let dismissed = false;
+  let startY = 0;
+  let currentOffset = 0;
+  let isPointerDown = false;
+  let draggedFar = false;
+
+  function showBanner() {
+   if (dismissed || document.getElementById('winterballMaintenanceOverlay')) return;
+   banner.classList.remove('is-dismissed');
+   banner.classList.add('is-visible');
+  }
+
+  function dismissBanner() {
+   if (dismissed) return;
+   dismissed = true;
+   banner.style.transform = '';
+   banner.style.opacity = '';
+   banner.classList.remove('is-visible', 'is-dragging');
+   banner.classList.add('is-dismissed');
+  }
+
+  function jumpToNotice() {
+   if (saleNotice) {
+    saleNotice.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+    saleNotice.classList.add('is-highlighted');
+    setTimeout(() => saleNotice.classList.remove('is-highlighted'), 1800);
+   }
+   dismissBanner();
+  }
+
+  if (closeBtn) {
+   closeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dismissBanner();
+   });
+  }
+
+  banner.addEventListener('pointerdown', (e) => {
+   if (e.target.closest('#iosSaleCloseBtn')) return;
+   isPointerDown = true;
+   draggedFar = false;
+   startY = e.clientY;
+   currentOffset = 0;
+   banner.classList.add('is-dragging');
+  });
+
+  window.addEventListener('pointermove', (e) => {
+   if (!isPointerDown || dismissed) return;
+   const dy = e.clientY - startY;
+   if (Math.abs(dy) > 6) draggedFar = true;
+   const clamped = dy < 0 ? dy : Math.min(dy * 0.2, 14);
+   currentOffset = clamped;
+   banner.style.transform = `translate3d(-50%, ${clamped}px, 0) scale(1)`;
+   if (clamped < 0) {
+    banner.style.opacity = String(Math.max(0.25, 1 + clamped / 120));
+   }
+  }, { passive: true });
+
+  window.addEventListener('pointerup', () => {
+   if (!isPointerDown) return;
+   isPointerDown = false;
+   banner.classList.remove('is-dragging');
+   if (currentOffset <= -34) {
+    dismissBanner();
+   } else {
+    banner.style.transform = '';
+    banner.style.opacity = '';
+   }
+  });
+
+  banner.addEventListener('click', (e) => {
+   if (e.target.closest('#iosSaleCloseBtn') || draggedFar) return;
+   jumpToNotice();
+  });
+
+  banner.addEventListener('keydown', (e) => {
+   if (e.key === 'Escape') {
+    dismissBanner();
+   } else if (e.key === 'Enter' || e.key === ' ') {
+    if (e.target === closeBtn) return;
+    e.preventDefault();
+    jumpToNotice();
+   }
+  });
+
+  const delay = reduceMotion ? 60 : 650;
+  setTimeout(showBanner, delay);
  })();
 </script>
 
