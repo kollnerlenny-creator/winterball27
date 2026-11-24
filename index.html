@@ -1321,6 +1321,215 @@
         padding: 11px 20px;
     }
 
+    /* Hero / Final CTA-Gruppe mit Status-Check-Button */
+    .hero-cta-group {
+        margin-top: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        max-width: 100%;
+    }
+    .hero .hero-cta-group .cta {
+        margin-top: 0;
+    }
+    .final-cta .hero-cta-group {
+        margin-top: 0;
+    }
+    .cta-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 17px 28px;
+        min-height: 55px;
+        border-radius: 100px;
+        border: 1px solid rgba(223, 233, 255, 0.34);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(143, 180, 255, 0.06));
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        color: #eef3ff;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 15.5px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        white-space: nowrap;
+        cursor: pointer;
+        box-shadow: 0 8px 26px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+    }
+    .cta-secondary:hover,
+    .cta-secondary:focus-visible {
+        transform: translateY(-2px);
+        border-color: rgba(223, 233, 255, 0.62);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(143, 180, 255, 0.14));
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.32);
+        outline: none;
+    }
+    @media (max-width: 600px) {
+        .hero-cta-group {
+            margin-top: 28px;
+            gap: 10px;
+            width: 100%;
+        }
+        .cta-secondary {
+            padding: 14px 24px;
+            min-height: 48px;
+            font-size: 14.5px;
+        }
+    }
+
+    /* Status-Check Modal (DSGVO-konform per E-Mail) */
+    .status-modal-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 1200;
+        background: rgba(6, 10, 20, 0.76);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 18px;
+    }
+    .status-modal-backdrop.is-open {
+        display: flex;
+    }
+    .status-modal {
+        position: relative;
+        width: 100%;
+        max-width: 440px;
+        border-radius: 28px;
+        padding: 28px 26px 26px;
+        background: linear-gradient(165deg, rgba(26, 36, 62, 0.96) 0%, rgba(12, 18, 34, 0.98) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        box-shadow: 0 28px 70px rgba(0, 0, 0, 0.62), inset 0 1px 0 rgba(255, 255, 255, 0.26);
+        color: var(--text);
+        font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+    .status-modal-close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.06);
+        color: #dce6ff;
+        font-size: 20px;
+        line-height: 1;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+    .status-modal-close:hover,
+    .status-modal-close:focus-visible {
+        background: rgba(255, 255, 255, 0.16);
+        color: #ffffff;
+        outline: none;
+    }
+    .status-modal-eyebrow {
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 1.6px;
+        text-transform: uppercase;
+        color: var(--accent-glow);
+        margin-bottom: 6px;
+    }
+    .status-modal h2 {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: 28px;
+        font-weight: 600;
+        color: #ffffff;
+        margin: 0 36px 8px 0;
+        line-height: 1.2;
+    }
+    .status-modal-desc {
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--text-dim);
+        margin: 0 0 18px;
+    }
+    .status-modal label {
+        display: block;
+        font-size: 12.5px;
+        font-weight: 600;
+        letter-spacing: 0.4px;
+        color: var(--accent);
+        margin-bottom: 7px;
+    }
+    .status-modal input[type="email"] {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 13px 15px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(7, 11, 22, 0.65);
+        color: #ffffff;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 15px;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .status-modal input[type="email"]:focus {
+        border-color: var(--accent-glow);
+        box-shadow: 0 0 0 3px rgba(143, 180, 255, 0.22);
+    }
+    .status-modal-submit {
+        width: 100%;
+        margin-top: 14px;
+        padding: 14px 20px;
+        min-height: 48px;
+        border: none;
+        border-radius: 100px;
+        background: linear-gradient(135deg, var(--accent), var(--accent-glow));
+        color: #0a0e1a;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 8px 24px rgba(143, 180, 255, 0.32);
+        transition: transform 0.25s ease, filter 0.25s ease, opacity 0.2s ease;
+    }
+    .status-modal-submit:hover:not(:disabled) {
+        transform: translateY(-1px);
+        filter: brightness(1.04);
+    }
+    .status-modal-submit:disabled {
+        opacity: 0.65;
+        cursor: wait;
+    }
+    .status-modal-feedback {
+        margin-top: 14px;
+        padding: 13px 15px;
+        border-radius: 14px;
+        font-size: 13.5px;
+        line-height: 1.55;
+        display: none;
+    }
+    .status-modal-feedback.is-info {
+        display: block;
+        background: rgba(127, 224, 168, 0.12);
+        border: 1px solid rgba(127, 224, 168, 0.35);
+        color: #e4fff0;
+    }
+    .status-modal-feedback.is-error {
+        display: block;
+        background: rgba(255, 110, 110, 0.14);
+        border: 1px solid rgba(255, 110, 110, 0.38);
+        color: #ffd9d9;
+    }
+    .status-modal-privacy {
+        margin-top: 14px;
+        font-size: 12px;
+        line-height: 1.5;
+        color: rgba(185, 200, 232, 0.68);
+    }
+
 </style>
 </head>
 <body>
@@ -1400,7 +1609,10 @@
  <div class="live-counter" id="liveCounter" style="display:none;">
  <span class="pulse-dot"></span><span id="liveCounterText"></span>
  </div>
- <a href="anmeldung.html" class="cta">Jetzt anmelden</a>
+ <div class="hero-cta-group">
+  <a href="anmeldung.html" class="cta">Jetzt anmelden</a>
+  <button type="button" class="cta-secondary" data-open-status-check>Bin ich schon angemeldet?</button>
+ </div>
 
  <!-- Mobile Social Duo (Below CTA) -->
  <div class="hero-mobile-social">
@@ -1713,7 +1925,10 @@
 <!-- Finaler CTA -->
 <section class="final-cta reveal">
  <div class="section-title">Bereit für einen zauberhaften Abend?</div>
- <a href="anmeldung.html" class="cta">Jetzt anmelden</a>
+ <div class="hero-cta-group">
+  <a href="anmeldung.html" class="cta">Jetzt anmelden</a>
+  <button type="button" class="cta-secondary" data-open-status-check>Bin ich schon angemeldet?</button>
+ </div>
 </section>
 
 <!-- Bewertung mit Schneeflocken -->
@@ -2392,6 +2607,134 @@
 
   const delay = reduceMotion ? 60 : 650;
   setTimeout(showBanner, delay);
+ })();
+</script>
+
+<!-- DSGVO-konformer Anmeldestatus-Check Modal -->
+<div id="statusCheckModal" class="status-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="statusModalTitle" hidden>
+ <div class="status-modal">
+  <button type="button" class="status-modal-close" id="statusCheckCloseBtn" aria-label="Fenster schließen">&times;</button>
+  <div class="status-modal-eyebrow">Datenschutzkonformer Check</div>
+  <h2 id="statusModalTitle">Bin ich schon angemeldet?</h2>
+  <p class="status-modal-desc">
+   Gib deine E-Mail-Adresse ein. Aus Datenschutzgründen senden wir deinen persönlichen Anmelde- und Zahlungsstatus ausschließlich an dein eigenes Postfach.
+  </p>
+  <form id="statusCheckForm" novalidate>
+   <label for="statusCheckEmailInput">Deine E-Mail-Adresse</label>
+   <input
+    type="email"
+    id="statusCheckEmailInput"
+    name="email"
+    autocomplete="email"
+    placeholder="name@beispiel.de oder ...@gymwilsdruff.lernsax.de"
+    required
+   >
+   <button type="submit" class="status-modal-submit" id="statusCheckSubmitBtn">Status per E-Mail anfordern</button>
+  </form>
+  <div id="statusCheckFeedback" class="status-modal-feedback" aria-live="polite"></div>
+  <div class="status-modal-privacy">
+   Hinweis: Auf der Website wird aus Datenschutzgründen nie angezeigt, welche E-Mail-Adressen registriert sind. Falls du keine Mail findest (z. B. wegen LernSax-Einschränkungen in Klasse 5–7), schreib uns kurz an <a href="mailto:info@winterball27.de" style="color:var(--accent-glow); text-decoration:none;">info@winterball27.de</a>.
+  </div>
+ </div>
+</div>
+
+<script>
+ (function() {
+  const WORKER_URL = 'https://winterball-worker.kollnerlenny.workers.dev';
+  const modal = document.getElementById('statusCheckModal');
+  const closeBtn = document.getElementById('statusCheckCloseBtn');
+  const form = document.getElementById('statusCheckForm');
+  const emailInput = document.getElementById('statusCheckEmailInput');
+  const submitBtn = document.getElementById('statusCheckSubmitBtn');
+  const feedback = document.getElementById('statusCheckFeedback');
+  const triggers = document.querySelectorAll('[data-open-status-check]');
+
+  if (!modal || !form || !emailInput || !submitBtn || !feedback) return;
+
+  function openModal() {
+   modal.hidden = false;
+   modal.classList.add('is-open');
+   feedback.className = 'status-modal-feedback';
+   feedback.textContent = '';
+   setTimeout(() => emailInput.focus(), 40);
+  }
+
+  function closeModal() {
+   modal.classList.remove('is-open');
+   modal.hidden = true;
+  }
+
+  triggers.forEach((btn) => {
+   btn.addEventListener('click', openModal);
+  });
+
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+  modal.addEventListener('click', (e) => {
+   if (e.target === modal) closeModal();
+  });
+
+  document.addEventListener('keydown', (e) => {
+   if (e.key === 'Escape' && modal.classList.contains('is-open')) {
+    closeModal();
+   }
+  });
+
+  async function requestStatusEmail(email) {
+   try {
+    const proxyRes = await fetch('/api/check-status', {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify({ email })
+    });
+    if (proxyRes.status !== 404 && proxyRes.status !== 405 && proxyRes.status !== 502) {
+     return proxyRes;
+    }
+   } catch (_) {}
+
+   return fetch(WORKER_URL + '/check-status', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email })
+   });
+  }
+
+  form.addEventListener('submit', async (e) => {
+   e.preventDefault();
+   const email = String(emailInput.value || '').trim().toLowerCase();
+   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    feedback.className = 'status-modal-feedback is-error';
+    feedback.textContent = 'Bitte gib eine gültige E-Mail-Adresse ein.';
+    emailInput.focus();
+    return;
+   }
+
+   submitBtn.disabled = true;
+   submitBtn.textContent = 'Wird geprüft...';
+   feedback.className = 'status-modal-feedback';
+   feedback.textContent = '';
+
+   try {
+    const res = await requestStatusEmail(email);
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+     throw new Error(data.error || 'Die Anfrage konnte gerade nicht gesendet werden.');
+    }
+    feedback.className = 'status-modal-feedback is-info';
+    feedback.innerHTML = 'Falls unter <strong>' + email.replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c])) + '</strong> eine Anmeldung vorliegt, haben wir dir deinen aktuellen Anmelde- und Zahlungsstatus soeben per E-Mail gesendet. Bitte schau auch im Spam-Ordner nach.';
+   } catch (err) {
+    feedback.className = 'status-modal-feedback is-error';
+    feedback.textContent = err && err.message ? err.message : 'Verbindungsfehler — bitte versuche es gleich noch einmal.';
+   } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Status per E-Mail anfordern';
+   }
+  });
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('statuscheck') === '1' || window.location.hash === '#statuscheck') {
+   openModal();
+  }
  })();
 </script>
 

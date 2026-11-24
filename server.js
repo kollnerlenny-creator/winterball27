@@ -107,7 +107,7 @@ app.all('/api/worker/:endpoint', (req, res) => {
   proxyToWorker(req.params.endpoint, req, res);
 });
 
-app.all(['/api/send-confirmation', '/api/send-tickets', '/api/generate-pdf', '/api/generate-invoice'], (req, res) => {
+app.all(['/api/send-confirmation', '/api/send-tickets', '/api/generate-pdf', '/api/generate-invoice', '/api/check-status'], (req, res) => {
   const endpoint = req.path.replace(/^\/api\//, '');
   proxyToWorker(endpoint, req, res);
 });
