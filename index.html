@@ -2234,8 +2234,8 @@
  getDoc(doc(db, 'settings', 'pricing')).then(snap => {
  if (!snap.exists()) return;
  const data = snap.data();
- if (data.u18) document.getElementById('priceU18').innerHTML = `${data.u18}<span> €</span>`;
- if (data.ue18) document.getElementById('priceUe18').innerHTML = `${data.ue18}<span> €</span>`;
+ if (data.u18 && Number.isFinite(Number(data.u18))) document.getElementById('priceU18').innerHTML = `${escapeHtml(Number(data.u18))}<span> €</span>`;
+ if (data.ue18 && Number.isFinite(Number(data.ue18))) document.getElementById('priceUe18').innerHTML = `${escapeHtml(Number(data.ue18))}<span> €</span>`;
  }).catch(() => {});
 
  getDoc(doc(db, 'settings', 'info')).then(snap => {

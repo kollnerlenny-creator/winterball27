@@ -715,67 +715,72 @@
  renderSearchResults();
  });
 
+ function escapeHtml(str){
+  return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ }
+
  function renderSearchResults(){
- if (searchModal.style.display === 'none') return;
- const query = (searchInput.value || '').trim().toLowerCase();
+  if (searchModal.style.display === 'none') return;
+  const query = (searchInput.value || '').trim().toLowerCase();
 
- if (!query) {
- searchResults.innerHTML = `
- <div style="text-align:center; color:var(--text-dim); padding:24px 10px; font-size:13px;">
- Gästenamen oder Ticket-ID eingeben...
- </div>`;
- return;
- }
+  if (!query) {
+  searchResults.innerHTML = `
+  <div style="text-align:center; color:var(--text-dim); padding:24px 10px; font-size:13px;">
+  Gästenamen oder Ticket-ID eingeben...
+  </div>`;
+  return;
+  }
 
- const matches = allTickets.filter(t => {
- const name = (t.name || '').toLowerCase();
- const tid = (t.ticketId || '').toLowerCase();
- return name.includes(query) || tid.includes(query);
- }).slice(0, 25);
+  const matches = allTickets.filter(t => {
+  const name = (t.name || '').toLowerCase();
+  const tid = (t.ticketId || '').toLowerCase();
+  return name.includes(query) || tid.includes(query);
+  }).slice(0, 25);
 
- if (matches.length === 0) {
- searchResults.innerHTML = `
- <div style="text-align:center; color:var(--error); padding:20px; font-size:13px;">
- Kein Ticket gefunden für „${searchInput.value}“
- </div>`;
- return;
- }
+  if (matches.length === 0) {
+  searchResults.innerHTML = `
+  <div style="text-align:center; color:var(--error); padding:20px; font-size:13px;">
+  Kein Ticket gefunden für „${escapeHtml(searchInput.value)}“
+  </div>`;
+  return;
+  }
 
- searchResults.innerHTML = '';
- matches.forEach(t => {
- const item = document.createElement('div');
- item.className = 'ticket-item';
+  searchResults.innerHTML = '';
+  matches.forEach(t => {
+  const item = document.createElement('div');
+  item.className = 'ticket-item';
 
- const catLabel = t.category === 'u18' ? 'U18' : '18+';
- const classStr = t.schoolClass ? ` · Kl. ${t.schoolClass}` : '';
+  const catLabel = t.category === 'u18' ? 'U18' : '18+';
+  const classStr = t.schoolClass ? ` · Kl. ${escapeHtml(t.schoolClass)}` : '';
 
- let actionHtml = '';
- if (t.checkedIn) {
- actionHtml = `<span class="status-badge badge-used">Eingecheckt</span>`;
- } else if (!t.paid) {
- actionHtml = `<span class="status-badge badge-unpaid">Unbezahlt</span>`;
- } else {
- actionHtml = `<button type="button" class="btn-checkin" data-tid="${t.ticketId}">Einchecken</button>`;
- }
+  let actionHtml = '';
+  if (t.checkedIn) {
+  actionHtml = `<span class="status-badge badge-used">Eingecheckt</span>`;
+  } else if (!t.paid) {
+  actionHtml = `<span class="status-badge badge-unpaid">Unbezahlt</span>`;
+  } else {
+  actionHtml = `<button type="button" class="btn-checkin">Einchecken</button>`;
+  }
 
- item.innerHTML = `
- <div class="ticket-info">
- <div class="ticket-name">${t.name}</div>
- <div class="ticket-meta">${catLabel}${classStr} · <code>${t.ticketId}</code></div>
- </div>
- ${actionHtml}
- `;
+  item.innerHTML = `
+  <div class="ticket-info">
+  <div class="ticket-name">${escapeHtml(t.name)}</div>
+  <div class="ticket-meta">${catLabel}${classStr} · <code>${escapeHtml(t.ticketId)}</code></div>
+  </div>
+  ${actionHtml}
+  `;
 
- const checkinBtn = item.querySelector('.btn-checkin');
- if (checkinBtn) {
- checkinBtn.addEventListener('click', async () => {
- searchModal.style.display = 'none';
- await handleScan(t.ticketId);
- });
- }
+  const checkinBtn = item.querySelector('.btn-checkin');
+  if (checkinBtn) {
+  checkinBtn.dataset.tid = t.ticketId || '';
+  checkinBtn.addEventListener('click', async () => {
+  searchModal.style.display = 'none';
+  await handleScan(t.ticketId);
+  });
+  }
 
- searchResults.appendChild(item);
- });
+  searchResults.appendChild(item);
+  });
  }
 </script>
 </body>

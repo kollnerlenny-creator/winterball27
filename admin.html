@@ -3100,13 +3100,23 @@
 							</div>
 							<div class="cash-modal-name" id="cashModalName"></div>
 							<div id="cashModalSubtitle"></div>
-							<div style="margin-top:10px; text-align:left; background:rgba(255,255,255,0.03); border:1px solid var(--glass-border); border-radius:10px; padding:9px 11px;">
-								<div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:5px;">
-									<label for="cashModalEmailInput" style="font-size:11px; color:var(--text-dim); font-weight:600; margin:0;">Ticket-E-Mail (direkt änderbar, z. B. Eltern-Mail)</label>
-									<button type="button" id="cashModalManualBtn" style="display:none; padding:3px 8px; font-size:11px; border-radius:6px; border:1px solid rgba(143,180,255,0.4); background:rgba(143,180,255,0.14); color:#dfe9ff; cursor:pointer; font-weight:600;">📋 Manuell</button>
+							<div style="margin-top:10px; text-align:left; background:rgba(255,255,255,0.03); border:1px solid var(--glass-border); border-radius:10px; padding:9px 11px; display:flex; flex-direction:column; gap:8px;">
+								<div>
+									<div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px;">
+										<label for="cashModalNameInput" style="font-size:11px; color:var(--text-dim); font-weight:600; margin:0;">Name Besteller (direkt änderbar)</label>
+										<button type="button" id="cashModalSaveDetailsBtn" style="padding:3px 8px; font-size:11px; border-radius:6px; border:1px solid rgba(127,224,168,0.38); background:rgba(127,224,168,0.12); color:#b9f5d2; cursor:pointer; font-weight:600;">💾 Speichern</button>
+									</div>
+									<input type="text" id="cashModalNameInput" placeholder="Vor- und Nachname" style="width:100%; box-sizing:border-box; padding:7px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.14); background:rgba(7,11,22,0.55); color:#fff; font-size:12.5px;">
 								</div>
-								<input type="email" id="cashModalEmailInput" placeholder="E-Mail für Ticketversand" style="width:100%; box-sizing:border-box; padding:7px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.14); background:rgba(7,11,22,0.55); color:#fff; font-size:12.5px;">
-								<div id="cashModalEmailWarn" style="display:none; font-size:11px; color:#ffd27f; margin-top:5px; line-height:1.4;">⚠️ LernSax ab Jg. 2024 blockiert oft Mails – am besten kurz Eltern-Mail eintragen oder nach Zahlung „📋 Manuell“ nutzen.</div>
+								<div id="cashModalCompanionsWrap" style="display:none; flex-direction:column; gap:5px;"></div>
+								<div>
+									<div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px;">
+										<label for="cashModalEmailInput" style="font-size:11px; color:var(--text-dim); font-weight:600; margin:0;">Ticket-E-Mail (direkt änderbar, z. B. Eltern-Mail)</label>
+										<button type="button" id="cashModalManualBtn" style="display:none; padding:3px 8px; font-size:11px; border-radius:6px; border:1px solid rgba(143,180,255,0.4); background:rgba(143,180,255,0.14); color:#dfe9ff; cursor:pointer; font-weight:600;">📋 Manuell</button>
+									</div>
+									<input type="email" id="cashModalEmailInput" placeholder="E-Mail für Ticketversand" style="width:100%; box-sizing:border-box; padding:7px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.14); background:rgba(7,11,22,0.55); color:#fff; font-size:12.5px;">
+									<div id="cashModalEmailWarn" style="display:none; font-size:11px; color:#ffd27f; margin-top:5px; line-height:1.4;">⚠️ LernSax ab Jg. 2024 blockiert oft Mails – am besten kurz Eltern-Mail eintragen oder nach Zahlung „📋 Manuell“ nutzen.</div>
+								</div>
 							</div>
 						</div>
 
@@ -8644,8 +8654,14 @@ let allRatings = [];
 		const paidTickets = hasExplicitlyPaid ? tickets.filter(t => t.paid) : [];
 		const isPartial = paidTickets.length > 0 && unpaidTickets.length > 0;
 		const dueCents = ticketsDueCents(regId);
+		const ordererTicket = tickets.find(t => t.name === reg.name && t.category === reg.category)
+			|| tickets.find(t => t.name === reg.name)
+			|| tickets[0]
+			|| null;
+		const ordererTicketId = ordererTicket ? ordererTicket.id : null;
+		const companionTickets = ordererTicket ? tickets.filter(t => t.id !== ordererTicket.id) : [];
 
-		cashModalState = { regId, btnEl, dueCents, givenCents: 0, donationCents: 0, keepChangeActive: false };
+		cashModalState = { regId, btnEl, dueCents, givenCents: 0, donationCents: 0, keepChangeActive: false, ordererTicketId };
 		document.getElementById('cashModalName').textContent = reg.name;
 
 		const subEl = document.getElementById('cashModalSubtitle');
@@ -8679,6 +8695,42 @@ let allRatings = [];
 			}
 		}
 
+		const nameInp = document.getElementById('cashModalNameInput');
+		if (nameInp) {
+			nameInp.value = reg.name || '';
+			nameInp.oninput = () => {
+				const liveName = nameInp.value.trim();
+				const headerNameEl = document.getElementById('cashModalName');
+				if (headerNameEl) headerNameEl.textContent = liveName || reg.name || '';
+			};
+		}
+
+		const compWrap = document.getElementById('cashModalCompanionsWrap');
+		if (compWrap) {
+			compWrap.innerHTML = '';
+			if (companionTickets.length > 0) {
+				compWrap.style.display = 'flex';
+				companionTickets.forEach((ct, idx) => {
+					const row = document.createElement('div');
+					row.style.cssText = 'display:flex; flex-direction:column; gap:3px;';
+					const lbl = document.createElement('label');
+					lbl.style.cssText = 'font-size:10.5px; color:var(--text-dim); font-weight:600; margin:0;';
+					lbl.textContent = `Begleitung ${idx + 1} (${categoryLabel(ct.category)})`;
+					const inp = document.createElement('input');
+					inp.type = 'text';
+					inp.value = ct.name || '';
+					inp.placeholder = `Name Begleitung ${idx + 1}`;
+					inp.dataset.ticketId = ct.id;
+					inp.style.cssText = 'width:100%; box-sizing:border-box; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.14); background:rgba(7,11,22,0.55); color:#fff; font-size:12px;';
+					row.appendChild(lbl);
+					row.appendChild(inp);
+					compWrap.appendChild(row);
+				});
+			} else {
+				compWrap.style.display = 'none';
+			}
+		}
+
 		const emailInp = document.getElementById('cashModalEmailInput');
 		const emailWarn = document.getElementById('cashModalEmailWarn');
 		const manualBtn = document.getElementById('cashModalManualBtn');
@@ -8694,8 +8746,26 @@ let allRatings = [];
 			emailInp.oninput = syncCashEmailHint;
 			syncCashEmailHint();
 		}
+
+		const saveDetailsBtn = document.getElementById('cashModalSaveDetailsBtn');
+		if (saveDetailsBtn) {
+			saveDetailsBtn.onclick = async () => {
+				saveDetailsBtn.disabled = true;
+				const origText = saveDetailsBtn.textContent;
+				saveDetailsBtn.textContent = 'Speichert...';
+				try {
+					const saved = await saveCashModalDetails(regId, true);
+					if (saved) showAdminToast('Name / E-Mail gespeichert ✓');
+				} finally {
+					saveDetailsBtn.disabled = false;
+					saveDetailsBtn.textContent = origText;
+				}
+			};
+		}
+
 		if (manualBtn) {
-			manualBtn.onclick = () => {
+			manualBtn.onclick = async () => {
+				await saveCashModalDetails(regId, false);
 				closeCashModal();
 				openManualLernSaxModal(regId);
 			};
@@ -8705,11 +8775,138 @@ let allRatings = [];
 		document.getElementById('cashModalOverlay').classList.add('show');
 	}
 
+	function collectCashModalDetails(){
+		const nameInp = document.getElementById('cashModalNameInput');
+		const emailInp = document.getElementById('cashModalEmailInput');
+		const cleanName = String(nameInp?.value || '').trim();
+		if (!cleanName) {
+			alert('Bitte einen Namen für den Besteller eingeben.');
+			nameInp?.focus();
+			return null;
+		}
+		const rawEmail = String(emailInp?.value || '').trim().toLowerCase();
+		const cleanEmail = rawEmail ? sanitizeEmail(rawEmail) : '';
+		if (rawEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+			alert('Bitte eine gültige E-Mail-Adresse eingeben.');
+			emailInp?.focus();
+			return null;
+		}
+		const companionInputs = Array.from(document.querySelectorAll('#cashModalCompanionsWrap input[data-ticket-id]'));
+		const companions = [];
+		for (const inp of companionInputs) {
+			const cName = String(inp.value || '').trim();
+			if (!cName) {
+				alert('Begleitungsnamen dürfen nicht leer sein.');
+				inp.focus();
+				return null;
+			}
+			companions.push({ ticketId: inp.dataset.ticketId, name: cName });
+		}
+		return {
+			name: cleanName,
+			email: cleanEmail,
+			companions,
+			ordererTicketId: cashModalState.ordererTicketId || null
+		};
+	}
+
+	async function saveCashModalDetails(regId, notifyIfUnchanged = false){
+		const reg = allRegs.find(r => r.id === regId);
+		if (!reg) return false;
+		const details = collectCashModalDetails();
+		if (!details) return false;
+
+		const tickets = ticketsFor(regId);
+		const ordererTicket = (details.ordererTicketId && tickets.find(t => t.id === details.ordererTicketId))
+			|| tickets.find(t => t.name === reg.name && t.category === reg.category)
+			|| tickets.find(t => t.name === reg.name)
+			|| tickets[0]
+			|| null;
+
+		const nameChanged = details.name !== String(reg.name || '').trim();
+		const emailChanged = !!(details.email && details.email !== String(reg.email || '').trim().toLowerCase());
+		const compMap = new Map((details.companions || []).map(c => [c.ticketId, c.name]));
+
+		const ticketPatches = [];
+		let anyCompanionChanged = false;
+		tickets.forEach(t => {
+			const tUpd = {};
+			if (ordererTicket && t.id === ordererTicket.id) {
+				if (nameChanged) tUpd.name = details.name;
+			} else if (compMap.has(t.id)) {
+				const newCName = compMap.get(t.id);
+				if (newCName && newCName !== String(t.name || '').trim()) {
+					tUpd.name = newCName;
+					anyCompanionChanged = true;
+				}
+			}
+			if (emailChanged) tUpd.email = details.email;
+			if (Object.keys(tUpd).length > 0) ticketPatches.push({ ticket: t, upd: tUpd });
+		});
+
+		if (!nameChanged && !emailChanged && !anyCompanionChanged) {
+			if (notifyIfUnchanged) showAdminToast('Keine Änderungen zum Speichern.');
+			return true;
+		}
+
+		try {
+			const batch = writeBatch(db);
+			const regUpd = {};
+			if (nameChanged) regUpd.name = details.name;
+			if (emailChanged) regUpd.email = details.email;
+
+			let nextCompanions = null;
+			if (anyCompanionChanged) {
+				const compTickets = ordererTicket ? tickets.filter(t => t.id !== ordererTicket.id) : [];
+				nextCompanions = compTickets.map((t, idx) => {
+					const orig = Array.isArray(reg.companions) ? reg.companions[idx] : null;
+					const updatedName = compMap.get(t.id) || t.name;
+					return {
+						...(orig || {}),
+						name: updatedName,
+						category: t.category || (orig && orig.category) || 'u18',
+						schoolClass: (t.schoolClass !== undefined ? t.schoolClass : (orig ? orig.schoolClass : null)) || null
+					};
+				});
+				regUpd.companions = nextCompanions;
+			}
+
+			if (Object.keys(regUpd).length > 0) {
+				batch.update(doc(db, 'registrations', regId), regUpd);
+			}
+			ticketPatches.forEach(({ ticket, upd }) => {
+				batch.update(doc(db, 'tickets', ticket.id), upd);
+			});
+			await batch.commit();
+
+			if (nameChanged) reg.name = details.name;
+			if (emailChanged) reg.email = details.email;
+			if (nextCompanions) reg.companions = nextCompanions;
+			ticketPatches.forEach(({ ticket, upd }) => Object.assign(ticket, upd));
+
+			const headerNameEl = document.getElementById('cashModalName');
+			if (headerNameEl) headerNameEl.textContent = reg.name;
+			render();
+			renderCashier();
+			if (typeof renderCashierMode === 'function') renderCashierMode();
+			return true;
+		} catch (err) {
+			console.error(err);
+			alert('Daten konnten nicht gespeichert werden: ' + (err.message || err));
+			return false;
+		}
+	}
+
 	function closeCashModal(){
 		document.getElementById('cashModalOverlay').classList.remove('show');
-		cashModalState = { regId: null, btnEl: null, dueCents: 0, givenCents: 0, donationCents: 0, keepChangeActive: false };
+		cashModalState = { regId: null, btnEl: null, dueCents: 0, givenCents: 0, donationCents: 0, keepChangeActive: false, ordererTicketId: null };
 		const subEl = document.getElementById('cashModalSubtitle');
 		if (subEl) subEl.innerHTML = '';
+		const compWrap = document.getElementById('cashModalCompanionsWrap');
+		if (compWrap) {
+			compWrap.innerHTML = '';
+			compWrap.style.display = 'none';
+		}
 	}
 
 	// Tastendruck visuell auf dem Bildschirm aufleuchten lassen (taktiles Feedback)
@@ -8833,9 +9030,10 @@ let allRatings = [];
 	// Bezahlt bestätigen
 	document.getElementById('cashConfirmBtn')?.addEventListener('click', () => {
 		const { regId, btnEl, donationCents } = cashModalState;
-		const editedEmail = String(document.getElementById('cashModalEmailInput')?.value || '').trim().toLowerCase();
+		const details = collectCashModalDetails();
+		if (!details) return;
 		closeCashModal();
-		if (regId) markAsPaid(regId, btnEl, donationCents, editedEmail);
+		if (regId) markAsPaid(regId, btnEl, donationCents, details.email, details);
 	});
 
 	// =========================================================================
@@ -9264,7 +9462,7 @@ let allRatings = [];
  }
  });
 
- async function markAsPaid(regId, btnEl, donationCents = 0, overrideEmail = ''){
+ async function markAsPaid(regId, btnEl, donationCents = 0, overrideEmail = '', nameEdits = null){
 		if (btnEl) {
 			btnEl.disabled = true;
 			btnEl.textContent = 'Wird verarbeitet...';
@@ -9278,6 +9476,15 @@ let allRatings = [];
 			const donationEuro = (donationCents > 0) ? (Math.round(donationCents) / 100) : (Number(reg.donation) || 0);
 			const cleanOverride = String(overrideEmail || '').trim().toLowerCase();
 			const emailChanged = !!(cleanOverride && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanOverride) && cleanOverride !== String(reg.email || '').trim().toLowerCase());
+			const cleanName = String(nameEdits?.name || '').trim();
+			const nameChanged = !!(cleanName && cleanName !== String(reg.name || '').trim());
+			const ordererTicket = (nameEdits?.ordererTicketId && tickets.find(t => t.id === nameEdits.ordererTicketId))
+				|| tickets.find(t => t.name === reg.name && t.category === reg.category)
+				|| tickets.find(t => t.name === reg.name)
+				|| tickets[0]
+				|| null;
+			const compMap = new Map((nameEdits?.companions || []).map(c => [c.ticketId, String(c.name || '').trim()]));
+
 			const updateData = { paid: true, paidAt: serverTimestamp() };
 			if (donationEuro > 0) {
 				updateData.donation = donationEuro;
@@ -9285,12 +9492,44 @@ let allRatings = [];
 			if (emailChanged) {
 				updateData.email = cleanOverride;
 			}
-			batch.update(doc(db, 'registrations', regId), updateData);
+			if (nameChanged) {
+				updateData.name = cleanName;
+			}
+
+			let anyCompanionNameChanged = false;
+			const ticketPatches = [];
 			tickets.forEach(t => {
 				const tUpd = { paid: true };
 				if (emailChanged) tUpd.email = cleanOverride;
+				if (ordererTicket && t.id === ordererTicket.id) {
+					if (nameChanged) tUpd.name = cleanName;
+				} else if (compMap.has(t.id)) {
+					const newCName = compMap.get(t.id);
+					if (newCName && newCName !== String(t.name || '').trim()) {
+						tUpd.name = newCName;
+						anyCompanionNameChanged = true;
+					}
+				}
+				ticketPatches.push({ ticket: t, upd: tUpd });
 				batch.update(doc(db, 'tickets', t.id), tUpd);
 			});
+
+			let nextCompanions = null;
+			if (anyCompanionNameChanged) {
+				const compTickets = ordererTicket ? tickets.filter(t => t.id !== ordererTicket.id) : [];
+				nextCompanions = compTickets.map((t, idx) => {
+					const orig = Array.isArray(reg.companions) ? reg.companions[idx] : null;
+					return {
+						...(orig || {}),
+						name: compMap.get(t.id) || t.name,
+						category: t.category || (orig && orig.category) || 'u18',
+						schoolClass: (t.schoolClass !== undefined ? t.schoolClass : (orig ? orig.schoolClass : null)) || null
+					};
+				});
+				updateData.companions = nextCompanions;
+			}
+
+			batch.update(doc(db, 'registrations', regId), updateData);
 			await batch.commit();
 
 			// Sofort lokalen Zustand aktualisieren, damit UI & Kasse ohne Listener-Verzögerung umschalten
@@ -9299,12 +9538,17 @@ let allRatings = [];
 			if (emailChanged) {
 				reg.email = cleanOverride;
 			}
+			if (nameChanged) {
+				reg.name = cleanName;
+			}
+			if (nextCompanions) {
+				reg.companions = nextCompanions;
+			}
 			if (donationEuro > 0) {
 				reg.donation = donationEuro;
 			}
-			tickets.forEach(t => {
-				t.paid = true;
-				if (emailChanged) t.email = cleanOverride;
+			ticketPatches.forEach(({ ticket, upd }) => {
+				Object.assign(ticket, upd);
 			});
 			render();
 			renderCashier();
@@ -10178,6 +10422,10 @@ let allRatings = [];
  </button>`
  : `<span class="badge in" style="padding:8px 14px; font-size:13px; font-weight:700;"> Vollständig bezahlt</span>`
  }
+ <button type="button" class="cashier-edit-btn" data-id="${r.id}" style="padding:10px 14px; font-size:12.5px; border-radius:var(--radius-sm); border:1px solid var(--glass-border); background:rgba(255,255,255,0.06); color:var(--text); cursor:pointer; display:inline-flex; align-items:center; gap:6px;" title="Namen, E-Mail oder Begleitungen bearbeiten">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px; height:13px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+ <span>Bearbeiten</span>
+ </button>
  <button type="button" class="add-companion-btn" data-id="${r.id}" style="padding:10px 14px; font-size:12.5px; border-radius:var(--radius-sm); border:1px solid var(--glass-border); background:rgba(255,255,255,0.06); color:var(--text); cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px; height:13px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
  <span>+ Begleitung hinzufügen</span>
@@ -10191,6 +10439,9 @@ let allRatings = [];
 
  resultsWrap.querySelectorAll('.cashier-pay-btn').forEach(btn => {
  btn.addEventListener('click', () => openCashModal(btn.dataset.id, btn));
+ });
+ resultsWrap.querySelectorAll('.cashier-edit-btn').forEach(btn => {
+ btn.addEventListener('click', () => openEditRegModal(btn.dataset.id));
  });
  resultsWrap.querySelectorAll('.add-companion-btn').forEach(btn => {
  btn.addEventListener('click', () => openAddCompanionModal(btn.dataset.id));
@@ -10757,6 +11008,9 @@ let allRatings = [];
  <span>Quittung</span>
  </button>
  ` : ''}
+ <button type="button" class="fast-change-btn cashier-mode-edit-btn" data-reg-id="${r.id}" title="Namen oder Daten bearbeiten">
+ <span>✏️</span>
+ </button>
  </div>
  </div>
  `;
@@ -10829,6 +11083,9 @@ let allRatings = [];
  });
  document.querySelectorAll('.cashier-invoice-btn').forEach(btn => {
  btn.addEventListener('click', () => downloadInvoicePdf(btn.dataset.regId, btn));
+ });
+ document.querySelectorAll('.cashier-mode-edit-btn').forEach(btn => {
+ btn.addEventListener('click', () => openEditRegModal(btn.dataset.regId));
  });
  }
 

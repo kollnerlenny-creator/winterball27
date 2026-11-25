@@ -261,37 +261,42 @@ async function lookupLernSaxThreshold() {
 const statusCooldownMap = new Map();
 const STATUS_COOLDOWN_SEC = 60;
 
-async function checkAndSetStatusCooldown(email) {
+async function checkAndSetEmailCooldown(scope, email, cooldownSec = STATUS_COOLDOWN_SEC) {
+  const key = `${scope}:${email}`;
   const now = Date.now();
-  const memTs = statusCooldownMap.get(email);
-  if (memTs && (now - memTs) < STATUS_COOLDOWN_SEC * 1000) {
-    return Math.max(1, Math.ceil((STATUS_COOLDOWN_SEC * 1000 - (now - memTs)) / 1000));
+  const memTs = statusCooldownMap.get(key);
+  if (memTs && (now - memTs) < cooldownSec * 1000) {
+    return Math.max(1, Math.ceil((cooldownSec * 1000 - (now - memTs)) / 1000));
   }
 
   try {
     if (typeof caches !== "undefined" && caches.default) {
-      const cacheKey = new Request(`https://winterball-cooldown.invalid/check-status?email=${encodeURIComponent(email)}`);
+      const cacheKey = new Request(`https://winterball-cooldown.invalid/${encodeURIComponent(scope)}?email=${encodeURIComponent(email)}`);
       const cached = await caches.default.match(cacheKey);
       if (cached) {
         const ts = Number(await cached.text());
-        if (ts && (now - ts) < STATUS_COOLDOWN_SEC * 1000) {
-          statusCooldownMap.set(email, ts);
-          return Math.max(1, Math.ceil((STATUS_COOLDOWN_SEC * 1000 - (now - ts)) / 1000));
+        if (ts && (now - ts) < cooldownSec * 1000) {
+          statusCooldownMap.set(key, ts);
+          return Math.max(1, Math.ceil((cooldownSec * 1000 - (now - ts)) / 1000));
         }
       }
-      statusCooldownMap.set(email, now);
+      statusCooldownMap.set(key, now);
       await caches.default.put(
         cacheKey,
         new Response(String(now), {
-          headers: { "Cache-Control": `public, max-age=${STATUS_COOLDOWN_SEC}` },
+          headers: { "Cache-Control": `public, max-age=${cooldownSec}` },
         })
       );
       return 0;
     }
   } catch (_) {}
 
-  statusCooldownMap.set(email, now);
+  statusCooldownMap.set(key, now);
   return 0;
+}
+
+async function checkAndSetStatusCooldown(email) {
+  return checkAndSetEmailCooldown("check-status", email, STATUS_COOLDOWN_SEC);
 }
 
 // ---------- PDF-Ticket-Generierung ----------
@@ -807,8 +812,21 @@ export default {
     if (url.pathname === "/send-confirmation") {
       try {
         const payload = await request.json();
-        const { name, email, attendeeNames, useLernSax, greeting } = payload;
-        if (!name || !email || !Array.isArray(attendeeNames)) return json({ error: "Fehlende Felder" }, 400);
+        const name = String(payload?.name || "").trim().slice(0, 120);
+        const email = String(payload?.email || "").trim().toLowerCase();
+        const rawAttendees = Array.isArray(payload?.attendeeNames) ? payload.attendeeNames : [];
+        const attendeeNames = rawAttendees.slice(0, 15).map(n => String(n || "").trim().slice(0, 120)).filter(Boolean);
+        const useLernSax = Boolean(payload?.useLernSax);
+        const greeting = payload?.greeting ? String(payload.greeting).trim().slice(0, 160) : "";
+
+        if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254 || attendeeNames.length === 0) {
+          return json({ error: "Ungültige oder fehlende Felder" }, 400);
+        }
+
+        const retryAfter = await checkAndSetEmailCooldown("send-confirmation", email, 60);
+        if (retryAfter > 0) {
+          return json({ error: `Bitte warte ${retryAfter} Sekunden vor einem erneuten Versand.` }, 429);
+        }
 
         const formal = isFormalSalutation(payload);
         const subject = "✨ Anmeldung zum Winter Ball eingegangen ✨";

@@ -2262,6 +2262,10 @@
  return str;
  }
 
+ function escapeHtml(str){
+  return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ }
+
  function syncEmail(){
   if (!emailMode) {
   if (lernsaxInputGroup) lernsaxInputGroup.style.display = 'none';
@@ -2271,7 +2275,7 @@
   emailHint.className = 'email-hint';
   const salVal = (document.getElementById('salutation')?.value || 'du').toLowerCase();
   const isSie = salVal === 'sie';
-  emailHint.textContent = isSie ? 'Bitte wählen Sie oben aus, ob Sie eine LernSax-E-Mail oder eine andere E-Mail-Adresse nutzen möchten.' : 'Bitte wähle oben aus, ob du eine LernSax-E-Mail oder eine andere E-Mail-Adresse nutzen möchtest.';
+  emailHint.textContent = isSie ? 'Bitte wählen Sie oben aus, ob Sie eine LernSax-E-Mail oder eine andere E-Mail-Adresse nutzen möchten.' : 'Bitte wähle oben aus, ob du eine LernSax-E-Mail oder eine andere E-Mail-Adresse nutzen möchten.';
   }
   if (typeof updateJuniorLernSaxWarning === 'function') updateJuniorLernSaxWarning();
   return;
@@ -2290,12 +2294,13 @@
  const salVal = (document.getElementById('salutation')?.value || 'du').toLowerCase();
  const isSie = salVal === 'sie';
  if (raw) {
+ const safeFull = escapeHtml(full);
  emailHint.className = 'email-hint highlight';
  emailHint.innerHTML = hadDomain
  ? (isSie
- ? `ℹ <strong>"@gymwilsdruff.lernsax.de"</strong> ist bereits vorgegeben und wurde im Feld entfernt. Ihre E-Mail: <strong>${full}</strong>`
- : `ℹ <strong>"@gymwilsdruff.lernsax.de"</strong> ist bereits vorgegeben und wurde im Feld entfernt. Deine E-Mail: <strong>${full}</strong>`)
- : ` Vollständige Adresse: <strong>${full}</strong>`;
+ ? `ℹ <strong>"@gymwilsdruff.lernsax.de"</strong> ist bereits vorgegeben und wurde im Feld entfernt. Ihre E-Mail: <strong>${safeFull}</strong>`
+ : `ℹ <strong>"@gymwilsdruff.lernsax.de"</strong> ist bereits vorgegeben und wurde im Feld entfernt. Deine E-Mail: <strong>${safeFull}</strong>`)
+ : ` Vollständige Adresse: <strong>${safeFull}</strong>`;
  } else {
  emailHint.className = 'email-hint';
  emailHint.innerHTML = isSie
@@ -2315,7 +2320,7 @@
  if (raw) {
  if (wasCorrected) {
  emailHint.className = 'email-hint highlight';
- emailHint.innerHTML = ` <strong>Doppeltes "@gymwilsdruff.lernsax.de" erkannt:</strong> Wurde automatisch korrigiert zu <strong>${raw}</strong>`;
+ emailHint.innerHTML = ` <strong>Doppeltes "@gymwilsdruff.lernsax.de" erkannt:</strong> Wurde automatisch korrigiert zu <strong>${escapeHtml(raw)}</strong>`;
  } else {
  emailHint.className = 'email-hint';
  emailHint.textContent = ` Bestätigung & Ticket gehen an: ${raw}`;
@@ -2733,8 +2738,8 @@
  sCompList.style.display = 'block';
  sCompList.innerHTML = '<div class="summary-entry-label" style="margin-bottom:4px; font-size:11px; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-dim); font-weight:600;">Begleitpersonen</div>' +
  validCompanions.map(c => {
- const catLabel = c.cat === 'u18' ? (c.cls ? `U18, Kl. ${c.cls}` : 'U18') : '18+';
- return `<div style="font-size:13px; color:#ffffff; padding:2px 0;">• ${c.name} <span style="color:var(--text-dim); font-size:11.5px;">(${catLabel})</span></div>`;
+ const catLabel = c.cat === 'u18' ? (c.cls ? `U18, Kl. ${escapeHtml(c.cls)}` : 'U18') : '18+';
+ return `<div style="font-size:13px; color:#ffffff; padding:2px 0;">• ${escapeHtml(c.name)} <span style="color:var(--text-dim); font-size:11.5px;">(${catLabel})</span></div>`;
  }).join('');
  } else {
  sCompList.style.display = 'none';
