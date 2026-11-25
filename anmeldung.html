@@ -1944,7 +1944,7 @@
 <!-- Firebase -->
 <script type="module">
  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
- import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, increment, writeBatch, query, where, limit, getDocs, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+ import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, increment, writeBatch, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
  const firebaseConfig = {
  apiKey: "AIzaSyDQaRxga3bFrNkyU6E_sQpp5_0G4ApInOg",
@@ -3347,10 +3347,34 @@
  submitBtn.disabled = true;
  submitBtn.textContent = 'Wird angemeldet...';
 
+ async function checkEmailExistsViaWorker(targetEmail) {
  try {
- // Prüfen, ob diese E-Mail sich schon einmal angemeldet hat
- const dupCheck = await getDocs(query(collection(db, 'registrations'), where('email', '==', email), limit(1)));
- if (!dupCheck.empty) {
+ const proxyRes = await fetch('/api/check-email', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({ email: targetEmail })
+ });
+ if (proxyRes.status !== 404 && proxyRes.status !== 405 && proxyRes.status !== 502) {
+ if (!proxyRes.ok) throw new Error(`HTTP ${proxyRes.status}`);
+ const data = await proxyRes.json();
+ return Boolean(data?.exists);
+ }
+ } catch (_) {}
+
+ const workerRes = await fetch(WORKER_URL + '/check-email', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({ email: targetEmail })
+ });
+ if (!workerRes.ok) throw new Error(`HTTP ${workerRes.status}`);
+ const workerData = await workerRes.json();
+ return Boolean(workerData?.exists);
+ }
+
+ try {
+ // Prüfen, ob diese E-Mail sich schon einmal angemeldet hat (über geschützten Worker-Endpunkt)
+ const alreadyRegistered = await checkEmailExistsViaWorker(email);
+ if (alreadyRegistered) {
  highlightError('Diese E-Mail-Adresse ist bereits angemeldet.', emailMode === 'lernsax' ? lernsaxUsername : otherEmailInput);
  submitBtn.disabled = false;
  submitBtn.textContent = 'Jetzt anmelden';

@@ -203,11 +203,111 @@ function gradeFromEmail(email) {
   return (grade >= 5 && grade <= 12) ? grade : null;
 }
 
-async function lookupRegistrationByEmail(email) {
+let cachedGoogleAccessToken = null;
+let cachedGoogleAccessTokenExp = 0;
+
+function base64UrlEncode(input) {
+  const bytes = typeof input === "string" ? new TextEncoder().encode(input) : new Uint8Array(input);
+  let binary = "";
+  const chunkSize = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+  }
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function pemToArrayBuffer(pem) {
+  const clean = String(pem || "")
+    .replace(/\\n/g, "\n")
+    .replace(/-----BEGIN PRIVATE KEY-----/g, "")
+    .replace(/-----END PRIVATE KEY-----/g, "")
+    .replace(/\s+/g, "");
+  const binary = atob(clean);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes.buffer;
+}
+
+async function getGoogleAccessToken(env) {
+  const raw = env?.FIREBASE_SERVICE_ACCOUNT;
+  if (!raw) return null;
+
+  const nowSec = Math.floor(Date.now() / 1000);
+  if (cachedGoogleAccessToken && nowSec < cachedGoogleAccessTokenExp - 60) {
+    return cachedGoogleAccessToken;
+  }
+
+  let sa;
+  try {
+    sa = typeof raw === "string" ? JSON.parse(raw) : raw;
+  } catch (_) {
+    throw new Error("FIREBASE_SERVICE_ACCOUNT ist kein gültiges JSON");
+  }
+
+  const clientEmail = sa?.client_email;
+  const privateKeyPem = sa?.private_key;
+  const tokenUri = sa?.token_uri || "https://oauth2.googleapis.com/token";
+  if (!clientEmail || !privateKeyPem) {
+    throw new Error("FIREBASE_SERVICE_ACCOUNT fehlen client_email oder private_key");
+  }
+
+  const headerB64 = base64UrlEncode(JSON.stringify({ alg: "RS256", typ: "JWT" }));
+  const payloadB64 = base64UrlEncode(JSON.stringify({
+    iss: clientEmail,
+    sub: clientEmail,
+    aud: tokenUri,
+    scope: "https://www.googleapis.com/auth/datastore",
+    iat: nowSec,
+    exp: nowSec + 3600,
+  }));
+
+  const signingInput = `${headerB64}.${payloadB64}`;
+  const cryptoKey = await crypto.subtle.importKey(
+    "pkcs8",
+    pemToArrayBuffer(privateKeyPem),
+    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign(
+    "RSASSA-PKCS1-v1_5",
+    cryptoKey,
+    new TextEncoder().encode(signingInput)
+  );
+  const jwt = `${signingInput}.${base64UrlEncode(signature)}`;
+
+  const tokenRes = await fetch(tokenUri, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=${encodeURIComponent(jwt)}`,
+  });
+  if (!tokenRes.ok) {
+    const errText = await tokenRes.text().catch(() => "");
+    throw new Error(`Google OAuth2 Fehler (${tokenRes.status}): ${errText}`);
+  }
+  const tokenJson = await tokenRes.json();
+  if (!tokenJson?.access_token) {
+    throw new Error("Google OAuth2 lieferte kein access_token");
+  }
+
+  cachedGoogleAccessToken = tokenJson.access_token;
+  cachedGoogleAccessTokenExp = nowSec + Number(tokenJson.expires_in || 3600);
+  return cachedGoogleAccessToken;
+}
+
+async function lookupRegistrationByEmail(email, env) {
   const queryUrl = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents:runQuery`;
+  const headers = { "Content-Type": "application/json" };
+  const accessToken = await getGoogleAccessToken(env);
+  if (accessToken) {
+    headers["Authorization"] = `Bearer ${accessToken}`;
+  }
+
   const res = await fetch(queryUrl, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify({
       structuredQuery: {
         from: [{ collectionId: "registrations" }],
@@ -245,10 +345,15 @@ async function lookupRegistrationByEmail(email) {
   };
 }
 
-async function lookupLernSaxThreshold() {
+async function lookupLernSaxThreshold(env) {
   try {
     const url = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/settings/lernsaxThreshold`;
-    const res = await fetch(url);
+    const headers = {};
+    const accessToken = await getGoogleAccessToken(env);
+    if (accessToken) {
+      headers["Authorization"] = `Bearer ${accessToken}`;
+    }
+    const res = await fetch(url, { headers });
     if (!res.ok) return null;
     const doc = await res.json();
     const val = firestoreFieldValue(doc?.fields?.grade);
@@ -866,13 +971,29 @@ export default {
       }
     }
 
+    // 1a. E-MAIL-DUPLIKATPRÜFUNG FÜR DAS ANMELDEFORMULAR (gibt ausschließlich { exists } zurück)
+    if (url.pathname === "/check-email") {
+      try {
+        const payload = await request.json();
+        const email = String(payload?.email || "").trim().toLowerCase();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
+          return json({ error: "Ungültige E-Mail-Adresse." }, 400);
+        }
+        const reg = await lookupRegistrationByEmail(email, env);
+        return json({ exists: Boolean(reg) });
+      } catch (err) {
+        console.error("check-email error:", err);
+        return json({ error: "Prüfung fehlgeschlagen" }, 500);
+      }
+    }
+
     // 1b. DSGVO-KONFORMER ANMELDESTATUS-CHECK ("Bin ich schon angemeldet?")
     // Antwortet immer neutral { success: true }, damit fremde E-Mail-Adressen nicht ausgespäht werden können.
     if (url.pathname === "/check-status") {
       try {
         const payload = await request.json();
         const email = String(payload?.email || "").trim().toLowerCase();
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
           return json({ error: "Bitte gib eine gültige E-Mail-Adresse ein." }, 400);
         }
 
@@ -884,7 +1005,7 @@ export default {
           }, 429);
         }
 
-        const reg = await lookupRegistrationByEmail(email);
+        const reg = await lookupRegistrationByEmail(email, env);
         if (!reg) {
           return json({ success: true });
         }
@@ -911,7 +1032,7 @@ export default {
         const isLernSax = domain === "lernsax.de" || domain.endsWith(".lernsax.de");
         let useLernSax = false;
         if (isLernSax) {
-          const threshold = await lookupLernSaxThreshold();
+          const threshold = await lookupLernSaxThreshold(env);
           const clMatch = String(reg.schoolClass || "").match(/(\d+)/);
           const classGrade = clMatch ? parseInt(clMatch[1], 10) : null;
           const effectiveGrade = classGrade || gradeFromEmail(email);

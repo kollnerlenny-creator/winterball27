@@ -108,7 +108,8 @@ const ALLOWED_WORKER_ENDPOINTS = new Set([
   'send-tickets',
   'generate-pdf',
   'generate-invoice',
-  'check-status'
+  'check-status',
+  'check-email'
 ]);
 
 app.all('/api/worker/:endpoint', (req, res) => {
@@ -119,7 +120,7 @@ app.all('/api/worker/:endpoint', (req, res) => {
   proxyToWorker(endpoint, req, res);
 });
 
-app.all(['/api/send-confirmation', '/api/send-tickets', '/api/generate-pdf', '/api/generate-invoice', '/api/check-status'], (req, res) => {
+app.all(['/api/send-confirmation', '/api/send-tickets', '/api/generate-pdf', '/api/generate-invoice', '/api/check-status', '/api/check-email'], (req, res) => {
   const endpoint = req.path.replace(/^\/api\//, '');
   proxyToWorker(endpoint, req, res);
 });
