@@ -3348,6 +3348,8 @@
  submitBtn.textContent = 'Wird angemeldet...';
 
  async function checkEmailExistsViaWorker(targetEmail) {
+ const useDirectWorker = /(^|\.)winterball27\.de$/i.test(window.location.hostname || '');
+ if (!useDirectWorker) {
  try {
  const proxyRes = await fetch('/api/check-email', {
  method: 'POST',
@@ -3360,6 +3362,7 @@
  return Boolean(data?.exists);
  }
  } catch (_) {}
+ }
 
  const workerRes = await fetch(WORKER_URL + '/check-email', {
  method: 'POST',
@@ -3484,6 +3487,8 @@
  };
 
  let sent = false;
+ const useDirectWorker = /(^|\.)winterball27\.de$/i.test(window.location.hostname || '');
+ if (!useDirectWorker) {
  try {
  const proxyRes = await fetch('/api/send-confirmation', {
  method: 'POST',
@@ -3492,6 +3497,7 @@
  });
  if (proxyRes.ok) sent = true;
  } catch(e) {}
+ }
 
  if (!sent) {
  await fetch(WORKER_URL + '/send-confirmation', {

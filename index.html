@@ -2880,16 +2880,19 @@
   });
 
   async function requestStatusEmail(email) {
-   try {
-    const proxyRes = await fetch('/api/check-status', {
-     method: 'POST',
-     headers: { 'Content-Type': 'application/json' },
-     body: JSON.stringify({ email })
-    });
-    if (proxyRes.status !== 404 && proxyRes.status !== 405 && proxyRes.status !== 502) {
-     return proxyRes;
-    }
-   } catch (_) {}
+   const useDirectWorker = /(^|\.)winterball27\.de$/i.test(window.location.hostname || '');
+   if (!useDirectWorker) {
+    try {
+     const proxyRes = await fetch('/api/check-status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+     });
+     if (proxyRes.status !== 404 && proxyRes.status !== 405 && proxyRes.status !== 502) {
+      return proxyRes;
+     }
+    } catch (_) {}
+   }
 
    return fetch(WORKER_URL + '/check-status', {
     method: 'POST',
