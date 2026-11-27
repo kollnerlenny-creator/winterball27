@@ -150,6 +150,12 @@
  .result-name{font-size:19px; font-weight:600; margin-bottom:3px;}
  .result-sub{font-size:13px; color:var(--text-dim);}
  .result-detail{font-size:12px; margin-top:6px; opacity:0.85;}
+ .result-u18-alert{
+ margin-top:10px; padding:8px 12px; border-radius:10px;
+ background:rgba(255,210,127,0.16); border:1px solid rgba(255,210,127,0.55);
+ color:#ffd27f; font-size:12.5px; font-weight:700; letter-spacing:0.2px;
+ display:none;
+ }
 
  /* --- Aktions-Buttons --- */
  .action-row{
@@ -222,6 +228,7 @@
  <h1>Scanner Login</h1>
  <input type="email" id="loginEmail" placeholder="E-Mail">
  <input type="password" id="loginPass" placeholder="Passwort">
+ <div id="loginError" style="display:none; margin-top:10px; font-size:12.5px; color:var(--error);"></div>
  <button id="loginBtn">Anmelden</button>
 </div>
 
@@ -276,6 +283,7 @@
  <div class="result-name" id="resultName"></div>
  <div class="result-sub" id="resultSub"></div>
  <div class="result-detail" id="resultDetail"></div>
+ <div class="result-u18-alert" id="resultU18Alert"></div>
  </div>
 
  <!-- 5. Aktionen: Manuelle Suche & Logout -->
@@ -310,7 +318,7 @@
  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
  import {
  initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
- collection, onSnapshot, updateDoc, doc
+ collection, onSnapshot, updateDoc, doc, Timestamp
  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
@@ -331,27 +339,162 @@
  });
  const auth = getAuth(app);
 
+ const TICKETS_CACHE_KEY = 'wb27_scanner_tickets_cache';
+ const PENDING_CHECKINS_KEY = 'wb27_scanner_pending_checkins';
+
  let allTickets = [];
- onSnapshot(collection(db, 'tickets'), (snap) => {
+ let ticketsUnsub = null;
+ let isFlushingQueue = false;
+ let hideResultTimer = null;
+ let unlockScanTimer = null;
+
+ function loadPendingCheckins(){
+ try {
+ const raw = localStorage.getItem(PENDING_CHECKINS_KEY);
+ const arr = raw ? JSON.parse(raw) : [];
+ return Array.isArray(arr) ? arr : [];
+ } catch (_) {
+ return [];
+ }
+ }
+
+ function savePendingCheckins(list){
+ try {
+ localStorage.setItem(PENDING_CHECKINS_KEY, JSON.stringify(list));
+ } catch (_) {}
+ updateConnBadge();
+ }
+
+ function loadCachedTickets(){
+ try {
+ const raw = localStorage.getItem(TICKETS_CACHE_KEY);
+ const arr = raw ? JSON.parse(raw) : [];
+ return Array.isArray(arr) ? arr : [];
+ } catch (_) {
+ return [];
+ }
+ }
+
+ function saveCachedTickets(list){
+ try {
+ const compact = list.map(t => ({
+ id: t.id,
+ ticketId: t.ticketId || '',
+ name: t.name || '',
+ category: t.category || 'ue18',
+ schoolClass: t.schoolClass || null,
+ paid: Boolean(t.paid),
+ checkedIn: Boolean(t.checkedIn)
+ }));
+ localStorage.setItem(TICKETS_CACHE_KEY, JSON.stringify(compact));
+ } catch (_) {}
+ }
+
+ function applyPendingCheckinsToTickets(){
+ const pending = loadPendingCheckins();
+ if (!pending.length) return;
+ const pendingIds = new Set(pending.map(p => p.docId));
+ allTickets.forEach(t => {
+ if (pendingIds.has(t.id)) {
+ t.checkedIn = true;
+ }
+ });
+ }
+
+ function enqueuePendingCheckin(docId, ticketId, checkedInAtMs){
+ const list = loadPendingCheckins();
+ if (!list.some(item => item.docId === docId)) {
+ list.push({ docId, ticketId, checkedInAtMs });
+ savePendingCheckins(list);
+ }
+ }
+
+ async function flushPendingCheckins(){
+ if (isFlushingQueue || !navigator.onLine || !auth.currentUser) return;
+ const queue = loadPendingCheckins();
+ if (!queue.length) return;
+
+ isFlushingQueue = true;
+ updateConnBadge();
+ try {
+ const remaining = [];
+ for (let i = 0; i < queue.length; i++) {
+ const item = queue[i];
+ try {
+ await Promise.race([
+ updateDoc(doc(db, 'tickets', item.docId), {
+ checkedIn: true,
+ checkedInAt: Timestamp.fromMillis(Number(item.checkedInAtMs) || Date.now())
+ }),
+ new Promise((_, reject) => setTimeout(() => reject(new Error('Sync-Timeout')), 5000))
+ ]);
+ } catch (err) {
+ console.warn('Offline-Check-in Sync wartet noch:', item.ticketId, err?.message || err);
+ remaining.push(...queue.slice(i));
+ break;
+ }
+ }
+ savePendingCheckins(remaining);
+ } finally {
+ isFlushingQueue = false;
+ updateConnBadge();
+ }
+ }
+
+ function startTicketsListener(){
+ if (ticketsUnsub) return;
+ if (allTickets.length === 0) {
+ allTickets = loadCachedTickets();
+ applyPendingCheckinsToTickets();
+ updateStats();
+ }
+ ticketsUnsub = onSnapshot(collection(db, 'tickets'), (snap) => {
  allTickets = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+ applyPendingCheckinsToTickets();
+ saveCachedTickets(allTickets);
  updateStats();
  renderSearchResults();
+ flushPendingCheckins();
+ }, (err) => {
+ console.warn('Tickets-Sync Hinweis:', err?.message || err);
  });
+ }
 
  onAuthStateChanged(auth, (user) => {
  document.getElementById('loginCard').style.display = user ? 'none' : 'block';
  document.getElementById('dashboardArea').style.display = user ? 'flex' : 'none';
- if(user) startScanner();
+ if (user) {
+ startTicketsListener();
+ startScanner();
+ flushPendingCheckins();
+ } else {
+ if (ticketsUnsub) {
+ ticketsUnsub();
+ ticketsUnsub = null;
+ }
+ allTickets = [];
+ }
  });
 
  document.getElementById('loginBtn').addEventListener('click', async () => {
  const email = document.getElementById('loginEmail').value;
  const pass = document.getElementById('loginPass').value;
+ const errEl = document.getElementById('loginError');
+ if (errEl) errEl.style.display = 'none';
  try { await signInWithEmailAndPassword(auth, email, pass); }
- catch(e){ alert('Login fehlgeschlagen'); }
+ catch(e){
+ if (errEl) {
+ errEl.textContent = 'Login fehlgeschlagen. Bitte Zugangsdaten prüfen.';
+ errEl.style.display = 'block';
+ }
+ }
  });
 
- document.getElementById('logoutBtn').addEventListener('click', () => {
+ document.getElementById('logoutBtn').addEventListener('click', async () => {
+ if (navigator.onLine) {
+ await flushPendingCheckins().catch(() => {});
+ }
+ try { localStorage.removeItem(TICKETS_CACHE_KEY); } catch (_) {}
  if (qrScannerInstance) {
  qrScannerInstance.stop().catch(() => {});
  }
@@ -360,12 +503,36 @@
 
  function updateConnBadge(){
  const online = navigator.onLine;
- document.getElementById('connDot').classList.toggle('offline', !online);
- document.getElementById('connText').textContent = online ? 'Online' : 'Offline — Check-ins werden lokal gespeichert';
- document.getElementById('connBadge').classList.toggle('offline-text', !online);
+ const pendingCount = loadPendingCheckins().length;
+ const dot = document.getElementById('connDot');
+ const text = document.getElementById('connText');
+ const badge = document.getElementById('connBadge');
+
+ dot.classList.toggle('offline', !online || pendingCount > 0);
+ badge.classList.toggle('offline-text', !online || pendingCount > 0);
+
+ if (!online) {
+ text.textContent = pendingCount > 0
+ ? `Offline · ${pendingCount} Check-in${pendingCount > 1 ? 's' : ''} vorgemerkt`
+ : 'Offline — Check-ins werden lokal gespeichert';
+ } else if (pendingCount > 0) {
+ text.textContent = isFlushingQueue
+ ? `Synchronisiere ${pendingCount} Check-in${pendingCount > 1 ? 's' : ''}...`
+ : `Online · ${pendingCount} Check-in${pendingCount > 1 ? 's' : ''} warten auf Sync`;
+ } else {
+ text.textContent = 'Online';
  }
- window.addEventListener('online', updateConnBadge);
+ }
+ window.addEventListener('online', () => {
+ updateConnBadge();
+ flushPendingCheckins();
+ });
  window.addEventListener('offline', updateConnBadge);
+ setInterval(() => {
+ if (navigator.onLine && auth.currentUser && loadPendingCheckins().length > 0) {
+ flushPendingCheckins();
+ }
+ }, 12000);
  updateConnBadge();
 
  // --- Live-Statistiken aktualisieren ---
@@ -562,11 +729,13 @@
  async (decodedText) => {
  if(!scanning) return;
  scanning = false;
- await handleScan(decodedText.trim());
- setTimeout(() => {
+ if (hideResultTimer) clearTimeout(hideResultTimer);
+ if (unlockScanTimer) clearTimeout(unlockScanTimer);
+ const delayMs = await handleScan(decodedText.trim());
+ hideResultTimer = setTimeout(() => {
  document.getElementById('resultCard').classList.add('hide');
- }, 1800);
- setTimeout(() => { scanning = true; }, 2400);
+ }, delayMs);
+ unlockScanTimer = setTimeout(() => { scanning = true; }, delayMs + 500);
  },
  () => {}
  );
@@ -604,9 +773,11 @@
  async (decodedText) => {
  if(!scanning) return;
  scanning = false;
- await handleScan(decodedText.trim());
- setTimeout(() => { document.getElementById('resultCard').classList.add('hide'); }, 1800);
- setTimeout(() => { scanning = true; }, 2400);
+ if (hideResultTimer) clearTimeout(hideResultTimer);
+ if (unlockScanTimer) clearTimeout(unlockScanTimer);
+ const delayMs = await handleScan(decodedText.trim());
+ hideResultTimer = setTimeout(() => { document.getElementById('resultCard').classList.add('hide'); }, delayMs);
+ unlockScanTimer = setTimeout(() => { scanning = true; }, delayMs + 500);
  },
  () => {}
  );
@@ -626,7 +797,12 @@
  const name = document.getElementById('resultName');
  const sub = document.getElementById('resultSub');
  const detail = document.getElementById('resultDetail');
+ const u18Alert = document.getElementById('resultU18Alert');
  card.classList.remove('hide');
+ if (u18Alert) {
+ u18Alert.style.display = 'none';
+ u18Alert.textContent = '';
+ }
 
  const ticket = allTickets.find(t => t.ticketId === ticketId);
 
@@ -640,7 +816,7 @@
  playSound('invalid');
  triggerHaptic('invalid');
  triggerScreenFlash('invalid');
- return;
+ return 1800;
  }
 
  // 2. NOCH NICHT BEZAHLT
@@ -653,7 +829,7 @@
  playSound('invalid');
  triggerHaptic('invalid');
  triggerScreenFlash('invalid');
- return;
+ return 1800;
  }
 
  // 3. BEREITS EINGECHECKT
@@ -666,29 +842,37 @@
  playSound('used');
  triggerHaptic('used');
  triggerScreenFlash('used');
- return;
+ return 1800;
  }
 
  // 4. GÜLTIG & ERFOLGREICH EINGECHECKT
+ const nowMs = Date.now();
  ticket.checkedIn = true;
+ saveCachedTickets(allTickets);
  updateStats();
+
+ const isU18 = ticket.category === 'u18';
+ const classSuffix = ticket.schoolClass ? ` (Kl. ${ticket.schoolClass})` : '';
+ const catLabel = isU18 ? `Unter 18${classSuffix}` : '18 oder älter';
 
  card.className = 'result-card show valid';
  icon.textContent = '';
  name.textContent = ticket.name;
- const catLabel = ticket.category === 'u18' ? 'Unter 18' : '18 oder älter';
  sub.textContent = navigator.onLine ? 'Einlass gewährt' : 'Gültig (wird bei Netz nachgereicht)';
  detail.textContent = `${catLabel} · ${ticket.ticketId}`;
+ if (u18Alert && isU18) {
+ u18Alert.textContent = 'U18-Ticket · Ausweis & Muttizettel prüfen!';
+ u18Alert.style.display = 'block';
+ }
 
  playSound('valid');
  triggerHaptic('valid');
  triggerScreenFlash('valid');
 
- try {
- await updateDoc(doc(db, 'tickets', ticket.id), { checkedIn: true });
- } catch(err){
- console.error('Check-in konnte nicht synchronisiert werden:', err);
- }
+ enqueuePendingCheckin(ticket.id, ticket.ticketId, nowMs);
+ flushPendingCheckins();
+
+ return isU18 ? 2400 : 1800;
  }
 
  // --- Manuelle Suche / Check-in ---
